@@ -1,15 +1,16 @@
 import logging
 import sys
 import traceback
-
+from Tkinter import *
 import time
+import os
 
 import math
 from asciimatics.effects import RandomNoise
 from asciimatics.event import KeyboardEvent
 from asciimatics.exceptions import ResizeScreenError, NextScene
 from asciimatics.scene import Scene
-from asciimatics.screen import Screen
+from dual_screen import Screen
 from asciimatics.widgets import Frame, Layout, Divider, Button, ListBox, Widget, MultiColumnListBox, PopUpDialog, Text, \
     Label
 
@@ -20,13 +21,7 @@ VIDEO_DISPLAY_TEXT = 'NOW [{}] {}              NEXT [{}] {}'
 VIDEO_DISPLAY_BANNER_LIST = ['[','-','-','-','-','-','-','-','-','-','-',']']
 VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
 
-logger = logging.getLogger('myapp')
-hdlr = logging.FileHandler('C:/Users/Tim/PycharmProjects/videoLooper/myapp.log')
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
-
+logger = data_centre.setup_logging()
 
 class Display(Frame):
     def __init__(self, switch, screen,driver, on_load=None):
@@ -37,30 +32,24 @@ class Display(Frame):
                                       title="r_e_c_u_r"
                                       )
         self._last_frame = 0
-        self.popup_message = None
         self.video_driver = driver
         self.my_frame_update_count = 40
-
-
 
         layout_top = Layout([1,1,1])
         self.add_layout(layout_top)
 
         self.browser_button = Button("BROWSER", self.do_nothing())
         self.browser_button.disabled = True
-        #self.browser_button.is_tab_stop = False
         if switch[0]:
             self.browser_button.custom_colour = "focus_button"
 
         self.looper_button = Button("LOOPER", self.do_nothing())
         self.looper_button.disabled = True
-        #self.looper_button.is_tab_stop = False
         if switch[1]:
             self.looper_button.custom_colour = "focus_button"
 
         self.settings_button = Button("SETTINGS", self.do_nothing())
         self.settings_button.disabled = True
-        #self.advance_button.is_tab_stop = False
         if switch[2]:
             self.settings_button.custom_colour = "focus_button"
         layout_top.add_widget(Divider(), 0)
@@ -83,7 +72,7 @@ class Display(Frame):
         self.fix()
 
     def do_nothing(self):
-        return
+        pass
 
     def get_text_for_video_display(self):
         now_bank, now_status, next_bank, next_status, duration, video_length = self.video_driver.get_info_for_video_display()
@@ -109,8 +98,6 @@ class Display(Frame):
         return 20
 
     def get_focus_on_list(self, list):
-
-        #return self._layouts[self._focus]
         return list.options[list.value][0][0]
 
     def process_event(self, event):
@@ -119,6 +106,7 @@ class Display(Frame):
                 raise NextScene
 
         return super(Display, self).process_event(event)
+
 
 class Browser(Display):
     def __init__(self, screen, data, driver):
@@ -164,13 +152,8 @@ class Browser(Display):
                      self._reload_list(self._browser_data_view.value)
 
               if event.key_code in [ord('c')]:
-                  #self.popup_message = PopUpDialog(self._screen, 'Deleting all banks',['|'])
-
-                  #self._scene.add_effect()
                   data_centre.clear_all_banks()
-                  #time.sleep(1)
 
-                  #self._scene.remove_effect(popup_message)
                   self._data_object.rewrite_browser_list()
                   self._reload_list(self._browser_data_view.value)
 
@@ -181,13 +164,10 @@ class Browser(Display):
         logger.info('the BROWSER frame number is {}'.format(frame_no))
         super(Browser, self)._update(frame_no)
 
-
-
-
     def _reload_list(self, new_value=None):
-
         self._browser_data_view.options = self._data_object.get_browser_data_for_display()
         self._browser_data_view.value = new_value
+
 
 class Looper(Display):
     def __init__(self, screen, data,driver):
@@ -206,24 +186,12 @@ class Looper(Display):
         self.fix()
 
     def process_event(self, event):
-        # if isinstance(event, KeyboardEvent):
-        #     if event.key_code in [ord('q'), ord('Q'), Screen.ctrl("c")]:
-        #         raise StopApplication("User quit")
-        #     elif event.key_code in [ord("r"), ord("R")]:
-        #         self._reverse = not self._reverse
-        #     elif event.key_code == ord("<"):
-        #         self._sort = max(0, self._sort - 1)
-        #     elif event.key_code == ord(">"):
-        #         self._sort = min(7, self._sort + 1)
-
-            #self._last_frame = 0
-
-        # Now pass on to lower levels for normal handling of the event.
         return super(Looper, self).process_event(event)
 
     def _reload_list(self, new_value=None):
         self._bank_data_view.options = data_centre.get_all_looper_data_for_display()
         self._bank_data_view.value = new_value
+
 
 class Settings(Display):
     def __init__(self, screen, data,driver):
@@ -255,6 +223,7 @@ class Settings(Display):
 
         return super(Settings, self).process_event(event)
 
+
 class ScrollingMultiColumnListBox(MultiColumnListBox):
     def __init__(self, height, columns, options, titles):
         super(ScrollingMultiColumnListBox, self).__init__(height, columns, options, titles)
@@ -267,13 +236,6 @@ class ScrollingMultiColumnListBox(MultiColumnListBox):
                 self._line = -1
 
          super(ScrollingMultiColumnListBox,self).process_event(event)
-
-
-def inspect_browser_focus(dir_name):
-    if(dir_name.endswith('|') or dir_name.endswith('/')):
-        return False , dir_name.lstrip()[:-1]
-    else:
-        return True , dir_name.lstrip()
 
 def create_video_display_banner(duration,video_length):
     banner_list = ['[','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-',']']
@@ -288,25 +250,28 @@ def create_video_display_banner(duration,video_length):
 
     return ''.join(banner_list)
 
-
-
-def demo(screen):
+def demo(screen, tk):
     scenes = [Scene([Browser(screen, data,video_driver)], -1),
               Scene([Looper(screen, data,video_driver)], -1),
               Scene([Settings(screen, data,video_driver)], -1)]
-    screen.play(scenes)
+    screen.play(scenes,tk)
 
 data = data_centre.data()
 video_driver = video_centre.video_driver()
 last_scene = None
+
+tk = Tk()
+canvas = Canvas(tk, width=500, height=400, bd=0, highlightthickness=0)
+canvas.pack()
+
 while True:
     try:
-        Screen.wrapper(demo, catch_interrupt=True)
+        Screen.wrapper(demo, catch_interrupt=True, arguments=(tk,))
         sys.exit(0)
     except ResizeScreenError as e:
         last_scene = e.scene
     except Exception as e:
         logger.error(traceback.format_exc())
         logger.error(str(e))
-        # Logs the error appropriately.
+
 

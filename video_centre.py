@@ -1,5 +1,9 @@
 import time
-from omxdriver import OMXDriver #<== for deving only
+try:
+    from omxdriver import OMXDriver #<== for deving only
+    has_omx = True
+except ImportError:
+    has_omx = False
 from Tkinter import Tk, Canvas
 import data_centre
 
@@ -9,22 +13,23 @@ logger = data_centre.setup_logging()
 
 class video_driver(object):
     def __init__(self, widget = None):
-	logger.info('this is a test')
+
         self.widget = widget
         self.delay = 50
-        self.last_player = video_player(self.widget,'a')
-        self.current_player = video_player(self.widget,'b')
-        self.next_player = video_player(self.widget,'c')
+        logger.info('the has_omx flag is {}'.format(has_omx))
+        if has_omx:
+            self.last_player = video_player(self.widget,'a')
+            self.current_player = video_player(self.widget,'b')
+            self.next_player = video_player(self.widget,'c')
+            self.manual_next = False
 
-        self.manual_next = False
-
-        self.widget.after(self.delay,self.begin_playing)
+            self.widget.after(self.delay,self.begin_playing)
 
     def begin_playing(self):
         #TODO: the first clip will be a demo
         first_context = data_centre.get_next_context()
         #first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
-	logger.info(first_context['location'])
+        logger.info(first_context['location'])
         self.current_player.load_content(first_context['location'])
 
         self.wait_for_first_load()
@@ -83,8 +88,11 @@ class video_driver(object):
 
 
     def get_info_for_video_display(self):
-        return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number,\
+        if has_omx:
+            return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number,\
                self.next_player.status, self.current_player.duration, self.current_player.video_length
+        else:
+            return 0, 'test', 1, 'test' , 0, 10
 
 
 class video_player(object):
@@ -110,18 +118,18 @@ class video_player(object):
 
     def play_content(self):
         self.status = 'PLAYING'
-	logger.info('{} is playing now'.format(self.name))
+        logger.info('{} is playing now'.format(self.name))
         self.omx.pause_before_play_required = 'no'
-	self.omx.show(True,0)
+        self.omx.show(True,0)
 
        
 
     def load_content(self, context):
         self.status = 'LOADING'
         logger.info('{} is loading now {}'.format(self.name,context))
-	self.omx.load(context,'after-first-frame','--win 0,0,400,400 --no-osd','')
+        self.omx.load(context,'after-first-frame','--win 0,0,400,400 --no-osd','')
         
-	#layer = layer + 1
+    #layer = layer + 1
 
     def set_to_default(self):
         self.omx.kill()

@@ -261,7 +261,11 @@ canvas.pack()
 
 data = data_centre.data()
 
-video_driver = video_centre.video_driver(canvas)
+try:
+	video_driver = video_centre.video_driver(canvas)
+except Exception as e:
+    logger.error(traceback.format_exc())
+    logger.error(str(e))		
 
 last_scene = None
 

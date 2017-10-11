@@ -13,9 +13,9 @@ logger = data_centre.setup_logging()
 
 class video_driver(object):
     def __init__(self, widget = None):
-
+	print 'has omx :{}'.format(has_omx)
         self.widget = widget
-        self.delay = 50
+        self.delay = 5
         logger.info('the has_omx flag is {}'.format(has_omx))
         if has_omx:
             self.last_player = video_player(self.widget,'a')
@@ -27,9 +27,11 @@ class video_driver(object):
 
     def begin_playing(self):
         #TODO: the first clip will be a demo
+        print 'is running here'
         first_context = data_centre.get_next_context()
         #first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
         logger.info(first_context['location'])
+        print(first_context['location'])
         self.current_player.load_content(first_context['location'])
 
         self.wait_for_first_load()

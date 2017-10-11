@@ -25,5 +25,8 @@ data = data_centre.data()
 
 try:
     video_driver = video_centre.video_driver(canvas)
+
+    while True:
+	tk.update()
 except Exception as e:
     logger.error(str(e))

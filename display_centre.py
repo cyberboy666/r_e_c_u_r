@@ -19,7 +19,7 @@ logger = data_centre.setup_logging()
 tk = Tk()
 # tk.withdraw()
 canvas = Canvas(tk, width=500, height=400, bd=0, highlightthickness=0)
-canvas.pack()
+canvas.pack(fill=BOTH, expand=YES)
 
 wid = canvas.winfo_id()
 os.system('xterm -into %d -geometry 40x20 -sb &' % wid)

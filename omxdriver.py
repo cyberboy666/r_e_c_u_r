@@ -4,7 +4,9 @@ import sys
 import dbus
 import subprocess
 from time import time,strftime
+import data_centre
 
+logger = data_centre.setup_logging()
 
 
 """
@@ -103,8 +105,8 @@ class OMXDriver(object):
         # self.mon.log(self, 'dbus user ' + self.dbus_user)
         # self.mon.log(self, 'dbus name ' + self.dbus_name)
 
-        # print self.omxplayer_cmd
-        print("Send command to omxplayer: "+ self.omxplayer_cmd)
+        # logger.info self.omxplayer_cmd
+        logger.info("Send command to omxplayer: "+ self.omxplayer_cmd)
         # self._process=subprocess.Popen(self.omxplayer_cmd,shell=True,stdout=file('/home/pi/pipresents/pp_logs/stdout.txt','a'),stderr=file('/home/pi/pipresents/pp_logs/stderr.txt','a'))
         self._process=subprocess.Popen(self.omxplayer_cmd,shell=True,stdout=file('/dev/null','a'),stderr=file('/dev/null','a'))
         self.pid=self._process.pid
@@ -119,13 +121,13 @@ class OMXDriver(object):
         connect_success=self.__dbus_connect()
         if connect_success is True:
             # print 'SUCCESS'
-            print('connected to omxplayer dbus after ' + str(self.dbus_tries) + ' centisecs')
+            logger.info('connected to omxplayer dbus after ' + str(self.dbus_tries) + ' centisecs')
                 
             # get duration of the track in microsecs if fails return a very large duration
             # posibly faile because omxplayer is running but not omxplayer.bin
             duration_success,duration=self.get_duration()
             if duration_success is False:
-                print('get duration failed for n attempts using '+ str(duration/60000000)+ ' minutes')
+                logger.info('get duration failed for n attempts using '+ str(duration/60000000)+ ' minutes')
             # calculate time to pause before last frame
             self.duration = duration
             self.pause_at_end_time = duration - 350000
@@ -184,7 +186,7 @@ class OMXDriver(object):
                             self.end_play_reason='pause_at_end'
                             return
                         else:
-                            print 'pause at end failed, probably because of delay after detection, just run on'
+                            logger.info( 'pause at end failed, probably because of delay after detection, just run on')
                             self.widget.after(self.delay,self._status_loop)
                     else:
                         # need to do the pausing for preload after first timestamp is received 0 is default value before start
@@ -199,7 +201,7 @@ class OMXDriver(object):
                             else:
                                 # should never fail, just warn at the moment
                                 # print 'pause after load failed '+ + str(self.video_position)
-                                print( str(self.id)+ ' pause after load fail ' + str(self.video_position))
+                                logger.info( str(self.id)+ ' pause after load fail ' + str(self.video_position))
                             self.widget.after(self.delay,self._status_loop)
                         else:
                             self.widget.after(self.delay,self._status_loop)
@@ -218,30 +220,30 @@ class OMXDriver(object):
                 # print self.id,' unpause for show success', self.video_position
             else:
                 # should never fail, just warn at the moment
-                print(str(self.id)+ ' unpause for show fail ' + str(self.video_position))
+                logger.info(str(self.id)+ ' unpause for show fail ' + str(self.video_position))
 
         
     def control(self,char):
 
         val = OMXDriver.KEY_MAP[char]
-        print('>control received and sent to omxplayer ' + str(self.pid))
+        #logger.info('>control received and sent to omxplayer ' + str(self.pid))
         if self.is_running():
             try:
                 self.__iface_player.Action(dbus.Int32(val))
             except dbus.exceptions.DBusException as ex:
-                print('Failed to send control - dbus exception: {}'.format(ex.get_dbus_message()))
+                #logger.info('Failed to send control - dbus exception: {}'.format(ex.get_dbus_message()))
                 return
         else:
-            print('Failed to send control - process not running')
+            logger.info('Failed to send control - process not running')
             return
 
         
     # USE ONLY at end and after load
     # return succces of the operation, several tries if pause did not work and no error reported.
     def pause(self,reason):
-        print(self,'pause received '+reason)
+        #logger.info(self,'pause received {}'.format(reason))
         if self.paused is False:
-            print('not paused so send pause '+reason)
+            logger.info('not paused so send pause {}'.format(reason))
             tries=1
             while True:
                 if self.send_pause() is False:
@@ -256,12 +258,12 @@ class OMXDriver(object):
                     return False
                 else:
                     # failed for no good reason
-                    print(self, '!!!!! repeat pause ' + str(tries))
+                    logger.info(self, '!!!!! repeat pause {}'.format(str(tries)))
                     # print self.id,' !!!!! repeat pause ',self.video_position, tries
                     tries +=1
                     if tries >5:
                         # print self.id, ' pause failed for n attempts'
-                        print('pause failed for n attempts')
+                        logger.info('pause failed for n attempts')
                         return False
             # repeat
 
@@ -269,9 +271,9 @@ class OMXDriver(object):
     # USE ONLY for show
 
     def unpause(self,reason):
-        print('MON' + 'Unpause received '+ reason)
+        logger.info('MON' + 'Unpause received {}'.format(reason))
         if self.paused is True:
-            print('MON' +'Is paused so Track will be unpaused '+ reason)
+            logger.info('MON' +'Is paused so Track will be unpaused {}'.format(reason))
             tries=1
             while True:
                 if self.send_unpause() is False:
@@ -287,12 +289,12 @@ class OMXDriver(object):
                     # failed for good reason because of exception or process not running caused by end of track
                     return False
                 else:
-                    print('warn' + '!!!!! repeat unpause ' + str(tries))
+                    logger.info('warn' + '!!!!! repeat unpause {}'.format(tries))
                     # print self.id,' !!!! repeat unpause ',self.video_position, tries
                     tries +=1
                     if tries >5:
                         # print self.id, ' unpause failed for n attempts'                       
-                        print('warn' + 'unpause failed for n attempts')
+                        logger.info('warn' + 'unpause failed for n attempts')
                         return False
                     
 
@@ -301,11 +303,11 @@ class OMXDriver(object):
             try:
                 result=self.__iface_props.PlaybackStatus()
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to test paused - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to test paused - dbus exception: {}'.format(ex.get_dbus_message()))
                 return 'Failed'
             return result
         else:
-            print('warn'+'Failed to test paused - process not running')
+            logger.info('warn'+'Failed to test paused - process not running')
             # print self.id,' test paused not successful - process'
             return 'Failed'
 
@@ -315,11 +317,11 @@ class OMXDriver(object):
             try:
                 self.__iface_player.Pause()
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to send pause - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to send pause - dbus exception: {}'.format(ex.get_dbus_message()))
                 return False
             return True
         else:
-            print('warn'+'Failed to send pause - process not running')
+            logger.info('warn'+'Failed to send pause - process not running')
             # print self.id,' send pause not successful - process'
             return False
 
@@ -329,16 +331,16 @@ class OMXDriver(object):
             try:
                 self.__iface_player.Action(16)
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to send unpause - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to send unpause - dbus exception: {}'.format(ex.get_dbus_message()))
                 return False
             return True
         else:
-            print('warn'+'Failed to send unpause - process not running')
+            logger.info('warn'+'Failed to send unpause - process not running')
             # print self.id,' send unpause not successful - process'
             return False
 
     def pause_on(self):
-        print('mon'+'pause on received ')
+        logger.info('mon'+'pause on received ')
         # print 'pause on',self.paused
         if self.paused is True:
             return
@@ -350,15 +352,15 @@ class OMXDriver(object):
                 # print 'paused OK'
                 return
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to do pause on - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to do pause on - dbus exception: {}'.format(ex.get_dbus_message()))
                 return
         else:
-            print('warn'+'Failed to do pause on - process not running')
+            logger.info('warn'+'Failed to do pause on - process not running')
             return
                     
 
     def pause_off(self):
-        print('mon'+'pause off received ')
+        logger.info('mon'+'pause off received ')
         # print 'pause off',self.paused
         if self.paused is False:
             return
@@ -369,14 +371,14 @@ class OMXDriver(object):
                 # print 'not paused OK'
                 return
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to do pause off - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to do pause off - dbus exception: {}'.format(ex.get_dbus_message()))
                 return
         else:
-            print('warn'+'Failed to do pause off - process not running')
+            logger.info('warn'+'Failed to do pause off - process not running')
             return
 
     def go(self):
-        print('log'+'go received ')
+        logger.info('log'+'go received ')
         self.unpause('for go')
 
 
@@ -392,7 +394,7 @@ class OMXDriver(object):
         
 
     def toggle_pause(self,reason):
-        print('log'+'toggle pause received '+ reason)
+        logger.info('log'+'toggle pause received {}'.format(reason))
         if not self.paused:
             self.paused = True
         else:
@@ -401,16 +403,16 @@ class OMXDriver(object):
             try:
                 self.__iface_player.Action(16)
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to toggle pause - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to toggle pause - dbus exception: {}'.format(ex.get_dbus_message()))
                 return
         else:
-            print('warn'+'Failed to toggle pause - process not running')
+            logger.info('warn'+'Failed to toggle pause - process not running')
             return
 
 
 
     def stop(self):
-        print('log'+'>stop received and quit sent to omxplayer ' + str(self.pid))
+        logger.info('log'+'>stop received and quit sent to omxplayer {} '.format(self.pid))
         # need to send 'nice day'
         if self.paused_at_end is True:
             self.end_play_signal=True
@@ -420,10 +422,10 @@ class OMXDriver(object):
             try:
                 self.__iface_root.Quit()
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed to quit - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed to quit - dbus exception: {}'.format(ex.get_dbus_message()))
                 return
         else:
-            print('warn'+'Failed to quit - process not running')
+            logger.info('warn'+'Failed to quit - process not running')
             return
 
 
@@ -471,7 +473,7 @@ class OMXDriver(object):
             if success is True:
                 return True,duration
             else:
-                print('warn'+ 'repeat get duration ' + str(tries))
+                logger.info('warn'+ 'repeat get duration {}'.format(tries))
                 tries +=1
                 if tries >5:                      
                     return False,sys.maxint*100
@@ -484,7 +486,7 @@ class OMXDriver(object):
                 micros = self.__iface_props.Duration()
                 return True,micros
             except dbus.exceptions.DBusException as ex:
-                print('warn'+'Failed get duration - dbus exception: {}'.format(ex.get_dbus_message()))
+                logger.info('warn'+'Failed get duration - dbus exception: {}'.format(ex.get_dbus_message()))
                 return False,-1
         else:
             return False,-1
@@ -502,20 +504,20 @@ class OMXDriver(object):
             bus_pid_filename = "/tmp/omxplayerdbus.{}.pid".format(self.dbus_user)
 
             if not os.path.exists(bus_address_filename):
-                print('log'+'waiting for bus address file ' + bus_address_filename)
+                logger.info('log'+'waiting for bus address file {}'.format(bus_address_filename))
                 self.omx_loaded=False
                 return False
             else:
                 f = open(bus_address_filename, "r")
                 bus_address = f.read().rstrip()
                 if bus_address == '':
-                    print('log'+ 'waiting for bus address in file ' + bus_address_filename)
+                    logger.info('log'+ 'waiting for bus address in file {}'.format(bus_address_filename))
                     self.omx_loaded=False
                     return False
                 else:
                     # self.mon.log(self, 'bus address found ' + bus_address)
                     if not os.path.exists(bus_pid_filename):
-                        print('warn'+ 'bus pid file does not exist ' + bus_pid_filename)
+                        logger.info('warn'+ 'bus pid file does not exist {}'.format(bus_pid_filename))
                         self.omx_loaded=False
                         return False
                     else:

@@ -33,7 +33,7 @@ class Display(Frame):
                                       )
         self._last_frame = 0
         self.video_driver = driver
-        self.my_frame_update_count = 40
+        self.my_frame_update_count = 5
 
         layout_top = Layout([1,1,1])
         self.add_layout(layout_top)
@@ -79,7 +79,6 @@ class Display(Frame):
         banner = create_video_display_banner(duration,video_length)
         time_been = data_centre.convert_int_to_string_for_display(duration)
         time_left = data_centre.convert_int_to_string_for_display(video_length - duration)
-        logger.info(VIDEO_DISPLAY_BANNER_TEXT.format(time_been,banner,time_left))
         return VIDEO_DISPLAY_BANNER_TEXT.format(time_been,banner,time_left),VIDEO_DISPLAY_TEXT.format(now_bank , now_status, next_bank, next_status, duration)
 
     def _update(self, frame_no):
@@ -129,6 +128,7 @@ class Browser(Display):
          numberMapping = [ord('q'),ord('w'),ord('e'),ord('r'),ord('t'),ord('y'),ord('u'),ord('i'),ord('o'),ord('p') ]
 
          if isinstance(event, KeyboardEvent):
+	      logger.info('the button you just pressed was {}'.format(event.key_code))
               if event.key_code in numberMapping:
 
                  focus = self.get_focus_on_list(self._browser_data_view)
@@ -161,7 +161,6 @@ class Browser(Display):
         # Now pass on to lower levels for normal handling of the event.
 
     def _update(self, frame_no):
-        logger.info('the BROWSER frame number is {}'.format(frame_no))
         super(Browser, self)._update(frame_no)
 
     def _reload_list(self, new_value=None):
@@ -256,13 +255,19 @@ def demo(screen, tk):
               Scene([Settings(screen, data,video_driver)], -1)]
     screen.play(scenes,tk)
 
-data = data_centre.data()
-video_driver = video_centre.video_driver()
-last_scene = None
-
 tk = Tk()
 canvas = Canvas(tk, width=500, height=400, bd=0, highlightthickness=0)
 canvas.pack()
+
+data = data_centre.data()
+
+try:
+	video_driver = video_centre.video_driver(canvas)
+except Exception as e:
+    logger.error(traceback.format_exc())
+    logger.error(str(e))		
+
+last_scene = None
 
 while True:
     try:

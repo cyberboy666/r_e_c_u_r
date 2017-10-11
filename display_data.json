@@ -1,1 +1,107 @@
-[{"start": -1, "length": -1, "end": -1, "location": "/home/pi/pp_home/media/samplerloop3s3.mp4", "name": "spooky_video_2.mp4"}, {"start": -1, "length": -1, "end": -1, "location": "C:/TestFolderStucture/random_video_1.mp4", "name": "random_video_1.mp4"}, {"start": -1, "length": -1, "end": -1, "location": "C:/TestFolderStucture/random_video_2.mp4", "name": "random_video_2.mp4"}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}, {"start": -1, "length": -1, "end": -1, "location": "", "name": ""}]
+[
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "/home/pi/pp_home/media/samplerloop3s3.mp4",
+        "name": "spooky_video_2.mp4"
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "C:/TestFolderStucture/random_video_1.mp4",
+        "name": "random_video_1.mp4"
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "C:/TestFolderStucture/random_video_2.mp4",
+        "name": "random_video_2.mp4"
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    },
+    {
+        "start": -1,
+        "length": -1,
+        "end": -1,
+        "location": "",
+        "name": ""
+    }
+]

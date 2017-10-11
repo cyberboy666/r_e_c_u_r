@@ -1,1 +1,26 @@
-[{"name": "PLAYBACK_MODE", "value": "LOOPER"}, {"name": "PLAYLIST", "value": "[1,1,1,4,1,2,1,4]"}, {"name": "SYNC_LENGTHS", "value": "OFF"}, {"name": "SYNC_LENGTHS_TO", "value": "00:08"}, {"name": "RAND_START", "value": "OFF"}, {"name": "VIDEO_OUTPUT", "value": "HDMI"}]
+[
+    {
+        "name": "PLAYBACK_MODE",
+        "value": "LOOPER"
+    },
+    {
+        "name": "PLAYLIST",
+        "value": "[1,1,1,4,1,2,1,4]"
+    },
+    {
+        "name": "SYNC_LENGTHS",
+        "value": "OFF"
+    },
+    {
+        "name": "SYNC_LENGTHS_TO",
+        "value": "00:08"
+    },
+    {
+        "name": "RAND_START",
+        "value": "OFF"
+    },
+    {
+        "name": "VIDEO_OUTPUT",
+        "value": "HDMI"
+    }
+]

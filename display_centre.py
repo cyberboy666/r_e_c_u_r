@@ -9,27 +9,24 @@ from Tkinter import *
 import video_centre
 import data_centre
 
-VIDEO_DISPLAY_TEXT = 'NOW [{}] {}              NEXT [{}] {}'
-VIDEO_DISPLAY_BANNER_LIST = [
-    '[', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ']']
-VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
-
-logger = data_centre.setup_logging()
-
+# logger = data_centre.setup_logging()
 tk = Tk()
 # tk.withdraw()
-canvas = Canvas(tk, width=500, height=400, bd=0, highlightthickness=0)
-canvas.pack(fill=BOTH, expand=YES)
+canvas = Frame(tk, width=500, height=400)
+# data = data_centre.data()
 
-wid = canvas.winfo_id()
-os.system('xterm -into %d -geometry 40x20 -sb &' % wid)
 
-data = data_centre.data()
+def key(event):
+    print "pressed", repr(event.char)
 
-try:
-    video_driver = video_centre.video_driver(canvas)
+canvas.bind("<Key>", key)
 
-    while True:
-        tk.update()
-except Exception as e:
-    logger.error(str(e))
+canvas.pack()
+canvas.focus_set()
+tk.mainloop()
+# try:
+# #    video_driver = video_centre.video_driver(canvas)
+#     pass
+
+# except Exception as e:
+#     # logger.error(str(e))

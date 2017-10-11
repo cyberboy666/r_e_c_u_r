@@ -30,7 +30,7 @@ def setup_logging():
 logger = setup_logging()
 
 ######## sets paths and constants ########
-PATH_TO_BROWSER = 'C:\TestFolderStucture' #TODO replace this with pi path name when i know what makes sense
+PATH_TO_BROWSER = 'C:/TestFolderStucture'#get_the_current_dir_path() #TODO replace this with pi path name when i know what makes sense
 PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
 

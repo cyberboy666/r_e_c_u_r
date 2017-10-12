@@ -1,6 +1,8 @@
 import time
+
 try:
     from omxdriver import OMXDriver  # <== for deving only
+
     has_omx = True
 except ImportError:
     has_omx = False
@@ -8,7 +10,9 @@ from Tkinter import Tk, Canvas
 import data_centre
 
 logger = data_centre.setup_logging()
-#layer = 0
+
+
+# layer = 0
 
 
 class video_driver(object):
@@ -27,7 +31,7 @@ class video_driver(object):
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
-        #first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
+        # first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
 
         self.current_player.load_content()
 
@@ -56,14 +60,14 @@ class video_driver(object):
         self.current_player.play_content()
         # self.last_player.exit()
 
-        #next_context = '/home/pi/pp_home/media/samplerloop3s.mp4'
+        # next_context = '/home/pi/pp_home/media/samplerloop3s.mp4'
         self.next_player.load_content()
 
         self.wait_for_next_cycle()
 
     def wait_for_next_cycle(self):
 
-        if(self.current_player.is_finished() or self.manual_next):
+        if (self.current_player.is_finished() or self.manual_next):
             logger.info('{} is finished'.format(self.current_player.name))
             self.manual_next = False
             if self.next_player.is_loaded():
@@ -80,7 +84,7 @@ class video_driver(object):
             self.widget.after(self.delay, self.wait_for_next_cycle)
 
     def wait_for_next_load(self):
-        if(self.next_player.is_loaded()):
+        if (self.next_player.is_loaded()):
             self.switch_players()
             self.play_video()
         else:
@@ -88,8 +92,8 @@ class video_driver(object):
 
     def get_info_for_video_display(self):
         if has_omx:
-            return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number,\
-                self.next_player.status, self.current_player.duration, self.current_player.video_length
+            return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number, \
+                   self.next_player.status, self.current_player.duration, self.current_player.video_length
         else:
             return 0, 'test', 1, 'test', 0, 10
 
@@ -98,10 +102,14 @@ class video_player(object):
     def __init__(self, widget, name):
         self.widget = widget
         self.name = name
+        self.video_name = ''
         self.status = 'UNASSIGNED'
         self.bank_number = '-'
         self.position = 0
-        self.video_length = 10
+        self.start = ''
+        self.end = ''
+        self.length = 10
+        self.location = ''
 
         self.omx = OMXDriver(self.widget, '')
 
@@ -125,22 +133,30 @@ class video_player(object):
 
     def load_content(self):
         self.status = 'LOADING'
-        next_context = data_centre.get_next_context()
+        self.get_context_for_this_player()
         logger.info('{} is loading now {}'.format(
-            self.name, next_context['location']))
+            self.name,self.location ))
         self.omx.load(next_context['location'], 'after-first-frame',
                       '--win 0,0,400,400 --no-osd', '')
 
-    def reload_content(self):
-		self.status = 'RELOADING'
-		if self.is_loaded():
-			self.exit()
-		else:
-			self.widget.after(50,self.reload_content)
-			print("trying to reload")
-		self.load_content()
+    def get_context_for_this_player(self):
+        next_context = data_centre.get_next_context()
+        self.location = next_context['location']
+        self.length = next_context['location']
+        self.start = next_context['start']
+        self.end = next_context['end']
+        self.video_name = next_context['name']
 
-    #layer = layer + 1
+    def reload_content(self):
+        self.status = 'RELOADING'
+        if self.is_loaded():
+            self.exit()
+        else:
+            self.widget.after(50, self.reload_content)
+            print("trying to reload")
+        self.load_content()
+
+    # layer = layer + 1
 
     def set_to_default(self):
         ##not used
@@ -148,7 +164,7 @@ class video_player(object):
         self.omx = OMXDriver(self.widget, '')
 
     def exit(self):
-        if(self.omx.omx_loaded is not None):
+        if (self.omx.omx_loaded is not None):
             logger.info('{} is exiting omx'.format(self.name))
             self.omx.stop()
             self.omx = OMXDriver(self.widget, '')
@@ -156,12 +172,12 @@ class video_player(object):
     def pause_content(self):
         self.status = 'PAUSED'
 
-#tk = Tk()
+# tk = Tk()
 
-#canvas = Canvas(tk,width=500,height=400, bd=0, highlightthickness=0)
+# canvas = Canvas(tk,width=500,height=400, bd=0, highlightthickness=0)
 # canvas.pack()
 
-#driver = video_driver(canvas)
+# driver = video_driver(canvas)
 
 # while True:
 #	tk.update()

@@ -11,10 +11,16 @@ import data_centre
 
 # logger = data_centre.setup_logging()
 tk = Tk()
+
+label1Text = StringVar()
+label1Text.set('blah')
 # tk.withdraw()
-canvas = Frame(tk, width=500, height=400)
+frame = Frame(tk, width=500, height=400)
 # data = data_centre.data()
-video_driver = video_centre.video_driver(canvas)
+label = Label(tk, textvariable=label1Text)
+video_driver = video_centre.video_driver(frame)
+
+label.pack()
 
 def key(event):
     print "pressed", repr(event.char)
@@ -24,13 +30,16 @@ def key(event):
         data_centre.update_next_bank_number(int(event.char))
         video_driver.next_player.reload_content()
 
-canvas.bind("<Key>", key)
+def update_current_time():
+    label1Text.set(video_driver.current_player.omx.get_position())
+    tk.after(500, update_current_time)
 
-canvas.pack()
-canvas.focus_set()
+frame.bind("<Key>", key)
 
+frame.pack()
+frame.focus_set()
 
-
+tk.after(500, update_current_time)
 tk.mainloop()
 # try:
 # #    video_driver = video_centre.video_driver(canvas)

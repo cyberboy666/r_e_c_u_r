@@ -31,10 +31,12 @@ def key(event):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))
         #video_driver.next_player.reload_content()
+    elif(event.char in ['\r']):
+        video_driver.manual_next = True
 
 def update_current_time():
     label_position_value.set('Current Position:' + convert_int_to_string_for_display(video_driver.current_player.get_position() / 1000000))
-    label_length_value.set('Video Length: ' + video_driver.current_player.length)
+    label_length_value.set('Video Length: {}'.format(video_driver.current_player.length))
     tk.after(500, update_current_time)
 
 frame.bind("<Key>", key)

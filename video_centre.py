@@ -29,7 +29,6 @@ class video_driver(object):
         # TODO: the first clip will be a demo
         #first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
 
-        print(first_context['location'])
         self.current_player.load_content()
 
         self.wait_for_first_load()

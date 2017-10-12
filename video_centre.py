@@ -93,7 +93,7 @@ class video_driver(object):
     def get_info_for_video_display(self):
         if has_omx:
             return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number, \
-                   self.next_player.status, self.current_player.position, self.current_player.length
+                self.next_player.status, self.current_player.get_position(), self.current_player.length
         else:
             return 0, 'test', 1, 'test', 0, 10
 
@@ -146,6 +146,7 @@ class video_player(object):
         self.start = next_context['start']
         self.end = next_context['end']
         self.video_name = next_context['name']
+        self.bank_number = next_context['bank_number']
 
     def reload_content(self):
         self.status = 'RELOADING'

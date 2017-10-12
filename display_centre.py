@@ -168,9 +168,14 @@ load_display(display)
 
 select_current_browser_index()
 
-
 def key(event):
-    if(event.char in ['0', '1', '2']):
+    print event.char
+    if(event.char == '/'):
+        print 'it\'s cleared!'
+        data_centre.clear_all_banks()
+        refresh_display()
+    
+    if(event.char in ['0', '1', '2','3','4','5','6','7']):
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
     elif(event.char in ['\r']):
@@ -215,6 +220,7 @@ frame.bind("<Key>", key)
 frame.bind("<Up>", up_key)
 frame.bind("<Down>", down_key)
 frame.bind("<BackSpace>", backspace_key)
+
 
 frame.pack()
 frame.focus_set()

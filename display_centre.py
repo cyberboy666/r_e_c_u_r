@@ -139,8 +139,9 @@ def move_browser_selection_up():
     global browser_index
     global browser_start_index
     if browser_index == 0:
-        browser_start_index = browser_start_index - 1
-        refresh_display()
+        if(browser_start_index > 0):
+            browser_start_index = browser_start_index - 1
+            refresh_display()
         return
     display.tag_remove("SELECT", ROW_OFFSET + browser_index,
                        ROW_OFFSET + SELECTOR_WIDTH + browser_index)
@@ -157,8 +158,9 @@ def move_browser_selection_down():
     last_index = len(data_object.get_browser_data_for_display()) - 1
     if browser_index >= last_index:
         return
-    
-    if browser_index >= MAX_LINES -1:
+    if browser_index + browser_start_index >= last_index:
+        return
+    if browser_index >= MAX_LINES - 1:
         browser_start_index = browser_start_index + 1
         refresh_display()
         return

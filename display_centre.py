@@ -20,7 +20,7 @@ def key(event):
     print "pressed", repr(event.char)
     if(event.char in ['0','1','2'] ):
         print 'updating next bank'
-        data_centre.update_next_bank_number(event.char)
+        data_centre.update_next_bank_number(int(event.char))
 
 canvas.bind("<Key>", key)
 

@@ -69,6 +69,8 @@ def load_display(display):
 
 def load_title(display):
     display.insert(END, '======== r_e_c_u_r ======== \n')
+    display.tag_add("TITLE", 1.9, 1.18)
+
 
 
 def load_divider(display):
@@ -77,8 +79,13 @@ def load_divider(display):
 
 def load_player(display):
     text, banner = get_text_for_video_display()
+    end_of_text = float("3." + str(len(text)))
+    end_of_banner = float("3." + str(len(banner)))
     display.insert(END, text + '\n')
+    display.tag_add("PLAYER_INFO", 3.0, end_of_text)
     display.insert(END, banner + '\n')
+    display.tag_add("PLAYER_INFO", 4.0, end_of_banner)
+
 
 
 def load_looper(display):
@@ -181,9 +188,10 @@ def refresh_display():
     if display_mode == "BROWSER":
         select_current_browser_index()
 
-display = Text(tk)
-
-display.tag_configure("SELECT", background="black", foreground="white")
+display = Text(tk, bg="black", fg="white")
+display.tag_configure("SELECT", background="white", foreground="black")
+display.tag_configure("TITLE", background="black", foreground="red")
+display.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
 
 load_display(display)
 

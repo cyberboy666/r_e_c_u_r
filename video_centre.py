@@ -27,11 +27,10 @@ class video_driver(object):
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
-        first_context = data_centre.get_next_context()
         #first_context = '/home/pi/pp_home/media/01_trashpalaceintro.mp4'
-        logger.info(first_context['location'])
+
         print(first_context['location'])
-        self.current_player.load_content(first_context['location'])
+        self.current_player.load_content()
 
         self.wait_for_first_load()
 
@@ -58,9 +57,8 @@ class video_driver(object):
         self.current_player.play_content()
         # self.last_player.exit()
 
-        next_context = data_centre.get_next_context()
         #next_context = '/home/pi/pp_home/media/samplerloop3s.mp4'
-        self.next_player.load_content(next_context['location'])
+        self.next_player.load_content()
 
         self.wait_for_next_cycle()
 
@@ -124,15 +122,22 @@ class video_player(object):
         self.omx.pause_before_play_required = 'no'
         self.omx.show(True, 0)
 
-    def load_content(self, context):
+    def load_content(self):
         self.status = 'LOADING'
-        logger.info('{} is loading now {}'.format(self.name, context))
-        self.omx.load(context, 'after-first-frame',
+        next_context = data_centre.get_next_context()
+        logger.info('{} is loading now {}'.format(self.name, next_context['location']))
+        self.omx.load(next_context['location'], 'after-first-frame',
                       '--win 0,0,400,400 --no-osd', '')
+
+    def reload_content(self):
+        self.exit()
+        self.load_content()
+
 
     #layer = layer + 1
 
     def set_to_default(self):
+        ##not used
         self.omx.kill()
         self.omx = OMXDriver(self.widget, '')
 

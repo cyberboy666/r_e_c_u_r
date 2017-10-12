@@ -251,7 +251,7 @@ def get_next_context():
 
     set_next_bank_number_from_playback_mode(playback_mode, next_bank_number)
 
-    context = dict(location=next_bank_details['location'],start=start_value,end=end_value, bank_number=next_bank_number)
+    context = dict(location=next_bank_details['location'],name=next_bank_details['name'],start=start_value,end=end_value, bank_number=next_bank_number)
     return context
 
 def get_context_options_from_settings():

@@ -143,11 +143,9 @@ def move_browser_selection_up():
             browser_start_index = browser_start_index - 1
             refresh_display()
         return
-    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
-                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    deselect_current_browser_index()
     browser_index = browser_index - 1
-    display.tag_add("SELECT", ROW_OFFSET + browser_index,
-                    ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    select_current_browser_index()
 
 
 def move_browser_selection_down():
@@ -164,22 +162,24 @@ def move_browser_selection_down():
         browser_start_index = browser_start_index + 1
         refresh_display()
         return
-    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
-                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    deselect_current_browser_index()
     browser_index = browser_index + 1
-    display.tag_add("SELECT", ROW_OFFSET + browser_index,
-                    ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    select_current_browser_index()
 
 
 def select_current_browser_index():
     display.tag_add("SELECT", ROW_OFFSET + browser_index,
                     ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
+def deselect_current_browser_index():
+    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
+                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
 def refresh_display():
     display.delete(1.0, END)
     load_display(display)
-    select_current_browser_index()
+    if display_mode == "BROWSER":
+        select_current_browser_index()
 
 display = Text(tk)
 
@@ -222,6 +222,13 @@ def down_key(event):
         print "values at end of down:"
         print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
+def num_lock_key(event):
+    global display_mode
+    if display_mode == "BROWSER":
+        display_mode = "LOOPER"
+    else:
+        display_mode = "BROWSER"
+    refresh_display()
 
 def backspace_key(event):
     global browser_index
@@ -252,6 +259,7 @@ frame.bind("<Key>", key)
 frame.bind("<Up>", up_key)
 frame.bind("<Down>", down_key)
 frame.bind("<BackSpace>", backspace_key)
+frame.bind("<Num_Lock>", num_lock_key)
 
 
 frame.pack()

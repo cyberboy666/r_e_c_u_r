@@ -18,10 +18,11 @@ video_driver = video_centre.video_driver(canvas)
 
 def key(event):
     print "pressed", repr(event.char)
+    print "video position is :{}".format(video_driver.current_player.get_position())
     if(event.char in ['0','1','2'] ):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))
-        video_driver.next_player.load_content()
+        video_driver.next_player.reload_content()
 
 canvas.bind("<Key>", key)
 

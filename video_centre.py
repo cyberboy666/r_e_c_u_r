@@ -129,8 +129,13 @@ class video_player(object):
                       '--win 0,0,400,400 --no-osd', '')
 
     def reload_content(self):
-        self.exit()
-        self.load_content()
+		self.status = 'RELOADING'
+		if self.is_loaded():
+			self.exit()
+		else:
+			self.widget.after(50,self.reload_content)
+			print("trying to reload")
+		self.load_content()
 
     #layer = layer + 1
 

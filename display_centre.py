@@ -25,11 +25,11 @@ label.pack()
 
 def key(event):
     print "pressed", repr(event.char)
-    if(event.char in ['0', '1', '2']):
+    print "video position is :{}".format(video_driver.current_player.get_position())
+    if(event.char in ['0','1','2'] ):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))
-        # This doesn't work, something to fix later
-        # video_driver.next_player.load_content()
+        video_driver.next_player.reload_content()
 
 def update_current_time():
     label1Text.set(convert_int_to_string_for_display(video_driver.current_player.omx.get_position() / 1000))

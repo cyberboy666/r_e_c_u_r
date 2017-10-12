@@ -29,10 +29,10 @@ def key(event):
     if(event.char in ['0','1','2'] ):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))
-        video_driver.next_player.reload_content()
+        #video_driver.next_player.reload_content()
 
 def update_current_time():
-    label1Text.set(convert_int_to_string_for_display(video_driver.current_player.omx.get_position() / 1000))
+    label1Text.set(convert_int_to_string_for_display(video_driver.current_player.get_position() / 1000000))
     tk.after(500, update_current_time)
 
 frame.bind("<Key>", key)

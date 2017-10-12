@@ -112,7 +112,10 @@ class video_player(object):
         return self.omx.end_play_signal
 
     def get_position(self):
-        return self.omx.video_position
+        if self.is_loaded():
+            return self.omx.video_position
+        else:
+            return 0
 
     def play_content(self):
         self.status = 'PLAYING'

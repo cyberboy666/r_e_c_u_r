@@ -287,6 +287,9 @@ def set_next_bank_number_from_playback_mode(playback_mode, current_bank_number):
         next_bank_number = current_bank_number
     update_json('next_bank_number.json',next_bank_number)
 
+def update_next_bank_number(new_value):
+    update_json(NEXT_BANK_JSON, new_value)
+
 ####<<<< generic methods for all tabs >>>>#####
 
 def read_json(file_name):

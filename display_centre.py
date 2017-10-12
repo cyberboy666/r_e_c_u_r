@@ -138,6 +138,8 @@ def load_browser(self):
 def move_browser_selection_up():
     global browser_index
     global browser_start_index
+    if browser_start_index == 0:
+        return
     if browser_index == 0:
         browser_start_index = browser_start_index - 1
         refresh_display()

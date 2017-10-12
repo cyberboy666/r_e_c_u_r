@@ -28,7 +28,7 @@ bank_info = data_centre.get_all_looper_data_for_display()
 t = Text(tk)
 for x in bank_info:
    for y in x:
-       t.insert(END, y + ' ')
+       t.insert(END, str(y) + ' ')
    t.insert(END, '\n')
 t.pack()
 

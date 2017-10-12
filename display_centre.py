@@ -24,6 +24,14 @@ video_driver = video_centre.video_driver(frame)
 label_length.pack()
 label_position.pack()
 
+bank_info = data_centre.get_all_looper_data_for_display()
+t = Text(tk)
+for x in bank_info:
+   for y in x:
+       t.insert(END, y + ' ')
+   t.insert(END, '\n')
+t.pack()
+
 def key(event):
     print "pressed", repr(event.char)
     print "video position is :{}".format(video_driver.current_player.get_position())
@@ -33,6 +41,7 @@ def key(event):
         #video_driver.next_player.reload_content()
     elif(event.char in ['\r']):
         video_driver.manual_next = True
+
 
 def update_current_time():
     label_position_value.set('Current Position:' + convert_int_to_string_for_display(video_driver.current_player.get_position() / 1000000))

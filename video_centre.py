@@ -124,14 +124,14 @@ class video_player(object):
     def load_content(self):
         self.status = 'LOADING'
         next_context = data_centre.get_next_context()
-        logger.info('{} is loading now {}'.format(self.name, next_context['location']))
+        logger.info('{} is loading now {}'.format(
+            self.name, next_context['location']))
         self.omx.load(next_context['location'], 'after-first-frame',
                       '--win 0,0,400,400 --no-osd', '')
 
     def reload_content(self):
         self.exit()
         self.load_content()
-
 
     #layer = layer + 1
 

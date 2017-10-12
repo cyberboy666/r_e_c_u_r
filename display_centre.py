@@ -199,6 +199,9 @@ def key(event):
         # video_driver.next_player.reload_content()
     elif event.char in ['\r']:
         video_driver.manual_next = True
+    elif(event.char in ['.']):
+        # code for killswitch
+        sys.exit()
 
 
 def up_key(event):

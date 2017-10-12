@@ -34,6 +34,7 @@ def key(event):
 
 def update_current_time():
     label_position_value.set('Current Position:' + convert_int_to_string_for_display(video_driver.current_player.get_position() / 1000000))
+    label_length_value.set('Video Length: ' + video_driver.current_player.length)
     tk.after(500, update_current_time)
 
 frame.bind("<Key>", key)

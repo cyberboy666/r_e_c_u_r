@@ -142,7 +142,7 @@ class video_player(object):
     def get_context_for_this_player(self):
         next_context = data_centre.get_next_context()
         self.location = next_context['location']
-        self.length = next_context['location']
+        self.length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
         self.video_name = next_context['name']

@@ -101,7 +101,7 @@ class video_player(object):
         self.name = name
         self.status = 'UNASSIGNED'
         self.bank_number = '-'
-        self.duration = 0
+        self.position = 0
         self.video_length = 10
 
         self.omx = OMXDriver(self.widget, '')
@@ -112,9 +112,8 @@ class video_player(object):
     def is_finished(self):
         return self.omx.end_play_signal
 
-    def get_fake_duration(self):
-        self.duration = self.duration + 1
-        return self.duration
+    def get_position(self):
+        return self.omx.video_position
 
     def play_content(self):
         self.status = 'PLAYING'

@@ -14,7 +14,10 @@ import data_centre
 VIDEO_DISPLAY_TEXT = 'NOW [{}] {}              NEXT [{}] {}'
 VIDEO_DISPLAY_BANNER_LIST = ['[','-','-','-','-','-','-','-','-','-','-',']']
 VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
+SELECTOR_WIDTH = 0.35
+ROW_OFFSET = 8.0
 
+browser_index = 0
 
 tk = Tk()
 
@@ -106,17 +109,39 @@ def load_browser(self):
     for path in browser_info:
         display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
 
+def move_browser_selection_up():
+    global browser_index
+    print "Index at start: " + str(browser_index)
+    if browser_index == 0:
+        return
+    display.tag_remove("SELECT", ROW_OFFSET + browser_index, ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    browser_index = browser_index - 1
+    display.tag_add("SELECT", ROW_OFFSET + browser_index, ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    print "Index at end: " + str(browser_index)
+
+def move_browser_selection_down():
+    global browser_index
+    data_object = data_centre.data()
+    browser_info = data_object.get_browser_data_for_display()
+    last_index = len(data_object.get_browser_data_for_display()) -1
+    print "Index at start: " + str(browser_index)
+    if(browser_index == last_index):
+        return
+    display.tag_remove("SELECT", ROW_OFFSET + browser_index, ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    browser_index = browser_index + 1
+    display.tag_add("SELECT", ROW_OFFSET + browser_index, ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    print "Index at end: " + str(browser_index)
+
 display = Text(tk)
 
-display.tag_configure("BOLD", background="black", foreground="white")
+display.tag_configure("SELECT", background="black", foreground="white")
 
 load_display(display)
 
-display.tag_add("BOLD", 8.0, 8.35)
+display.tag_add("SELECT", ROW_OFFSET + browser_index, ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
 def key(event):
     print "pressed", repr(event.char)
-    print sel.first
     if(event.char in ['0', '1', '2']):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))
@@ -124,6 +149,15 @@ def key(event):
     elif(event.char in ['\r']):
         video_driver.manual_next = True
 
+def up_key(event):
+    print "pressed up"
+    if display_mode == "BROWSER":
+        move_browser_selection_up()
+
+def down_key(event):
+    print "pressed down"
+    if display_mode == "BROWSER":
+        move_browser_selection_down()
 
 def update_current_time():
     label_position_value.set('Current Position:' + convert_int_to_string_for_display(video_driver.current_player.get_position() / 1000000))
@@ -131,6 +165,8 @@ def update_current_time():
     tk.after(500, update_current_time)
 
 frame.bind("<Key>", key)
+frame.bind("<Up>", up_key)
+frame.bind("<Down>", down_key)
 
 frame.pack()
 frame.focus_set()

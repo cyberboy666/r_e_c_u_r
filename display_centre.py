@@ -17,6 +17,8 @@ VIDEO_DISPLAY_BANNER_LIST = [
 VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
 SELECTOR_WIDTH = 0.35
 ROW_OFFSET = 8.0
+MAX_LINES = 5
+browser_start_index = 0
 
 browser_index = 0
 
@@ -118,16 +120,27 @@ def create_video_display_banner(duration, video_length):
 
 def load_browser(self):
     global data_object
+    global browser_start_index
+    line_count = 0
     browser_info = data_object.get_browser_data_for_display()
     display.insert(END, '------ <BROWSER> ------ \n')
     display.insert(END, '{:50} {:20} \n'.format('path', 'bank'))
-    for path in browser_info:
-        display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
 
+    for index in range(len(browser_info)):
+        if line_count >= MAX_LINES:
+            break
+        if index >= browser_start_index:
+            path = browser_info[index]
+            display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
+            line_count = line_count + 1
 
+    
 def move_browser_selection_up():
     global browser_index
+    global browser_start_index
     if browser_index == 0:
+        browser_start_index = browser_start_index - 1
+        refresh_display()
         return
     display.tag_remove("SELECT", ROW_OFFSET + browser_index,
                        ROW_OFFSET + SELECTOR_WIDTH + browser_index)
@@ -139,9 +152,15 @@ def move_browser_selection_up():
 def move_browser_selection_down():
     global browser_index
     global data_object
+    global browser_start_index
     browser_info = data_object.get_browser_data_for_display()
     last_index = len(data_object.get_browser_data_for_display()) - 1
-    if(browser_index == last_index):
+    if browser_index >= last_index:
+        return
+    
+    if browser_index >= MAX_LINES -1:
+        browser_start_index = browser_start_index + 1
+        refresh_display()
         return
     display.tag_remove("SELECT", ROW_OFFSET + browser_index,
                        ROW_OFFSET + SELECTOR_WIDTH + browser_index)
@@ -170,35 +189,43 @@ select_current_browser_index()
 
 def key(event):
     print event.char
-    if(event.char == '/'):
+    if event.char == '/':
         print 'it\'s cleared!'
         data_centre.clear_all_banks()
         refresh_display()
-    
-    if(event.char in ['0', '1', '2','3','4','5','6','7']):
+
+    if event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
-    elif(event.char in ['\r']):
+    elif event.char in ['\r']:
         video_driver.manual_next = True
 
 
 def up_key(event):
     if display_mode == "BROWSER":
         move_browser_selection_up()
-
+        global browser_index
+        global browser_start_index
+        print "values at end of up:"
+        print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
 def down_key(event):
     if display_mode == "BROWSER":
         move_browser_selection_down()
+        global browser_index
+        global browser_start_index
+        print "values at end of down:"
+        print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
 
 def backspace_key(event):
     global browser_index
     global data_object
+    global browser_start_index
     browser_list = data_object.get_browser_data_for_display()
     if display_mode == "BROWSER":
         is_file, name = data_centre.extract_file_type_and_name_from_browser_format(
-            browser_list[browser_index][0])
+            browser_list[browser_index + browser_start_index][0])
         if is_file:
             data_centre.create_new_bank_mapping_in_first_open(name)
             data_object.rewrite_browser_list()

@@ -4,7 +4,7 @@ import os
 import sys
 import time
 import traceback
-import data_centre
+from data_centre import *
 from Tkinter import *
 
 import video_centre
@@ -32,7 +32,7 @@ def key(event):
         # video_driver.next_player.load_content()
 
 def update_current_time():
-    label1Text.set(data_center.convert_int_to_string_for_display(video_driver.current_player.omx.get_position() / 1000))
+    label1Text.set(convert_int_to_string_for_display(video_driver.current_player.omx.get_position() / 1000))
     tk.after(500, update_current_time)
 
 frame.bind("<Key>", key)

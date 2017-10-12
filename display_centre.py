@@ -6,11 +6,21 @@ import time
 import traceback
 from data_centre import *
 from Tkinter import *
+import tkFont
 
 import video_centre
 import data_centre
 
+VIDEO_DISPLAY_TEXT = 'NOW [{}] {}              NEXT [{}] {}'
+VIDEO_DISPLAY_BANNER_LIST = ['[','-','-','-','-','-','-','-','-','-','-',']']
+VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
+
+
 tk = Tk()
+
+#from tkinter.font import Font
+
+bold_font = tkFont.Font( size=12, weight="bold")
 
 label_position_value = StringVar()
 label_position_value.set('Current Position: --:--')
@@ -24,17 +34,89 @@ video_driver = video_centre.video_driver(frame)
 label_length.pack()
 label_position.pack()
 
+
 bank_info = data_centre.get_all_looper_data_for_display()
-t = Text(tk)
-for x in bank_info:
-   for y in x:
-       t.insert(END, y + ' ')
-   t.insert(END, '\n')
-t.pack()
+
+#terminal_font = Font(family="Terminal", size=12)
+#terminal_font_bold = Font(family="Terminal", size=12, weight='bold')
+#titles.configure(font=terminal_font_bold)
+display_mode = 'BROWSER'
+
+def load_display(display):
+    load_title(display)
+    load_divider(display)
+    load_player(display)
+    load_divider(display)
+    if display_mode == 'BROWSER':
+        load_browser(display)
+    elif display_mode == 'SETTINGS':
+        load_settings(display)
+    else:
+        load_looper(display)
+    load_divider(display)
+
+    display.pack()
+
+
+def load_title(display):
+    display.insert(END,'======== r_e_c_u_r ======== \n')
+
+def load_divider(display):
+    display.insert(END, '---------------- \n')
+
+def load_player(display):
+    text, banner = get_text_for_video_display()
+    display.insert(END, text + '\n')
+    display.insert(END, banner + '\n')
+
+def load_looper(display):
+    bank_info = data_centre.get_all_looper_data_for_display()
+    display.insert(END, '------ <LOOPER> ------ \n')
+    display.insert(END, '{:>10} {:>20} {:>10} {:>10} {:>10} \n'.format('bank no', 'name', 'length', 'start', 'end'))
+    for bank in bank_info:
+        display.insert(END, '{:>10} {:>20} {:>10} {:>10} {:>10} \n'.format(bank[0], bank[1], bank[2], bank[3], bank[4]))
+
+def get_text_for_video_display():
+    now_bank, now_status, next_bank, next_status, duration, video_length = video_driver.get_info_for_video_display()
+    banner = create_video_display_banner(duration, video_length)
+    time_been = data_centre.convert_int_to_string_for_display(duration)
+    time_left = data_centre.convert_int_to_string_for_display(video_length - duration)
+
+    return VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left),\
+           VIDEO_DISPLAY_TEXT.format(now_bank,now_status,next_bank, next_status)
+
+def create_video_display_banner(duration,video_length):
+    banner_list = ['[','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-',']']
+    max = len(banner_list) - 1
+    if duration <= 0:
+        banner_list[0] = '<'
+    elif duration >= video_length:
+        banner_list[max] = '>'
+    else:
+        marker = int(math.floor(float(duration)/float(video_length)*(max-1))+1)
+        banner_list[marker] = '*'
+
+    return ''.join(banner_list)
+
+def load_browser(self):
+    data_object = data_centre.data()
+    browser_info = data_object.get_browser_data_for_display()
+    display.insert(END, '------ <BROWSER> ------ \n')
+    display.insert(END, '{:50} {:20} \n'.format('path', 'bank'))
+    for path in browser_info:
+        display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
+
+display = Text(tk)
+
+display.tag_configure("BOLD", background="black", foreground="white")
+
+load_display(display)
+
+display.tag_add("BOLD", 8.0, 8.35)
 
 def key(event):
     print "pressed", repr(event.char)
-    print "video position is :{}".format(video_driver.current_player.get_position())
+    print sel.first
     if(event.char in ['0', '1', '2']):
         print 'updating next bank'
         data_centre.update_next_bank_number(int(event.char))

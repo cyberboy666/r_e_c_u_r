@@ -52,7 +52,7 @@ class data(object):
 
         browser_list_for_display = []
         for index , dir in enumerate(self._browser_list):
-            browser_list_for_display.append(([dir['name'],dir['bank']],index))
+            browser_list_for_display.append([dir['name'],dir['bank']])
         #logger.info(browser_list_for_display)
         return browser_list_for_display
 
@@ -177,7 +177,7 @@ def get_all_looper_data_for_display():
         length = convert_int_to_string_for_display(bank["length"])
         start = convert_int_to_string_for_display(bank["start"])
         end = convert_int_to_string_for_display(bank["end"])
-        loop_data.append(([str(index),bank["name"],length,start,end],index))
+        loop_data.append([str(index), bank["name"], length, start, end])
 
     return loop_data
 

@@ -97,6 +97,11 @@ class video_driver(object):
         else:
             return 0, 'test', 1, 'test', 0, 10
 
+    def exit_all_players(self):
+        self.last_player.exit()
+        self.next_player.exit()
+        self.current_player.exit()
+
 
 class video_player(object):
     def __init__(self, widget, name):

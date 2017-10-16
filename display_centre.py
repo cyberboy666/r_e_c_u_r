@@ -99,7 +99,6 @@ def load_looper(display):
 
 def get_text_for_video_display():
     now_bank, now_status, next_bank, next_status, duration, video_length = video_driver.get_info_for_video_display()
-    print 'just got info for display! the current time is {}'.format(duration)
     banner = create_video_display_banner(duration, video_length)
     time_been = data_centre.convert_int_to_string_for_display(duration)
     time_left = data_centre.convert_int_to_string_for_display(
@@ -202,6 +201,11 @@ def key(event):
         data_centre.clear_all_banks()
         refresh_display()
 
+    if event.char == '.':
+        if video_centre.has_omx:
+            video_driver.exit_all_players()
+        tk.destroy()
+
     if event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
@@ -217,16 +221,12 @@ def up_key(event):
         move_browser_selection_up()
         global browser_index
         global browser_start_index
-        print "values at end of up:"
-        print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
 def down_key(event):
     if display_mode == "BROWSER":
         move_browser_selection_down()
         global browser_index
         global browser_start_index
-        print "values at end of down:"
-        print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
 def num_lock_key(event):
     global display_mode

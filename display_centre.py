@@ -22,11 +22,8 @@ browser_start_index = 0
 
 browser_index = 0
 
+
 tk = Tk()
-
-# from tkinter.font import Font
-
-bold_font = tkFont.Font(size=12, weight="bold")
 
 label_position_value = StringVar()
 label_position_value.set('Current Position: --:--')
@@ -42,6 +39,8 @@ label_position.pack()
 
 # our data store
 data_object = data_centre.data()
+
+browser_list = data_object.get_browser_data_for_display()
 
 bank_info = data_centre.get_all_looper_data_for_display()
 
@@ -128,16 +127,16 @@ def create_video_display_banner(duration, video_length):
 def load_browser(self):
     global data_object
     global browser_start_index
+    global browser_list
     line_count = 0
-    browser_info = data_object.get_browser_data_for_display()
     display.insert(END, '------ <BROWSER> ------ \n')
     display.insert(END, '{:50} {:20} \n'.format('path', 'bank'))
 
-    for index in range(len(browser_info)):
+    for index in range(len(browser_list)):
         if line_count >= MAX_LINES:
             break
         if index >= browser_start_index:
-            path = browser_info[index]
+            path = browser_list[index]
             display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
             line_count = line_count + 1
 
@@ -145,8 +144,6 @@ def load_browser(self):
 def move_browser_selection_up():
     global browser_index
     global browser_start_index
-    if browser_start_index == 0:
-        return
     if browser_index == 0:
         if(browser_start_index > 0):
             browser_start_index = browser_start_index - 1
@@ -161,10 +158,8 @@ def move_browser_selection_down():
     global browser_index
     global data_object
     global browser_start_index
-    browser_info = data_object.get_browser_data_for_display()
-    last_index = len(data_object.get_browser_data_for_display()) - 1
-    if browser_index >= last_index:
-        return
+    global browser_list
+    last_index = len(browser_list) - 1
     if browser_index + browser_start_index >= last_index:
         return
     if browser_index >= MAX_LINES - 1:
@@ -244,25 +239,22 @@ def backspace_key(event):
     global browser_index
     global data_object
     global browser_start_index
-    browser_list = data_object.get_browser_data_for_display()
+    global browser_list
     if display_mode == "BROWSER":
         is_file, name = data_centre.extract_file_type_and_name_from_browser_format(
             browser_list[browser_index + browser_start_index][0])
         if is_file:
             data_centre.create_new_bank_mapping_in_first_open(name)
-            data_object.rewrite_browser_list()
         else:
             data_object.update_open_folders(name)
-            data_object.rewrite_browser_list()
+        data_object.rewrite_browser_list()
+        browser_list = data_object.get_browser_data_for_display()
         refresh_display()
 
 
-def update_current_time():
-    label_position_value.set('Current Position:' + convert_int_to_string_for_display(
-        video_driver.current_player.get_position() / 1000000))
-    label_length_value.set('Video Length: {}'.format(
-        video_driver.current_player.length))
-    tk.after(500, update_current_time)
+def update_screen():
+    refresh_display()
+    tk.after(1000, update_screen)
 
 
 frame.bind("<Key>", key)
@@ -275,6 +267,5 @@ frame.bind("<Num_Lock>", num_lock_key)
 frame.pack()
 frame.focus_set()
 
-tk.after(500, update_current_time)
-tk.after(1000, refresh_display)
+tk.after(1000, update_screen)
 tk.mainloop()

@@ -70,7 +70,7 @@ class data(object):
         self._browser_list = generate_browser_list(PATH_TO_BROWSER, 0, self._open_folders)
 
     def get_browser_data_for_display(self):
-        ######## map the browser_list to format for displaying in asciimatics ########
+        ######## map the browser_list to format for displaying ########
         if not self._browser_list:
             self.rewrite_browser_list()
 
@@ -162,11 +162,12 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
     ######## used for mapping current video to a specific bank ########
     has_location , location = get_path_for_file(file_name)
     length = get_length_for_file(location)
-    new_bank = dict(name=file_name, location=location, length=-1, start=-1, end=-1)
+    new_bank = dict(name=file_name, location=location, length=length, start=-1, end=-1)
     update_a_banks_data(bank_number, new_bank, memory_bank)
 
 def get_length_for_file(location):
-    return FFProbe(location).streams[0].duration
+    video_length = FFProbe(location).streams[0].duration
+    return int(round(float(video_length)))
 
 def get_path_for_file(file_name):
     ######## returns full path for a given file name ########
@@ -174,8 +175,7 @@ def get_path_for_file(file_name):
         if file_name in files:
             print root
             return True, '{}/{}'.format(root,file_name)
-        else:
-            return False, ''
+    return False, ''
 
 def update_a_banks_data(bank_number, bank_info, memory_bank=[]):
     ######## overwrite a given banks info with new data ########
@@ -196,6 +196,7 @@ def get_all_looper_data_for_display():
     ######## read bank mappings from data object and format for displaying in asciimatics ########
     memory_bank = read_json(BANK_DATA_JSON)
     loop_data = []
+    print 'getting the loop data'
     for index, bank in enumerate(memory_bank):
         length = convert_int_to_string_for_display(bank["length"])
         start = convert_int_to_string_for_display(bank["start"])

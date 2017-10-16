@@ -11,6 +11,26 @@ NEXT_BANK_JSON = 'next_bank_number.json'
 SETTINGS_JSON = 'settings.json'
 BANK_DATA_JSON = 'display_data.json'
 
+####<<<< generic methods for all tabs >>>>#####
+
+def read_json(file_name):
+    with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:
+        data = json.load(data_file)
+    return data
+
+def update_json(file_name,data):
+    with open('{}{}'.format(PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
+        json.dump(data, data_file)
+
+def convert_int_to_string_for_display(time_in_seconds):
+    if time_in_seconds < 0:
+        return ''
+    elif time_in_seconds >= 6000:
+        return '99:99'
+    else:
+        return time.strftime("%M:%S", time.gmtime(time_in_seconds))
+
+
 ######## define how to get path to current dir and set up logging ########
 def get_the_current_dir_path():
     #TODO: investigate weird path formatting differences
@@ -27,11 +47,14 @@ def setup_logging():
     logger.setLevel(logging.INFO)
     return logger
 
+def get_path_to_browser():
+    return read_json('path_to_browser.json')
+
 logger = setup_logging()
 
 ######## sets paths and constants ########
-PATH_TO_BROWSER = '/media/pi/TIM' #get_the_current_dir_path() #TODO replace this with pi path name when i know what makes sense
 PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
+PATH_TO_BROWSER = get_path_to_browser() #'/media/pi/TIM' #get_the_current_dir_path() #TODO replace this with pi path name when i know what makes sense
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
 
 ####<<<< data methods for browser tab >>>>#####
@@ -290,21 +313,3 @@ def set_next_bank_number_from_playback_mode(playback_mode, current_bank_number):
 def update_next_bank_number(new_value):
     update_json(NEXT_BANK_JSON, new_value)
 
-####<<<< generic methods for all tabs >>>>#####
-
-def read_json(file_name):
-    with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:
-        data = json.load(data_file)
-    return data
-
-def update_json(file_name,data):
-    with open('{}{}'.format(PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
-        json.dump(data, data_file)
-
-def convert_int_to_string_for_display(time_in_seconds):
-    if time_in_seconds < 0:
-        return ''
-    elif time_in_seconds >= 6000:
-        return '99:99'
-    else:
-        return time.strftime("%M:%S", time.gmtime(time_in_seconds))

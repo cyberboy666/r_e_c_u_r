@@ -69,6 +69,8 @@ def load_display(display):
 
 def load_title(display):
     display.insert(END, '======== r_e_c_u_r ======== \n')
+    display.tag_add("TITLE", 1.9, 1.18)
+
 
 
 def load_divider(display):
@@ -77,8 +79,13 @@ def load_divider(display):
 
 def load_player(display):
     text, banner = get_text_for_video_display()
+    end_of_text = float("3." + str(len(text)))
+    end_of_banner = float("3." + str(len(banner)))
     display.insert(END, text + '\n')
+    display.tag_add("PLAYER_INFO", 3.0, end_of_text)
     display.insert(END, banner + '\n')
+    display.tag_add("PLAYER_INFO", 4.0, end_of_banner)
+
 
 
 def load_looper(display):
@@ -141,14 +148,13 @@ def move_browser_selection_up():
     if browser_start_index == 0:
         return
     if browser_index == 0:
-        browser_start_index = browser_start_index - 1
-        refresh_display()
+        if(browser_start_index > 0):
+            browser_start_index = browser_start_index - 1
+            refresh_display()
         return
-    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
-                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    deselect_current_browser_index()
     browser_index = browser_index - 1
-    display.tag_add("SELECT", ROW_OFFSET + browser_index,
-                    ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    select_current_browser_index()
 
 
 def move_browser_selection_down():
@@ -159,31 +165,35 @@ def move_browser_selection_down():
     last_index = len(data_object.get_browser_data_for_display()) - 1
     if browser_index >= last_index:
         return
-    
-    if browser_index >= MAX_LINES -1:
+    if browser_index + browser_start_index >= last_index:
+        return
+    if browser_index >= MAX_LINES - 1:
         browser_start_index = browser_start_index + 1
         refresh_display()
         return
-    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
-                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    deselect_current_browser_index()
     browser_index = browser_index + 1
-    display.tag_add("SELECT", ROW_OFFSET + browser_index,
-                    ROW_OFFSET + SELECTOR_WIDTH + browser_index)
+    select_current_browser_index()
 
 
 def select_current_browser_index():
     display.tag_add("SELECT", ROW_OFFSET + browser_index,
                     ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
+def deselect_current_browser_index():
+    display.tag_remove("SELECT", ROW_OFFSET + browser_index,
+                       ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
 def refresh_display():
     display.delete(1.0, END)
     load_display(display)
-    select_current_browser_index()
+    if display_mode == "BROWSER":
+        select_current_browser_index()
 
-display = Text(tk)
-
-display.tag_configure("SELECT", background="black", foreground="white")
+display = Text(tk, bg="black", fg="white")
+display.tag_configure("SELECT", background="white", foreground="black")
+display.tag_configure("TITLE", background="black", foreground="red")
+display.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
 
 load_display(display)
 
@@ -222,6 +232,13 @@ def down_key(event):
         print "values at end of down:"
         print "browser index: {} browerser_start_index {}".format(browser_index, browser_start_index)
 
+def num_lock_key(event):
+    global display_mode
+    if display_mode == "BROWSER":
+        display_mode = "LOOPER"
+    else:
+        display_mode = "BROWSER"
+    refresh_display()
 
 def backspace_key(event):
     global browser_index
@@ -252,6 +269,7 @@ frame.bind("<Key>", key)
 frame.bind("<Up>", up_key)
 frame.bind("<Down>", down_key)
 frame.bind("<BackSpace>", backspace_key)
+frame.bind("<Num_Lock>", num_lock_key)
 
 
 frame.pack()

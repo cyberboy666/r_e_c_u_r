@@ -5,6 +5,7 @@ import os
 from random import randint
 import time
 import inspect
+from ffprobe import FFProbe
 
 ######## sets names for the persistant data objects ########
 NEXT_BANK_JSON = 'next_bank_number.json'
@@ -165,8 +166,7 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
     update_a_banks_data(bank_number, new_bank, memory_bank)
 
 def get_length_for_file(location):
-    #TODO: will have omx.player get length of file probs..
-    pass
+    return FFProbe(location).streams[0].duration
 
 def get_path_for_file(file_name):
     ######## returns full path for a given file name ########

@@ -121,7 +121,7 @@ class video_player(object):
 
     def get_position(self):
         if self.is_loaded():
-            return self.omx.video_position
+            return self.omx.video_position/1000000
         else:
             return 0
 

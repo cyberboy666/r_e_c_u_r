@@ -99,6 +99,7 @@ def load_looper(display):
 
 def get_text_for_video_display():
     now_bank, now_status, next_bank, next_status, duration, video_length = video_driver.get_info_for_video_display()
+    print 'just got info for display! the current time is {}'.format(duration)
     banner = create_video_display_banner(duration, video_length)
     time_been = data_centre.convert_int_to_string_for_display(duration)
     time_left = data_centre.convert_int_to_string_for_display(

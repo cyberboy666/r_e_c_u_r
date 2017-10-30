@@ -18,3 +18,9 @@ a diy videolooper for py/pi
 (for reading video lengths :) sudo apt-get ffmpeg and pip install ffprobe
 
 note that to set up the file to browser you will have to create a fle called path_to_browser.json and put in it "your/path/to/browser"
+
+##setting up the lcd screen:
+
+download from waveshare and follow instructions: :LCD-show-170703.tar.gz , sudo raspi-config => more options => expand filesysem. boot option => Desktop autologin.
+
+copy driver and run 'tar xvf LCD-show-*.tar.gz', cd LCD-show/ => chmod =x LCD35-show => ./LCD35-show

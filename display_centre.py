@@ -209,21 +209,24 @@ def num_lock_key(event):
 
 def key(event):
     print event.char
+    ## '/' clear all banks
     if event.char == '/':
         print 'it\'s cleared!'
         data_centre.clear_all_banks()
         refresh_display()
-
-    if event.char == '.':
+    ## '.' quits r_e_c_u_r
+    elif event.char == '.':
         if video_centre.has_omx:
             video_driver.exit_all_players()
         tk.destroy()
-
-    if event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
+    ## 'num' sets current selection to bank number num
+    elif event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
+    ## 'enter' sets manual next flag
     elif event.char in ['\r']:
         video_driver.manual_next = True
+    ## 'm' switches display mode
     elif(event.char in ['m']):
         global display_mode
         if display_mode == "BROWSER":
@@ -231,6 +234,9 @@ def key(event):
         else:
             display_mode = "BROWSER"
         refresh_display()
+    ## 'l' pauses/unpauses the video
+    elif(event.char in ['l']):
+        video_driver.current_player.toggle_pause()
 
 
 def up_key(event):

@@ -11,12 +11,11 @@ import tkFont
 import video_centre
 import data_centre
 
-VIDEO_DISPLAY_TEXT = 'NOW [{}] {}              NEXT [{}] {}'
-VIDEO_DISPLAY_BANNER_LIST = [
-    '[', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ']']
+VIDEO_DISPLAY_TEXT = 'NOW [{}] {}     NEXT [{}] {}'
+
 VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
-SELECTOR_WIDTH = 0.35
-ROW_OFFSET = 8.0
+SELECTOR_WIDTH = 0.28
+ROW_OFFSET = 6.0
 MAX_LINES = 5
 browser_start_index = 0
 
@@ -25,17 +24,11 @@ browser_index = 0
 
 tk = Tk()
 
-label_position_value = StringVar()
-label_position_value.set('Current Position: --:--')
-label_length_value = StringVar()
-label_length_value.set('Video Length: --:--')
 
 frame = Frame(tk, width=500, height=400)
-label_position = Label(tk, textvariable=label_position_value)
-label_length = Label(tk, textvariable=label_length_value)
+
 video_driver = video_centre.video_driver(frame)
-label_length.pack()
-label_position.pack()
+
 
 # our data store
 data_object = data_centre.data()
@@ -52,28 +45,27 @@ display_mode = 'BROWSER'
 
 def load_display(display):
     load_title(display)
-    load_divider(display)
+    #load_divider(display)
     load_player(display)
-    load_divider(display)
+    #load_divider(display)
     if display_mode == 'BROWSER':
         load_browser(display)
     elif display_mode == 'SETTINGS':
         pass  # load_settings(display)
     else:
         load_looper(display)
-    load_divider(display)
-
+    #load_divider(display)
     display.pack()
 
 
 def load_title(display):
-    display.insert(END, '======== r_e_c_u_r ======== \n')
-    display.tag_add("TITLE", 1.9, 1.18)
+    display.insert(END, '================ r_e_c_u_r ================ \n')
+    display.tag_add("TITLE", 1.17, 1.26)
 
 
 
 def load_divider(display):
-    display.insert(END, '---------------- \n')
+    display.insert(END, '------------------------------------------- \n')
 
 
 def load_player(display):
@@ -81,19 +73,19 @@ def load_player(display):
     end_of_text = float("3." + str(len(text)))
     end_of_banner = float("3." + str(len(banner)))
     display.insert(END, text + '\n')
-    display.tag_add("PLAYER_INFO", 3.0, end_of_text)
+    display.tag_add("PLAYER_INFO", 2.0, end_of_text)
     display.insert(END, banner + '\n')
-    display.tag_add("PLAYER_INFO", 4.0, end_of_banner)
+    display.tag_add("PLAYER_INFO", 3.0, end_of_banner)
 
 
 
 def load_looper(display):
     bank_info = data_centre.get_all_looper_data_for_display()
-    display.insert(END, '------ <LOOPER> ------ \n')
-    display.insert(END, '{:>10} {:>20} {:>10} {:>10} {:>10} \n'.format(
+    display.insert(END, '--------------- <LOOPER> --------------- \n')
+    display.insert(END, '{:>3} {:>10} {:>3} {:>3} {:>3} \n'.format(
         'bank no', 'name', 'length', 'start', 'end'))
     for bank in bank_info:
-        display.insert(END, '{:>10} {:>20} {:>10} {:>10} {:>10} \n'.format(
+        display.insert(END, '{:>3} {:>10} {:>3} {:>3} {:>3} \n'.format(
             bank[0], bank[1], bank[2], bank[3], bank[4]))
 
 
@@ -109,7 +101,7 @@ def get_text_for_video_display():
 
 
 def create_video_display_banner(duration, video_length):
-    banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+    banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
                    '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', ']']
     max = len(banner_list) - 1
     if duration <= 0:
@@ -129,15 +121,15 @@ def load_browser(self):
     global browser_start_index
     global browser_list
     line_count = 0
-    display.insert(END, '------ <BROWSER> ------ \n')
-    display.insert(END, '{:50} {:20} \n'.format('path', 'bank'))
+    display.insert(END, '---------------- <BROWSER> ---------------- \n')
+    display.insert(END, '{:35} {:5} \n'.format('path', 'bank'))
 
     for index in range(len(browser_list)):
         if line_count >= MAX_LINES:
             break
         if index >= browser_start_index:
             path = browser_list[index]
-            display.insert(END, '{:50} {:20} \n'.format(path[0], path[1]))
+            display.insert(END, '{:35} {:5} \n'.format(path[0], path[1]))
             line_count = line_count + 1
 
     
@@ -180,12 +172,14 @@ def deselect_current_browser_index():
                        ROW_OFFSET + SELECTOR_WIDTH + browser_index)
 
 def refresh_display():
+    display.configure(state='normal')
     display.delete(1.0, END)
     load_display(display)
+    display.configure(state='disable')
     if display_mode == "BROWSER":
         select_current_browser_index()
 
-display = Text(tk, bg="black", fg="white")
+display = Text(tk, bg="black", fg="white", font=('courier', 14))
 display.tag_configure("SELECT", background="white", foreground="black")
 display.tag_configure("TITLE", background="black", foreground="red")
 display.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
@@ -255,18 +249,22 @@ def backspace_key(event):
 
 def update_screen():
     refresh_display()
+    display.focus_set()
     tk.after(1000, update_screen)
 
+def callback(event):
+    frame.focus_set()
+    print "clicked at", event.x, event.y
 
-frame.bind("<Key>", key)
-frame.bind("<Up>", up_key)
-frame.bind("<Down>", down_key)
-frame.bind("<BackSpace>", backspace_key)
-frame.bind("<Num_Lock>", num_lock_key)
-
+display.bind("<Key>", key)
+display.bind("<Up>", up_key)
+display.bind("<Down>", down_key)
+display.bind("<BackSpace>", backspace_key)
+display.bind("<Num_Lock>", num_lock_key)
+display.bind("<Button-1>", callback)
 
 frame.pack()
-frame.focus_set()
 
+tk.attributes("-fullscreen", True)
 tk.after(1000, update_screen)
 tk.mainloop()

@@ -24,11 +24,9 @@ browser_index = 0
 
 tk = Tk()
 
-
 frame = Frame(tk, width=500, height=400)
 
 video_driver = video_centre.video_driver(frame)
-
 
 # our data store
 data_object = data_centre.data()
@@ -37,6 +35,7 @@ browser_list = data_object.get_browser_data_for_display()
 
 bank_info = data_centre.get_all_looper_data_for_display()
 
+current_message = None
 # terminal_font = Font(family="Terminal", size=12)
 # terminal_font_bold = Font(family="Terminal", size=12, weight='bold')
 # titles.configure(font=terminal_font_bold)
@@ -55,6 +54,7 @@ def load_display(display):
     else:
         load_looper(display)
     #load_divider(display)
+
     display.pack()
 
 
@@ -88,6 +88,14 @@ def load_looper(display):
         display.insert(END, '{:>3} {:>10} {:>3} {:>3} {:>3} \n'.format(
             bank[0], bank[1], bank[2], bank[3], bank[4]))
 
+def load_message(display):
+    display.insert(END, 'INFO: {}'.format(current_message))
+    display.tag_add("ERROR_MESSAGE", 14.0, 15.0)
+    tk.after(4000,clear_message)
+
+def clear_message():
+    global current_message
+    current_message = None
 
 def get_text_for_video_display():
     now_bank, now_status, next_bank, next_status, duration, video_length = video_driver.get_info_for_video_display()
@@ -182,32 +190,52 @@ def refresh_display():
 display = Text(tk, bg="black", fg="white", font=('courier', 14))
 display.tag_configure("SELECT", background="white", foreground="black")
 display.tag_configure("TITLE", background="black", foreground="red")
+display.tag_configure("ERROR_MESSAGE", background="red", foreground="black")
+display.tag_configure("INFO_MESSAGE", background="blue", foreground="black")
 display.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
 
 load_display(display)
 
 select_current_browser_index()
 
+def num_lock_key(event):
+    global display_mode
+    if display_mode == "BROWSER":
+        display_mode = "LOOPER"
+    else:
+        display_mode = "BROWSER"
+    refresh_display()
+
 def key(event):
     print event.char
+    ## '/' clear all banks
     if event.char == '/':
         print 'it\'s cleared!'
         data_centre.clear_all_banks()
         refresh_display()
-
-    if event.char == '.':
+    ## '.' quits r_e_c_u_r
+    elif event.char == '.':
         if video_centre.has_omx:
             video_driver.exit_all_players()
         tk.destroy()
-
-    if event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
+    ## 'num' sets current selection to bank number num
+    elif event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
+    ## 'enter' sets manual next flag
     elif event.char in ['\r']:
         video_driver.manual_next = True
-    elif(event.char in ['.']):
-        # code for killswitch
-        sys.exit()
+    ## 'm' switches display mode
+    elif(event.char in ['m']):
+        global display_mode
+        if display_mode == "BROWSER":
+            display_mode = "LOOPER"
+        else:
+            display_mode = "BROWSER"
+        refresh_display()
+    ## 'l' pauses/unpauses the video
+    elif(event.char in ['l']):
+        video_driver.current_player.toggle_pause()
 
 
 def up_key(event):
@@ -222,29 +250,28 @@ def down_key(event):
         global browser_index
         global browser_start_index
 
-def num_lock_key(event):
-    global display_mode
-    if display_mode == "BROWSER":
-        display_mode = "LOOPER"
-    else:
-        display_mode = "BROWSER"
-    refresh_display()
+
 
 def backspace_key(event):
-    global browser_index
-    global data_object
-    global browser_start_index
-    global browser_list
-    if display_mode == "BROWSER":
-        is_file, name = data_centre.extract_file_type_and_name_from_browser_format(
-            browser_list[browser_index + browser_start_index][0])
-        if is_file:
-            data_centre.create_new_bank_mapping_in_first_open(name)
-        else:
-            data_object.update_open_folders(name)
-        data_object.rewrite_browser_list()
-        browser_list = data_object.get_browser_data_for_display()
-        refresh_display()
+    try:
+        global browser_index
+        global data_object
+        global browser_start_index
+        global browser_list
+        global current_message
+        if display_mode == "BROWSER":
+            is_file, name = data_centre.extract_file_type_and_name_from_browser_format(
+                browser_list[browser_index + browser_start_index][0])
+            if is_file:
+                data_centre.create_new_bank_mapping_in_first_open(name)
+            else:
+                data_object.update_open_folders(name)
+            data_object.rewrite_browser_list()
+            browser_list = data_object.get_browser_data_for_display()
+            refresh_display()
+    except Exception as e:
+        print 'the current message is: {}'.format(e.message)
+        current_message = e.message
 
 
 def update_screen():
@@ -263,8 +290,13 @@ display.bind("<BackSpace>", backspace_key)
 display.bind("<Num_Lock>", num_lock_key)
 display.bind("<Button-1>", callback)
 
+
 frame.pack()
 
 tk.attributes("-fullscreen", True)
 tk.after(1000, update_screen)
-tk.mainloop()
+
+try:
+    tk.mainloop()
+except:
+    current_message = traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)

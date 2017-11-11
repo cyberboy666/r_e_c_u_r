@@ -167,6 +167,7 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
 
 def get_length_for_file(location):
     video_length = FFProbe(location).streams[0].duration
+    print video_length
     return int(round(float(video_length)))
 
 def get_path_for_file(file_name):

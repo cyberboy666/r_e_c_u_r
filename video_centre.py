@@ -174,8 +174,19 @@ class video_player(object):
             self.omx.stop()
             self.omx = OMXDriver(self.widget, '')
 
-    def pause_content(self):
-        self.status = 'PAUSED'
+    def toggle_pause(self):
+        is_paused = self.omx.omxplayer_is_paused()
+        print is_paused
+        if is_paused == 'RUNNING':
+            if self.omx.send_pause():
+                self.status = 'PAUSED'
+                return
+        elif is_paused == 'PAUSED':
+            if self.omx.send_unpause():
+                self.status = 'PLAYING'
+                return
+        print 'failed to toggle pause (this needs to be in message)'
+
 
 # tk = Tk()
 

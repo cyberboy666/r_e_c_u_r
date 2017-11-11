@@ -409,7 +409,8 @@ class OMXDriver(object):
             logger.info('warn'+'Failed to toggle pause - process not running')
             return
 
-
+    def run_action(self, num):
+        self.__iface_player.Action(num)
 
     def stop(self):
         logger.info('log'+'>stop received and quit sent to omxplayer {} '.format(self.pid))

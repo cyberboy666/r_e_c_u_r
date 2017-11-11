@@ -187,11 +187,11 @@ class video_player(object):
                 return
         print 'failed to toggle pause (this needs to be in message)'
 
-    def seek_video_to(self, amount_in_seconds):
-        if self.omx.seek(amount_in_seconds*1000000) == None:
-            print 'failed to seek {}'.format(amount_in_seconds)
-        else:
-            print 'successfully seeked {} '.format(amount_in_seconds)
+    def jump_video_forward(self):
+        self.omx.run_action(20)
+
+    def jump_video_back(self):
+        self.omx.run_action(19)
             
 
 # tk = Tk()

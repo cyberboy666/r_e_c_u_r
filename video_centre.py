@@ -141,7 +141,7 @@ class video_player(object):
         logger.info('{} is loading now {}'.format(
             self.name,self.location ))
         self.omx.load(self.location, 'after-first-frame',
-                      '--win 0,0,400,400 --no-osd --display 5', '')
+                      '--win 250,350,800,800 --no-osd --display 5', '')
 
     def get_context_for_this_player(self):
         next_context = data_centre.get_next_context()

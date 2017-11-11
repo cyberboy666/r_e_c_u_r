@@ -55,7 +55,7 @@ logger = setup_logging()
 
 ######## sets paths and constants ########
 PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
-PATH_TO_BROWSER = get_path_to_browser() #'/media/pi/TIM' #get_the_current_dir_path() #TODO replace this with pi path name when i know what makes sense
+PATH_TO_BROWSER = get_path_to_browser()
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
 
 ####<<<< data methods for browser tab >>>>#####

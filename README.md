@@ -15,7 +15,7 @@ a diy videolooper for py/pi
 
 - change keyboard layout :  sudo raspi-config => localiation options => change keyboard layout => generic 104 => english us => english us => the default for => no compose => no then sudo reboot
 
-(for reading video lengths :) sudo apt-get ffmpeg and pip install ffprobe
+(for reading video lengths :) sudo apt-get install ffmpeg and pip install ffprobe (needed a sudo apt-get update in there the second time too)
 
 note that to set up the file to browser you will have to create a fle called path_to_browser.json and put in it "your/path/to/browser"
 

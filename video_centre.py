@@ -177,16 +177,22 @@ class video_player(object):
     def toggle_pause(self):
         is_paused = self.omx.omxplayer_is_paused()
         print is_paused
-        if is_paused == 'RUNNING':
+        if is_paused == 'Playing':
             if self.omx.send_pause():
                 self.status = 'PAUSED'
                 return
-        elif is_paused == 'PAUSED':
+        elif is_paused == 'Paused':
             if self.omx.send_unpause():
                 self.status = 'PLAYING'
                 return
         print 'failed to toggle pause (this needs to be in message)'
 
+    def seek_video_to(self, amount_in_seconds):
+        if self.omx.seek(amount_in_seconds*1000000) == None:
+            print 'failed to seek {}'.format(amount_in_seconds)
+        else:
+            print 'successfully seeked {} '.format(amount_in_seconds)
+            
 
 # tk = Tk()
 

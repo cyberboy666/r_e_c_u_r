@@ -236,6 +236,10 @@ def key(event):
     ## 'l' pauses/unpauses the video
     elif(event.char in ['l']):
         video_driver.current_player.toggle_pause()
+    elif(event.char in ['j']):
+        video_driver.current_player.seek_video_to(-2)
+    elif(event.char in ['k']):
+        video_driver.current_player.seek_video_to(2)
 
 
 def up_key(event):

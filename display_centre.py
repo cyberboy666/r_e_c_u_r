@@ -35,7 +35,6 @@ browser_list = data_object.get_browser_data_for_display()
 
 bank_info = data_centre.get_all_looper_data_for_display()
 
-current_message = None
 # terminal_font = Font(family="Terminal", size=12)
 # terminal_font_bold = Font(family="Terminal", size=12, weight='bold')
 # titles.configure(font=terminal_font_bold)
@@ -50,11 +49,13 @@ def load_display(display):
     if display_mode == 'BROWSER':
         load_browser(display)
     elif display_mode == 'SETTINGS':
-        pass  # load_settings(display)
+        load_settings(display)
     else:
         load_looper(display)
     #load_divider(display)
-
+    if data_centre.current_message:
+        print 'trying to display'
+        load_message(display)
     display.pack()
 
 
@@ -77,25 +78,42 @@ def load_player(display):
     display.insert(END, banner + '\n')
     display.tag_add("PLAYER_INFO", 3.0, end_of_banner)
 
-
+def load_settings(display):
+    global data_object
+    global browser_start_index
+    line_count = 0
+    settings_list = data_centre.get_all_settings_data_for_display()
+    display.insert(END, '--------------- <SETTINGS> --------------- \n')
+    display.insert(END, '{:>20} {:>20} \n'.format('SETTING', 'VALUE'))
+    for index in range(len(settings_list)):
+        if line_count >= MAX_LINES:
+            break
+        if index >= browser_start_index:
+            setting = settings_list[index]
+            display.insert(END, '{:>20} {:>20} \n'.format(setting[0], setting[1]))
+            line_count = line_count + 1
 
 def load_looper(display):
     bank_info = data_centre.get_all_looper_data_for_display()
     display.insert(END, '--------------- <LOOPER> --------------- \n')
-    display.insert(END, '{:>3} {:>10} {:>3} {:>3} {:>3} \n'.format(
-        'bank no', 'name', 'length', 'start', 'end'))
+    display.insert(END, '{:>4} {:>15} {:>4} {:>4} {:>4} \n'.format(
+        'bank', 'name', 'length', 'start', 'end'))
     for bank in bank_info:
-        display.insert(END, '{:>3} {:>10} {:>3} {:>3} {:>3} \n'.format(
-            bank[0], bank[1], bank[2], bank[3], bank[4]))
+        display.insert(END, '{:>4} {:>15} {:>4} {:>4} {:>4} \n'.format(
+            bank[0], bank[1][0:15], bank[2], bank[3], bank[4]))
+    select_current_playing(video_driver.current_player.bank_number)
+
+def select_current_playing(bank_number):
+        if(bank_number != '-'):
+            display.tag_add("SELECT", ROW_OFFSET + bank_number,
+                        ROW_OFFSET + SELECTOR_WIDTH + bank_number)
 
 def load_message(display):
-    display.insert(END, 'INFO: {}'.format(current_message))
+    display.insert(END, 'INFO: {}'.format(data_centre.current_message))
     display.tag_add("ERROR_MESSAGE", 14.0, 15.0)
-    tk.after(4000,clear_message)
+    tk.after(4000,data_centre.clear_message)
 
-def clear_message():
-    global current_message
-    current_message = None
+
 
 def get_text_for_video_display():
     now_bank, now_status, next_bank, next_status, duration, video_length = video_driver.get_info_for_video_display()
@@ -129,7 +147,7 @@ def load_browser(self):
     global browser_start_index
     global browser_list
     line_count = 0
-    display.insert(END, '---------------- <BROWSER> ---------------- \n')
+    display.insert(END, '--------------- <BROWSER> --------------- \n')
     display.insert(END, '{:35} {:5} \n'.format('path', 'bank'))
 
     for index in range(len(browser_list)):
@@ -137,7 +155,7 @@ def load_browser(self):
             break
         if index >= browser_start_index:
             path = browser_list[index]
-            display.insert(END, '{:35} {:5} \n'.format(path[0], path[1]))
+            display.insert(END, '{:35} {:5} \n'.format(path[0][0:35], path[1]))
             line_count = line_count + 1
 
     
@@ -184,7 +202,7 @@ def refresh_display():
     display.delete(1.0, END)
     load_display(display)
     display.configure(state='disable')
-    if display_mode == "BROWSER":
+    if display_mode in ["BROWSER", "SETTINGS"]:
         select_current_browser_index()
 
 display = Text(tk, bg="black", fg="white", font=('courier', 14))
@@ -197,14 +215,6 @@ display.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
 load_display(display)
 
 select_current_browser_index()
-
-def num_lock_key(event):
-    global display_mode
-    if display_mode == "BROWSER":
-        display_mode = "LOOPER"
-    else:
-        display_mode = "BROWSER"
-    refresh_display()
 
 def key(event):
     print event.char
@@ -219,41 +229,43 @@ def key(event):
             video_driver.exit_all_players()
         tk.destroy()
     ## 'num' sets current selection to bank number num
-    elif event.char in ['0', '1', '2', '3', '4', '5', '6', '7']:
+    elif event.char in ['0', '1', '2', '3', '4', '5', '6', '7','8','9']:
         data_centre.update_next_bank_number(int(event.char))
         # video_driver.next_player.reload_content()
     ## 'enter' sets manual next flag
     elif event.char in ['\r']:
         video_driver.manual_next = True
-    ## 'm' switches display mode
-    elif(event.char in ['m']):
+    ## '*' switches display mode
+    elif(event.char in ['*']):
         global display_mode
         if display_mode == "BROWSER":
             display_mode = "LOOPER"
-        else:
+        elif display_mode == "LOOPER":
+            display_mode = "SETTINGS"
+        elif display_mode == "SETTINGS":
             display_mode = "BROWSER"
         refresh_display()
-    ## 'l' pauses/unpauses the video
-    elif(event.char in ['l']):
-        video_driver.current_player.toggle_pause()
-    elif(event.char in ['j']):
-        video_driver.current_player.jump_video_back()
-    elif(event.char in ['k']):
-        video_driver.current_player.jump_video_forward()
+    elif(event.char in ['+']):
+        down_key(event)
+    elif(event.char in ['-']):
+        up_key(event)
 
 
 def up_key(event):
-    if display_mode == "BROWSER":
+    if display_mode in ["BROWSER", "SETTINGS"]:
         move_browser_selection_up()
         global browser_index
         global browser_start_index
+    elif display_mode == "LOOPER":
+        video_driver.current_player.jump_video_back()
 
 def down_key(event):
-    if display_mode == "BROWSER":
+    if display_mode in ["BROWSER", "SETTINGS"]:
         move_browser_selection_down()
         global browser_index
         global browser_start_index
-
+    elif display_mode == "LOOPER":
+        video_driver.current_player.jump_video_forward()
 
 
 def backspace_key(event):
@@ -262,7 +274,6 @@ def backspace_key(event):
         global data_object
         global browser_start_index
         global browser_list
-        global current_message
         if display_mode == "BROWSER":
             is_file, name = data_centre.extract_file_type_and_name_from_browser_format(
                 browser_list[browser_index + browser_start_index][0])
@@ -273,9 +284,14 @@ def backspace_key(event):
             data_object.rewrite_browser_list()
             browser_list = data_object.get_browser_data_for_display()
             refresh_display()
+        elif display_mode == "LOOPER":
+            video_driver.current_player.toggle_pause()
+        elif display_mode == "SETTINGS":
+            data_centre.switch_settings(browser_index + browser_start_index)
+            refresh_display()
     except Exception as e:
         print 'the current message is: {}'.format(e.message)
-        current_message = e.message
+        data_centre.set_message(e.message)
 
 
 def update_screen():
@@ -283,17 +299,11 @@ def update_screen():
     display.focus_set()
     tk.after(1000, update_screen)
 
-def callback(event):
-    frame.focus_set()
-    print "clicked at", event.x, event.y
-
 display.bind("<Key>", key)
 display.bind("<Up>", up_key)
 display.bind("<Down>", down_key)
 display.bind("<BackSpace>", backspace_key)
-display.bind("<Num_Lock>", num_lock_key)
-display.bind("<Button-1>", callback)
-
+#display.bind("<Num_Lock>", num_lock_key)
 
 frame.pack()
 
@@ -303,4 +313,4 @@ tk.after(1000, update_screen)
 try:
     tk.mainloop()
 except:
-    current_message = traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
+    data_centre.set_message(traceback.print_tb(exc_traceback, limit=1, file=sys.stdout))

@@ -7,6 +7,18 @@ import time
 import inspect
 from ffprobe import FFProbe
 
+
+current_message = None
+
+def set_message(message):
+    global current_message
+    print 'trying to set message'
+    current_message = message
+
+def clear_message():
+    global current_message
+    current_message = None
+
 ######## sets names for the persistant data objects ########
 NEXT_BANK_JSON = 'next_bank_number.json'
 SETTINGS_JSON = 'settings.json'
@@ -57,7 +69,8 @@ logger = setup_logging()
 PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
 PATH_TO_BROWSER = get_path_to_browser()
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
-
+DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
+print DEV_MODE
 ####<<<< data methods for browser tab >>>>#####
 class data(object):
     ######## a data class used mainly for managing the browser list ########
@@ -197,7 +210,6 @@ def get_all_looper_data_for_display():
     ######## read bank mappings from data object and format for displaying in asciimatics ########
     memory_bank = read_json(BANK_DATA_JSON)
     loop_data = []
-    print 'getting the loop data'
     for index, bank in enumerate(memory_bank):
         length = convert_int_to_string_for_display(bank["length"])
         start = convert_int_to_string_for_display(bank["start"])
@@ -213,15 +225,15 @@ def get_all_settings_data_for_display():
     settings = read_json(SETTINGS_JSON)
     display_settings = []
     for index, setting in enumerate(settings):
-        display_settings.append(([setting['name'],setting['value']],index))
+        display_settings.append([setting['name'],setting['value']])
     return display_settings
 
-def switch_settings(setting_name):
+def switch_settings(setting_index):
     ######## update the value of selected setting by cycling through valid options ########
     settings = read_json(SETTINGS_JSON)
 
     for index, setting in enumerate(settings):
-        if setting['name'] == setting_name:
+        if index == setting_index:
             setting = cycle_setting_value(setting)
 
     update_json(SETTINGS_JSON,settings)
@@ -250,6 +262,11 @@ def cycle_setting_value(setting):
             setting['value'] = 'COMPOSITE'
         else:
             setting['value'] = 'HDMI'
+    elif setting['name'] == 'DEV_MODE':
+        if setting['value'] == 'ON':
+            setting['value'] = 'OFF'
+        else:
+            setting['value'] = 'ON'
 
     return setting
 
@@ -313,5 +330,11 @@ def set_next_bank_number_from_playback_mode(playback_mode, current_bank_number):
     update_json('next_bank_number.json',next_bank_number)
 
 def update_next_bank_number(new_value):
-    update_json(NEXT_BANK_JSON, new_value)
+    global current_message
+    memory_bank = read_json(BANK_DATA_JSON)
+    if(memory_bank[new_value]['location'] == ''):
+        print 'its empty!'
+        current_message = 'the bank you pressed is empty'
+    else:
+        update_json(NEXT_BANK_JSON, new_value)
 

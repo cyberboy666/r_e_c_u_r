@@ -2,15 +2,17 @@ import time
 
 try:
     from omxdriver import OMXDriver  # <== for deving only
-
     has_omx = True
 except ImportError:
     has_omx = False
 from Tkinter import Tk, Canvas
 import data_centre
-
 logger = data_centre.setup_logging()
-
+if data_centre.DEV_MODE == "ON":
+    print 'we in'
+    screen_size = "--win 250,350,800,800"
+else:
+    screen_size = '--win 0,0,1279,959' #'--blank'
 
 # layer = 0
 
@@ -60,7 +62,6 @@ class video_driver(object):
         self.current_player.play_content()
         # self.last_player.exit()
 
-        # next_context = '/home/pi/pp_home/media/samplerloop3s.mp4'
         self.next_player.load_content()
 
         self.wait_for_next_cycle()
@@ -70,15 +71,19 @@ class video_driver(object):
         if (self.current_player.is_finished() or self.manual_next):
             logger.info('{} is finished'.format(self.current_player.name))
             self.manual_next = False
-            if self.next_player.is_loaded():
+            if (self.next_player.is_loaded()):
                 logger.info('{} is loaded on switchover'.format(
                     self.next_player.name))
                 self.switch_players()
                 self.play_video()
+            elif(self.next_player.failed_to_load):
+                self.switch_players()
+                self.next_player.load_content()
+                self.widget.after(self.delay, self.wait_for_next_cycle)
             else:
                 logger.info('{} is not loaded yet!'.format(
                     self.next_player.name))
-                self.current_player.pause_content()
+                self.current_player.toggle_pause()
                 self.wait_for_next_load()
         else:
             self.widget.after(self.delay, self.wait_for_next_cycle)
@@ -114,7 +119,7 @@ class video_player(object):
         self.end = ''
         self.length = 10
         self.location = ''
-
+        self.failed_to_load = False
         self.omx = OMXDriver(self.widget, '')
 
     def is_loaded(self):
@@ -136,12 +141,21 @@ class video_player(object):
         self.omx.show(True, 0)
 
     def load_content(self):
-        self.status = 'LOADING'
-        self.get_context_for_this_player()
-        logger.info('{} is loading now {}'.format(
-            self.name,self.location ))
-        self.omx.load(self.location, 'after-first-frame',
-                      '--win 250,350,800,800 --no-osd --display 5', '')
+        try:
+            self.status = 'LOADING'
+            self.get_context_for_this_player()
+            logger.info('{} is loading now {}'.format(
+                self.name,self.location ))
+            if self.location == "" :
+                data_centre.set_message("failed to load - bank empty")
+                print 'failed to load'
+                self.failed_to_load = True
+            else:
+                self.omx.load(self.location, 'after-first-frame',
+                          '{} --no-osd '.format(screen_size), '')
+        except Exception as e:
+            print 'load problems, the current message is: {}'.format(e.message)
+            data_centre.set_message(e.message)
 
     def get_context_for_this_player(self):
         next_context = data_centre.get_next_context()
@@ -169,10 +183,14 @@ class video_player(object):
         self.omx = OMXDriver(self.widget, '')
 
     def exit(self):
-        if (self.omx.omx_loaded is not None):
-            logger.info('{} is exiting omx'.format(self.name))
-            self.omx.stop()
-            self.omx = OMXDriver(self.widget, '')
+        try:
+            if (self.omx.omx_loaded is not None):
+                logger.info('{} is exiting omx'.format(self.name))
+                self.omx.stop()
+                self.omx = OMXDriver(self.widget, '')
+        except Exception as e:
+            print 'the current message is: {}'.format(e.message)
+            data_centre.set_message(e.message)
 
     def toggle_pause(self):
         is_paused = self.omx.omxplayer_is_paused()

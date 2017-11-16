@@ -120,7 +120,7 @@ def add_folder_to_browser_list(current_path, current_level,open_folder_list):
             add_folder_to_browser_list(next_path, next_level,open_folder_list)
 
     for f in files:
-        if (os.path.splitext(f)[1] in ['.mp4']):
+        if (os.path.splitext(f)[1] in ['.mp4', '.mkv']):
             #print('{}{}'.format(indent, f))
             results.append(dict(name='{}{}'.format(indent, f), bank='-'))
 

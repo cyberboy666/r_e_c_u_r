@@ -1,11 +1,12 @@
 # r_e_c_u_r
 a diy videolooper for py/pi
 
-#things to do / bugs to fix:
+# things to do / bugs to fix:
 
 - [ ] reload video on press is broken - the pause after load (when its not loaded in time) seems to not to work
+- [ ] mkv files break coz length lookup fails
 
-#things iv done on a freshly flashed pi to run/dev r_e_c_u_r
+# things iv done on a freshly flashed pi to run/dev r_e_c_u_r
 
 - sudo apt-get install git
 
@@ -19,7 +20,7 @@ a diy videolooper for py/pi
 
 note that to set up the file to browser you will have to create a fle called path_to_browser.json and put in it "your/path/to/browser"
 
-##setting up the lcd screen:
+## setting up the lcd screen:
 
 download from waveshare and follow instructions: :LCD-show-170703.tar.gz , sudo raspi-config => more options => expand filesysem. boot option => Desktop autologin.
 

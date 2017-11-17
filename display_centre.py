@@ -21,8 +21,14 @@ browser_start_index = 0
 
 browser_index = 0
 
-
-tk = Tk()
+print 'the start'
+try:
+    tk = Tk()
+except Exception as e:
+    print 'failed to load tk - trying again after 2 minute'
+    time.sleep(120)
+    tk =Tk()
+    
 
 frame = Frame(tk, width=500, height=400)
 

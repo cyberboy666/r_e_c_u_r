@@ -9,10 +9,9 @@ from Tkinter import Tk, Canvas
 import data_centre
 logger = data_centre.setup_logging()
 if data_centre.DEV_MODE == "ON":
-    print 'we in'
     screen_size = "--win 250,350,800,800"
 else:
-    screen_size = '--win 0,0,1279,959' #'--blank'
+    screen_size = '--win 45,15,970,760' #'--blank'
 
 # layer = 0
 

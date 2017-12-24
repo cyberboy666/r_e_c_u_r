@@ -5,14 +5,14 @@ import os
 from random import randint
 import time
 import inspect
-from ffprobe import FFProbe
+#from ffprobe import FFProbe
 
 
 current_message = None
 
 def set_message(message):
     global current_message
-    print 'trying to set message'
+    print('trying to set message')
     current_message = message
 
 def clear_message():
@@ -70,7 +70,7 @@ PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
 PATH_TO_BROWSER = get_path_to_browser()
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
 DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
-print DEV_MODE
+print(DEV_MODE)
 ####<<<< data methods for browser tab >>>>#####
 class data(object):
     ######## a data class used mainly for managing the browser list ########
@@ -179,15 +179,15 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
     update_a_banks_data(bank_number, new_bank, memory_bank)
 
 def get_length_for_file(location):
-    video_length = FFProbe(location).streams[0].duration
-    print video_length
-    return int(round(float(video_length)))
+    #video_length = FFProbe(location).streams[0].duration
+    #print(video_length)
+    return 0
 
 def get_path_for_file(file_name):
     ######## returns full path for a given file name ########
     for root, dirs, files in os.walk(PATH_TO_BROWSER):
         if file_name in files:
-            print root
+            print(root)
             return True, '{}/{}'.format(root,file_name)
     return False, ''
 
@@ -333,7 +333,7 @@ def update_next_bank_number(new_value):
     global current_message
     memory_bank = read_json(BANK_DATA_JSON)
     if(memory_bank[new_value]['location'] == ''):
-        print 'its empty!'
+        print('its empty!')
         current_message = 'the bank you pressed is empty'
     else:
         update_json(NEXT_BANK_JSON, new_value)

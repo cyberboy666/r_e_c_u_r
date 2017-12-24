@@ -5,8 +5,9 @@ import sys
 import time
 import traceback
 from data_centre import *
-from Tkinter import *
-import tkFont
+from tkinter import *
+import tkinter.font
+import omxdriver
 
 import video_centre
 import data_centre
@@ -21,11 +22,11 @@ browser_start_index = 0
 
 browser_index = 0
 
-print 'the start'
+print('the start')
 try:
     tk = Tk()
 except Exception as e:
-    print 'failed to load tk - trying again after 2 minute'
+    print('failed to load tk - trying again after 2 minute')
     time.sleep(120)
     tk =Tk()
     
@@ -36,6 +37,7 @@ video_driver = video_centre.video_driver(frame)
 
 # our data store
 data_object = data_centre.data()
+video_player = omxdriver.omx_player(frame)
 
 browser_list = data_object.get_browser_data_for_display()
 
@@ -60,7 +62,7 @@ def load_display(display):
         load_looper(display)
     #load_divider(display)
     if data_centre.current_message:
-        print 'trying to display'
+        print('trying to display')
         load_message(display)
     display.pack()
 
@@ -223,10 +225,10 @@ load_display(display)
 select_current_browser_index()
 
 def key(event):
-    print event.char
+    print(event.char)
     ## '/' clear all banks
     if event.char == '/':
-        print 'it\'s cleared!'
+        print('it\'s cleared!')
         data_centre.clear_all_banks()
         refresh_display()
     ## '.' quits r_e_c_u_r
@@ -255,6 +257,13 @@ def key(event):
         down_key(event)
     elif(event.char in ['-']):
         up_key(event)
+    ## 'enter' sets manual next flag
+    elif event.char in ['z']:
+        print('playing video')
+        video_player.play_video()
+    elif event.char in ['x']:
+        print('playing video')
+        video_player.pause_video()
 
 
 def up_key(event):
@@ -296,7 +305,7 @@ def backspace_key(event):
             data_centre.switch_settings(browser_index + browser_start_index)
             refresh_display()
     except Exception as e:
-        print 'the current message is: {}'.format(e.message)
+        print('the current message is: {}'.format(e.message))
         data_centre.set_message(e.message)
 
 

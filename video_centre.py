@@ -5,7 +5,7 @@ try:
     has_omx = True
 except ImportError:
     has_omx = False
-from Tkinter import Tk, Canvas
+from tkinter import Tk, Canvas
 import data_centre
 logger = data_centre.setup_logging()
 if data_centre.DEV_MODE == "ON":
@@ -18,7 +18,7 @@ else:
 
 class video_driver(object):
     def __init__(self, widget=None):
-        print 'has omx :{}'.format(has_omx)
+        print('has omx :{}'.format(has_omx))
         self.widget = widget
         self.delay = 5
         logger.info('the has_omx flag is {}'.format(has_omx))
@@ -28,7 +28,7 @@ class video_driver(object):
             self.next_player = video_player(self.widget, 'c')
             self.manual_next = False
 
-            self.widget.after(self.delay, self.begin_playing)
+            #self.widget.after(self.delay, self.begin_playing)
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
@@ -147,13 +147,13 @@ class video_player(object):
                 self.name,self.location ))
             if self.location == "" :
                 data_centre.set_message("failed to load - bank empty")
-                print 'failed to load'
+                print('failed to load')
                 self.failed_to_load = True
             else:
                 self.omx.load(self.location, 'after-first-frame',
                           '{} --no-osd '.format(screen_size), '')
         except Exception as e:
-            print 'load problems, the current message is: {}'.format(e.message)
+            print('load problems, the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)
 
     def get_context_for_this_player(self):
@@ -188,12 +188,12 @@ class video_player(object):
                 self.omx.stop()
                 self.omx = OMXDriver(self.widget, '')
         except Exception as e:
-            print 'the current message is: {}'.format(e.message)
+            print('the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)
 
     def toggle_pause(self):
         is_paused = self.omx.omxplayer_is_paused()
-        print is_paused
+        print(is_paused)
         if is_paused == 'Playing':
             if self.omx.send_pause():
                 self.status = 'PAUSED'
@@ -202,7 +202,7 @@ class video_player(object):
             if self.omx.send_unpause():
                 self.status = 'PLAYING'
                 return
-        print 'failed to toggle pause (this needs to be in message)'
+        print('failed to toggle pause (this needs to be in message)')
 
     def jump_video_forward(self):
         self.omx.run_action(20)

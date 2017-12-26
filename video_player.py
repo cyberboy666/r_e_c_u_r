@@ -18,7 +18,7 @@ class video_player:
         self.end = -1
         self.length = 0
         self.location = ''
-        self.arguments = ['--no-osd', '--win', screen_size] 
+        self.arguments = ['--no-osd', '--win', screen_size, '--alpha', '0'] 
 
     def load(self):
         self.get_context_for_player()
@@ -32,27 +32,24 @@ class video_player:
 
     def pause_at_start(self):
         position = self.get_position()
-        print('{}: the pause_at_start position is {}'.format(self.name, position))
-        if(position > -0.055):
+        if(position > -0.05):
             self.status = 'LOADED'
             self.player.pause()
-            print('{}: its paused'.format(self.name))
         elif(self.omx_running):
             self.root.after(5,self.pause_at_start)
 
     def play(self):
         self.status = 'PLAYING'
+        self.player.set_alpha(255)        
         self.player.play()
         self.pause_at_end()
 
     def pause_at_end(self):
         position = self.get_position()
-        print('{}: the pause_at_end position is {}'.format(self.name, position))
-        if(position > (self.duration - 0.15 )):
+        if(position > (self.duration - 0.2 )):
             self.status = 'FINISHED'
-            print('time to end is {}'.format(self.duration - position))
             self.player.pause()
-            print('its finished')
+            print('its paused at end!')
         elif(self.omx_running):
             self.root.after(5,self.pause_at_end)
 
@@ -71,6 +68,7 @@ class video_player:
         try:
             return self.player.position()
         except:
+            print('{}: error get_position'.format(self.name))
             return -1
 
     def get_context_for_player(self):
@@ -83,7 +81,6 @@ class video_player:
 
     def toggle_pause(self):
         self.player.play_pause()
-
         self.status = self.player.playback_status().upper()
 
     def seek(self, amount):
@@ -92,6 +89,7 @@ class video_player:
     def exit(self):
         try:
             self.player.quit()
+            self.status = 'UNASSIGNED'
             self.omx_running = False
         except:
             pass

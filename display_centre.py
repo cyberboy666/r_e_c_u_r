@@ -8,7 +8,7 @@ from data_centre import *
 from tkinter import *
 import tkinter.font
 
-import video_centre
+from video_driver import video_driver
 import data_centre
 
 VIDEO_DISPLAY_TEXT = 'NOW [{}] {}     NEXT [{}] {}'
@@ -32,7 +32,7 @@ except Exception as e:
 
 frame = Frame(tk, width=500, height=400)
 
-video_driver = video_centre.video_driver(frame)
+video_driver = video_driver(frame)
 
 # our data store
 data_object = data_centre.data()
@@ -232,7 +232,7 @@ def key(event):
         refresh_display()
     ## '.' quits r_e_c_u_r
     elif event.char == '.':
-        if video_centre.has_omx:
+        if video_driver.has_omx:
             video_driver.exit_all_players()
         tk.destroy()
     ## 'num' sets current selection to bank number num

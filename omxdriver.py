@@ -9,6 +9,7 @@ class omx_driver:
         self.status = 'UNASSIGNED'
         self.duration = 0
         self.dbus_name = dbus_name
+        self.omx_running = True
 
 
     def load(self, location, arguments):
@@ -41,7 +42,7 @@ class omx_driver:
             print('time to end is {}'.format(self.duration - position))
             self.player.pause()
             print('its finished')
-        else:
+        elif(self.omx_running):
             self.root.after(5,self.pause_at_end)
 
     def get_position(self):
@@ -60,4 +61,5 @@ class omx_driver:
 
     def quit(self):
         self.player.quit()
+        self.omx_running = False
 

@@ -96,8 +96,8 @@ class video_driver(object):
 
     def get_info_for_video_display(self):
         if has_omx:
-            return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number, \
-                self.next_player.status, self.current_player.get_position(), self.current_player.length
+            return self.current_player.bank_number, self.current_player.omx.status, self.next_player.bank_number, \
+                self.next_player.omx.status, self.current_player.get_position(), self.current_player.length
         else:
             return 0, 'test', 1, 'test', 0, 10
 
@@ -128,7 +128,7 @@ class video_player(object):
         return self.omx.status is 'FINISHED'
 
     def get_position(self):
-        if self.is_loaded():
+        if self.omx.status is not 'LOADING':
             return self.omx.get_position()
         else:
             return 0
@@ -171,8 +171,6 @@ class video_player(object):
             self.widget.after(50, self.reload_content)
             print("trying to reload")
         self.load_content()
-
-    # layer = layer + 1
 
     def exit(self):
         try:

@@ -1,5 +1,9 @@
 from omxplayer.player import OMXPlayer
 import data_centre
+if data_centre.DEV_MODE == 'ON':
+    screen_size = '250,350,800,800'
+else:
+    screen_size = '45,15,970,760' #'--blank'
 
 class video_player:
     def __init__(self, root, name):
@@ -14,7 +18,7 @@ class video_player:
         self.end = -1
         self.length = 0
         self.location = ''
-        self.arguments = ['--no-osd'] #'{}'.format(screen_size), 
+        self.arguments = ['--no-osd', '--win', screen_size] 
 
     def load(self):
         self.get_context_for_player()

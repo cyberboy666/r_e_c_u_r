@@ -23,12 +23,12 @@ class video_driver(object):
         self.delay = 5
         logger.info('the has_omx flag is {}'.format(has_omx))
         if has_omx:
-            self.last_player = video_player(self.widget, 'a')
-            self.current_player = video_player(self.widget, 'b')
-            self.next_player = video_player(self.widget, 'c')
+            self.last_player = video_player(self.widget, 'a.a')
+            self.current_player = video_player(self.widget, 'b.b')
+            self.next_player = video_player(self.widget, 'c.c')
             self.manual_next = False
 
-            #self.widget.after(self.delay, self.begin_playing)
+            self.widget.after(self.delay, self.begin_playing)
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
@@ -119,7 +119,7 @@ class video_player(object):
         self.length = 10
         self.location = ''
         self.failed_to_load = False
-        self.omx = omx_driver(self.widget)
+        self.omx = omx_driver(self.widget, dbus_name=self.name)
 
     def is_loaded(self):
         return self.omx.status is 'LOADED'
@@ -149,7 +149,7 @@ class video_player(object):
                 self.failed_to_load = True
             else:
                 self.omx.load(self.location,
-                          '{} --no-osd '.format(screen_size))
+                          ['--no-osd']) #'{}'.format(screen_size), 
         except Exception as e:
             print('load problems, the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)
@@ -179,7 +179,7 @@ class video_player(object):
             if (self.is_loaded):
                 logger.info('{} is exiting omx'.format(self.name))
                 self.omx.quit()
-                self.omx = omx_driver(self.widget)
+                self.omx = omx_driver(self.widget, dbus_name=self.name)
         except Exception as e:
             print('the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)

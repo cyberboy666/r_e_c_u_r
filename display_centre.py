@@ -37,7 +37,7 @@ video_driver = video_centre.video_driver(frame)
 
 # our data store
 data_object = data_centre.data()
-video_player = omxdriver.omx_player(frame)
+video_player = omxdriver.omx_driver(frame, 'nope')
 
 browser_list = data_object.get_browser_data_for_display()
 

@@ -7,7 +7,6 @@ import traceback
 from data_centre import *
 from tkinter import *
 import tkinter.font
-import omxdriver
 
 import video_centre
 import data_centre
@@ -37,7 +36,7 @@ video_driver = video_centre.video_driver(frame)
 
 # our data store
 data_object = data_centre.data()
-video_player = omxdriver.omx_driver(frame, 'nope')
+#video_player = omxdriver.omx_driver(frame, 'nope')
 
 browser_list = data_object.get_browser_data_for_display()
 
@@ -272,7 +271,8 @@ def up_key(event):
         global browser_index
         global browser_start_index
     elif display_mode == "LOOPER":
-        video_driver.current_player.jump_video_back()
+        pass
+        #video_driver.current_player.jump_video_back()
 
 def down_key(event):
     if display_mode in ["BROWSER", "SETTINGS"]:
@@ -280,7 +280,8 @@ def down_key(event):
         global browser_index
         global browser_start_index
     elif display_mode == "LOOPER":
-        video_driver.current_player.jump_video_forward()
+        pass
+        #video_driver.current_player.jump_video_forward()
 
 
 def backspace_key(event):

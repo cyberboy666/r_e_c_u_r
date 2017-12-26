@@ -238,9 +238,10 @@ def key(event):
     ## 'num' sets current selection to bank number num
     elif event.char in ['0', '1', '2', '3', '4', '5', '6', '7','8','9']:
         data_centre.update_next_bank_number(int(event.char))
-        # video_driver.next_player.reload_content()
+        video_driver.next_player.reload()
     ## 'enter' sets manual next flag
     elif event.char in ['\r']:
+        print('manual skip')
         video_driver.manual_next = True
     ## '*' switches display mode
     elif(event.char in ['*']):

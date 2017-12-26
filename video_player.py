@@ -33,11 +33,11 @@ class video_player:
     def pause_at_start(self):
         position = self.get_position()
         print('{}: the pause_at_start position is {}'.format(self.name, position))
-        if(position > -0.05):
+        if(position > -0.055):
             self.status = 'LOADED'
             self.player.pause()
             print('{}: its paused'.format(self.name))
-        else:
+        elif(self.omx_running):
             self.root.after(5,self.pause_at_start)
 
     def play(self):
@@ -55,6 +55,11 @@ class video_player:
             print('its finished')
         elif(self.omx_running):
             self.root.after(5,self.pause_at_end)
+
+    def reload(self):
+        self.exit()
+        self.omx_running = False
+        self.load()
 
     def is_loaded(self):
         return self.status is 'LOADED'

@@ -1,7 +1,7 @@
 import time
 
 try:
-    from omxdriver import OMXDriver  # <== for deving only
+    from omxdriver import omx_driver  # <== for deving only
     has_omx = True
 except ImportError:
     has_omx = False
@@ -119,39 +119,37 @@ class video_player(object):
         self.length = 10
         self.location = ''
         self.failed_to_load = False
-        self.omx = OMXDriver(self.widget, '')
+        self.omx = omx_driver(self.widget)
 
     def is_loaded(self):
-        return self.omx.start_play_signal
+        return self.omx.status is 'LOADED'
 
     def is_finished(self):
-        return self.omx.end_play_signal
+        return self.omx.status is 'FINISHED'
 
     def get_position(self):
         if self.is_loaded():
-            return self.omx.video_position/1000000
+            return self.omx.get_position()
         else:
             return 0
 
     def play_content(self):
-        self.status = 'PLAYING'
+        
         logger.info('{} is playing now'.format(self.name))
-        self.omx.pause_before_play_required = 'no'
-        self.omx.show(True, 0)
+        self.omx.play()
 
     def load_content(self):
         try:
-            self.status = 'LOADING'
             self.get_context_for_this_player()
             logger.info('{} is loading now {}'.format(
                 self.name,self.location ))
-            if self.location == "" :
+            if self.location == '' :
                 data_centre.set_message("failed to load - bank empty")
                 print('failed to load')
                 self.failed_to_load = True
             else:
-                self.omx.load(self.location, 'after-first-frame',
-                          '{} --no-osd '.format(screen_size), '')
+                self.omx.load(self.location,
+                          '{} --no-osd '.format(screen_size))
         except Exception as e:
             print('load problems, the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)
@@ -176,39 +174,24 @@ class video_player(object):
 
     # layer = layer + 1
 
-    def set_to_default(self):
-        ##not used
-        self.omx.kill()
-        self.omx = OMXDriver(self.widget, '')
-
     def exit(self):
         try:
-            if (self.omx.omx_loaded is not None):
+            if (self.is_loaded):
                 logger.info('{} is exiting omx'.format(self.name))
-                self.omx.stop()
-                self.omx = OMXDriver(self.widget, '')
+                self.omx.quit()
+                self.omx = omx_driver(self.widget)
         except Exception as e:
             print('the current message is: {}'.format(e.message))
             data_centre.set_message(e.message)
 
     def toggle_pause(self):
-        is_paused = self.omx.omxplayer_is_paused()
-        print(is_paused)
-        if is_paused == 'Playing':
-            if self.omx.send_pause():
-                self.status = 'PAUSED'
-                return
-        elif is_paused == 'Paused':
-            if self.omx.send_unpause():
-                self.status = 'PLAYING'
-                return
-        print('failed to toggle pause (this needs to be in message)')
+        self.omx.toggle_pause()
 
     def jump_video_forward(self):
-        self.omx.run_action(20)
+        self.omx.seek(30)
 
     def jump_video_back(self):
-        self.omx.run_action(19)
+        self.omx.seek(-30)
             
 
 # tk = Tk()

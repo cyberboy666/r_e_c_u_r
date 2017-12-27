@@ -66,7 +66,7 @@ def get_path_to_browser():
 logger = setup_logging()
 
 ######## sets paths and constants ########
-PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
+PATH_TO_DATA_OBJECTS = '{}\\data_objects\\'.format(get_the_current_dir_path())
 PATH_TO_BROWSER = get_path_to_browser()
 EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
 DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]

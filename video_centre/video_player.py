@@ -1,4 +1,7 @@
-from omxplayer.player import OMXPlayer
+try:
+    from omxplayer.player import OMXPlayer
+except:
+    pass
 import data_centre
 if data_centre.DEV_MODE == 'ON':
     screen_size = '250,350,800,800'
@@ -94,4 +97,16 @@ class video_player:
         except:
             pass
 
+class fake_video_player:
+    def __init__(self):
+        self.player = None
+        self.name = name
+        self.omx_running = False
+        self.status = 'UNASSIGNED'
+        self.duration = 0
+        self.bank_number = '-'
+        self.start = -1
+        self.end = -1
+        self.length = 0
+        self.location = ''
 

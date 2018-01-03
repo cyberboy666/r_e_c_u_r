@@ -3,7 +3,7 @@ a diy videolooper for py/pi
 
 # things to do / bugs to fix:
 
-- ~~[ ] reload video on press is broken - the pause after load (when its not loaded in time) seems to not to work
+- [ ] ~~reload video on press is broken - the pause after load (when its not loaded in time) seems to not to work
 - [ ] mkv files break coz length lookup fails-~~
 
 # things iv done on a freshly flashed pi to run/dev r_e_c_u_r

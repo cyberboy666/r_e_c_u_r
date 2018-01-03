@@ -4,7 +4,7 @@ a diy videolooper for py/pi
 # things to do / bugs to fix:
 
 - ~~[ ] reload video on press is broken - the pause after load (when its not loaded in time) seems to not to work
-- [ ] mkv files break coz length lookup fails-
+- [ ] mkv files break coz length lookup fails-~~
 
 # things iv done on a freshly flashed pi to run/dev r_e_c_u_r
 
@@ -16,7 +16,7 @@ a diy videolooper for py/pi
 
 - change keyboard layout :  sudo raspi-config => localiation options => change keyboard layout => generic 104 => english us => english us => the default for => no compose => no then sudo reboot
 
-~~(for reading video lengths :) sudo apt-get install ffmpeg and pip install ffprobe (needed a sudo apt-get update in there the second time too)
+~~(for reading video lengths :) sudo apt-get install ffmpeg and pip install ffprobe (needed a sudo apt-get update in there the second time too)~~
 
 note that to set up the file to browser you will have to create a fle called path_to_browser.json and put in it "your/path/to/browser"
 

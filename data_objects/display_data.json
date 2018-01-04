@@ -1,1 +1,72 @@
-[{"start": -1, "end": -1, "location": "/media/pi/TIM1/samplerloop3s.mp4", "length": 4, "name": "samplerloop3s.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/teaser1.mp4", "length": 3, "name": "teaser1.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/teaser2.mp4", "length": 3, "name": "teaser2.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/teaser3.mp4", "length": 3, "name": "teaser3.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/teaser4.mp4", "length": 2, "name": "teaser4.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/Test.mp4", "length": 600, "name": "Test.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/TRASHPALACEVIDEOS/01_trashpalaceintro.mp4", "length": 26, "name": "01_trashpalaceintro.mp4"}, {"start": 5, "end": 40, "location": "/media/pi/TIM1/videos_to_play/colour_pixel_01.mp4", "length": 49, "name": "colour_pixel_01.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/teaser1.mp4", "length": 0, "name": "teaser1.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/samplerloop3s2.mp4", "length": 0, "name": "samplerloop3s2.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/videos_to_play/colour_pixel_02.mp4", "length": 87.04, "name": "colour_pixel_02.mp4"}, {"start": -1, "end": -1, "location": "/media/pi/TIM1/videos_to_play/long_spinning.mp4", "length": 804.245, "name": "long_spinning.mp4"}, {"start": -1, "end": -1, "location": "", "length": -1, "name": ""}, {"start": -1, "end": -1, "location": "", "length": -1, "name": ""}, {"start": -1, "end": -1, "location": "", "length": -1, "name": ""}]
+[
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/samplerloop3s.mp4",
+    "length": 4,
+    "name": "samplerloop3s.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/teaser1.mp4",
+    "length": 3,
+    "name": "teaser1.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/teaser2.mp4",
+    "length": 3,
+    "name": "teaser2.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/teaser3.mp4",
+    "length": 3,
+    "name": "teaser3.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/teaser4.mp4",
+    "length": 2,
+    "name": "teaser4.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/Test.mp4",
+    "length": 600,
+    "name": "Test.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/TRASHPALACEVIDEOS/01_trashpalaceintro.mp4",
+    "length": 26,
+    "name": "01_trashpalaceintro.mp4"
+  },
+  {
+    "start": 5,
+    "end": 40,
+    "location": "/media/pi/TIM1/videos_to_play/colour_pixel_01.mp4",
+    "length": 49,
+    "name": "colour_pixel_01.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/teaser1.mp4",
+    "length": 0,
+    "name": "teaser1.mp4"
+  },
+  {
+    "start": -1,
+    "end": -1,
+    "location": "/media/pi/TIM1/samplerloop3s2.mp4",
+    "length": 0,
+    "name": "samplerloop3s2.mp4"
+  }
+]

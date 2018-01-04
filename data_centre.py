@@ -6,13 +6,12 @@ from random import randint
 import time
 import inspect
 
-#from ffprobe import FFProbe
 try:
     from omxplayer.player import OMXPlayer
     has_omx = True
 except:
     has_omx = False
-print('has omx:{}'.format(has_omx))
+print('data_centre has omx:{}'.format(has_omx))
 
 
 current_message = None
@@ -76,7 +75,7 @@ logger = setup_logging()
 ######## sets paths and constants ########
 PATH_TO_DATA_OBJECTS = '{}data_objects/'.format(get_the_current_dir_path())
 PATH_TO_BROWSER = get_path_to_browser()
-EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
+EMPTY_BANK = dict(name='', location='', length=-1, start=-1, end=-1)
 DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
 print(DEV_MODE)
 ####<<<< data methods for browser tab >>>>#####
@@ -213,7 +212,7 @@ def clear_all_banks():
 ####<<<< data methods for looper tab >>>>#####
 
 def get_all_looper_data_for_display():
-    ######## read bank mappings from data object and format for displaying in asciimatics ########
+    ######## read bank mappings from data object and format for displaying ########
     memory_bank = read_json(BANK_DATA_JSON)
     loop_data = []
     for index, bank in enumerate(memory_bank):
@@ -227,7 +226,7 @@ def get_all_looper_data_for_display():
 ####<<<< data methods for looper tab >>>>#####
 
 def get_all_settings_data_for_display():
-    ######## read settings from data object and format for displaying in asciimatics ########
+    ######## read settings from data object and format for displaying ########
     settings = read_json(SETTINGS_JSON)
     display_settings = []
     for index, setting in enumerate(settings):

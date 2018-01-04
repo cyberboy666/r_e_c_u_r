@@ -1,17 +1,13 @@
-try:
-    from video_centre.video_player import video_player  # <== for deving only
-    has_omx = True
-except ImportError:
-    has_omx = False
-    from video_centre.video_player import fake_video_player
+import data_centre
+from video_centre.video_player import video_player, fake_video_player  # <== for deving only
+
 
 
 class VideoDriver(object):
     def __init__(self, root=None):
-        print('has omx :{}'.format(has_omx))
         self.root = root
         self.delay = 5
-        self.has_omx = has_omx
+        self.has_omx = data_centre.has_omx
         if self.has_omx:
             self.last_player = video_player(self.root, 'a.a')
             self.current_player = video_player(self.root, 'b.b')
@@ -72,7 +68,7 @@ class VideoDriver(object):
                 self.next_player.status, self.current_player.get_position(), self.current_player.length, \
                 self.current_player.start, self.current_player.end
         else:
-            return 0, 'test', 1, 'test', 0, 10
+            return 0, 'test', 1, 'test', 5, 10, 2, 8
 
     def exit_all_players(self):
         self.next_player.exit()

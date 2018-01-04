@@ -5,9 +5,9 @@ import data_centre
 
 class Display(object):
     MAX_LINES = 10
-    SELECTOR_WIDTH = 0.28
+    SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
-    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}      NEXT [{}] {}'
+    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}                 NEXT [{}] {}'
     VIDEO_DISPLAY_BANNER_TEXT = ' {} {} {}'
 
     def __init__(self, tk, video_driver):
@@ -34,22 +34,27 @@ class Display(object):
     def add_tags(self):
         self.display_text.tag_configure("SELECT", background="white", foreground="black")
         self.display_text.tag_configure("TITLE", background="black", foreground="red")
+        self.display_text.tag_configure("DISPLAY_MODE", background="black", foreground="magenta")
         self.display_text.tag_configure("ERROR_MESSAGE", background="red", foreground="black")
         self.display_text.tag_configure("INFO_MESSAGE", background="blue", foreground="black")
         self.display_text.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
+        self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="cyan")
 
     def load_display(self):
         self.load_title()
         self.load_player()
+        self.load_display_body()
+        self.load_message()
+        self.display_text.pack()
+
+    def load_display_body(self):
         if self.display_mode == 'BROWSER':
             self.load_browser()
         elif self.display_mode == 'SETTINGS':
             self.load_settings()
         else:
-            self.load_looper()
-            print('trying to display')
-        self.load_message()
-        self.display_text.pack()
+            self.load_sampler()
+        self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
 
     def load_title(self):
         self.display_text.insert(END, '================== r_e_c_u_r ================== \n')
@@ -66,24 +71,30 @@ class Display(object):
 
     def load_settings(self):
         line_count = 0
-        self.display_text.insert(END, '--------------- <SETTINGS> --------------- \n')
-        self.display_text.insert(END, '{:>20} {:>20} \n'.format('SETTING', 'VALUE'))
-        for index in range(len(self.settings_list)):
+        self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{:^25} {:^25} \n'.format('SETTING', 'VALUE'))
+        number_of_settings_items = len(self.settings_list)
+        for index in range(number_of_settings_items):
             if line_count >= self.MAX_LINES:
                 break
-            if index >= self.browser_start_index:
+            if index >= self.settings_start_index:
                 setting = self.settings_list[index]
-                self.display_text.insert(END, '{:>20} {:>20} \n'.format(setting[0], setting[1]))
+                self.display_text.insert(END, '{:>25} {:<25} \n'.format(setting[0], setting[1][0:25]))
                 line_count = line_count + 1
 
-    def load_looper(self):
+        for index in range(self.MAX_LINES - number_of_settings_items):
+            self.display_text.insert(END, '\n')
+
+    def load_sampler(self):
         bank_info = data_centre.get_all_looper_data_for_display()
-        self.display_text.insert(END, '--------------- <LOOPER> --------------- \n')
-        self.display_text.insert(END, '{:>4} {:>15} {:>4} {:>4} {:>4} \n'.format(
+        self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
             'bank', 'name', 'length', 'start', 'end'))
         for bank in bank_info:
-            self.display_text.insert(END, '{:>4} {:>15} {:>4} {:>4} {:>4} \n'.format(
-                bank[0], bank[1][0:15], bank[2], bank[3], bank[4]))
+            self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
+                bank[0], bank[1][0:22], bank[2], bank[3], bank[4]))
         self.select_current_playing(self.video_driver.current_player.bank_number)
 
     def load_message(self):
@@ -96,16 +107,21 @@ class Display(object):
 
     def load_browser(self):
         line_count = 0
-        self.display_text.insert(END, '--------------- <BROWSER> --------------- \n')
-        self.display_text.insert(END, '{:35} {:5} \n'.format('path', 'bank'))
+        self.display_text.insert(END, '------------------ <BROWSER> ------------------ \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{:40} {:5} \n'.format('path', 'bank'))
 
-        for index in range(len(self.browser_list)):
+        number_of_browser_items = len(self.browser_list)
+        for index in range(number_of_browser_items):
             if line_count >= self.MAX_LINES:
                 break
             if index >= self.browser_start_index:
                 path = self.browser_list[index]
-                self.display_text.insert(END, '{:35} {:5} \n'.format(path[0][0:35], path[1]))
+                self.display_text.insert(END, '{:40} {:5} \n'.format(path[0][0:35], path[1]))
                 line_count = line_count + 1
+
+        for index in range(self.MAX_LINES - number_of_browser_items):
+            self.display_text.insert(END, '\n')
 
     def highlight_this_row(self, row):
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,
@@ -128,7 +144,9 @@ class Display(object):
     @staticmethod
     def create_video_display_banner(start, end, length, position):
         banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
-                       '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-',
                        ']']
         max = len(banner_list) - 1
         if position < start:

@@ -5,7 +5,7 @@ import sys
 from user_input.actions import Actions
 from display_centre.display import Display
 from user_input.numpad_input import NumpadInput
-from video_centre.videodriver import VideoDriver
+from video_centre.video_driver import VideoDriver
 import data_centre
 
 ## create tk object

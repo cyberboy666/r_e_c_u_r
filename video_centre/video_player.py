@@ -118,7 +118,7 @@ class video_player:
 class fake_video_player:
     def __init__(self):
         self.player = None
-        self.name = name
+        self.name = 'fake'
         self.omx_running = False
         self.status = 'N/A'
         self.duration = 0

@@ -26,6 +26,10 @@ class NumpadInput(object):
         if event.char is not '.':        
             self.display.refresh_display()
 
+        # for bank in range(10):
+        #     if event.char == str(bank):
+        #         self.actions.load_this_bank_into_next_player(bank)
+
     def on_backspace_press(self, event):
         if self.display.display_mode == 'BROWSER':
             self.actions.enter_on_browser_selection()

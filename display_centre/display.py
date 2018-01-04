@@ -99,9 +99,10 @@ class Display(object):
 
     def load_message(self):
         if data_centre.current_message:
-            self.display_text.insert(END, 'INFO: {}'.format(data_centre.current_message))
-            self.display_text.tag_add("ERROR_MESSAGE", 14.0, 15.0)
-            self.tk.after(4000, data_centre.clear_message)
+            self.display_text.insert(END, '{}: {}'.format(data_centre.current_message[0], data_centre.current_message[1]))
+            self.display_text.tag_add('{}_MESSAGE'.format(data_centre.current_message[0]), 16.0, 17.0)
+            message_length = 4000
+            self.tk.after(message_length, data_centre.clear_message)
         else:
             self.display_text.insert(END, '=============================================== \n')
 

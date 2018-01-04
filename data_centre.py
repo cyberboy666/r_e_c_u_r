@@ -14,17 +14,18 @@ except:
 print('data_centre has omx:{}'.format(has_omx))
 
 
-current_message = None
+current_message = [None, None]
 
 
-def set_message(message):
+def set_message(message_type,message ):
     global current_message
     print('trying to set message')
-    current_message = message
+    current_message = [message_type, message]
+
 
 def clear_message():
     global current_message
-    current_message = None
+    current_message = [None, None]
 
 ######## sets names for the persistant data objects ########
 NEXT_BANK_JSON = 'next_bank_number.json'

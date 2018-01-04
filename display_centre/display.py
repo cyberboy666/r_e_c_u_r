@@ -4,7 +4,7 @@ import data_centre
 
 
 class Display(object):
-    MAX_LINES = 5
+    MAX_LINES = 10
     SELECTOR_WIDTH = 0.28
     ROW_OFFSET = 6.0
     VIDEO_DISPLAY_TEXT = ' NOW [{}] {}      NEXT [{}] {}'
@@ -29,7 +29,7 @@ class Display(object):
 
     @staticmethod
     def create_display_text(tk):
-        return Text(tk, bg="black", fg="white", font=('courier', 14))
+        return Text(tk, bg="black", fg="white", font=('courier', 13))
 
     def add_tags(self):
         self.display_text.tag_configure("SELECT", background="white", foreground="black")
@@ -47,15 +47,13 @@ class Display(object):
             self.load_settings()
         else:
             self.load_looper()
-        # load_divider(display)
-        if data_centre.current_message:
             print('trying to display')
-            self.load_message()
+        self.load_message()
         self.display_text.pack()
 
     def load_title(self):
-        self.display_text.insert(END, '================ r_e_c_u_r ================ \n')
-        self.display_text.tag_add("TITLE", 1.17, 1.26)
+        self.display_text.insert(END, '================== r_e_c_u_r ================== \n')
+        self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def load_player(self):
         text, banner = self.get_text_for_video_display()
@@ -89,9 +87,12 @@ class Display(object):
         self.select_current_playing(self.video_driver.current_player.bank_number)
 
     def load_message(self):
-        self.display_text.insert(END, 'INFO: {}'.format(data_centre.current_message))
-        self.display_text.tag_add("ERROR_MESSAGE", 14.0, 15.0)
-        self.tk.after(4000, data_centre.clear_message)
+        if data_centre.current_message:
+            self.display_text.insert(END, 'INFO: {}'.format(data_centre.current_message))
+            self.display_text.tag_add("ERROR_MESSAGE", 14.0, 15.0)
+            self.tk.after(4000, data_centre.clear_message)
+        else:
+            self.display_text.insert(END, '=============================================== \n')
 
     def load_browser(self):
         line_count = 0

@@ -5,19 +5,30 @@ import os
 from random import randint
 import time
 import inspect
-#from ffprobe import FFProbe
+
+try:
+    from omxplayer.player import OMXPlayer
+    has_omx = True
+except:
+    has_omx = False
+print('data_centre has omx:{}'.format(has_omx))
 
 
-current_message = None
+current_message = [None, None, None]
+number_of_messages = 0
 
-def set_message(message):
+def set_message(message_type,message ):
     global current_message
-    print('trying to set message')
-    current_message = message
+    global number_of_messages
+    current_message = [message_type, message,True]
+    number_of_messages = number_of_messages + 1
 
 def clear_message():
     global current_message
-    current_message = None
+    global number_of_messages
+    number_of_messages = number_of_messages - 1
+    if number_of_messages is 0:
+        current_message = [None, None, None]
 
 ######## sets names for the persistant data objects ########
 NEXT_BANK_JSON = 'next_bank_number.json'
@@ -66,9 +77,9 @@ def get_path_to_browser():
 logger = setup_logging()
 
 ######## sets paths and constants ########
-PATH_TO_DATA_OBJECTS = get_the_current_dir_path()
+PATH_TO_DATA_OBJECTS = '{}data_objects/'.format(get_the_current_dir_path())
 PATH_TO_BROWSER = get_path_to_browser()
-EMPTY_BANK = dict(name='',location='',length=-1,start=-1,end=-1)
+EMPTY_BANK = dict(name='', location='', length=-1, start=-1, end=-1)
 DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
 print(DEV_MODE)
 ####<<<< data methods for browser tab >>>>#####
@@ -179,9 +190,7 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
     update_a_banks_data(bank_number, new_bank, memory_bank)
 
 def get_length_for_file(location):
-    #video_length = FFProbe(location).streams[0].duration
-    #print(video_length)
-    return 0
+    return get_duration_from_path(location)
 
 def get_path_for_file(file_name):
     ######## returns full path for a given file name ########
@@ -207,7 +216,7 @@ def clear_all_banks():
 ####<<<< data methods for looper tab >>>>#####
 
 def get_all_looper_data_for_display():
-    ######## read bank mappings from data object and format for displaying in asciimatics ########
+    ######## read bank mappings from data object and format for displaying ########
     memory_bank = read_json(BANK_DATA_JSON)
     loop_data = []
     for index, bank in enumerate(memory_bank):
@@ -221,7 +230,7 @@ def get_all_looper_data_for_display():
 ####<<<< data methods for looper tab >>>>#####
 
 def get_all_settings_data_for_display():
-    ######## read settings from data object and format for displaying in asciimatics ########
+    ######## read settings from data object and format for displaying ########
     settings = read_json(SETTINGS_JSON)
     display_settings = []
     for index, setting in enumerate(settings):
@@ -337,4 +346,11 @@ def update_next_bank_number(new_value):
         current_message = 'the bank you pressed is empty'
     else:
         update_json(NEXT_BANK_JSON, new_value)
+
+def get_duration_from_path(path):
+    temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
+    duration = temp_player.duration()
+    temp_player.quit()
+    return duration
+
 

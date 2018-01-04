@@ -104,7 +104,7 @@ class video_player:
             self.set_position(after_seek_position)
             #self.player.seek(amount)
         else:
-            data_centre.current_message = ['INFO', 'can not seek outside range']
+            data_centre.set_message('INFO', 'can not seek outside range')
 
     def set_position(self, position):
         self.player.set_position(position)

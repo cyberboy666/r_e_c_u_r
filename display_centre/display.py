@@ -35,8 +35,8 @@ class Display(object):
         self.display_text.tag_configure("SELECT", background="white", foreground="black")
         self.display_text.tag_configure("TITLE", background="black", foreground="red")
         self.display_text.tag_configure("DISPLAY_MODE", background="black", foreground="magenta")
-        self.display_text.tag_configure("ERROR_MESSAGE", background="red", foreground="black")
-        self.display_text.tag_configure("INFO_MESSAGE", background="blue", foreground="black")
+        self.display_text.tag_configure("ERROR_MESSAGE", background="red", foreground="white")
+        self.display_text.tag_configure("INFO_MESSAGE", background="blue", foreground="white")
         self.display_text.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
         self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="cyan")
 
@@ -81,13 +81,17 @@ class Display(object):
         self.select_current_playing(self.video_driver.current_player.bank_number)
 
     def load_message(self):
-        if data_centre.current_message:
-            self.display_text.insert(END, '{}: {}'.format(data_centre.current_message[0], data_centre.current_message[1]))
-            self.display_text.tag_add('{}_MESSAGE'.format(data_centre.current_message[0]), 16.0, 17.0)
+        if data_centre.current_message[1]:
+            self.display_text.insert(END, '{:5}: {:38}'.format(data_centre.current_message[0], data_centre.current_message[1][0:38]))
+            self.display_text.tag_add('{}_MESSAGE'.format(data_centre.current_message[0]), 16.0,16.0 + self.SELECTOR_WIDTH)
+        print(data_centre.current_message[2])
+        if data_centre.current_message[2]:
+            self.clear_message()
+
+    def clear_message(self):
+            data_centre.current_message[2] = False
             message_length = 4000
             self.tk.after(message_length, data_centre.clear_message)
-        else:
-            self.display_text.insert(END, '=============================================== \n')
 
     def load_browser(self):
         line_count = 0
@@ -123,17 +127,6 @@ class Display(object):
 
         for index in range(self.MAX_LINES - number_of_settings_items):
             self.display_text.insert(END, '\n')
-
-    def load_message(self):
-        if data_centre.current_message[1]:
-            print('trying to show message')
-            self.display_text.insert(END, 'INFO: {}'.format(data_centre.current_message))
-            self.display_text.tag_add("ERROR_MESSAGE", 14.0, 15.0)
-            self.tk.after(4000, data_centre.clear_message)
-        else:
-            self.display_text.insert(END, '=============================================== \n')
-
-
 
     def highlight_this_row(self, row):
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,

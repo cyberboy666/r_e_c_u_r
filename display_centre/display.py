@@ -7,7 +7,7 @@ class Display(object):
     MAX_LINES = 10
     SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
-    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}                 NEXT [{}] {}'
+    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}              NEXT [{}] {}'
     VIDEO_DISPLAY_BANNER_TEXT = ' {} {} {}'
 
     def __init__(self, tk, video_driver):
@@ -47,15 +47,6 @@ class Display(object):
         self.load_message()
         self.display_text.pack()
 
-    def load_display_body(self):
-        if self.display_mode == 'BROWSER':
-            self.load_browser()
-        elif self.display_mode == 'SETTINGS':
-            self.load_settings()
-        else:
-            self.load_sampler()
-        self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
-
     def load_title(self):
         self.display_text.insert(END, '================== r_e_c_u_r ================== \n')
         self.display_text.tag_add("TITLE", 1.19, 1.28)
@@ -69,22 +60,14 @@ class Display(object):
         self.display_text.insert(END, banner + '\n')
         self.display_text.tag_add("PLAYER_INFO", 3.0, end_of_banner)
 
-    def load_settings(self):
-        line_count = 0
-        self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:^25} {:^25} \n'.format('SETTING', 'VALUE'))
-        number_of_settings_items = len(self.settings_list)
-        for index in range(number_of_settings_items):
-            if line_count >= self.MAX_LINES:
-                break
-            if index >= self.settings_start_index:
-                setting = self.settings_list[index]
-                self.display_text.insert(END, '{:>25} {:<25} \n'.format(setting[0], setting[1][0:25]))
-                line_count = line_count + 1
-
-        for index in range(self.MAX_LINES - number_of_settings_items):
-            self.display_text.insert(END, '\n')
+    def load_display_body(self):
+        if self.display_mode == 'BROWSER':
+            self.load_browser()
+        elif self.display_mode == 'SETTINGS':
+            self.load_settings()
+        else:
+            self.load_sampler()
+        self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
 
     def load_sampler(self):
         bank_info = data_centre.get_all_looper_data_for_display()
@@ -123,6 +106,34 @@ class Display(object):
 
         for index in range(self.MAX_LINES - number_of_browser_items):
             self.display_text.insert(END, '\n')
+
+    def load_settings(self):
+        line_count = 0
+        self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{:^25} {:^20} \n'.format('SETTING', 'VALUE'))
+        number_of_settings_items = len(self.settings_list)
+        for index in range(number_of_settings_items):
+            if line_count >= self.MAX_LINES:
+                break
+            if index >= self.settings_start_index:
+                setting = self.settings_list[index]
+                self.display_text.insert(END, '{:>25} {:<20} \n'.format(setting[0], setting[1][0:20]))
+                line_count = line_count + 1
+
+        for index in range(self.MAX_LINES - number_of_settings_items):
+            self.display_text.insert(END, '\n')
+
+    def load_message(self):
+        if data_centre.current_message[1]:
+            print('trying to show message')
+            self.display_text.insert(END, 'INFO: {}'.format(data_centre.current_message))
+            self.display_text.tag_add("ERROR_MESSAGE", 14.0, 15.0)
+            self.tk.after(4000, data_centre.clear_message)
+        else:
+            self.display_text.insert(END, '=============================================== \n')
+
+
 
     def highlight_this_row(self, row):
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,

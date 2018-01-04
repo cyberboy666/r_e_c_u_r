@@ -30,26 +30,35 @@ class video_player:
         self.player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
         self.omx_running = True
         self.duration = self.player.duration()
+        if(self.end is -1): 
+            self.end = self.duration
+        if(self.start is -1):
+            self.start = 0
         print('{}: the duration is {}'.format(self.name, self.duration))
+        if(self.start > 0.5):
+            self.set_position(self.start - 0.5)
         self.pause_at_start()
 
     def pause_at_start(self):
-        position = self.get_position()
-        if(position > -0.05):
+        position = self.get_position()  
+        start_threshold = self.start - 0.05
+        print('position:{} threshold:{}'.format(position, start_threshold))
+        if(position > start_threshold):
             self.status = 'LOADED'
             self.player.pause()
+            self.player.set_alpha(255)       
         elif(self.omx_running):
             self.root.after(5,self.pause_at_start)
 
     def play(self):
         self.status = 'PLAYING'
-        self.player.set_alpha(255)        
         self.player.play()
         self.pause_at_end()
 
     def pause_at_end(self):
         position = self.get_position()
-        if(position > (self.duration - 0.2 )):
+        end_threshold = self.end - 0.2
+        if(position > end_threshold):
             self.status = 'FINISHED'
             self.player.pause()
             print('its paused at end!')
@@ -88,6 +97,9 @@ class video_player:
 
     def seek(self, amount):
         self.player.seek(amount)
+
+    def set_position(self, position):
+        self.player.set_position(position)
 
     def exit(self):
         try:

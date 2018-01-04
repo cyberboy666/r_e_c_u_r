@@ -52,7 +52,7 @@ class Actions(object):
     def toggle_pause_on_player(self):
         self.video_driver.current_player.toggle_pause()
 
-    def seek_forward_on_player(self):
+    def seek_forward_on_player(self):    
         self.video_driver.current_player.seek(30)
 
     def seek_back_on_player(self):

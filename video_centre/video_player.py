@@ -14,12 +14,12 @@ class video_player:
         self.player = None
         self.name = name
         self.omx_running = False
-        self.status = 'UNASSIGNED'
-        self.duration = 0
+        self.status = 'N/A'
+        self.duration = 0.0
         self.bank_number = '-'
-        self.start = -1
-        self.end = -1
-        self.length = 0
+        self.start = -1.0
+        self.end = -1.0
+        self.length = 0.0
         self.location = ''
         self.arguments = ['--no-osd', '--win', screen_size, '--alpha', '0'] 
 
@@ -29,7 +29,9 @@ class video_player:
         self.status = 'LOADING'
         self.player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
         self.omx_running = True
-        self.duration = self.player.duration()
+        print('duration is: {}'.format(self.duration))
+        self.duration = self.player.duration() # <-- uneeded once self.duration stores float
+        print('new duration is: {}'.format(self.duration))
         if(self.end is -1): 
             self.end = self.duration
         if(self.start is -1):
@@ -85,9 +87,10 @@ class video_player:
     def get_context_for_player(self):
         next_context = data_centre.get_next_context()
         self.location = next_context['location']
-        self.length = next_context['length']
+        self.duration = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
+        self.length = self.end - self.start
         self.bank_number = next_context['bank_number']
 
     def toggle_pause(self):
@@ -95,7 +98,11 @@ class video_player:
         self.status = self.player.playback_status().upper()
 
     def seek(self, amount):
-        self.player.seek(amount)
+        position = self.get_position()
+        after_seek_position = position + amount
+        if after_seek_position > self.start and after_seek_position < self.end:
+            self.set_position(after_seek_position)
+            #self.player.seek(amount)
 
     def set_position(self, position):
         self.player.set_position(position)
@@ -103,7 +110,7 @@ class video_player:
     def exit(self):
         try:
             self.player.quit()
-            self.status = 'UNASSIGNED'
+            self.status = 'N/A'
             self.omx_running = False
         except:
             pass
@@ -113,7 +120,7 @@ class fake_video_player:
         self.player = None
         self.name = name
         self.omx_running = False
-        self.status = 'UNASSIGNED'
+        self.status = 'N/A'
         self.duration = 0
         self.bank_number = '-'
         self.start = -1

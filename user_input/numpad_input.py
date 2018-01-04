@@ -23,6 +23,8 @@ class NumpadInput(object):
             self.on_slash_press()
         elif event.char == '.':
             self.on_dot_press()
+        if event.char is not '.':        
+            self.display.refresh_display()
 
     def on_backspace_press(self, event):
         if self.display.display_mode == 'BROWSER':
@@ -31,6 +33,7 @@ class NumpadInput(object):
             self.actions.toggle_pause_on_player()
         elif self.display.display_mode == 'SETTINGS':
             self.actions.enter_on_settings_selection()
+        self.display.refresh_display()
 
     def on_minus_press(self):
         if self.display.display_mode == 'BROWSER':
@@ -59,3 +62,4 @@ class NumpadInput(object):
 
     def on_dot_press(self):
         self.actions.quit_the_program()
+

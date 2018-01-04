@@ -7,8 +7,8 @@ class Display(object):
     MAX_LINES = 5
     SELECTOR_WIDTH = 0.28
     ROW_OFFSET = 6.0
-    VIDEO_DISPLAY_TEXT = 'NOW [{}] {}     NEXT [{}] {}'
-    VIDEO_DISPLAY_BANNER_TEXT = '{} {} {}'
+    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}      NEXT [{}] {}'
+    VIDEO_DISPLAY_BANNER_TEXT = ' {} {} {}'
 
     def __init__(self, tk, video_driver):
         self.video_driver = video_driver
@@ -115,28 +115,28 @@ class Display(object):
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
     def get_text_for_video_display(self):
-        now_bank, now_status, next_bank, next_status, duration, video_length = self.video_driver.get_info_for_video_display()
-        banner = self.create_video_display_banner(duration, video_length)
-        time_been = data_centre.convert_int_to_string_for_display(duration)
+        now_bank, now_status, next_bank, next_status, position, video_length, start, end = self.video_driver.get_info_for_video_display()
+        banner = self.create_video_display_banner(start, end, video_length, position)
+        time_been = data_centre.convert_int_to_string_for_display(position - start)
         time_left = data_centre.convert_int_to_string_for_display(
-            video_length - duration)
+            end - position)
 
         return self.VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left), \
                self.VIDEO_DISPLAY_TEXT.format(now_bank, now_status, next_bank, next_status)
 
     @staticmethod
-    def create_video_display_banner(duration, video_length):
+    def create_video_display_banner(start, end, length, position):
         banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        ']']
         max = len(banner_list) - 1
-        if duration <= 0:
+        if position < start:
             banner_list[0] = '<'
-        elif duration >= video_length:
+        elif position > end:
             banner_list[max] = '>'
-        else:
-            marker = int(math.floor(float(duration) /
-                                    float(video_length) * (max - 1)) + 1)
+        elif length != 0:
+            marker = int(math.floor(float(position - start) /
+                                    float(length) * (max - 1)) + 1)
             banner_list[marker] = '*'
 
         return ''.join(banner_list)
@@ -150,10 +150,10 @@ class Display(object):
             self.highlight_this_row(self.browser_index)
         elif self.display_mode is 'SETTINGS':
             self.highlight_this_row(self.settings_index)
+        self.display_text.focus_set()
 
     def update_screen(self):
         self.refresh_display()
-        self.display_text.focus_set()
         self.tk.after(1000, self.update_screen)
 
     def select_current_playing(self, bank_number):

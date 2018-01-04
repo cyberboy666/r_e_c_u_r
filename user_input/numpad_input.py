@@ -24,7 +24,7 @@ class NumpadInput(object):
         elif event.char == '.':
             self.on_dot_press()
 
-    def on_backspace_press(self):
+    def on_backspace_press(self, event):
         if self.display.display_mode == 'BROWSER':
             self.actions.enter_on_browser_selection()
         elif self.display.display_mode == 'LOOPER':

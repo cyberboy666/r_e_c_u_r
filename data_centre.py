@@ -5,10 +5,18 @@ import os
 from random import randint
 import time
 import inspect
+
 #from ffprobe import FFProbe
+try:
+    from omxplayer.player import OMXPlayer
+    has_omx = True
+except:
+    has_omx = False
+print('has omx:{}'.format(has_omx))
 
 
 current_message = None
+
 
 def set_message(message):
     global current_message
@@ -179,9 +187,7 @@ def create_new_bank_mapping(bank_number,file_name,memory_bank=[]):
     update_a_banks_data(bank_number, new_bank, memory_bank)
 
 def get_length_for_file(location):
-    #video_length = FFProbe(location).streams[0].duration
-    #print(video_length)
-    return 0
+    return get_duration_from_path(location)
 
 def get_path_for_file(file_name):
     ######## returns full path for a given file name ########
@@ -337,4 +343,11 @@ def update_next_bank_number(new_value):
         current_message = 'the bank you pressed is empty'
     else:
         update_json(NEXT_BANK_JSON, new_value)
+
+def get_duration_from_path(path):
+    temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
+    duration = temp_player.duration()
+    temp_player.quit()
+    return duration
+
 

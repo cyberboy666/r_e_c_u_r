@@ -42,7 +42,6 @@ class video_player:
     def pause_at_start(self):
         position = self.get_position()  
         start_threshold = self.start - 0.05
-        print('position:{} threshold:{}'.format(position, start_threshold))
         if(position > start_threshold):
             self.status = 'LOADED'
             self.player.pause()
@@ -121,4 +120,6 @@ class fake_video_player:
         self.end = -1
         self.length = 0
         self.location = ''
+
+
 

@@ -4,7 +4,7 @@ except:
     pass
 import data_centre
 if data_centre.DEV_MODE == 'ON':
-    screen_size = '250,350,800,800'
+    screen_size = '50,350,550,750'
 else:
     screen_size = '45,15,970,760' #'--blank'
 

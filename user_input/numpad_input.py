@@ -33,7 +33,7 @@ class NumpadInput(object):
     def on_backspace_press(self, event):
         if self.display.display_mode == 'BROWSER':
             self.actions.enter_on_browser_selection()
-        elif self.display.display_mode == 'LOOPER':
+        elif self.display.display_mode == 'SAMPLER':
             self.actions.toggle_pause_on_player()
         elif self.display.display_mode == 'SETTINGS':
             self.actions.enter_on_settings_selection()
@@ -42,7 +42,7 @@ class NumpadInput(object):
     def on_minus_press(self):
         if self.display.display_mode == 'BROWSER':
             self.actions.move_browser_selection_up()
-        elif self.display.display_mode == 'LOOPER':
+        elif self.display.display_mode == 'SAMPLER':
             self.actions.seek_back_on_player()
         elif self.display.display_mode == 'SETTINGS':
             self.actions.move_settings_selection_up()
@@ -50,7 +50,7 @@ class NumpadInput(object):
     def on_plus_press(self):
         if self.display.display_mode == 'BROWSER':
             self.actions.move_browser_selection_down()
-        elif self.display.display_mode == 'LOOPER':
+        elif self.display.display_mode == 'SAMPLER':
             self.actions.seek_forward_on_player()
         elif self.display.display_mode == 'SETTINGS':
             self.actions.move_settings_selection_down()

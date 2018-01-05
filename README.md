@@ -1,5 +1,5 @@
 # r_e_c_u_r
-a diy videolooper for py/pi
+a diy video looper for py/pi
 
 # things to do / bugs to fix:
 

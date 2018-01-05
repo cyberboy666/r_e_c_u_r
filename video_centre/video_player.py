@@ -2,16 +2,17 @@ try:
     from omxplayer.player import OMXPlayer
 except:
     pass
-import data_centre
-if data_centre.DEV_MODE == 'ON':
-    screen_size = '50,350,550,750'
-else:
-    screen_size = '45,15,970,760' #'--blank'
+
 
 class video_player:
-    def __init__(self, root, name):
+    def __init__(self, root, message_handler, data, name):
         self.root = root
-        self.player = None
+        self.message_handler = message_handler
+        self.data = data
+
+        self.screen_size = self.set_screen_size()
+
+        self.omx_player = None
         self.name = name
         self.omx_running = False
         self.status = 'N/A'
@@ -27,10 +28,10 @@ class video_player:
         self.get_context_for_player()
 
         self.status = 'LOADING'
-        self.player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
+        self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
         self.omx_running = True
         print('duration is: {}'.format(self.duration))
-        self.duration = self.player.duration() # <-- uneeded once self.duration stores float
+        self.duration = self.omx_player.duration() # <-- uneeded once self.duration stores float
         print('new duration is: {}'.format(self.duration))
         if(self.end is -1): 
             self.end = self.duration
@@ -46,14 +47,14 @@ class video_player:
         start_threshold = self.start - 0.05
         if(position > start_threshold):
             self.status = 'LOADED'
-            self.player.pause()
-            self.player.set_alpha(255)       
+            self.omx_player.pause()
+            self.omx_player.set_alpha(255)
         elif(self.omx_running):
             self.root.after(5,self.pause_at_start)
 
     def play(self):
         self.status = 'PLAYING'
-        self.player.play()
+        self.omx_player.play()
         self.pause_at_end()
 
     def pause_at_end(self):
@@ -61,7 +62,7 @@ class video_player:
         end_threshold = self.end - 0.2
         if(position > end_threshold):
             self.status = 'FINISHED'
-            self.player.pause()
+            self.omx_player.pause()
             print('its paused at end!')
         elif(self.omx_running):
             self.root.after(5,self.pause_at_end)
@@ -79,7 +80,7 @@ class video_player:
 
     def get_position(self):
         try:
-            return self.player.position()
+            return self.omx_player.position()
         except:
             print('{}: error get_position'.format(self.name))
             return -1
@@ -94,8 +95,8 @@ class video_player:
         self.bank_number = next_context['bank_number']
 
     def toggle_pause(self):
-        self.player.play_pause()
-        self.status = self.player.playback_status().upper()
+        self.omx_player.play_pause()
+        self.status = self.omx_player.playback_status().upper()
 
     def seek(self, amount):
         position = self.get_position()
@@ -107,15 +108,22 @@ class video_player:
             data_centre.set_message('INFO', 'can not seek outside range')
 
     def set_position(self, position):
-        self.player.set_position(position)
+        self.omx_player.set_position(position)
 
     def exit(self):
         try:
-            self.player.quit()
+            self.omx_player.quit()
             self.status = 'N/A'
             self.omx_running = False
         except:
             pass
+
+    def set_screen_size(self):
+        if self.data.DEV_MODE == 'ON':
+            return '50,350,550,750'
+        else:
+            return '45,15,970,760'
+
 
 class fake_video_player:
     def __init__(self):

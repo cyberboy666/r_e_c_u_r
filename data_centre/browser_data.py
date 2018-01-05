@@ -4,7 +4,8 @@ import data_centre.data
 
 class BrowserData(object):
     ######## a data class used mainly for managing the browser list ########
-    def __init__(self):
+    def __init__(self, initial_path):
+        self.initial_path = initial_path
         self.open_folders = []
         self.browser_list = []
         self.memory_bank = []
@@ -19,7 +20,7 @@ class BrowserData(object):
     def generate_browser_list(self):
         ######## starts the recursive process of listing all folders and video files to display ########
         self.browser_list = []
-        self._add_folder_to_browser_list(data_centre.data.PATH_TO_BROWSER, 0)
+        self._add_folder_to_browser_list(self.initial_path, 0)
 
         self.memory_bank = data_centre.data.read_json(data_centre.data.BANK_DATA_JSON)
 

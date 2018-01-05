@@ -23,7 +23,7 @@ def read_json(file_name):
 
 
 def update_json(file_name, data):
-    with open('{}{}'.format(Data.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
+    with open('{}{}'.format(PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
         json.dump(data, data_file)
 
 
@@ -36,10 +36,10 @@ PATH_TO_BROWSER = get_path_to_browser()
 
 class Data(object):
     def __init__(self, message_handler):
-        self.browser_data = BrowserData()
+        self.browser_data = BrowserData(PATH_TO_BROWSER)
         self.message_handler = message_handler
 
-        self.has_omx = self.try_import_omx()
+        self.has_omx = self._try_import_omx()
         self.DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
 
 
@@ -92,7 +92,7 @@ class Data(object):
         return self.browser_data.generate_browser_list()
 
     def return_browser_list(self):
-        return self.browser_data.browser_list()
+        return self.browser_data.browser_list
 
     @staticmethod
     def get_settings_data():
@@ -220,7 +220,7 @@ class Data(object):
         update_json('next_bank_number.json',next_slot_number)
 
     @staticmethod
-    def try_import_omx():
+    def _try_import_omx():
         try:
             from omxplayer.player import OMXPlayer
             return True

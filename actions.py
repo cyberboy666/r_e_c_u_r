@@ -8,30 +8,26 @@ class Actions(object):
 
 
     def move_browser_selection_down(self):
-        # self.display.move_browser_down()
-        self.display.navigate_menu('down', len(self.display.browser_list))
+        self.display.navigate_menu('down', len(self.data.return_browser_list()))
 
     def move_browser_selection_up(self):
         # self.display.move_browser_up()
-        self.display.navigate_menu('up', len(self.display.browser_list))
+        self.display.navigate_menu('up', len(self.data.return_browser_list()))
 
     def enter_on_browser_selection(self):
-
         is_file, name = self.data.browser_data.extract_file_type_and_name_from_browser_format(
-            self.data.browser_list[self.display.selected_list_index][0])
+            self.data.return_browser_list()[self.display.selected_list_index]['name'])
         if is_file:
             self.data.create_new_bank_mapping_in_first_open(name)
         else:
             self.data.browser_data.update_open_folders(name)
-        self.display.browser_list = self.data.rewrite_browser_list()
+        self.data.rewrite_browser_list()
 
     def move_settings_selection_down(self):
-        # self.display.move_settings_down()
-        self.display.navigate_menu('down', len(self.display.settings_list))
+        self.display.navigate_menu('down', len(self.data.get_settings_data()))
 
     def move_settings_selection_up(self):
-        # self.display.move_settings_up()
-        self.display.navigate_menu('up', len(self.display.settings_list))
+        self.display.navigate_menu('up', len(self.data.get_settings_data()))
 
     def enter_on_settings_selection(self):
         self.data.switch_settings(self.display.selected_list_index)
@@ -45,7 +41,7 @@ class Actions(object):
         self.tk.destroy()
 
     def load_this_slot_into_next_player(self, slot):
-        update_next_slot_number(slot)
+        self.data.update_next_slot_number(slot)
         self.video_driver.next_player.reload()
 
     def trigger_next_player(self):

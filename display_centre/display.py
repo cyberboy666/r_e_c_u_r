@@ -85,17 +85,18 @@ class Display(object):
             self.selected_list_index = self.video_driver.current_player.bank_number
 
     def _load_browser(self):
+        browser_list = self.data.return_browser_list()
         number_of_lines_displayed = 0
         self.display_text.insert(END, '------------------ <BROWSER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.insert(END, '{:40} {:5} \n'.format('path', 'bank'))
 
-        number_of_browser_items = len(self.browser_list)
+        number_of_browser_items = len(browser_list)
         for index in range(number_of_browser_items):
             if number_of_lines_displayed >= self.MENU_HEIGHT:
                 break
             if index >= self.top_menu_index:
-                path = self.browser_list[index]
+                path = browser_list[index]
                 self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:35], path['bank']))
                 number_of_lines_displayed = number_of_lines_displayed + 1
 

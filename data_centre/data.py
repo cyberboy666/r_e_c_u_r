@@ -14,7 +14,7 @@ BANK_DATA_JSON = 'display_data.json'
 NEXT_SLOT_JSON = 'next_bank_number.json'
 SETTINGS_JSON = 'settings.json'
 EMPTY_BANK = dict(name='', location='', length=-1, start=-1, end=-1)
-PATH_TO_DATA_OBJECTS = '{}\\json_objects\\'.format(get_the_current_dir_path())
+PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
 def read_json(file_name):
     with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:

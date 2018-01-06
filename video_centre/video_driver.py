@@ -8,10 +8,11 @@ class VideoDriver(object):
         self.data = data
         self.delay = 5
         self.has_omx = self.data.has_omx
+        print(self.has_omx)
         if self.has_omx:
-            self.last_player = video_player(self.root, 'a.a')
-            self.current_player = video_player(self.root, 'b.b')
-            self.next_player = video_player(self.root, 'c.c')
+            self.last_player = video_player(self.root, self.message_handler, self.data, 'a.a')
+            self.current_player = video_player(self.root,self.message_handler, self.data, 'b.b')
+            self.next_player = video_player(self.root, self.message_handler, self.data, 'c.c')
             self.manual_next = False
             self.print_status()
             self.root.after(self.delay, self.begin_playing)

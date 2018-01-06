@@ -66,7 +66,6 @@ class Display(object):
         else:
             self._load_sampler()
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
-        print('selected_list_index:{}, top_menu_index:{}'.format(self.selected_list_index, self.top_menu_index))
         self._highlight_this_row(self.selected_list_index - self.top_menu_index)
 
     def _load_sampler(self):
@@ -170,7 +169,7 @@ class Display(object):
 
     def _update_screen_every_second(self):
         self.refresh_display()
-        self.tk.after(1000, self._update_screen_every_second)
+        self.tk.after(500, self._update_screen_every_second)
 
     def refresh_display(self):
         self.display_text.configure(state='normal')

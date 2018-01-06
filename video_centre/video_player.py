@@ -22,7 +22,7 @@ class video_player:
         self.end = -1.0
         self.length = 0.0
         self.location = ''
-        self.arguments = ['--no-osd', '--win', screen_size, '--alpha', '0'] 
+        self.arguments = ['--no-osd', '--win', self.screen_size, '--alpha', '0'] 
 
     def load(self):
         self.get_context_for_player()
@@ -86,7 +86,7 @@ class video_player:
             return -1
 
     def get_context_for_player(self):
-        next_context = data_centre.get_next_context()
+        next_context = self.data.get_next_context()
         self.location = next_context['location']
         self.duration = next_context['length']
         self.start = next_context['start']
@@ -105,7 +105,7 @@ class video_player:
             self.set_position(after_seek_position)
             #self.player.seek(amount)
         else:
-            data_centre.set_message('INFO', 'can not seek outside range')
+            self.message_handler.set_message('INFO', 'can not seek outside range')
 
     def set_position(self, position):
         self.omx_player.set_position(position)

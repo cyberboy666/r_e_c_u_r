@@ -11,9 +11,9 @@ def get_the_current_dir_path():
     return os.path.split(current_file_path)[0]
 
 BANK_DATA_JSON = 'display_data.json'
-NEXT_SLOT_JSON = 'next_bank_number.json'
+NEXT_SLOT_JSON = 'next_slot_number.json'
 SETTINGS_JSON = 'settings.json'
-EMPTY_BANK = dict(name='', location='', length=-1, start=-1, end=-1)
+EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
 def read_json(file_name):
@@ -54,7 +54,7 @@ class Data(object):
         return False
 
     def create_new_slot_mapping(self, slot_number, file_name):
-        ######## used for mapping current video to a specific bank ########
+        ######## used for mapping current video to a specific slot ########
         has_location, location = self._get_path_for_file(file_name)
         length = self._get_length_for_file(location)
         new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1)
@@ -63,8 +63,8 @@ class Data(object):
     @staticmethod
     def clear_all_slots():
         memory_bank = read_json(BANK_DATA_JSON)
-        for index, bank in enumerate(memory_bank):
-            memory_bank[index] = EMPTY_BANK
+        for index in enumerate(memory_bank):
+            memory_bank[index] = EMPTY_SLOT
         update_json(BANK_DATA_JSON, memory_bank)
 
     def update_next_slot_number(self, new_value):
@@ -125,8 +125,13 @@ class Data(object):
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
                        length=next_slot_details['length'], start=start_value, end=end_value,
-                       bank_number=next_slot_number)
+                       slot_number=next_slot_number)
         return context
+
+    def update_slot_start_to_this_time(self, slot_number, time):
+        memory_bank = read_json(BANK_DATA_JSON)
+        memory_bank[slot_number]['start'] = time
+        update_json(BANK_DATA_JSON, memory_bank)
 
     def _get_length_for_file(self, path):
         if self.has_omx:
@@ -145,10 +150,10 @@ class Data(object):
         return False, ''
 
     @staticmethod
-    def _update_a_slots_data(bank_number, slot_info):
-        ######## overwrite a given banks info with new data ########
+    def _update_a_slots_data(slot_number, slot_info):
+        ######## overwrite a given slots info with new data ########
         memory_bank = read_json(BANK_DATA_JSON)
-        memory_bank[bank_number] = slot_info
+        memory_bank[slot_number] = slot_info
         update_json(BANK_DATA_JSON, memory_bank)
 
     @staticmethod
@@ -212,12 +217,12 @@ class Data(object):
         if playback_mode == 'SAMPLER':
             next_slot_number = current_slot_number
         elif playback_mode == 'RANDOM':
-            #TODO: actually find which banks have value and only use those
+            #TODO: actually find which slots have value and only use those
             next_slot_number = randint(0,14)
         elif playback_mode == 'PLAYLIST':
             #TODO: implement some playlist objects and logic at some point
             next_slot_number = current_slot_number
-        update_json('next_bank_number.json',next_slot_number)
+        update_json('next_slot_number.json',next_slot_number)
 
     @staticmethod
     def _try_import_omx():

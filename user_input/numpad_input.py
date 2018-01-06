@@ -1,7 +1,8 @@
 
 
 class NumpadInput(object):
-    def __init__(self, display, actions):
+    def __init__(self, message_handler, display, actions):
+        self.message_handler = message_handler
         self.display = display
         self.actions = actions
         self.bind_actions()
@@ -23,12 +24,28 @@ class NumpadInput(object):
             self.on_slash_press()
         elif event.char == '.':
             self.on_dot_press()
+        elif event.char == '0':
+            self.on_0_press()
+        elif event.char == '1':
+            self.on_1_press()
+        elif event.char == '2':
+            self.on_2_press()
+        elif event.char == '3':
+            self.on_3_press()
+        elif event.char == '4':
+            self.on_4_press()
+        elif event.char == '5':
+            self.on_5_press()
+        elif event.char == '6':
+            self.on_6_press()
+        elif event.char == '7':
+            self.on_7_press()
+        elif event.char == '8':
+            self.on_8_press()
+        elif event.char == '9':
+            self.on_9_press()
         if event.char is not '.':        
             self.display.refresh_display()
-
-        # for bank in range(10):
-        #     if event.char == str(bank):
-        #         self.actions.load_this_bank_into_next_player(bank)
 
     def on_backspace_press(self, event):
         if self.display.display_mode == 'BROWSER':
@@ -62,8 +79,68 @@ class NumpadInput(object):
         self.actions.cycle_display_mode()
 
     def on_slash_press(self):
-        pass
+        self.actions.toggle_function()
 
     def on_dot_press(self):
         self.actions.quit_the_program()
+
+    def on_0_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(0)
+
+    def on_1_press(self):
+        if self.message_handler.function_on:
+            self.actions.set_playing_sample_start_to_current_duration()
+        else:
+            self.actions.load_this_slot_into_next_player(1)
+
+    def on_2_press(self):
+        if self.message_handler.function_on:
+            self.actions.clear_playing_sample_start_time()
+        else:
+            self.actions.load_this_slot_into_next_player(2)
+
+    def on_3_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(3)
+
+    def on_4_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(4)
+
+    def on_5_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(5)
+
+    def on_6_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(6)
+
+    def on_7_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(7)
+
+    def on_8_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(8)
+
+    def on_9_press(self):
+        if self.message_handler.function_on:
+            pass
+        else:
+            self.actions.load_this_slot_into_next_player(9)
 

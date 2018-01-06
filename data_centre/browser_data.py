@@ -27,9 +27,9 @@ class BrowserData(object):
         for browser_line in self.browser_list:
             is_file, file_name = self.extract_file_type_and_name_from_browser_format(browser_line['name'])
             if is_file:
-                is_banked, bank_number = self._is_file_in_memory_bank(file_name)
-                if is_banked:
-                    browser_line['bank'] = str(bank_number)
+                is_slotted, slot_number = self._is_file_in_memory_bank(file_name)
+                if is_slotted:
+                    browser_line['bank'] = str(slot_number)
 
         return self.browser_list
 
@@ -49,7 +49,7 @@ class BrowserData(object):
         indent = ' ' * 4 * (current_level)
         for folder in dirs:
             is_open, char = self._check_folder_state(folder)
-            self.browser_list.append(dict(name='{}{}{}'.format(indent, folder, char), bank='x'))
+            self.browser_list.append(dict(name='{}{}{}'.format(indent, folder, char), slot='x'))
             if (is_open):
                 next_path = '{}/{}'.format(root, folder)
                 next_level = current_level + 1
@@ -58,7 +58,7 @@ class BrowserData(object):
         for f in files:
             split_name = os.path.splitext(f)
             if (split_name[1] in ['.mp4', '.mkv']):
-                self.browser_list.append(dict(name='{}{}'.format(indent, split_name[0]), bank='-'))
+                self.browser_list.append(dict(name='{}{}'.format(indent, split_name[0]), slot='-'))
 
     def _check_folder_state(self, folder_name):
         ######## used for displaying folders as open or closed ########
@@ -71,8 +71,8 @@ class BrowserData(object):
         ######## used for displaying the mappings in browser view ########
         if not self.memory_bank:
             self.memory_bank = data_centre.data.read_json(data_centre.data.BANK_DATA_JSON)
-        for index, bank in enumerate(self.memory_bank):
-            if file_name == bank['name']:
+        for index, slot in enumerate(self.memory_bank):
+            if file_name == slot['name']:
                 return True, index
         return False, ''
 

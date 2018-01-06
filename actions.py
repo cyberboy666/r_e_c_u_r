@@ -18,7 +18,7 @@ class Actions(object):
         is_file, name = self.data.browser_data.extract_file_type_and_name_from_browser_format(
             self.data.return_browser_list()[self.display.selected_list_index]['name'])
         if is_file:
-            self.data.create_new_bank_mapping_in_first_open(name)
+            self.data.create_new_slot_mapping_in_first_open(name)
         else:
             self.data.browser_data.update_open_folders(name)
         self.data.rewrite_browser_list()
@@ -51,11 +51,11 @@ class Actions(object):
         self.display.topscreen_menu_index = 0
         self.display.current_menu_index = self.display.topscreen_menu_index
         if self.display.display_mode == "BROWSER":
-            self.display.display_mode = "SAMPLER"
-        elif self.display.display_mode == "SAMPLER":
             self.display.display_mode = "SETTINGS"
-        elif self.display.display_mode == "SETTINGS":
+        elif self.display.display_mode == "SAMPLER":
             self.display.display_mode = "BROWSER"
+        elif self.display.display_mode == "SETTINGS":
+            self.display.display_mode = "SAMPLER"
 
     def toggle_pause_on_player(self):
         self.video_driver.current_player.toggle_pause()
@@ -65,3 +65,15 @@ class Actions(object):
 
     def seek_back_on_player(self):
         self.video_driver.current_player.seek(-30)
+
+    def toggle_function(self):
+        self.message_handler.function_on = not self.message_handler.function_on
+
+    def set_playing_sample_start_to_current_duration(self):
+        current_slot = self.video_driver.current_player.slot_number
+        current_duration = self.video_driver.current_player.get_duration()
+        self.data.update_slot_start_to_this_time(current_slot, current_duration)
+
+    def clear_playing_sample_start_time(self):
+        current_slot = self.video_driver.current_player.slot_number
+        self.data.update_slot_start_to_this_time(current_slot, 0)

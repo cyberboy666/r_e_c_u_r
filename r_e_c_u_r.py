@@ -31,7 +31,7 @@ display = Display(tk, video_driver, message_handler, data)
 # setup the actions
 actions = Actions(tk, message_handler, data, video_driver, display)
 
-numpad_input = NumpadInput(display, actions)
+numpad_input = NumpadInput(message_handler, display, actions)
 
 frame.pack()
 tk.attributes("-fullscreen", True)

@@ -37,6 +37,7 @@ class Display(object):
         self.display_text.tag_configure("INFO_MESSAGE", background="blue", foreground="white")
         self.display_text.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
         self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="cyan")
+        self.display_text.tag_configure("FUNCTION", background="cyan", foreground="black")
 
     def _load_display(self):
         self._load_title()
@@ -69,26 +70,26 @@ class Display(object):
         self._highlight_this_row(self.selected_list_index - self.top_menu_index)
 
     def _load_sampler(self):
-        bank_info = self.data.get_sampler_data()
+        bank_data = self.data.get_sampler_data()
         self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
             'slot', 'name', 'length', 'start', 'end'))
-        for index, slot in enumerate(bank_info):
+        for index, slot in enumerate(bank_data):
             self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
                 index, slot['name'][0:22], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
-        if self.video_driver.current_player.bank_number is '-':
+        if self.video_driver.current_player.slot_number is '-':
             self.selected_list_index = 0
         else:
-            self.selected_list_index = self.video_driver.current_player.bank_number
+            self.selected_list_index = self.video_driver.current_player.slot_number
 
     def _load_browser(self):
         browser_list = self.data.return_browser_list()
         number_of_lines_displayed = 0
         self.display_text.insert(END, '------------------ <BROWSER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:40} {:5} \n'.format('path', 'bank'))
+        self.display_text.insert(END, '{:40} {:5} \n'.format('path', 'slot'))
 
         number_of_browser_items = len(browser_list)
         for index in range(number_of_browser_items):
@@ -96,7 +97,7 @@ class Display(object):
                 break
             if index >= self.top_menu_index:
                 path = browser_list[index]
-                self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:35], path['bank']))
+                self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:35], path['slot']))
                 number_of_lines_displayed = number_of_lines_displayed + 1
 
         for index in range(self.MENU_HEIGHT - number_of_browser_items):
@@ -107,14 +108,14 @@ class Display(object):
         settings_list = self.data.get_settings_data()
         self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:^25} {:^20} \n'.format('SETTING', 'VALUE'))
+        self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
         number_of_settings_items = len(settings_list)
         for index in range(number_of_settings_items):
             if line_count >= self.MENU_HEIGHT:
                 break
             if index >= self.top_menu_index:
                 setting = settings_list[index]
-                self.display_text.insert(END, '{:>25} {:<20} \n'.format(setting['name'], setting['value'][0:20]))
+                self.display_text.insert(END, '{:>23} {:<22} \n'.format(setting['name'], setting['value'][0:20]))
                 line_count = line_count + 1
 
         for index in range(self.MENU_HEIGHT - number_of_settings_items):
@@ -126,10 +127,13 @@ class Display(object):
                 self.message_handler.current_message[0], self.message_handler.current_message[1][0:38]))
             self.display_text.tag_add('{}_MESSAGE'.format(
                 self.message_handler.current_message[0]), 16.0,16.0 + self.SELECTOR_WIDTH)
-        if self.message_handler.current_message[2]:
-            self.message_handler.current_message[2] = False
-            message_length = 4000
-            self.tk.after(message_length, self.message_handler.clear_message)
+            if self.message_handler.current_message[2]:
+                self.message_handler.current_message[2] = False
+                message_length = 4000
+                self.tk.after(message_length, self.message_handler.clear_message)
+        elif self.message_handler.function_on:
+            self.display_text.insert(END, '{:^45}'.format('< FUNCTION KEY ON >'))
+            self.display_text.tag_add('FUNCTION', 16.0,16.0 + self.SELECTOR_WIDTH)
 
     def _highlight_this_row(self, row):
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,
@@ -140,13 +144,13 @@ class Display(object):
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
     def _get_info_for_player(self):
-        now_bank, now_status, next_bank, next_status, position, video_length, start, end = self.video_driver.get_info_for_player_display()
+        now_slot, now_status, next_slot, next_status, position, video_length, start, end = self.video_driver.get_info_for_player_display()
         banner = self.create_video_display_banner(start, end, video_length, position)
         time_been = self.format_time_value(position - start)
         time_left = self.format_time_value(end - position)
 
         return self.VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left), \
-               self.VIDEO_DISPLAY_TEXT.format(now_bank, now_status, next_bank, next_status)
+               self.VIDEO_DISPLAY_TEXT.format(now_slot, now_status, next_slot, next_status)
 
     @staticmethod
     def create_video_display_banner(start, end, length, position):

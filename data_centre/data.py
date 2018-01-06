@@ -2,6 +2,10 @@ import json
 import os
 from random import randint
 import inspect
+try:
+    from omxplayer.player import OMXPlayer
+except:
+    pass
 
 from data_centre.browser_data import BrowserData
 
@@ -40,6 +44,7 @@ class Data(object):
         self.message_handler = message_handler
 
         self.has_omx = self._try_import_omx()
+        print('has_omx: {}'.format(self.has_omx))
         self.DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
 
 
@@ -56,6 +61,7 @@ class Data(object):
     def create_new_slot_mapping(self, slot_number, file_name):
         ######## used for mapping current video to a specific slot ########
         has_location, location = self._get_path_for_file(file_name)
+        print('file_name:{},has_location:{}, location:{}'.format(file_name,has_location, location))
         length = self._get_length_for_file(location)
         new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1)
         self._update_a_slots_data(slot_number, new_slot)
@@ -63,7 +69,7 @@ class Data(object):
     @staticmethod
     def clear_all_slots():
         memory_bank = read_json(BANK_DATA_JSON)
-        for index in enumerate(memory_bank):
+        for index, slot in enumerate(memory_bank):
             memory_bank[index] = EMPTY_SLOT
         update_json(BANK_DATA_JSON, memory_bank)
 
@@ -133,7 +139,13 @@ class Data(object):
         memory_bank[slot_number]['start'] = position
         update_json(BANK_DATA_JSON, memory_bank)
 
+    def update_slot_end_to_this_time(self, slot_number, position):
+        memory_bank = read_json(BANK_DATA_JSON)
+        memory_bank[slot_number]['end'] = position
+        update_json(BANK_DATA_JSON, memory_bank)
+
     def _get_length_for_file(self, path):
+        print('getting length for: {}'.format(path))
         if self.has_omx:
             temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
             duration = temp_player.duration()

@@ -35,6 +35,7 @@ class video_player:
             self.end = self.total_length
         if(self.start is -1):
             self.start = 0
+        self.crop_length = self.end - self.start
         print('{}: the duration is {}'.format(self.name, self.total_length))
         if self.start > 0.5:
             self.set_position(self.start - 0.5)
@@ -89,7 +90,6 @@ class video_player:
         #self.total_length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
-        self.crop_length = self.end - self.start
         self.slot_number = next_context['slot_number']
 
     def toggle_pause(self):

@@ -73,7 +73,20 @@ class Actions(object):
         current_slot = self.video_driver.current_player.slot_number
         current_position = self.video_driver.current_player.get_position()
         self.data.update_slot_start_to_this_time(current_slot, current_position)
+        self.load_this_slot_into_next_player(current_slot)
 
     def clear_playing_sample_start_time(self):
         current_slot = self.video_driver.current_player.slot_number
         self.data.update_slot_start_to_this_time(current_slot, -1)
+        self.load_this_slot_into_next_player(current_slot)
+
+    def set_playing_sample_end_to_current_duration(self):
+        current_slot = self.video_driver.current_player.slot_number
+        current_position = self.video_driver.current_player.get_position()
+        self.data.update_slot_end_to_this_time(current_slot, current_position)
+        self.load_this_slot_into_next_player(current_slot)
+
+    def clear_playing_sample_end_time(self):
+        current_slot = self.video_driver.current_player.slot_number
+        self.data.update_slot_end_to_this_time(current_slot, -1)
+        self.load_this_slot_into_next_player(current_slot)

@@ -161,7 +161,6 @@ class Display(object):
                        '-', '-', '-', '-', '-',
                        ']']
         max = len(banner_list) - 1
-        print('start:{},end:{},length:{},position:{},max:{}'.format(start, end, crop_length, position, max))
         if position < start:
             banner_list[0] = '<'
         elif position > end:
@@ -169,7 +168,6 @@ class Display(object):
         elif crop_length != 0:
             marker = int(math.floor(float(position - start) /
                                     float(crop_length) * (max - 1)) + 1)
-            print('marker:{}'.format(marker))
             banner_list[marker] = '*'
 
         return ''.join(banner_list)

@@ -29,7 +29,7 @@ class BrowserData(object):
             if is_file:
                 is_slotted, slot_number = self._is_file_in_memory_bank(file_name)
                 if is_slotted:
-                    browser_line['bank'] = str(slot_number)
+                    browser_line['slot'] = str(slot_number)
 
         return self.browser_list
 
@@ -58,7 +58,7 @@ class BrowserData(object):
         for f in files:
             split_name = os.path.splitext(f)
             if (split_name[1] in ['.mp4', '.mkv']):
-                self.browser_list.append(dict(name='{}{}'.format(indent, split_name[0]), slot='-'))
+                self.browser_list.append(dict(name='{}{}'.format(indent, f), slot='-'))
 
     def _check_folder_state(self, folder_name):
         ######## used for displaying folders as open or closed ########

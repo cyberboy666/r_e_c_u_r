@@ -97,8 +97,7 @@ class NumpadInput(object):
             self.actions.load_this_slot_into_next_player(1)
 
     def on_2_press(self):
-        if self.message_handler.function_on:
-            print('function called')            
+        if self.message_handler.function_on:     
             self.actions.clear_playing_sample_start_time()
         else:
             self.actions.load_this_slot_into_next_player(2)
@@ -111,13 +110,13 @@ class NumpadInput(object):
 
     def on_4_press(self):
         if self.message_handler.function_on:
-            pass
+            self.actions.set_playing_sample_end_to_current_duration()
         else:
             self.actions.load_this_slot_into_next_player(4)
 
     def on_5_press(self):
         if self.message_handler.function_on:
-            pass
+            self.actions.clear_playing_sample_end_time()
         else:
             self.actions.load_this_slot_into_next_player(5)
 

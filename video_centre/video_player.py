@@ -16,11 +16,11 @@ class video_player:
         self.name = name
         self.omx_running = False
         self.status = 'N/A'
-        self.duration = 0.0
+        self.total_length = 0.0
         self.slot_number = '-'
         self.start = -1.0
         self.end = -1.0
-        self.length = 0.0
+        self.crop_length = 0.0
         self.location = ''
         self.arguments = ['--no-osd', '--win', self.screen_size, '--alpha', '0'] 
 
@@ -30,27 +30,25 @@ class video_player:
         self.status = 'LOADING'
         self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
         self.omx_running = True
-        print('duration is: {}'.format(self.duration))
-        self.duration = self.omx_player.duration() # <-- uneeded once self.duration stores float
-        print('new duration is: {}'.format(self.duration))
+        self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
         if(self.end is -1): 
-            self.end = self.duration
+            self.end = self.total_length
         if(self.start is -1):
             self.start = 0
-        print('{}: the duration is {}'.format(self.name, self.duration))
-        if(self.start > 0.5):
+        print('{}: the duration is {}'.format(self.name, self.total_length))
+        if self.start > 0.5:
             self.set_position(self.start - 0.5)
         self.pause_at_start()
 
     def pause_at_start(self):
         position = self.get_position()  
         start_threshold = self.start - 0.05
-        if(position > start_threshold):
+        if position > start_threshold:
             self.status = 'LOADED'
             self.omx_player.pause()
             self.omx_player.set_alpha(255)
-        elif(self.omx_running):
-            self.root.after(5,self.pause_at_start)
+        elif self.omx_running:
+            self.root.after(5, self.pause_at_start)
 
     def play(self):
         self.status = 'PLAYING'
@@ -65,7 +63,7 @@ class video_player:
             self.omx_player.pause()
             print('its paused at end!')
         elif(self.omx_running):
-            self.root.after(5,self.pause_at_end)
+            self.root.after(5, self.pause_at_end)
 
     def reload(self):
         self.exit()
@@ -88,10 +86,10 @@ class video_player:
     def get_context_for_player(self):
         next_context = self.data.get_next_context()
         self.location = next_context['location']
-        self.duration = next_context['length']
+        #self.total_length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
-        self.length = self.end - self.start
+        self.crop_length = self.end - self.start
         self.slot_number = next_context['slot_number']
 
     def toggle_pause(self):

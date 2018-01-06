@@ -144,8 +144,8 @@ class Display(object):
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
     def _get_info_for_player(self):
-        now_slot, now_status, next_slot, next_status, position, video_length, start, end = self.video_driver.get_info_for_player_display()
-        banner = self.create_video_display_banner(start, end, video_length, position)
+        now_slot, now_status, next_slot, next_status, position, crop_length, start, end = self.video_driver.get_info_for_player_display()
+        banner = self.create_video_display_banner(start, end, crop_length, position)
         time_been = self.format_time_value(position - start)
         time_left = self.format_time_value(end - position)
 
@@ -153,7 +153,7 @@ class Display(object):
                self.VIDEO_DISPLAY_TEXT.format(now_slot, now_status, next_slot, next_status)
 
     @staticmethod
-    def create_video_display_banner(start, end, length, position):
+    def create_video_display_banner(start, end, crop_length, position):
         
         banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
@@ -161,14 +161,14 @@ class Display(object):
                        '-', '-', '-', '-', '-',
                        ']']
         max = len(banner_list) - 1
-        print('start:{},end:{},length:{},position:{},max:{}'.format(start,end,length,position,max))
+        print('start:{},end:{},length:{},position:{},max:{}'.format(start, end, crop_length, position, max))
         if position < start:
             banner_list[0] = '<'
         elif position > end:
             banner_list[max] = '>'
-        elif length != 0:
+        elif crop_length != 0:
             marker = int(math.floor(float(position - start) /
-                                    float(length) * (max - 1)) + 1)
+                                    float(crop_length) * (max - 1)) + 1)
             print('marker:{}'.format(marker))
             banner_list[marker] = '*'
 

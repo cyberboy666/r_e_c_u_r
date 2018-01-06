@@ -154,12 +154,14 @@ class Display(object):
 
     @staticmethod
     def create_video_display_banner(start, end, length, position):
+        
         banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-',
                        ']']
         max = len(banner_list) - 1
+        print('start:{},end:{},length:{},position:{},max:{}'.format(start,end,length,position,max))
         if position < start:
             banner_list[0] = '<'
         elif position > end:
@@ -167,6 +169,7 @@ class Display(object):
         elif length != 0:
             marker = int(math.floor(float(position - start) /
                                     float(length) * (max - 1)) + 1)
+            print('marker:{}'.format(marker))
             banner_list[marker] = '*'
 
         return ''.join(banner_list)

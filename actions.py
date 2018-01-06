@@ -32,7 +32,7 @@ class Actions(object):
     def enter_on_settings_selection(self):
         self.data.switch_settings(self.display.selected_list_index)
 
-    def clear_all_sampler_slots(self):
+    def clear_all_slots(self):
         self.data.clear_all_slots()
 
     def quit_the_program(self):
@@ -48,8 +48,8 @@ class Actions(object):
         self.video_driver.manual_next = True
 
     def cycle_display_mode(self):
-        self.display.topscreen_menu_index = 0
-        self.display.current_menu_index = self.display.topscreen_menu_index
+        self.display.top_menu_index = 0
+        self.display.selected_menu_index = self.display.top_menu_index
         if self.display.display_mode == "BROWSER":
             self.display.display_mode = "SETTINGS"
         elif self.display.display_mode == "SAMPLER":
@@ -71,9 +71,9 @@ class Actions(object):
 
     def set_playing_sample_start_to_current_duration(self):
         current_slot = self.video_driver.current_player.slot_number
-        current_duration = self.video_driver.current_player.get_duration()
-        self.data.update_slot_start_to_this_time(current_slot, current_duration)
+        current_position = self.video_driver.current_player.get_position()
+        self.data.update_slot_start_to_this_time(current_slot, current_position)
 
     def clear_playing_sample_start_time(self):
         current_slot = self.video_driver.current_player.slot_number
-        self.data.update_slot_start_to_this_time(current_slot, 0)
+        self.data.update_slot_start_to_this_time(current_slot, -1)

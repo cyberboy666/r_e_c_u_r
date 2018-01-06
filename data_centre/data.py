@@ -128,9 +128,9 @@ class Data(object):
                        slot_number=next_slot_number)
         return context
 
-    def update_slot_start_to_this_time(self, slot_number, time):
+    def update_slot_start_to_this_time(self, slot_number, position):
         memory_bank = read_json(BANK_DATA_JSON)
-        memory_bank[slot_number]['start'] = time
+        memory_bank[slot_number]['start'] = position
         update_json(BANK_DATA_JSON, memory_bank)
 
     def _get_length_for_file(self, path):

@@ -2,26 +2,36 @@ import traceback
 from tkinter import Tk, Frame
 import sys
 
-from user_input.actions import Actions
+from actions import Actions
+from data_centre.data import Data
 from display_centre.display import Display
+from display_centre.messages import MessageHandler
 from user_input.numpad_input import NumpadInput
 from video_centre.video_driver import VideoDriver
 import data_centre
 
-## create tk object
+# create tk object
 tk = Tk()
 frame = Frame(tk, width=500, height=400)
 
-## setup the video driver
-video_driver = VideoDriver(frame)
+# setup message handler
 
-## setup the display
-display = Display(tk, video_driver)
+message_handler = MessageHandler()
 
-## setup the actions
-actions = Actions(tk, video_driver, display)
+# setup data
 
-numpad_input = NumpadInput(display, actions)
+data = Data(message_handler)
+
+# setup the video driver
+video_driver = VideoDriver(frame, message_handler, data)
+
+# setup the display
+display = Display(tk, video_driver, message_handler, data)
+
+# setup the actions
+actions = Actions(tk, message_handler, data, video_driver, display)
+
+numpad_input = NumpadInput(message_handler, display, actions)
 
 frame.pack()
 tk.attributes("-fullscreen", True)
@@ -29,4 +39,4 @@ tk.attributes("-fullscreen", True)
 try:
     tk.mainloop()
 except:
-    data_centre.set_message(traceback.print_tb(sys.exc_traceback, limit=1, file=sys.stdout))
+    message_handler.set_message(traceback.print_tb(sys.exc_traceback, limit=1, file=sys.stdout))

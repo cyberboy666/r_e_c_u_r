@@ -1,17 +1,18 @@
-import data_centre
 from video_centre.video_player import video_player, fake_video_player  # <== for deving only
 
 
-
 class VideoDriver(object):
-    def __init__(self, root=None):
+    def __init__(self, root, message_handler, data):
         self.root = root
+        self.message_handler = message_handler
+        self.data = data
         self.delay = 5
-        self.has_omx = data_centre.has_omx
+        self.has_omx = self.data.has_omx
+        print(self.has_omx)
         if self.has_omx:
-            self.last_player = video_player(self.root, 'a.a')
-            self.current_player = video_player(self.root, 'b.b')
-            self.next_player = video_player(self.root, 'c.c')
+            self.last_player = video_player(self.root, self.message_handler, self.data, 'a.a')
+            self.current_player = video_player(self.root,self.message_handler, self.data, 'b.b')
+            self.next_player = video_player(self.root, self.message_handler, self.data, 'c.c')
             self.manual_next = False
             self.print_status()
             self.root.after(self.delay, self.begin_playing)
@@ -62,10 +63,10 @@ class VideoDriver(object):
         else:
             self.root.after(self.delay, self.wait_for_next_load)
 
-    def get_info_for_video_display(self):
+    def get_info_for_player_display(self):
         if self.has_omx:
-            return self.current_player.bank_number, self.current_player.status, self.next_player.bank_number, \
-                self.next_player.status, self.current_player.get_position(), self.current_player.length, \
+            return self.current_player.slot_number, self.current_player.status, self.next_player.slot_number, \
+                self.next_player.status, self.current_player.get_position(), self.current_player.crop_length, \
                 self.current_player.start, self.current_player.end
         else:
             return 0, 'test', 1, 'test', 5, 10, 2, 8

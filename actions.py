@@ -11,7 +11,6 @@ class Actions(object):
         self.display.navigate_menu('down', len(self.data.return_browser_list()))
 
     def move_browser_selection_up(self):
-        # self.display.move_browser_up()
         self.display.navigate_menu('up', len(self.data.return_browser_list()))
 
     def enter_on_browser_selection(self):
@@ -49,7 +48,7 @@ class Actions(object):
 
     def cycle_display_mode(self):
         self.display.top_menu_index = 0
-        self.display.selected_menu_index = self.display.top_menu_index
+        self.display.selected_list_index = self.display.top_menu_index
         if self.display.display_mode == "BROWSER":
             self.display.display_mode = "SETTINGS"
         elif self.display.display_mode == "SAMPLER":

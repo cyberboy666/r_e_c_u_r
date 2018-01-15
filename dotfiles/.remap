@@ -1,0 +1,23 @@
+keycode 82=a
+keycode 86=b
+keycode 22=c 
+!note: this remaps the main backspace on a keyboard
+keycode 104=d
+keycode 63=e
+keycode 81=f
+keycode 85=g
+keycode 89=h
+keycode 91=i
+keycode 106=j
+keycode 80=k
+keycode 84=l
+keycode 88=m
+!note: the code will map 000 to n in the code
+keycode 77=o
+keycode 79=p
+keycode 83=q
+keycode 87=r
+keycode 90=s
+
+keycode 118=BackSpace 
+!note: for developing im going to use insert for backspacing 

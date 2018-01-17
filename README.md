@@ -1,9 +1,13 @@
 # r_e_c_u_r
  an open diy py/pi based video sampler
 
-## details
+## features
 
 (coming soon)
+
+## feature requests
+
+i started a board of features i would like to explore : https://trello.com/b/mmJJFyrp/feature-ideas
 
 ## main objectives:
 
@@ -19,3 +23,4 @@
 
 ## contact
 
+langolierz@gmail.com

@@ -43,3 +43,6 @@ and adding the following line to the bottom of the file:
 
 - now run scripts in `~/r_e_c_u_r/dotfiles` to switch between LCD display and hdmi output
 
+# hiding boot text
+
+i followed some instructions in top answer [here](https://raspberrypi.stackexchange.com/questions/59310/remove-boot-messages-all-text-in-jessie) - this is a work in progress

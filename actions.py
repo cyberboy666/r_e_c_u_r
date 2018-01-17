@@ -43,6 +43,36 @@ class Actions(object):
         self.data.update_next_slot_number(slot)
         self.video_driver.next_player.reload()
 
+    def load_slot_0_into_next_player(self):
+        load_this_slot_into_next_player(0)
+
+    def load_slot_1_into_next_player(self):
+        load_this_slot_into_next_player(1)
+
+    def load_slot_2_into_next_player(self):
+        load_this_slot_into_next_player(2)
+
+    def load_slot_3_into_next_player(self):
+        load_this_slot_into_next_player(3)
+
+    def load_slot_4_into_next_player(self):
+        load_this_slot_into_next_player(4)
+
+    def load_slot_5_into_next_player(self):
+        load_this_slot_into_next_player(5)
+
+    def load_slot_6_into_next_player(self):
+        load_this_slot_into_next_player(6)
+
+    def load_slot_7_into_next_player(self):
+        load_this_slot_into_next_player(7)
+
+    def load_slot_8_into_next_player(self):
+        load_this_slot_into_next_player(8)
+
+    def load_slot_9_into_next_player(self):
+        load_this_slot_into_next_player(9)
+
     def trigger_next_player(self):
         self.video_driver.manual_next = True
 

@@ -1,146 +1,42 @@
-
+import string
 
 class NumpadInput(object):
-    def __init__(self, message_handler, display, actions):
+    def __init__(self, message_handler, display, actions, data):
         self.message_handler = message_handler
         self.display = display
         self.actions = actions
+        self.key_mappings = data.get_keypad_mapping_data()
         self.bind_actions()
 
     def bind_actions(self):
         self.display.display_text.bind("<Key>", self.on_key_press)
-        self.display.display_text.bind("<BackSpace>", self.on_backspace_press)
 
     def on_key_press(self, event):
-        if event.char == '-':
-            self.on_minus_press()
-        elif event.char == '+':
-            self.on_plus_press()
-        elif event.char == '\r':
-            self.on_enter_press()
-        elif event.char == '*':
-            self.on_star_press()
-        elif event.char == '/':
-            self.on_slash_press()
-        elif event.char == '.':
-            self.on_dot_press()
-        elif event.char == '0':
-            self.on_0_press()
-        elif event.char == '1':
-            self.on_1_press()
-        elif event.char == '2':
-            self.on_2_press()
-        elif event.char == '3':
-            self.on_3_press()
-        elif event.char == '4':
-            self.on_4_press()
-        elif event.char == '5':
-            self.on_5_press()
-        elif event.char == '6':
-            self.on_6_press()
-        elif event.char == '7':
-            self.on_7_press()
-        elif event.char == '8':
-            self.on_8_press()
-        elif event.char == '9':
-            self.on_9_press()
-        if event.char is not '.':        
+        
+        numpad = list(string.ascii_lowercase[0:19])
+        if event.char is '.':
+            self.actions.quit_the_program()
+        elif event.char in numpad:
+            print('the event key pressed is {}'.format(event.char))
+            print('the corrosponding mapping is {}'.format(self.key_mappings[event.char]))
+            this_mapping = self.key_mappings[event.char]
+            print('the current display mode is {}'.format(self.display.display_mode))
+            if self.display.display_mode in this_mapping:
+                mode = self.display.display_mode
+            elif 'DEFAULT' in this_mapping:
+                mode = 'DEFAULT'
+            print('the mode is set to {}'.format(mode))
+
+            if self.message_handler.function_on and len(this_mapping[mode]) > 1:
+                print('the action being called is {}'.format(this_mapping[mode][1]))
+                getattr(self.actions, this_mapping[mode][1])()
+            else:
+                print('the action being called is {}'.format(this_mapping[mode][0]))
+                getattr(self.actions, this_mapping[mode][0])()
+          
             self.display.refresh_display()
-
-    def on_backspace_press(self, event):
-        if self.display.display_mode == 'BROWSER':
-            self.actions.enter_on_browser_selection()
-        elif self.display.display_mode == 'SAMPLER':
-            self.actions.toggle_pause_on_player()
-        elif self.display.display_mode == 'SETTINGS':
-            self.actions.enter_on_settings_selection()
-        self.display.refresh_display()
-
-    def on_minus_press(self):
-        if self.display.display_mode == 'BROWSER':
-            self.actions.move_browser_selection_up()
-        elif self.display.display_mode == 'SAMPLER':
-            self.actions.seek_back_on_player()
-        elif self.display.display_mode == 'SETTINGS':
-            self.actions.move_settings_selection_up()
-
-    def on_plus_press(self):
-        if self.display.display_mode == 'BROWSER':
-            self.actions.move_browser_selection_down()
-        elif self.display.display_mode == 'SAMPLER':
-            self.actions.seek_forward_on_player()
-        elif self.display.display_mode == 'SETTINGS':
-            self.actions.move_settings_selection_down()
-
-    def on_enter_press(self):
-        self.actions.trigger_next_player()
-
-    def on_star_press(self):
-        self.actions.cycle_display_mode()
-
-    def on_slash_press(self):
-        self.actions.toggle_function()
-
-    def on_dot_press(self):
-        self.actions.quit_the_program()
-
-    def on_0_press(self):
-        if self.message_handler.function_on:
-            pass
         else:
-            self.actions.load_this_slot_into_next_player(0)
+            print('{} is not in keypad map'.format(event.char))
 
-    def on_1_press(self):
-        if self.message_handler.function_on:
-            self.actions.set_playing_sample_start_to_current_duration()
-        else:
-            self.actions.load_this_slot_into_next_player(1)
 
-    def on_2_press(self):
-        if self.message_handler.function_on:     
-            self.actions.clear_playing_sample_start_time()
-        else:
-            self.actions.load_this_slot_into_next_player(2)
-
-    def on_3_press(self):
-        if self.message_handler.function_on:
-            self.actions.clear_all_slots()
-        else:
-            self.actions.load_this_slot_into_next_player(3)
-
-    def on_4_press(self):
-        if self.message_handler.function_on:
-            self.actions.set_playing_sample_end_to_current_duration()
-        else:
-            self.actions.load_this_slot_into_next_player(4)
-
-    def on_5_press(self):
-        if self.message_handler.function_on:
-            self.actions.clear_playing_sample_end_time()
-        else:
-            self.actions.load_this_slot_into_next_player(5)
-
-    def on_6_press(self):
-        if self.message_handler.function_on:
-            pass
-        else:
-            self.actions.load_this_slot_into_next_player(6)
-
-    def on_7_press(self):
-        if self.message_handler.function_on:
-            pass
-        else:
-            self.actions.load_this_slot_into_next_player(7)
-
-    def on_8_press(self):
-        if self.message_handler.function_on:
-            pass
-        else:
-            self.actions.load_this_slot_into_next_player(8)
-
-    def on_9_press(self):
-        if self.message_handler.function_on:
-            pass
-        else:
-            self.actions.load_this_slot_into_next_player(9)
 

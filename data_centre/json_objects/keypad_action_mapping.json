@@ -12,7 +12,7 @@
 	"c": {
 		"BROWSER": ["enter_on_browser_selection"],
 		"SAMPLER": ["toggle_pause_on_player"],
-		"SETTINGS": ["enter_on_setting_selection"]
+		"SETTINGS": ["enter_on_settings_selection"]
 	},
 	"d": {
 		"DEFAULT": ["trigger_next_player"]
@@ -31,33 +31,33 @@
 		"DEFAULT": ["toggle_function"]
 	},
 	"j": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_0_into_next_player"]
 	},
 	"k": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_1_into_next_player"]
 	},
 	"l": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_2_into_next_player"]
 	},
 	"m": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_3_into_next_player"]
 	},
 	"n": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_4_into_next_player"]
 	},
 	"o": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_5_into_next_player"]
 	},
 	"p": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_6_into_next_player"]
 	},
 	"q": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_7_into_next_player"]
 	},
 	"r": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_8_into_next_player"]
 	},
 	"s": {
-		"DEFAULT": ["load_this_slot_into_next_player"]
+		"DEFAULT": ["load_slot_9_into_next_player","quit_the_program"]
 	}
 }

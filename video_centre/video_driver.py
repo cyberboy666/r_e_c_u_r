@@ -6,7 +6,7 @@ class VideoDriver(object):
         self.root = root
         self.message_handler = message_handler
         self.data = data
-        self.delay = 5
+        self.delay = 50
         self.has_omx = self.data.has_omx
         print(self.has_omx)
         if self.has_omx:
@@ -32,6 +32,7 @@ class VideoDriver(object):
         self.wait_for_first_load()
 
     def wait_for_first_load(self):
+        
         if self.current_player.is_loaded():
             self.play_video()
         else:

@@ -115,7 +115,7 @@ class Display(object):
                 break
             if index >= self.top_menu_index:
                 setting = settings_list[index]
-                self.display_text.insert(END, '{:>23} {:<22} \n'.format(setting['name'], setting['value'][0:20]))
+                self.display_text.insert(END, '{:>23} {:<22} \n'.format(setting['name'], setting['options'][0][0:20]))
                 line_count = line_count + 1
 
         for index in range(self.MENU_HEIGHT - number_of_settings_items):

@@ -2,6 +2,7 @@ import json
 import os
 from random import randint
 import inspect
+from itertools import cycle
 try:
     from omxplayer.player import OMXPlayer
 except:
@@ -17,6 +18,7 @@ def get_the_current_dir_path():
 BANK_DATA_JSON = 'display_data.json'
 NEXT_SLOT_JSON = 'next_slot_number.json'
 SETTINGS_JSON = 'settings.json'
+KEYPAD_MAPPING = 'keypad_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
@@ -45,8 +47,7 @@ class Data(object):
 
         self.has_omx = self._try_import_omx()
         print('has_omx: {}'.format(self.has_omx))
-        self.DEV_MODE = read_json(SETTINGS_JSON)[6]["value"]
-
+        self.screen_size= read_json(SETTINGS_JSON)[0]['options'][0]
 
 
     def create_new_slot_mapping_in_first_open(self, file_name):
@@ -87,10 +88,14 @@ class Data(object):
     def switch_settings(self, setting_index):
         ######## update the value of selected setting by cycling through valid options ########
         settings = read_json(SETTINGS_JSON)
-
-        for index, setting in enumerate(settings):
-            if index == setting_index:
-                self._cycle_setting_value(setting)
+        this_setting_option = settings[setting_index]['options']
+        this_setting_option = this_setting_option[len(this_setting_option)-1:]+this_setting_option[0:1]
+        settings[setting_index]['options'] = this_setting_option
+        update_json(SETTINGS_JSON, settings)
+    
+        #for index, setting in enumerate(settings):
+          #  if index == setting_index:
+             #   self._cycle_setting_value(setting)
 
         update_json(SETTINGS_JSON, settings)
 
@@ -105,6 +110,10 @@ class Data(object):
         return read_json(SETTINGS_JSON)
 
     @staticmethod
+    def get_keypad_mapping_data():
+        return read_json(KEYPAD_MAPPING)
+
+    @staticmethod
     def get_sampler_data():
         return read_json(BANK_DATA_JSON)
 
@@ -116,18 +125,6 @@ class Data(object):
         start_value = next_slot_details['start']
         end_value = next_slot_details['end']
         length = next_slot_details['length']
-
-        use_rand_start, use_sync_length, sync_length, playback_mode = self._get_context_options_from_settings()
-
-        if use_rand_start and use_sync_length:
-            start_value = randint(0, length - sync_length)
-            end_value = start_value + sync_length
-        elif use_rand_start and not use_sync_length:
-            start_value = randint(0, end_value)
-        elif not use_rand_start and use_sync_length:
-            end_value = min(length, start_value + sync_length)
-
-        self._set_next_slot_number_from_playback_mode(playback_mode, next_slot_number)
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
                        length=next_slot_details['length'], start=start_value, end=end_value,
@@ -167,74 +164,6 @@ class Data(object):
         memory_bank = read_json(BANK_DATA_JSON)
         memory_bank[slot_number] = slot_info
         update_json(BANK_DATA_JSON, memory_bank)
-
-    @staticmethod
-    def _cycle_setting_value(setting):
-        ######## contains the valid setting values for each applicable option ########
-        if setting['name'] == 'PLAYBACK_MODE':
-            if setting['value'] == 'SAMPLER':
-                setting['value'] = 'PLAYLIST'
-            elif setting['value'] == 'PLAYLIST':
-                setting['value'] = 'RANDOM'
-            else:
-                setting['value'] = 'SAMPLER'
-        elif setting['name'] == 'SYNC_LENGTHS':
-            if setting['value'] == 'ON':
-                setting['value'] = 'OFF'
-            else:
-                setting['value'] = 'ON'
-        elif setting['name'] == 'RAND_START':
-            if setting['value'] == 'ON':
-                setting['value'] = 'OFF'
-            else:
-                setting['value'] = 'ON'
-        elif setting['name'] == 'VIDEO_OUTPUT':
-            if setting['value'] == 'HDMI':
-                setting['value'] = 'COMPOSITE'
-            else:
-                setting['value'] = 'HDMI'
-        elif setting['name'] == 'DEV_MODE':
-            if setting['value'] == 'ON':
-                setting['value'] = 'OFF'
-            else:
-                setting['value'] = 'ON'
-
-        return setting
-
-    @staticmethod
-    def _get_context_options_from_settings():
-        ######## looks up the settings data object and returns states of relevant options ########
-        settings = read_json(SETTINGS_JSON)
-        use_sync_length = False
-        sync_length = 0
-        use_rand_start = False
-        playback_mode = ''
-
-        for index, setting in enumerate(settings):
-            if setting['name'] == 'SYNC_LENGTHS' and setting['value'] == 'ON':
-                use_sync_length = True
-            elif setting['name'] == 'SYNC_LENGTHS_TO':
-                sync_length = setting['value']
-            elif setting['name'] == 'RAND_START' and setting['value'] == 'ON':
-                use_rand_start = True
-            elif setting['name'] == 'PLAYBACK_MODE':
-                playback_mode = setting['value']
-
-        return use_rand_start, use_sync_length, sync_length, playback_mode
-
-    @staticmethod
-    def _set_next_slot_number_from_playback_mode(playback_mode, current_slot_number):
-        ######## sets next slot number by using playback mode logic ########
-        next_slot_number = 0
-        if playback_mode == 'SAMPLER':
-            next_slot_number = current_slot_number
-        elif playback_mode == 'RANDOM':
-            #TODO: actually find which slots have value and only use those
-            next_slot_number = randint(0,14)
-        elif playback_mode == 'PLAYLIST':
-            #TODO: implement some playlist objects and logic at some point
-            next_slot_number = current_slot_number
-        update_json('next_slot_number.json',next_slot_number)
 
     @staticmethod
     def _try_import_omx():

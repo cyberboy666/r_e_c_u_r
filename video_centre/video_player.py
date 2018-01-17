@@ -25,21 +25,26 @@ class video_player:
         self.arguments = ['--no-osd', '--win', self.screen_size, '--alpha', '0'] 
 
     def load(self):
-        self.get_context_for_player()
+        try:
+            self.get_context_for_player()
 
-        self.status = 'LOADING'
-        self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
-        self.omx_running = True
-        self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
-        if(self.end is -1): 
-            self.end = self.total_length
-        if(self.start is -1):
-            self.start = 0
-        self.crop_length = self.end - self.start
-        print('{}: the duration is {}'.format(self.name, self.total_length))
-        if self.start > 0.5:
-            self.set_position(self.start - 0.5)
-        self.pause_at_start()
+            self.status = 'LOADING'
+            print('the location is {}'.format(self.location))
+            self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
+            self.omx_running = True
+            self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
+            if(self.end is -1): 
+                self.end = self.total_length
+            if(self.start is -1):
+                self.start = 0
+            self.crop_length = self.end - self.start
+            print('{}: the duration is {}'.format(self.name, self.total_length))
+            if self.start > 0.5:
+                self.set_position(self.start - 0.5)
+            self.pause_at_start()
+        except:
+            self.message_handler.set_message('ERROR', 'first load error')
+            self.root.after(100, self.load)
 
     def pause_at_start(self):
         position = self.get_position()  
@@ -117,10 +122,12 @@ class video_player:
             pass
 
     def set_screen_size(self):
-        if self.data.DEV_MODE == 'ON':
+        if self.data.screen_size  == 'dev_mode':
             return '50,350,550,750'
-        else:
+        elif self.data.screen_size == 'composite':
             return '45,15,970,760'
+        elif self.data.screen_size == 'XGA':
+            return '0,0,1024,768'
 
 
 class fake_video_player:

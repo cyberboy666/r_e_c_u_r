@@ -1,0 +1,63 @@
+{
+	"a": {
+		"BROWSER": ["move_browser_selection_up"],
+		"SAMPLER": ["seek_back_on_player"],
+		"SETTINGS": ["move_settings_selection_up"]
+	},
+	"b": {
+		"BROWSER": ["move_browser_selection_down"],
+		"SAMPLER": ["seek_forward_on_player"],
+		"SETTINGS": ["move_settings_selection_down"]
+	},
+	"c": {
+		"BROWSER": ["enter_on_browser_selection"],
+		"SAMPLER": ["toggle_pause_on_player"],
+		"SETTINGS": ["enter_on_setting_selection"]
+	},
+	"d": {
+		"DEFAULT": ["trigger_next_player"]
+	},
+	"e": {
+		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"]
+	},
+	"f": {
+		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"]
+	},
+	"g": {},
+	"h": {
+		"DEFAULT": ["cycle_display_mode"]
+	},
+	"i": {
+		"DEFAULT": ["toggle_function"]
+	},
+	"j": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"k": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"l": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"m": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"n": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"o": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"p": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"q": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"r": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	},
+	"s": {
+		"DEFAULT": ["load_this_slot_into_next_player"]
+	}
+}

@@ -9,9 +9,6 @@ class video_player:
         self.root = root
         self.message_handler = message_handler
         self.data = data
-
-        self.screen_size = self.set_screen_size()
-
         self.omx_player = None
         self.name = name
         self.omx_running = False
@@ -22,12 +19,11 @@ class video_player:
         self.end = -1.0
         self.crop_length = 0.0
         self.location = ''
-        self.arguments = ['--no-osd', '--win', self.screen_size, '--alpha', '0'] 
 
     def load(self):
         try:
             self.get_context_for_player()
-
+            self.arguments = ['--no-osd', '--win', self.set_screen_size(), '--alpha', '0'] 
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
@@ -122,11 +118,11 @@ class video_player:
             pass
 
     def set_screen_size(self):
-        if self.data.screen_size  == 'dev_mode':
+        if self.data.get_screen_size_setting() == 'dev_mode':
             return '50,350,550,750'
-        elif self.data.screen_size == 'composite':
+        elif self.data.get_screen_size_setting() == 'composite':
             return '45,15,970,760'
-        elif self.data.screen_size == 'XGA':
+        elif self.data.get_screen_size_setting() == 'XGA':
             return '0,0,1024,768'
 
 

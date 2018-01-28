@@ -17,15 +17,11 @@ class NumpadInput(object):
         if event.char is '.':
             self.actions.quit_the_program()
         elif event.char in numpad:
-            print('the event key pressed is {}'.format(event.char))
-            print('the corrosponding mapping is {}'.format(self.key_mappings[event.char]))
             this_mapping = self.key_mappings[event.char]
-            print('the current display mode is {}'.format(self.display.display_mode))
             if self.display.display_mode in this_mapping:
                 mode = self.display.display_mode
             elif 'DEFAULT' in this_mapping:
                 mode = 'DEFAULT'
-            print('the mode is set to {}'.format(mode))
 
             if self.message_handler.function_on and len(this_mapping[mode]) > 1:
                 print('the action being called is {}'.format(this_mapping[mode][1]))

@@ -47,8 +47,9 @@ class Data(object):
 
         self.has_omx = self._try_import_omx()
         print('has_omx: {}'.format(self.has_omx))
-        self.screen_size= read_json(SETTINGS_JSON)[0]['options'][0]
 
+    def get_screen_size_setting(self):
+        return read_json(SETTINGS_JSON)[0]['options'][0]
 
     def create_new_slot_mapping_in_first_open(self, file_name):
         ######## used for mapping current video to next available slot ########
@@ -85,19 +86,21 @@ class Data(object):
     def add_open_folder(self, folder_name):
         self.browser_data.update_open_folders(folder_name)
 
-    def switch_settings(self, setting_index):
+    def check_if_setting_selection_is_action_otherwise_cycle_value(self, setting_index):
         ######## update the value of selected setting by cycling through valid options ########
-        settings = read_json(SETTINGS_JSON)
-        this_setting_option = settings[setting_index]['options']
-        this_setting_option = this_setting_option[len(this_setting_option)-1:]+this_setting_option[0:1]
-        settings[setting_index]['options'] = this_setting_option
-        update_json(SETTINGS_JSON, settings)
-    
-        #for index, setting in enumerate(settings):
-          #  if index == setting_index:
-             #   self._cycle_setting_value(setting)
+        selected_setting = read_json(SETTINGS_JSON)[setting_index]
+        if(selected_setting['options'][0] == 'run_action'):
+            return True,  selected_setting['name']
+        else:
+            self.cycle_setting_value(setting_index)
+            return False, None
 
-        update_json(SETTINGS_JSON, settings)
+    def cycle_setting_value(self, setting_index):
+            settings = read_json(SETTINGS_JSON)
+            this_setting_option = settings[setting_index]['options']
+            this_setting_option= this_setting_option[len(this_setting_option)-1:]+this_setting_option[0:len(this_setting_option)-1]
+            settings[setting_index]['options'] = this_setting_option
+            update_json(SETTINGS_JSON, settings)
 
     def rewrite_browser_list(self):
         return self.browser_data.generate_browser_list()

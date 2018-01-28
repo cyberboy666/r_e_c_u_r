@@ -1,1 +1,1 @@
-[{"name": "SCREEN_SIZE", "options": ["dev_mode","XGA","composite"]}]
+[{"name": "SCREEN_SIZE", "options": ["dev_mode", "XGA", "composite"]}, {"name": "quit_the_program", "options": ["run_action"]}]

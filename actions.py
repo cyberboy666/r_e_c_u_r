@@ -142,5 +142,8 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
 
     def run_script(self, script_name):
-        subprocess.call(['./dotfiles/{}.sh'.format(script_name)])
+        try:
+            subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name)])
+        except exception as e:
+            self.message_handler.set_message('ERROR',e.message)
         

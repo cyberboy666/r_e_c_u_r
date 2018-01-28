@@ -1,3 +1,5 @@
+import subprocess
+
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, display):
         self.tk = tk
@@ -122,3 +124,23 @@ class Actions(object):
         current_slot = self.video_driver.current_player.slot_number
         self.data.update_slot_end_to_this_time(current_slot, -1)
         self.load_this_slot_into_next_player(current_slot)
+
+    def switch_display_to_hdmi(self):
+        settings = self.data.get_settings_data()
+        current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']
+        if('dev_mode' in current_screen_mode): 
+            self.run_script('switch_display_to_hdmi')
+        else:
+            self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
+
+    def switch_display_to_lcd(self):
+        settings = self.data.get_settings_data()
+        current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']
+        if('dev_mode' in current_screen_mode): 
+            self.run_script('switch_display_to_lcd')
+        else:
+            self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
+
+    def run_script(self, script_name):
+        subprocess.call(['./dotfiles/{}.sh'.format(script_name)])
+        

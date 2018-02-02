@@ -17,10 +17,14 @@ i started a board of features i would like to explore : https://trello.com/b/mmJ
 
 ## documentation (coming soon):
 
-- *operating* - how to use r_e_c_u_r
-- *building* - how to build r_e_c_u_r
-- *developing* - how to contribute to r_e_c_u_r
+- [operating] - how to use r_e_c_u_r
+- [building] - how to build r_e_c_u_r
+- [developing] - how to contribute to r_e_c_u_r
 
 ## contact
 
 langolierz@gmail.com
+
+[operating]:(documentation/operate_docs.md)
+[building]:(documentation/build_docs.md)
+[developing]:(documentation/develop_docs.md)

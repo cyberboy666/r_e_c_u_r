@@ -25,6 +25,6 @@ i started a board of features i would like to explore : https://trello.com/b/mmJ
 
 langolierz@gmail.com
 
-[operating]:(documentation/operate_docs.md)
-[building]:(documentation/build_docs.md)
-[developing]:(documentation/develop_docs.md)
+[operating]: documentation/operate_docs.md
+[building]: documentation/build_docs.md
+[developing]: documentation/develop_docs.md

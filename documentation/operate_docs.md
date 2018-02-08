@@ -36,10 +36,10 @@ this section displays infomation about what is in the video player : the positio
 
 this is where you can load samples from your usb into the `SAMPLER`
 
-- in this mode ,  the `<-` and `->` keys will move the selection up and down
+- in this mode ,  the `<` and `>` keys will move the selection up and down
 - folders are displayed ending in `|` for closed and `/` for open , the depth is displayed as indentation
-- pressing the `square` key while a folder is selected toggles it open/closed
-- pressing the `square` key while a video is selected loads it into the next avaliable slot (note : you can see the first slot a video is loaded into on right colunm)
+- pressing the `■` key while a folder is selected toggles it open/closed
+- pressing the `■` key while a video is selected loads it into the next avaliable slot (note : you can see the first slot a video is loaded into on right colunm)
 
 ## `SAMPLER` display mode
 
@@ -49,7 +49,7 @@ this is the main display mode for using r_e_c_u_r. from this view you can see de
 
 this is where you can configure r_e_c_u_r's settings.
 
-- navigate the menu with `<-` and `->` keys like about
-- pressing `square` on a setting will either cycle through it's `options` or run an `action` depending on its type (a `action` setting will always have value `run_action`)
+- navigate the menu with `<` and `>` keys like about
+- pressing `■` on a setting will either cycle through it's `options` or run an `action` depending on its type (an `action` setting will always have value `run_action`)
 
 

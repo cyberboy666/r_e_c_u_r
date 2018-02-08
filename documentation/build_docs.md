@@ -8,7 +8,7 @@ these are the parts you need to get. to reduce costs i sourced them through alie
 
 - [raspberry pi3] *37 USD* (watch this space for experiments with other models/sbc's)
 
-![alt text][raspberry pi image]
+![main parts][main parts]
 
 - [raspberry pi screen] *12 USD*
 
@@ -18,7 +18,7 @@ other bits and pieces:
 
 - xxx and yyy size screws and nuts - a few dollars (exact sizes, links etc coming soon)
 
-- >=8 gig mircoSD card
+- 8 gig or greater mircoSD card
 
 - stable 5volt1A microUsb power supply
 
@@ -30,11 +30,11 @@ other bits and pieces:
 
 - 3d print the front panel, back panel and spaces from these files
 
-- 2d print the key mapping (or modify/create your own!) from here onto label paper or something sticky...
+- 2d print these [key stickers] (or modify/create your own!) onto vinyl, label paper or normal paper with double sided tape...
 
 ## put it together
 
-- using etcher (or otherwise) flash the micro sd with this modified image of raspberian (or follow the dotfile instructions here)
+- using [etcher] (or otherwise) flash the micro sd with this modified image of raspberian (or follow these [dotfile] instructions)
 
 - insert sd card into pi
 
@@ -51,6 +51,9 @@ other bits and pieces:
 ## try it owt
 
 [raspberry pi3]:https://www.aliexpress.com/item/RS-Version-2016-New-Raspberry-Pi-3-Model-B-Board-1GB-LPDDR2-BCM2837-Quad-Core-Ras/32789942633.html?spm=a2g0s.9042311.0.0.FkRWty
-[raspberry pi image]: ./images/build_01_pi.jpg
+[main parts]: build_all.jpg
 [raspberry pi screen]:https://www.aliexpress.com/item/New-3-5-inch-Raspberry-Pi-LCD-TFT-Touchscreen-Display-Touch-Shield-Raspberry-pi-2-Model/32605410449.html?spm=a2g0s.9042311.0.0.ZW1WDU
 [usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[key stickers]: https://docs.google.com/document/d/1vhXv5QTfyUqsZuMdQu1lh2dMfEk5HMNVyp8uhrc-I2w/edit?usp=sharing
+[etcher]: https://etcher.io/
+[dotfile] : ./dotfiles/README.md

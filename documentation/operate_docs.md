@@ -6,7 +6,7 @@
 - connect the hdmi output to the display you want to use
 - power the raspberry pi. you should see red lights on the pi board, some boot text on the hdmi out and the lcd display light up
 - after a few moments , a video should play on the display output , the raspberian desktop will load on lcd and then (after a few moments) the r_e_c_u_r display will load
-- the `DISPLAY` key can be used to cycle through _display_modes_
+- the `DSPLY` key can be used to cycle through _display_modes_
 
 ## controls
 
@@ -14,16 +14,17 @@ the controls on r_e_c_u_r work by mapping `keys` to `actions`. (custom mappings 
 
 The exceptions to this are the control keys:
 
-- `<-` and `->` : used for navigation when applicable (see below) ; used for seeking current sample in `SAMPLER` mode
-- `square` : used as 'enter' for navigation ; used to toggle pause/play in `SAMPLER` mode.
+- `<` and `>` : used for navigation when applicable (see below) ; used for seeking current sample in `SAMPLER` mode
+- `■` : used as 'enter' for navigation ; used to toggle pause/play in `SAMPLER` mode.
 
 the display modes described below are cycled by using the `DISPLAY` key. some actions are accessable through a `2ND FUNC` layer, toggled by the corrosponding key.
 other controls include:
 
-- `--->` is used to trigger the next loaded sample to play
+- `→` is used to trigger the next loaded sample to play
 - loading the sample in slot `x` to play next; where `x` is a key from `0` to `9`
 - cropping the current sample to start  (`[`) or end (`]`) at the current time
-- cycling forward (`NEXT BANK`) or back (`PREV BANK`) through the banks of sample , or clearing a bank (`CLEAR BANK`)
+- cycling forward back (`PRV BNK`) or (`NXT BNK`) through the banks of sample , or clearing a bank (`CLR BNK`) (note not implemented yet)
+- `< SPD` and `> SPD` are used to decrease and increase the speed of the currently playing clip (note not implemented yet)
 
 some keys are empty to leave room for future features. i encourage you to make a custom key map (link to doc) or add actions (another link) you would like to use.
 

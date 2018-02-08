@@ -19,7 +19,7 @@ The exceptions to this are the control keys:
 - `<` and `>` : used for navigation when applicable (see below) ; used for seeking current sample in `SAMPLER` mode
 - `■` : used as 'enter' for navigation ; used to toggle pause/play in `SAMPLER` mode.
 
-the display modes described below are cycled by using the `DISPLAY` key. some actions are accessible through a `2ND FUNC` layer, toggled by the corresponding key.
+the display modes described below are cycled by using the `DSPLY` key. some actions are accessible through a `FN` layer, toggled by the corresponding key.
 other controls include:
 
 - `→` is used to trigger the next loaded sample to play
@@ -71,6 +71,7 @@ this is where you can configure r_e_c_u_r's settings.
 (put image and info here)
 
 [display_image]: display_parts.jpg
+[player_example]: player_example.jpg
 [browser_example]: browser_example.jpg
 [sampler_example]: sampler_example.jpg
 [settings_example]: settings_example.jpg

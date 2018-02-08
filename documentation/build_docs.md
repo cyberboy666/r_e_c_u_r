@@ -42,7 +42,7 @@ other bits and pieces:
 
 - use the small screws to attach pi+screen to the back panel
 
-- attach keypad to the back panel and fasten in with a extra screw if nessicary
+- attach keypad to the back panel and fasten in with a extra screw if necessary
 
 - put large screws through back panel facing up and use spacers
 
@@ -56,4 +56,4 @@ other bits and pieces:
 [usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
 [key stickers]: https://docs.google.com/document/d/1vhXv5QTfyUqsZuMdQu1lh2dMfEk5HMNVyp8uhrc-I2w/edit?usp=sharing
 [etcher]: https://etcher.io
-[dotfile] : ./dotfiles/README.md
+[dotfile] : /dotfiles/README.md

@@ -10,6 +10,8 @@
 
 ## controls
 
+(put picture with controls here...)
+
 the controls on r_e_c_u_r work by mapping `keys` to `actions`. (custom mappings ?) by default most keys map to the same action independent of the state (ie display mode) the r_e_c_u_r is in.
 
 The exceptions to this are the control keys:
@@ -34,9 +36,13 @@ some keys are empty to leave room for future features. i encourage you to make a
 
 ## `PLAYER` display
 
+![player_example][player_example]
+
 this section displays information about what is in the video player : the position from start and end of currently playing video, what [slot] is playing now and what slot is loaded [next] 
 
 ## `BROWSER` display mode
+
+![browser_example][browser_example]
 
 this is where you can load samples from your usb into the `SAMPLER`
 
@@ -47,14 +53,24 @@ this is where you can load samples from your usb into the `SAMPLER`
 
 ## `SAMPLER` display mode
 
+![sampler_example][sampler_example]
+
 this is the main display mode for using r_e_c_u_r. from this view you can see details of all the samples loaded into the sampler. a `bank` contains 10 `slots` labelled `0` - `9`. pressing the corresponding `key` will load the `sample` in this `slot` to start when the current sample finishes. the `slot` of the currently playing sample is highlighted.
 
 ## `SETTINGS` display mode
+
+![settings_example][settings_example]
 
 this is where you can configure r_e_c_u_r's settings.
 
 - navigate the menu with `<` and `>` keys like about
 - pressing `■` on a setting will either cycle through it's `options` or run an `action` depending on its type (an `action` setting will always have value `run_action`)
 
+## `MESSAGE DISPLAY`
+
+(put image and info here)
 
 [display_image]: display_parts.jpg
+[browser_example]: browser_example.jpg
+[sampler_example]: sampler_example.jpg
+[settings_example]: settings_example.jpg

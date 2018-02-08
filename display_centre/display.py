@@ -76,8 +76,9 @@ class Display(object):
         self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
             'slot', 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
+            name_without_extension =  slot['name'].rsplit('.',1)[0]
             self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
-                index, slot['name'][0:22], self.format_time_value(slot['length']),
+                index, name_without_extension[0:22], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
         if self.video_driver.current_player.slot_number is '-':
             self.selected_list_index = 0

@@ -4,7 +4,7 @@ i have tried to write this application so it can easily be read and modified for
 
 this [diagram] might help understand the design : 
 
-![diagram_pic][diagram_pic]
+![design_overview][design_overview]
 
 here are some examples of changes you might want to make:
 
@@ -34,12 +34,12 @@ for each _label_ the application will read the [keypad_action_mapping.json] file
 
 ## beyond
 
-i hope the foundations iv provided encourage you to make larger changes for more ambitious features. if so you could try getting [in touch] first and maybe i could help align your approach with the rest of the project
+i hope the foundations iv provided encourage you to make larger changes for more ambitious features. if so you could try getting in touch (langolierz@gmail.com) first and maybe i could help align your approach with the rest of the project
 
 [diagram]: https://docs.google.com/drawings/d/1ltWCv82rKVzOiFe6GaDDPlneG2oki0yRujArPU5V2ss/edit?usp=sharing
-[diagram_pic]:
+[design_overview]: design_overview.jpg
 [premapped_keys]:
 [dotfiles]: ../dotfiles
 [keypad_action_mapping.json]: ../data_centre/json_objects/keypad_action_mapping.json
 [action]: ../actions.py 
-[in touch]: langolierz@gmail.com
+

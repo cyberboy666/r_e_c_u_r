@@ -16,14 +16,14 @@ to simpify the key-mapping process, i have premapped the numpad keys to the _lab
 
 (see [dotfiles] for description of this process)
 
-for each _label_ the application will read the `[keypad_action_mapping.json]` file and map it to an `[action]`. currently the format also allows unique actions per _display_mode_ and per the `2ND FUNC` toggle :
+for each _label_ the application will read the [keypad_action_mapping.json] file and map it to an [action]. currently the format also allows unique actions per _display_mode_ and per the `2ND FUNC` toggle :
 
 ```
 ...
-	"x": {
-		"BROWSER": ["trigger_this_action_in_display_mode"],
-		"DEFAULT": ["trigger_this_action_in_any_other_mode_with_FN_off","trigger_this_action_in_any_other_mode_with_FN_on"],
-	}
+"x": {
+	"BROWSER": ["trigger_this_action_in_display_mode"],
+	"DEFAULT": ["trigger_this_action_in_any_other_mode_with_FN_off","trigger_this_action_in_any_other_mode_with_FN_on"],
+}
 ```
 
 ## adding a new screen resolution option to the _settings_ menu

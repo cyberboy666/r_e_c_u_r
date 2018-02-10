@@ -1,56 +1,45 @@
-# how to build r_e_c_u_r
+# how to develop r_e_c_u_r
 
-## get some parts
+i have tried to write this application so it can easily be read and modified for different use cases. i recomend forking the repo to experiment with the codebase. open a pull request into origin <your_branch> if you want to contribe your changes back into the project.
 
-these are the parts you need to get. to reduce costs i sourced them through aliexpress.com but if you have other parts lying around try them out and let me know how it goes.
+this [diagram] might help understand the design : 
 
-### main parts:
+![diagram_pic][diagram_pic]
 
-- [raspberry pi3] *37 USD* (watch this space for experiments with other models/sbc's)
+here are some examples of changes you might want to make:
 
-![alt text][raspberry pi image]
+## rearranging the _keypad_ controls
 
-- [raspberry pi screen] *12 USD*
+to simpify the key-mapping process, i have premapped the numpad keys to the _labels_ `a` to `s` like this:
 
-- [usb keypad] *9 USD*
+![premapped_keys][premapped_keys]
 
-other bits and pieces:
+(see [dotfiles] for description of this process)
 
-- xxx and yyy size screws and nuts - a few dollars (exact sizes, links etc coming soon)
+for each _label_ the application will read the `[keypad_action_mapping.json]` file and map it to an `[action]`. currently the format also allows unique actions per _display_mode_ and per the `2ND FUNC` toggle :
 
-- >=8 gig mircoSD card
+```
+...
+	"x": {
+		"BROWSER": ["trigger_this_action_in_display_mode"],
+		"DEFAULT": ["trigger_this_action_in_any_other_mode_with_FN_off","trigger_this_action_in_any_other_mode_with_FN_on"],
+	}
+```
 
-- stable 5volt1A microUsb power supply
+## adding a new screen resolution option to the _settings_ menu
 
-- a usb for samples
+## creating a new action
 
-- hdmi cable for output...
+## adding a new `user input` device
 
-## print some things
+## beyond
 
-- 3d print the front panel, back panel and spaces from these files
+i hope the foundations iv provided encourage you to make larger changes for more ambitious features. if so you could try getting [in touch] first and maybe i could help align your approach with the rest of the project
 
-- 2d print the key mapping (or modify/create your own!) from here onto label paper or something sticky...
-
-## put it together
-
-- using etcher (or otherwise) flash the micro sd with this modified image of raspberian (or follow the dotfile instructions here)
-
-- insert sd card into pi
-
-- attach screen via the pi header pins and use screen spacers (with a little bluetac) to fasten it in
-
-- use the small screws to attach pi+screen to the back panel
-
-- attach keypad to the back panel and fasten in with a extra screw if nessicary
-
-- put large screws through back panel facing up and use spacers
-
-- attach top panel and hold with nuts
-
-## try it owt
-
-[raspberry pi3]:https://www.aliexpress.com/item/RS-Version-2016-New-Raspberry-Pi-3-Model-B-Board-1GB-LPDDR2-BCM2837-Quad-Core-Ras/32789942633.html?spm=a2g0s.9042311.0.0.FkRWty
-[raspberry pi image]: ./images/build_01_pi.jpg
-[raspberry pi screen]:https://www.aliexpress.com/item/New-3-5-inch-Raspberry-Pi-LCD-TFT-Touchscreen-Display-Touch-Shield-Raspberry-pi-2-Model/32605410449.html?spm=a2g0s.9042311.0.0.ZW1WDU
-[usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[diagram]: https://docs.google.com/drawings/d/1ltWCv82rKVzOiFe6GaDDPlneG2oki0yRujArPU5V2ss/edit?usp=sharing
+[diagram_pic]:
+[premapped_keys]:
+[dotfiles]: ../dotfiles
+[keypad_action_mapping.json]: ../data_centre/json_objects/keypad_action_mapping.json
+[action]: ../actions.py 
+[in touch]: langolierz@gmail.com

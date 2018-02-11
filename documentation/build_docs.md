@@ -16,7 +16,7 @@ these are the parts you need to get. to reduce costs i sourced them through alie
 
 other bits and pieces:
 
-- xxx and yyy size screws and nuts - a few dollars (exact sizes, links etc coming soon)
+- 4x m2 and 7x m3 screws - a few dollars (exact lengths/links etc coming soon)
 
 - 8 gig or greater mircoSD card
 

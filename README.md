@@ -8,7 +8,7 @@
 - seamlessly loop video through rpi's HDMI out
 - intuitively _browse_ video files on a usb and map them into __r_e_c_u_r__
 - load and trigger video samples from numbered slots in the _sampler_ bank
-- monitor the current samples playback and the sampler banks details on the lcd display
+- monitor the current samples playback status and the sampler banks details on the lcd display
 - dynamically set and clear the start/end points of each sample as it plays
 - configure the _settings_ menu to suit your use
 

@@ -56,4 +56,4 @@ other bits and pieces:
 [usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
 [key stickers]: https://docs.google.com/document/d/1vhXv5QTfyUqsZuMdQu1lh2dMfEk5HMNVyp8uhrc-I2w/edit?usp=sharing
 [etcher]: https://etcher.io
-[dotfile] : ../dotfiles/README.md
+[dotfile]: ../dotfiles/README.md

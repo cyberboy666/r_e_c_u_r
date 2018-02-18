@@ -1,18 +1,18 @@
 {
 	"a": {
-		"BROWSER": ["move_browser_selection_up"],
-		"SAMPLER": ["seek_back_on_player"],
-		"SETTINGS": ["move_settings_selection_up"]
+		"NAV_BROWSER": ["move_browser_selection_up"],
+		"PLAYER": ["seek_back_on_player"],
+		"NAV_SETTINGS": ["move_settings_selection_up"]
 	},
 	"b": {
-		"BROWSER": ["move_browser_selection_down"],
-		"SAMPLER": ["seek_forward_on_player"],
-		"SETTINGS": ["move_settings_selection_down"]
+		"NAV_BROWSER": ["move_browser_selection_down"],
+		"PLAYER": ["seek_forward_on_player"],
+		"NAV_SETTINGS": ["move_settings_selection_down"]
 	},
 	"c": {
-		"BROWSER": ["enter_on_browser_selection"],
-		"SAMPLER": ["toggle_pause_on_player"],
-		"SETTINGS": ["enter_on_settings_selection"]
+		"NAV_BROWSER": ["enter_on_browser_selection"],
+		"PLAYER": ["toggle_pause_on_player"],
+		"NAV_SETTINGS": ["enter_on_settings_selection"]
 	},
 	"d": {
 		"DEFAULT": ["trigger_next_player"]

@@ -17,6 +17,7 @@ class Display(object):
         self.data = data
 
         self.display_mode = "SAMPLER"
+        self.control_mode = 'PLAYER'
         self.top_menu_index = 0
         self.selected_list_index = self.top_menu_index
         self.browser_list = self.data.rewrite_browser_list()
@@ -124,7 +125,7 @@ class Display(object):
 
     def _load_message(self):
         if self.message_handler.current_message[1]:
-            self.display_text.insert(END, '{:5}: {:38}'.format(
+            self.display_text.insert(END, '{:5} {:38}'.format(
                 self.message_handler.current_message[0], self.message_handler.current_message[1][0:38]))
             self.display_text.tag_add('{}_MESSAGE'.format(
                 self.message_handler.current_message[0]), 16.0,16.0 + self.SELECTOR_WIDTH)
@@ -135,6 +136,9 @@ class Display(object):
         elif self.message_handler.function_on:
             self.display_text.insert(END, '{:^45}'.format('< FUNCTION KEY ON >'))
             self.display_text.tag_add('FUNCTION', 16.0,16.0 + self.SELECTOR_WIDTH)
+        else:
+            self.display_text.insert(END, '{:8} {:<10}'.format('CONTROL:', self.control_mode))
+            self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 
     def _highlight_this_row(self, row):
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,

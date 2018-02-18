@@ -31,8 +31,8 @@ class NumpadInput(object):
 
     def run_action_for_mapped_key(self, key):
         this_mapping = self.key_mappings[key]
-        if self.display.display_mode in this_mapping:
-            mode = self.display.display_mode
+        if self.display.control_mode in this_mapping:
+            mode = self.display.control_mode
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 

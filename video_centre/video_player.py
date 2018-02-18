@@ -19,6 +19,21 @@ class video_player:
         self.end = -1.0
         self.crop_length = 0.0
         self.location = ''
+        self.load_attempts = 0
+
+    def try_load(self):
+        load_attempts = 0
+        while(load_attempts < 4):
+            load_attempts = load_attempts + 1
+            if self.load():
+                print('load success')
+                return True
+            else:
+                print('load failed')
+        self.message_handler.set_message('ERROR', 'failed to load')
+        self.status = 'ERROR'
+        return False
+            
 
     def load(self):
         try:
@@ -38,9 +53,11 @@ class video_player:
             if self.start > 0.5:
                 self.set_position(self.start - 0.5)
             self.pause_at_start()
+            self.load_attempts = 0
+            return True
         except:
-            self.message_handler.set_message('ERROR', 'first load error')
-            self.root.after(100, self.load)
+            self.message_handler.set_message('ERROR', 'load attempt fail')
+            return False
 
     def pause_at_start(self):
         position = self.get_position()  

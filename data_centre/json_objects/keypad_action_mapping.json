@@ -37,7 +37,7 @@
 		"DEFAULT": ["load_slot_1_into_next_player"]
 	},
 	"l": {
-		"DEFAULT": ["load_slot_2_into_next_player"]
+		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"]
 	},
 	"m": {
 		"DEFAULT": ["load_slot_3_into_next_player"]

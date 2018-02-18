@@ -8,12 +8,14 @@ class VideoDriver(object):
         self.data = data
         self.delay = 50
         self.has_omx = self.data.has_omx
+        self.in_first_load_cycle = False
+        self.in_current_playing_cycle = False
+        self.in_next_load_cycle = False
         print(self.has_omx)
         if self.has_omx:
             self.last_player = video_player(self.root, self.message_handler, self.data, 'a.a')
             self.current_player = video_player(self.root,self.message_handler, self.data, 'b.b')
             self.next_player = video_player(self.root, self.message_handler, self.data, 'c.c')
-            self.manual_next = False
             self.print_status()
             self.root.after(self.delay, self.begin_playing)
         else:
@@ -28,15 +30,26 @@ class VideoDriver(object):
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
-        self.current_player.load()
-        self.wait_for_first_load()
+        if self.current_player.try_load():
+            self.in_first_load_cycle = True
+            self.wait_for_first_load()
+        else:
+            print('load failed')
 
     def wait_for_first_load(self):
-        
-        if self.current_player.is_loaded():
-            self.play_video()
-        else:
-            self.root.after(self.delay, self.wait_for_first_load)
+        if self.in_first_load_cycle:
+            if self.current_player.is_loaded():
+                self.in_first_load_cycle = False
+                self.play_video()
+            else:
+                self.root.after(self.delay, self.wait_for_first_load)
+
+    def switch_players_and_play_video(self):
+        self.in_first_load_cycle = False
+        self.in_current_playing_cycle = False
+        self.in_next_load_cycle = True
+
+        self.switch_if_next_is_loaded()
 
     def switch_players(self):
         temp_player = self.last_player
@@ -47,22 +60,30 @@ class VideoDriver(object):
 
     def play_video(self):
         self.current_player.play()
-        self.next_player.load()
+        self.next_player.try_load()
+        self.in_current_playing_cycle = True
         self.wait_for_next_cycle()
 
     def wait_for_next_cycle(self):
-        if self.current_player.is_finished() or self.manual_next:
-            self.manual_next = False
-            self.wait_for_next_load()
-        else:
-            self.root.after(self.delay, self.wait_for_next_cycle)
+        if self.in_current_playing_cycle:
+            if self.current_player.is_finished():
+                self.in_current_playing_cycle = False
+                self.in_next_load_cycle = True
+                self.switch_if_next_is_loaded()
+            else:
+                self.root.after(self.delay, self.wait_for_next_cycle)
 
-    def wait_for_next_load(self):
-        if self.next_player.is_loaded():
-            self.switch_players()
-            self.play_video()
-        else:
-            self.root.after(self.delay, self.wait_for_next_load)
+    def switch_if_next_is_loaded(self):
+        if self.in_next_load_cycle:
+            if self.next_player.is_loaded():
+                self.in_next_load_cycle = False
+                self.switch_players()
+                self.play_video()
+            else:
+                if self.next_player.status != 'ERROR':
+                    self.root.after(self.delay, self.switch_if_next_is_loaded)
+                else:
+                    self.in_next_load_cycle = False
 
     def get_info_for_player_display(self):
         if self.has_omx:

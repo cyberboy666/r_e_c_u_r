@@ -14,7 +14,7 @@ class video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.total_length = 0.0
-        self.slot_number = '-'
+        self.slot_number = '*-*'
         self.start = -1.0
         self.end = -1.0
         self.crop_length = 0.0
@@ -55,7 +55,7 @@ class video_player:
             self.pause_at_start()
             self.load_attempts = 0
             return True
-        except:
+        except ValueError:
             self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 
@@ -150,7 +150,7 @@ class fake_video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.duration = 0
-        self.slot_number = '-'
+        self.slot_number = '*-*'
         self.start = -1
         self.end = -1
         self.length = 0

@@ -7,7 +7,7 @@ class Actions(object):
         self.data = data
         self.video_driver = video_driver
         self.display = display
-
+        
 
     def move_browser_selection_down(self):
         self.display.navigate_menu('down', len(self.data.return_browser_list()))
@@ -79,17 +79,20 @@ class Actions(object):
         self.load_this_slot_into_next_player(9)
 
     def trigger_next_player(self):
-        self.video_driver.manual_next = True
+        self.video_driver.switch_players_and_play_video()
 
     def cycle_display_mode(self):
         self.display.top_menu_index = 0
         self.display.selected_list_index = self.display.top_menu_index
         if self.display.display_mode == "BROWSER":
             self.display.display_mode = "SETTINGS"
+            self.display.control_mode = 'NAV_SETTINGS'
         elif self.display.display_mode == "SAMPLER":
             self.display.display_mode = "BROWSER"
+            self.display.control_mode = 'NAV_BROWSER'
         elif self.display.display_mode == "SETTINGS":
             self.display.display_mode = "SAMPLER"
+            self.display.control_mode = 'PLAYER'
 
     def toggle_pause_on_player(self):
         self.video_driver.current_player.toggle_pause()

@@ -1,6 +1,8 @@
 # r_e_c_u_r
  an open diy py/pi based video sampler
  
+ ![vectorfront][vectorfront]
+ 
  __r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from the _keypad_ to control omxplayer's `video out` while `displaying` a simple text user interface on the _rpi lcd screen_  
 
 ## features
@@ -34,6 +36,7 @@ i started a [board] of features i would like to explore
 
 langolierz@gmail.com
 
+[vectorfront]: ./documentation/vectorfront.png
 [board]: https://trello.com/b/mmJJFyrp/feature-ideas
 [operating]: documentation/operate_docs.md
 [building]: documentation/build_docs.md

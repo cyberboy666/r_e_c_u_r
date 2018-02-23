@@ -82,7 +82,7 @@ class Display(object):
             self.display_text.insert(END, '{:^4} {:<22} {:<4} {:<4} {:<4} \n'.format(
                 index, name_without_extension[0:22], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
-        current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.slot_number)
+        current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         if current_bank is self.bank_number:
             self.selected_list_index = current_slot
         else:

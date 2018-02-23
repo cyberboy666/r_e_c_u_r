@@ -14,7 +14,7 @@ class video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.total_length = 0.0
-        self.slot_number = '*-*'
+        self.bankslot_number = '*-*'
         self.start = -1.0
         self.end = -1.0
         self.crop_length = 0.0
@@ -108,7 +108,7 @@ class video_player:
         #self.total_length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
-        self.slot_number = next_context['slot_number']
+        self.bankslot_number = next_context['bankslot_number']
 
     def toggle_pause(self):
         self.omx_player.play_pause()
@@ -150,7 +150,7 @@ class fake_video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.duration = 0
-        self.slot_number = '*-*'
+        self.bankslot_number = '*-*'
         self.start = -1
         self.end = -1
         self.length = 0

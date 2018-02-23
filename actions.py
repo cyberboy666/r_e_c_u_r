@@ -106,26 +106,38 @@ class Actions(object):
     def toggle_function(self):
         self.message_handler.function_on = not self.message_handler.function_on
 
+    def next_bank(self):
+        print('next bank')
+        self.update_bank(1)
+
+    def previous_bank(self):
+        self.update_bank(-1)
+
+    def update_bank(self, amount):
+        new_bank_number = self.data.update_bank_number(self.display.bank_number, amount)
+        print ('current number is : {} , new number is {} '.format(self.display.bank_number, new_bank_number))
+        self.display.bank_number = new_bank_number
+        
     def set_playing_sample_start_to_current_duration(self):
-        current_slot = self.video_driver.current_player.slot_number
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         current_position = self.video_driver.current_player.get_position()
-        self.data.update_slot_start_to_this_time(self.display.bank_number, current_slot, current_position)
+        self.data.update_slot_start_to_this_time(current_bank, current_slot, current_position)
         self.load_this_slot_into_next_player(current_slot)
 
     def clear_playing_sample_start_time(self):
-        current_slot = self.video_driver.current_player.slot_number
-        self.data.update_slot_start_to_this_time(self.display.bank_number, current_slot, -1)
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
+        self.data.update_slot_start_to_this_time(current_bank, current_slot, -1)
         self.load_this_slot_into_next_player(current_slot)
 
     def set_playing_sample_end_to_current_duration(self):
-        current_slot = self.video_driver.current_player.slot_number
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         current_position = self.video_driver.current_player.get_position()
-        self.data.update_slot_end_to_this_time(self.display.bank_number, current_slot, current_position)
+        self.data.update_slot_end_to_this_time(current_bank, current_slot, current_position)
         self.load_this_slot_into_next_player(current_slot)
 
     def clear_playing_sample_end_time(self):
-        current_slot = self.video_driver.current_player.slot_number
-        self.data.update_slot_end_to_this_time(self.display.bank_number, current_slot, -1)
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
+        self.data.update_slot_end_to_this_time(current_bank, current_slot, -1)
         self.load_this_slot_into_next_player(current_slot)
 
     def switch_display_to_hdmi(self):

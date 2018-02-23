@@ -31,10 +31,10 @@
 		"DEFAULT": ["toggle_function"]
 	},
 	"j": {
-		"DEFAULT": ["load_slot_0_into_next_player"]
+		"DEFAULT": ["load_slot_0_into_next_player","previous_bank"]
 	},
 	"k": {
-		"DEFAULT": ["load_slot_1_into_next_player"]
+		"DEFAULT": ["load_slot_1_into_next_player","next_bank"]
 	},
 	"l": {
 		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"]

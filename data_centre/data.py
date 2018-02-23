@@ -20,6 +20,7 @@ NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
 SETTINGS_JSON = 'settings.json'
 KEYPAD_MAPPING = 'keypad_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
+EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
 def read_json(file_name):
@@ -71,9 +72,17 @@ class Data(object):
     @staticmethod
     def clear_all_slots(bank_number):
         memory_bank = read_json(BANK_DATA_JSON)  
-        for index, slot in enumerate(memory_bank[bank_number]):
-            memory_bank[bank_number][index] = EMPTY_SLOT
+        memory_bank[bank_number] = EMPTY_BANK
         update_json(BANK_DATA_JSON, memory_bank)
+
+    def update_bank_number(self, current_bank_number, amount):
+        memory_bank = read_json(BANK_DATA_JSON)
+        if(memory_bank[-1] != EMPTY_BANK):
+            memory_bank.append(EMPTY_BANK)
+        elif(memory_bank[-1] == EMPTY_BANK and memory_bank[-2] == EMPTY_BANK):
+            memory_bank.pop()
+        update_json(BANK_DATA_JSON, memory_bank)
+        return (current_bank_number+amount)%(len(memory_bank))
 
     def update_next_slot_number(self, bank_number, new_value):
         memory_bank = read_json(BANK_DATA_JSON)
@@ -111,7 +120,6 @@ class Data(object):
     @classmethod
     def split_bankslot_number(cls, slot_number):
         split = slot_number.split('-')
-        print(split)
         is_bank_num_int , converted_bank_number = cls.try_convert_string_to_int(split[0])
         is_slot_num_int , converted_slot_number = cls.try_convert_string_to_int(split[1])
         return converted_bank_number, converted_slot_number
@@ -147,11 +155,12 @@ class Data(object):
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
                        length=next_slot_details['length'], start=start_value, end=end_value,
-                       slot_number=next_bankslot_number)
+                       bankslot_number=next_bankslot_number)
         return context
 
     def update_slot_start_to_this_time(self, bank_number, slot_number, position):
         memory_bank = read_json(BANK_DATA_JSON)
+        print('bank_no {} , slot_no {} '.format(bank_number, slot_number))
         memory_bank[bank_number][slot_number]['start'] = position
         update_json(BANK_DATA_JSON, memory_bank)
 

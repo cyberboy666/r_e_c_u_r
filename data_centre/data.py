@@ -19,7 +19,7 @@ BANK_DATA_JSON = 'display_data.json'
 NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
 SETTINGS_JSON = 'settings.json'
 KEYPAD_MAPPING = 'keypad_action_mapping.json'
-EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
+EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
 EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
@@ -66,7 +66,7 @@ class Data(object):
         has_location, location = self._get_path_for_file(file_name)
         print('file_name:{},has_location:{}, location:{}'.format(file_name,has_location, location))
         length = self._get_length_for_file(location)
-        new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1)
+        new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1, rate=1)
         self._update_a_slots_data(bank_number, slot_number, new_slot)
 
     @staticmethod
@@ -154,7 +154,7 @@ class Data(object):
         length = next_slot_details['length']
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
-                       length=next_slot_details['length'], start=start_value, end=end_value,
+                       length=next_slot_details['length'], rate=next_slot_details['rate'], start=start_value, end=end_value,
                        bankslot_number=next_bankslot_number)
         return context
 
@@ -167,6 +167,11 @@ class Data(object):
     def update_slot_end_to_this_time(self,bank_number, slot_number, position):
         memory_bank = read_json(BANK_DATA_JSON)
         memory_bank[bank_number][slot_number]['end'] = position
+        update_json(BANK_DATA_JSON, memory_bank)
+
+    def update_slot_rate_to_this(self,bank_number, slot_number, rate):
+        memory_bank = read_json(BANK_DATA_JSON)
+        memory_bank[bank_number][slot_number]['rate'] = rate
         update_json(BANK_DATA_JSON, memory_bank)
 
     def _get_length_for_file(self, path):

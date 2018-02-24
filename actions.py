@@ -115,9 +115,23 @@ class Actions(object):
 
     def update_bank(self, amount):
         new_bank_number = self.data.update_bank_number(self.display.bank_number, amount)
-        print ('current number is : {} , new number is {} '.format(self.display.bank_number, new_bank_number))
         self.display.bank_number = new_bank_number
         
+    def increase_speed(self):
+        new_rate = self.video_driver.current_player.change_rate(0.5)
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
+        self.data.update_slot_rate_to_this(current_bank, current_slot, new_rate)
+        self.load_this_slot_into_next_player(current_slot)
+
+    def decrease_speed(self):
+        new_rate = self.video_driver.current_player.change_rate(-0.5)
+        current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
+        self.data.update_slot_rate_to_this(current_bank, current_slot, new_rate)
+        self.load_this_slot_into_next_player(current_slot)
+
+    def print_speed(self):
+        self.message_handler.set_message('INFO', 'the speed of current video is {}'.format(self.video_driver.current_player.omx_player.rate()))
+
     def set_playing_sample_start_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         current_position = self.video_driver.current_player.get_position()

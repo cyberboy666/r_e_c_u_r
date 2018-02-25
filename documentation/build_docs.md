@@ -52,7 +52,7 @@ other bits and pieces:
 
 [raspberry pi3]:https://www.aliexpress.com/item/RS-Version-2016-New-Raspberry-Pi-3-Model-B-Board-1GB-LPDDR2-BCM2837-Quad-Core-Ras/32789942633.html?spm=a2g0s.9042311.0.0.FkRWty
 [main parts]: build_all.jpg
-[raspberry pi screen]:https://www.aliexpress.com/item/New-3-5-inch-Raspberry-Pi-LCD-TFT-Touchscreen-Display-Touch-Shield-Raspberry-pi-2-Model/32605410449.html?spm=a2g0s.9042311.0.0.ZW1WDU
+[raspberry pi screen]:https://www.aliexpress.com/item/3-5-Inch-TFT-LCD-Moudle-For-Raspberry-Pi-2-Model-B-RPI-B-raspberry-pi/32707058182.html?spm=a2g0s.13010208.99999999.262.bV4EPV
 [usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
 [key stickers]: https://docs.google.com/document/d/1vhXv5QTfyUqsZuMdQu1lh2dMfEk5HMNVyp8uhrc-I2w/edit?usp=sharing
 [etcher]: https://etcher.io

@@ -10,15 +10,20 @@
 - seamlessly loop video through rpi's HDMI out
 - intuitively _browse_ video files on a usb and map them into __r_e_c_u_r__
 - load and trigger video samples from numbered slots in the _sampler_ bank
-- monitor the current samples playback status and the sampler banks details on the lcd display
 - dynamically set and clear the start/end points of each sample as it plays
 - configure the _settings_ menu to suit your use
 
-(more coming soon)
+### more coming soon:
 
-### feature requests
+- composite video out (hopefully)
+- midi controlled
+- more playback modes and options
+- optional extention for live sampling
+- compatablity with other sbc's
 
-i started a [board] of features i would like to explore 
+### other feature requests
+
+i started a [board] of the features i would like to explore 
 
 ## main objectives:
 

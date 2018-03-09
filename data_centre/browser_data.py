@@ -27,9 +27,9 @@ class BrowserData(object):
         for browser_line in self.browser_list:
             is_file, file_name = self.extract_file_type_and_name_from_browser_format(browser_line['name'])
             if is_file:
-                is_slotted, slot_number = self._is_file_in_memory_bank(file_name)
+                is_slotted, bankslot_number = self._is_file_in_memory_bank(file_name)
                 if is_slotted:
-                    browser_line['slot'] = str(slot_number)
+                    browser_line['slot'] = str(bankslot_number)
 
         return self.browser_list
 
@@ -71,9 +71,10 @@ class BrowserData(object):
         ######## used for displaying the mappings in browser view ########
         if not self.memory_bank:
             self.memory_bank = data_centre.data.read_json(data_centre.data.BANK_DATA_JSON)
-        for index, slot in enumerate(self.memory_bank):
-            if file_name == slot['name']:
-                return True, index
+        for bank_index, bank in enumerate(self.memory_bank):
+            for slot_index, slot in enumerate(bank):
+                if file_name == slot['name']:
+                    return True, '{}-{}'.format(bank_index,slot_index)
         return False, ''
 
 

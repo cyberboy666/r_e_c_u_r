@@ -14,9 +14,10 @@ class video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.total_length = 0.0
-        self.slot_number = '-'
+        self.bankslot_number = '*-*'
         self.start = -1.0
         self.end = -1.0
+        self.rate = 1
         self.crop_length = 0.0
         self.location = ''
         self.load_attempts = 0
@@ -53,9 +54,11 @@ class video_player:
             if self.start > 0.5:
                 self.set_position(self.start - 0.5)
             self.pause_at_start()
+            print('set rate to {}'.format(self.rate))
+            self.omx_player.set_rate(self.rate)
             self.load_attempts = 0
             return True
-        except:
+        except ValueError:
             self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 
@@ -108,7 +111,8 @@ class video_player:
         #self.total_length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
-        self.slot_number = next_context['slot_number']
+        self.bankslot_number = next_context['bankslot_number']
+        self.rate = next_context['rate']
 
     def toggle_pause(self):
         self.omx_player.play_pause()
@@ -122,6 +126,17 @@ class video_player:
             #self.player.seek(amount)
         else:
             self.message_handler.set_message('INFO', 'can not seek outside range')
+
+    def change_rate(self, amount):
+        new_rate = self.rate + amount
+        if (new_rate > self.omx_player.minimum_rate() and new_rate < self.omx_player.maximum_rate()):
+            updated_speed = self.omx_player.set_rate(new_rate)
+            self.rate = new_rate
+            print('max rate {} , min rate {} '.format(self.omx_player.maximum_rate() ,self.omx_player.minimum_rate()))
+            return new_rate
+        else:
+            self.message_handler.set_message('INFO', 'can not set speed outside of range')
+            return self.rate
 
     def set_position(self, position):
         self.omx_player.set_position(position)
@@ -150,7 +165,7 @@ class fake_video_player:
         self.omx_running = False
         self.status = 'N/A'
         self.duration = 0
-        self.slot_number = '-'
+        self.bankslot_number = '*-*'
         self.start = -1
         self.end = -1
         self.length = 0

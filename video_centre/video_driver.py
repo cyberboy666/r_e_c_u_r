@@ -87,7 +87,7 @@ class VideoDriver(object):
 
     def get_info_for_player_display(self):
         if self.has_omx:
-            return self.current_player.slot_number, self.current_player.status, self.next_player.slot_number, \
+            return self.current_player.bankslot_number, self.current_player.status, self.next_player.bankslot_number, \
                 self.next_player.status, self.current_player.get_position(), self.current_player.crop_length, \
                 self.current_player.start, self.current_player.end
         else:

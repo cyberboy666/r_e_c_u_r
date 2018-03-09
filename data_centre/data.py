@@ -16,10 +16,11 @@ def get_the_current_dir_path():
     return os.path.split(current_file_path)[0]
 
 BANK_DATA_JSON = 'display_data.json'
-NEXT_SLOT_JSON = 'next_slot_number.json'
+NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
 SETTINGS_JSON = 'settings.json'
 KEYPAD_MAPPING = 'keypad_action_mapping.json'
-EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
+EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
+EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
 
 def read_json(file_name):
@@ -51,37 +52,45 @@ class Data(object):
     def get_screen_size_setting(self):
         return read_json(SETTINGS_JSON)[0]['options'][0]
 
-    def create_new_slot_mapping_in_first_open(self, file_name):
+    def create_new_slot_mapping_in_first_open(self, file_name, bank_number):
         ######## used for mapping current video to next available slot ########
         memory_bank = read_json(BANK_DATA_JSON)
-        for index, slot in enumerate(memory_bank):
+        for index, slot in enumerate(memory_bank[bank_number]):
             if (not slot['name']):
-                self.create_new_slot_mapping(index, file_name)
+                self.create_new_slot_mapping(bank_number, index, file_name)
                 return True
         return False
 
-    def create_new_slot_mapping(self, slot_number, file_name):
+    def create_new_slot_mapping(self,bank_number, slot_number, file_name):
         ######## used for mapping current video to a specific slot ########
         has_location, location = self._get_path_for_file(file_name)
         print('file_name:{},has_location:{}, location:{}'.format(file_name,has_location, location))
         length = self._get_length_for_file(location)
-        new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1)
-        self._update_a_slots_data(slot_number, new_slot)
+        new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1, rate=1)
+        self._update_a_slots_data(bank_number, slot_number, new_slot)
 
     @staticmethod
-    def clear_all_slots():
-        memory_bank = read_json(BANK_DATA_JSON)
-        for index, slot in enumerate(memory_bank):
-            memory_bank[index] = EMPTY_SLOT
+    def clear_all_slots(bank_number):
+        memory_bank = read_json(BANK_DATA_JSON)  
+        memory_bank[bank_number] = EMPTY_BANK
         update_json(BANK_DATA_JSON, memory_bank)
 
-    def update_next_slot_number(self, new_value):
+    def update_bank_number(self, current_bank_number, amount):
         memory_bank = read_json(BANK_DATA_JSON)
-        if memory_bank[new_value]['location'] == '':
+        if(memory_bank[-1] != EMPTY_BANK):
+            memory_bank.append(EMPTY_BANK)
+        elif(memory_bank[-1] == EMPTY_BANK and memory_bank[-2] == EMPTY_BANK):
+            memory_bank.pop()
+        update_json(BANK_DATA_JSON, memory_bank)
+        return (current_bank_number+amount)%(len(memory_bank))
+
+    def update_next_slot_number(self, bank_number, new_value):
+        memory_bank = read_json(BANK_DATA_JSON)
+        if memory_bank[bank_number][new_value]['location'] == '':
             print('its empty!')
             self.message_handler.set_message('INFO', 'the slot you pressed is empty')
         else:
-            update_json(NEXT_SLOT_JSON, new_value)
+            update_json(NEXT_BANKSLOT_JSON, '{}-{}'.format(bank_number,new_value))
 
     def add_open_folder(self, folder_name):
         self.browser_data.update_open_folders(folder_name)
@@ -108,6 +117,20 @@ class Data(object):
     def return_browser_list(self):
         return self.browser_data.browser_list
 
+    @classmethod
+    def split_bankslot_number(cls, slot_number):
+        split = slot_number.split('-')
+        is_bank_num_int , converted_bank_number = cls.try_convert_string_to_int(split[0])
+        is_slot_num_int , converted_slot_number = cls.try_convert_string_to_int(split[1])
+        return converted_bank_number, converted_slot_number
+
+    @staticmethod
+    def try_convert_string_to_int(string_input):
+        try:
+            return True , int(string_input)
+        except ValueError:
+            return False , '*'
+
     @staticmethod
     def get_settings_data():
         return read_json(SETTINGS_JSON)
@@ -122,30 +145,36 @@ class Data(object):
 
     def get_next_context(self):
         ######## loads the slot details, uses settings to modify them and then set next slot number ########
-        next_slot_number = read_json(NEXT_SLOT_JSON)
+        next_bankslot_number = read_json(NEXT_BANKSLOT_JSON)
         memory_bank = read_json(BANK_DATA_JSON)
-        next_slot_details = memory_bank[next_slot_number]
+        bank_num , slot_num = self.split_bankslot_number(next_bankslot_number)
+        next_slot_details = memory_bank[bank_num][slot_num]
         start_value = next_slot_details['start']
         end_value = next_slot_details['end']
         length = next_slot_details['length']
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
-                       length=next_slot_details['length'], start=start_value, end=end_value,
-                       slot_number=next_slot_number)
+                       length=next_slot_details['length'], rate=next_slot_details['rate'], start=start_value, end=end_value,
+                       bankslot_number=next_bankslot_number)
         return context
 
-    def update_slot_start_to_this_time(self, slot_number, position):
+    def update_slot_start_to_this_time(self, bank_number, slot_number, position):
         memory_bank = read_json(BANK_DATA_JSON)
-        memory_bank[slot_number]['start'] = position
+        print('bank_no {} , slot_no {} '.format(bank_number, slot_number))
+        memory_bank[bank_number][slot_number]['start'] = position
         update_json(BANK_DATA_JSON, memory_bank)
 
-    def update_slot_end_to_this_time(self, slot_number, position):
+    def update_slot_end_to_this_time(self,bank_number, slot_number, position):
         memory_bank = read_json(BANK_DATA_JSON)
-        memory_bank[slot_number]['end'] = position
+        memory_bank[bank_number][slot_number]['end'] = position
+        update_json(BANK_DATA_JSON, memory_bank)
+
+    def update_slot_rate_to_this(self,bank_number, slot_number, rate):
+        memory_bank = read_json(BANK_DATA_JSON)
+        memory_bank[bank_number][slot_number]['rate'] = rate
         update_json(BANK_DATA_JSON, memory_bank)
 
     def _get_length_for_file(self, path):
-        print('getting length for: {}'.format(path))
         if self.has_omx:
             temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
             duration = temp_player.duration()
@@ -162,10 +191,10 @@ class Data(object):
         return False, ''
 
     @staticmethod
-    def _update_a_slots_data(slot_number, slot_info):
+    def _update_a_slots_data(bank_number, slot_number, slot_info):
         ######## overwrite a given slots info with new data ########
         memory_bank = read_json(BANK_DATA_JSON)
-        memory_bank[slot_number] = slot_info
+        memory_bank[bank_number][slot_number] = slot_info
         update_json(BANK_DATA_JSON, memory_bank)
 
     @staticmethod

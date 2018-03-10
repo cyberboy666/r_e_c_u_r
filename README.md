@@ -7,7 +7,7 @@
 
 ## features
 
-- seamlessly loop video through rpi's HDMI out
+- seamlessly loop video through rpi's HDMI or composite out
 - intuitively _browse_ video files on a usb and map them into __r_e_c_u_r__
 - load and trigger video samples from numbered slots in the _sampler_ bank
 - dynamically set and clear the start/end points of each sample as it plays
@@ -15,7 +15,7 @@
 
 ### more coming soon:
 
-- composite video out (hopefully)
+- ~~composite video out (hopefully)~~
 - midi controlled
 - more playback modes and options
 - optional extention for live sampling

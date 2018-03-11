@@ -37,8 +37,7 @@ def update_json(file_name, data):
 def get_path_to_browser():
     return read_json('path_to_browser.json')
 
-PATH_TO_BROWSER = get_path_to_browser()
-
+PATH_TO_BROWSER = '/media/pi'
 
 class Data(object):
     def __init__(self, message_handler):

@@ -27,4 +27,6 @@ on finished image...
 
 - installing udisk-glue for mounting usb as described [here](https://jmeosbn.github.io/blog/minimal-raspbian-pi/#configure-automount-for-usb-drives)
 : `apt-get install udisks-glue policykit-1` and `sed -i '/^match disks /a\    automount = true' /etc/udisks-glue.conf`
-now just need to start it on boot
+now just need to start it on boot by adding it to ~/.bash_profile with start x
+
+- install omx ! (duhh) `sudo apt-get install omxplayer`

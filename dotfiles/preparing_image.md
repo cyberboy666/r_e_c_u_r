@@ -29,7 +29,9 @@ need is a x server and window manager. install these as per the kiosk-mode guide
 - install the dbus wrapper : `sudo apt-get install libdbus-glib-1-dev` and and `sudo apt-get install python3-pip`
 and `pip3 install dbus-python`
 
-install tkinter : `sudo apt-get install python3-tk`
+- install tkinter : `sudo apt-get install python3-tk`
+
+- install omx `sudo apt-get install omxplayer`
 
 - pull down recur code : `git clone https://github.com/langolierz/r_e_c_u_r.git`
 
@@ -49,4 +51,3 @@ xset s noblank &
 bash /home/pi/r_e_c_u_r/dotfiles/launcher.sh &
 
 
-- install omx ! (duhh) `sudo apt-get install omxplayer`

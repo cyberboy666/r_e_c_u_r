@@ -26,8 +26,8 @@ need is a x server and window manager. install these as per the kiosk-mode guide
 
 - install git `sudo apt-get install git`
 
-- install the dbus wrapper : `sudo apt-get install libdbus-glib-1-dev` and and `sudo apt-get install python3-pip`
-and `pip3 install dbus-python`
+- install the dbus wrapper and its prereqs : `sudo apt-get install libdbus-glib-1-dev` and `sudo apt-get install python3-pip`
+and `pip3 install dbus-python` and `pip3 install omxplayer-wrapper`
 
 - install tkinter : `sudo apt-get install python3-tk`
 

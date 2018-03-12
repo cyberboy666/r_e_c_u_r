@@ -37,7 +37,16 @@ install tkinter : `sudo apt-get install python3-tk`
 on finished image...
 
 - installing udisk-glue for mounting usb as described [here](https://jmeosbn.github.io/blog/minimal-raspbian-pi/#configure-automount-for-usb-drives)
-: `apt-get install udisks-glue policykit-1` and `sed -i '/^match disks /a\    automount = true' /etc/udisks-glue.conf`
-now just need to start it on boot by adding it to ~/.bash_profile with start x
+: `sudo apt-get install udisks-glue policykit-1` and ` sudo sed -i '/^match disks /a\    automount = true' /etc/udisks-glue.conf`
+now just need to start it on boot by adding it to ~/.bash_profile with along with startx :
+`sudo nano ~/.bash_profile` and add lines `sudo -u pi udisks-glue` and 
+`[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor`
+
+- now launch r_e_c_u_r when openbox starts : `sudo nano /etc/xdg/openbox/autostart` and add
+```
+xset s off &
+xset s noblank &
+bash /home/pi/r_e_c_u_r/dotfiles/launcher.sh &
+
 
 - install omx ! (duhh) `sudo apt-get install omxplayer`

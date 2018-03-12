@@ -7,15 +7,26 @@
 - set up auto console login and changed keyboard layout using `sudo raspi-config`
 
 - following the beginning of [this](https://gist.github.com/kmpm/8e535a12a45a32f6d36cf26c7c6cef51) guide,
-set up wifi and ran all updates
+set up wifi and ran all updates: 
+
+`sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` Add the bottom of the file
+```
+network={
+  ssid="YOUR_SSID"
+  psk="YOUR_PASSWORD"
+}
+```
+
+then `sudo apt update` and `sudo apt upgrade`
 
 - since im trying to run this as light as possible , i dont think i need pixel installed for tkinter to work
 according to [this](https://die-antwort.eu/techblog/2017-12-setup-raspberry-pi-for-kiosk-mode/) link all we
-need is a x server and window manager. install these as per the kiosk-mode guide
+need is a x server and window manager. install these as per the kiosk-mode guide: 
+`sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox`
 
 - install git `sudo apt-get install git`
 
-- install the dbus wrapper : `apt-get install libdbus-glib-1-dev` and and `apt-get install python3-pip`
+- install the dbus wrapper : `sudo apt-get install libdbus-glib-1-dev` and and `sudo apt-get install python3-pip`
 and `pip3 install dbus-python`
 
 install tkinter : `sudo apt-get install python3-tk`

@@ -16,9 +16,7 @@ class NumpadInput(object):
         self.display.display_text.bind("<Key>", self.on_key_press)
 
     def on_key_press(self, event):
-        
         numpad = list(string.ascii_lowercase[0:19])
-
 
         if event.char is '.':
             self.actions.quit_the_program()

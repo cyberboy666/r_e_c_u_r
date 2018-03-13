@@ -1,0 +1,52 @@
+i=1
+for lines in `cat ./boot/mark`
+do
+  case ${i} in
+  1) var1=${lines};;
+  esac
+  i=`expr ${i} + 1`
+done
+#echo "$var1"
+
+if test "$var1" = "0";then
+#sudo mkdir /etc/X11/xorg.conf.d
+sudo apt-get install xserver-xorg-input-evdev
+sudo cp -rf /usr/share/X11/xorg.conf.d/10-evdev.conf /usr/share/X11/xorg.conf.d/45-evdev.conf
+echo "1" > ./boot/mark
+fi
+
+if test "$1" = "0" -o "$#" = "0";then
+sudo cp -rf ./etc/X11/xorg.conf.d/99-calibration.conf-35b  /usr/share/X11/xorg.conf.d/99-calibration.conf
+sudo cp ./boot/config-35b.txt /boot/config.txt
+echo "LCD configrue 0"
+elif test "$1" = "90";then
+sudo cp -rf ./etc/X11/xorg.conf.d/99-calibration.conf-35b-90  /usr/share/X11/xorg.conf.d/99-calibration.conf
+sudo cp ./boot/config-35b.txt-90 /boot/config.txt
+echo "LCD configrue 90"
+elif test "$1" = "180";then
+sudo cp -rf ./etc/X11/xorg.conf.d/99-calibration.conf-35b-180  /usr/share/X11/xorg.conf.d/99-calibration.conf
+sudo cp ./boot/config-35b.txt-180 /boot/config.txt
+echo "LCD configrue 180"
+elif test "$1" = "270"; then
+sudo cp -rf ./etc/X11/xorg.conf.d/99-calibration.conf-35b-270  /usr/share/X11/xorg.conf.d/99-calibration.conf
+sudo cp ./boot/config-35b.txt-270 /boot/config.txt
+echo "LCD configrue 270"
+fi
+
+sudo cp ./waveshare35b-overlay.dtb /boot/overlays/waveshare35b.dtbo
+sudo cp ./waveshare35b-overlay.dtb /boot/overlays/
+sudo cp -rf ./usr/share/X11/xorg.conf.d/99-fbturbo.conf  /usr/share/X11/xorg.conf.d/
+if [ -b /dev/mmcblk0p7 ]; then
+sudo cp ./cmdline.txt-noobs /boot/cmdline.txt
+else
+sudo cp ./cmdline.txt /boot/
+fi
+
+sudo cp ./inittab /etc/
+
+if test "$#" = "0" -o "$1" = "0" -o "$1" = "90"  -o "$1" = "180" -o "$1" = "270"; then
+sudo reboot
+echo "reboot now"
+else
+echo "Invalid parameter,Usage:LCD35B-show [0] [90] [180] [270]"
+fi

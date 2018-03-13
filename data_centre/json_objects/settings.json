@@ -1,1 +1,1 @@
-[{"options": ["dev_mode", "XGA", "composite"], "name": "SCREEN_SIZE"}, {"options": ["run_action"], "name": "quit_the_program"}, {"options": ["run_action"], "name": "switch_display_to_hdmi"}, {"options": ["run_action"], "name": "switch_display_to_lcd"}]
+[{"options": ["dev_mode", "composite", "XGA"], "name": "SCREEN_SIZE"}, {"options": ["run_action"], "name": "quit_the_program"}, {"options": ["run_action"], "name": "switch_display_to_hdmi"}, {"options": ["run_action"], "name": "switch_display_to_lcd"}]

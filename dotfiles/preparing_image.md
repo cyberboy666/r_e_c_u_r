@@ -28,6 +28,8 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
  pip3 install dbus-python omxplayer-wrapper
  ```
 
+- now can set up auto desktop login using `sudo raspi-config`
+
 - pull down recur code : `git clone https://github.com/langolierz/r_e_c_u_r.git`
 
 - used `sudo nano ~/.config/lxsession/LXDE-pi/autostart` to add these lines : 

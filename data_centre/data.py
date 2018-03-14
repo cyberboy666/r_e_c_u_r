@@ -21,7 +21,7 @@ SETTINGS_JSON = 'settings.json'
 KEYPAD_MAPPING = 'keypad_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1)
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
-PATH_TO_BROWSER = '/media'
+PATH_TO_BROWSER = '/media/pi'
 
 def read_json(file_name):
     with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:

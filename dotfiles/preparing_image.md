@@ -7,7 +7,7 @@
 - set up auto console login and changed keyboard layout using `sudo raspi-config`
 
 - following the beginning of [this](https://gist.github.com/kmpm/8e535a12a45a32f6d36cf26c7c6cef51) guide,
-set up wifi and ran all updates: 
+set up wifi and run all updates: 
 
 `sudo nano /etc/wpa_supplicant/wpa_supplicant.conf` Add the bottom of the file
 ```
@@ -17,40 +17,29 @@ network={
 }
 ```
 
-then `sudo apt update` and `sudo apt upgrade`
+then `sudo apt update` and `sudo apt upgrade` , sudo reboot
 
-- since im trying to run this as light as possible , i dont think i need pixel installed for tkinter to work
-according to [this](https://die-antwort.eu/techblog/2017-12-setup-raspberry-pi-for-kiosk-mode/) link all we
-need is a x server and window manager. ~~install these as per the kiosk-mode guide: 
-`sudo apt-get install --no-install-recommends xserver-xorg x11-xserver-utils xinit openbox`~~
- UPDATE : seems my screen drivers dont work with openbox out of the box - i dont think its worth taking rabbithole just to save some space / load time. will procede with pixel as described above:
- `sudo apt-get install -y raspberrypi-ui-mods`
+- i trieds to get this working without needing pixel installed (using openbox and a few other bits but the drivers for my screens didnt work like this - decided its not worth shaving that yak rn. will procede with a stripped pixel as described above:
  
-- install git `sudo apt-get install git`
+ - download/install pixel + all the extra things needed for r_e_c_u_r : 
+ ```
+ sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev dbus-python python3-pip
+ 
+ pip3 install dbus-python omxplayer-wrapper
+ ```
 
-- install the dbus wrapper and its prereqs : `sudo apt-get install libdbus-glib-1-dev` and `sudo apt-get install python3-pip`
-and `pip3 install dbus-python` and `pip3 install omxplayer-wrapper`
-
-- install tkinter : `sudo apt-get install python3-tk`
-
-- install omx `sudo apt-get install omxplayer`
+- now can set up auto desktop login using `sudo raspi-config`
 
 - pull down recur code : `git clone https://github.com/langolierz/r_e_c_u_r.git`
 
-- should come with pixel ~~i also installing xterm `sudo apt-get install xterm` for debugging perposes.. dont think it will be needed
-on finished image...~~
-
-- ~~installing udisk-glue for mounting usb as described [here](https://jmeosbn.github.io/blog/minimal-raspbian-pi/#configure-automount-for-usb-drives)
-: `sudo apt-get install udisks-glue policykit-1` and ` sudo sed -i '/^match disks /a\    automount = true' /etc/udisks-glue.conf`
-now just need to start it on boot by adding it to ~/.bash_profile with along with startx :
-`sudo nano ~/.bash_profile` and add lines `sudo -u pi udisks-glue` and 
-`[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && startx -- -nocursor`~~
-
-- ~~now launch r_e_c_u_r when openbox starts : `sudo nano /etc/xdg/openbox/autostart` and add
+- used `sudo nano ~/.config/lxsession/LXDE-pi/autostart` to add these lines : 
 ```
-xset s off &
-xset s noblank &
-bash /home/pi/r_e_c_u_r/dotfiles/launcher.sh &
+@unclutter -display :0 -d -idle 3 -root -noevents
+@xset s off
+@xset s noblank
+@xset -dpms
+@bash /home/pi/r_e_c_u_r/dotfiles/launcher.sh
 ```
-~~
+(im not sure exactly what each part does and if it works but is suppose to stop screensaver / hide cursor / remove on screen power warnings etc)
 
+- i then went into pi item -> Preferences and set a black background , small task bar , no screensaver  and went into the file explorer -> Edit -> Preferences -> Volume Managment -> unchecked 'show available options for removable media ...' 

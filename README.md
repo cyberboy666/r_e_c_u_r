@@ -3,7 +3,7 @@
  
  ![vectorfront][vectorfront]
  
- __r_e_c_u_r__ is a fully customizable hardware video sampler. the open source embedded python application is built around a _raspberry pi3_ that uses `input` from a _keypad_ to control omxplayer's `video out` while `displaying` a simple text user interface on a _rpi lcd screen_
+ __r_e_c_u_r__ is a fully customizable hardware video sampler. the open source python application is built around a _raspberry pi3_ that uses `input` from a _keypad_ to control omxplayer's `video out` while `displaying` a simple text user interface on a _rpi lcd screen_
 
 ## features
 

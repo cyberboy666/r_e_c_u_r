@@ -3,7 +3,7 @@
  
  ![vectorfront][vectorfront]
  
- __r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from the _keypad_ to control omxplayer's `video out` while `displaying` a simple text user interface on the _rpi lcd screen_  
+ __r_e_c_u_r__ is a fully customizable hardware video sampler. the open source embedded python application is built around a _raspberry pi3_ that uses `input` from a _keypad_ to control omxplayer's `video out` while `displaying` a simple text user interface on a _rpi lcd screen_
 
 ## features
 
@@ -19,11 +19,10 @@
 - midi controlled
 - more playback modes and options
 - optional extention for live sampling
-- compatablity with other sbc's
 
-### other feature requests
+### other feature ideas
 
-i started a [board] of the features i would like to explore 
+i started a [board] of some features i would like to explore 
 
 ## main objectives:
 
@@ -36,6 +35,14 @@ i started a [board] of the features i would like to explore
 - [operating] - how to use r_e_c_u_r
 - [building] - how to build r_e_c_u_r
 - [developing] - how to contribute to r_e_c_u_r
+
+### status
+
+The nature of this project is to be open-ended and community driven. my r_e_c_u_r already solves the problems i intially built it for. what happens next depends on how it is used and recieved by you. if you like the idea please consider getting involved. Currently:
+
+- the _software_ is at a MVP status; the basic functionally is there and should work as expected. no doubt there are both known and unknown bugs around the edges (let me know whats impacting you!). this is also only the beginning of whats possible using python on a raspberry pi. i will continue to maintain and improve it, but in what direction and velocity depends on the users
+
+- the only _hardware_ option currently avaliable is the `diy enclosure`; this is designed be low cost, hackable and accessable. you can modify and 3d print/laser cut your own case, the recommended keypad and lcd parts are the cheapest i could find (with some compromises), basicly aiming to get these in the hands of as many other diy-er as interested. i also have plans to offer a limited `boutique enclosure` option at some point in the future - professional custom cut aluminuim cover , hand wired mechanical keys , real vinyl printed stickers, no compromises! this will probably coincide with a larger software release in near future if theres any interest 
 
 ## contact
 

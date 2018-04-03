@@ -1,0 +1,6 @@
+Section "InputClass"
+        Identifier      "calibration"
+        MatchProduct    "ADS7846 Touchscreen"
+        Option  "Calibration"   "36 3863 157 3887"
+        Option  "SwapAxes"      "0"
+EndSection

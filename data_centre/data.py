@@ -22,6 +22,7 @@ KEYPAD_MAPPING = 'keypad_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
 EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
+PATH_TO_BROWSER = '/media/pi'
 
 def read_json(file_name):
     with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:
@@ -32,14 +33,6 @@ def read_json(file_name):
 def update_json(file_name, data):
     with open('{}{}'.format(PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
         json.dump(data, data_file)
-
-
-
-def get_path_to_browser():
-    return read_json('path_to_browser.json')
-
-PATH_TO_BROWSER = get_path_to_browser()
-
 
 class Data(object):
     def __init__(self, message_handler):

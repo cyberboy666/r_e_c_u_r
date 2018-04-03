@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd /
-cd /home/pi/LCD-show
+cd /home/pi/r_e_c_u_r/dotfiles/lcd_display_drivers/LCD-show
 ./LCD-hdmi
-cd /
+

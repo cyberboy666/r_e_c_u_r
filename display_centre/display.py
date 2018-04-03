@@ -29,7 +29,7 @@ class Display(object):
 
     @staticmethod
     def _create_display_text(tk):
-        return Text(tk, bg="black", fg="white", font=('courier', 13))
+        return Text(tk, bg="black", fg="white", font=('Liberation Mono', 13))
 
     def _add_tags(self):
         self.display_text.tag_configure("SELECT", background="white", foreground="black")

@@ -39,7 +39,8 @@ class video_player:
     def load(self):
         try:
             self.get_context_for_player()
-            self.arguments = ['--no-osd', '--win', self.set_screen_size(), '--alpha', '0'] 
+            first_screen_arg, second_screen_arg = self.set_screen_size()
+            self.arguments = ['--no-osd', '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg] # , ] 
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
@@ -51,29 +52,31 @@ class video_player:
                 self.start = 0
             self.crop_length = self.end - self.start
             print('{}: the duration is {}'.format(self.name, self.total_length))
-            if self.start > 0.5:
-                self.set_position(self.start - 0.5)
+            if self.start > 0.9:
+                self.set_position(self.start - 0.9)
             self.pause_at_start()
-            print('set rate to {}'.format(self.rate))
-            self.omx_player.set_rate(self.rate)
-            self.load_attempts = 0
+            #print('set rate to {}'.format(self.rate))
+            #self.omx_player.set_rate(self.rate)
+            #self.load_attempts = 0
             return True
-        except ValueError:
-            self.message_handler.set_message('ERROR', 'load attempt fail')
+        except (ValueError, SystemError):
+            #self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 
     def pause_at_start(self):
-        position = self.get_position()  
-        start_threshold = self.start - 0.05
+        position = self.get_position()
+        start_threshold = round(self.start - 0.05,2)
+        #print('is playing: {} , position : {} , start_threshold : {}'.format(self.omx_player.is_playing(), position, start_threshold))
         if position > start_threshold:
             self.status = 'LOADED'
-            self.omx_player.pause()
             self.omx_player.set_alpha(255)
+            self.omx_player.pause()
         elif self.omx_running:
             self.root.after(5, self.pause_at_start)
 
     def play(self):
         self.status = 'PLAYING'
+        #self.omx_player.set_alpha(255)
         self.omx_player.play()
         self.pause_at_end()
 
@@ -90,7 +93,7 @@ class video_player:
     def reload(self):
         self.exit()
         self.omx_running = False
-        self.load()
+        self.try_load()
 
     def is_loaded(self):
         return self.status is 'LOADED'
@@ -151,11 +154,17 @@ class video_player:
 
     def set_screen_size(self):
         if self.data.get_screen_size_setting() == 'dev_mode':
-            return '50,350,550,750'
-        elif self.data.get_screen_size_setting() == 'composite':
-            return '45,15,970,760'
+            return '--win', '50,350,550,750'
+        elif self.data.get_screen_size_setting() == 'composite_pal':
+            return '--win', '0,0,768,576'
+        elif self.data.get_screen_size_setting() == 'composite_ntsc':
+            return '--win', '0,0,640,480'
+        elif self.data.get_screen_size_setting() == 'composite_converter':
+            return '--win', '45,15,970,760'
         elif self.data.get_screen_size_setting() == 'XGA':
-            return '0,0,1024,768'
+            return '--win', '0,0,1024,768'
+        else:
+            return '--aspect-mode', 'stretch'
 
 
 class fake_video_player:

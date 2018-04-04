@@ -37,7 +37,7 @@
 #config_hdmi_boost=4
 
 # uncomment for composite PAL
-sdtv_mode=2
+sdtv_mode=0
 
 #uncomment to overclock the arm. 700 MHz is the default.
 #arm_freq=800

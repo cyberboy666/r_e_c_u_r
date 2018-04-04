@@ -56,10 +56,11 @@ class VideoDriver(object):
         self.last_player = self.current_player
         self.current_player = self.next_player
         self.next_player = temp_player
-        self.last_player.exit()
+        #self.last_player.exit()
 
     def play_video(self):
         self.current_player.play()
+        self.last_player.exit()
         self.next_player.try_load()
         self.in_current_playing_cycle = True
         self.wait_for_next_cycle()

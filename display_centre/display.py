@@ -49,7 +49,7 @@ class Display(object):
         self.display_text.pack()
 
     def _load_title(self):
-        self.display_text.insert(END, '================== r_e_c_u_r:beta ============= \n')
+        self.display_text.insert(END, '================== r_e_c_u_r ================== \n')
         self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def _load_player(self):
@@ -75,13 +75,13 @@ class Display(object):
         bank_data = self.data.get_sampler_data()[self.bank_number]
         self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:^6} {:<16} {:<4} {:<4} {:<4} {:<4} \n'.format(
-            '{}-slot'.format(self.bank_number), 'name', 'length', 'start', 'end', 'rate'))
+        self.display_text.insert(END, '{:^6} {:<16} {:<4} {:<4} {:<4} \n'.format(
+            '{}-slot'.format(self.bank_number), 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
-            self.display_text.insert(END, '{:^4} {:<18} {:<4} {:<4} {:<4} {:<4} \n'.format(
+            self.display_text.insert(END, '{:^4} {:<18} {:<4} {:<4} {:<4} \n'.format(
                 index, name_without_extension[0:22], self.format_time_value(slot['length']),
-                self.format_time_value(slot['start']), self.format_time_value(slot['end']), slot['rate']))
+                self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
         current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         if current_bank is self.bank_number:
             self.selected_list_index = current_slot

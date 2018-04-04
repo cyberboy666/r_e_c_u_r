@@ -134,7 +134,7 @@ class Actions(object):
 
     def set_playing_sample_start_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        current_position = self.video_driver.current_player.get_position()
+        current_position = round(self.video_driver.current_player.get_position(),3)
         self.data.update_slot_start_to_this_time(current_bank, current_slot, current_position)
         self.load_this_slot_into_next_player(current_slot)
 
@@ -145,7 +145,7 @@ class Actions(object):
 
     def set_playing_sample_end_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        current_position = self.video_driver.current_player.get_position()
+        current_position = round(self.video_driver.current_player.get_position(),0)
         self.data.update_slot_end_to_this_time(current_bank, current_slot, current_position)
         self.load_this_slot_into_next_player(current_slot)
 
@@ -170,9 +170,21 @@ class Actions(object):
         else:
             self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
 
-    def run_script(self, script_name):
+    def set_composite_to_pal(self):
+        self.run_script('set_composite_mode','2')
+        self.message_handler.set_message('INFO', 'composite set to pal on next restart')
+
+    def set_composite_to_ntsc(self):
+        self.run_script('set_composite_mode','0')
+        self.message_handler.set_message('INFO', 'composite set to ntsc on next restart')
+
+    def run_script(self, script_name, script_argument=''):
         try:
-            subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name)])
-        except exception as e:
-            self.message_handler.set_message('ERROR',e.message)
+            subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name),script_argument])
+        except Exception as e:
+            if hasattr(e, 'message'):
+                error_info = e.message
+            else:
+                error_info = e
+            self.message_handler.set_message('ERROR',error_info)
         

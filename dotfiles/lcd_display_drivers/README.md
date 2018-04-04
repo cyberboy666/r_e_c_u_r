@@ -10,6 +10,12 @@ also some modifications might be needed to hide the boot text. i will document t
 
 ## changes to config-normal.txt
 
+## changes to config-nomal.txt
 
+- commenting out hdmi_force to allow composite output: `#hdmi_force_hotplug=1`
+
+## changes to the cmdline.txt
+
+`quiet splash logo.nologo plymouth.ignore-serial-consoles` for quiet boot with splash screen 
 
 [LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz

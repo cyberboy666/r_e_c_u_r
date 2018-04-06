@@ -35,3 +35,8 @@ i use adobe premiere to edit videos. i imported a raw 10s mts file from a digita
 - ~~1080 doesnt work - the video can play through once alright , but it seems like the omxplayer/dbus connection cant load another 1080 file while an existing 1080 file is playing~~
 
 UPDATE: turns out the 1080 files couldnt load because the pi hadnt been assigned enough memory to its gpu . i added `gpu_mem=448` to the config.txt and now 1080 videos seem to load and loop just fine. (still sometimes lags when change is triggered/ custom start)
+
+# summary of findings :
+
+- .mp4 containers witht h.264 codec seems to be the best format - long videos play fine (tested up to 3 hours) besides some display confusion for durations over 99 minutes as expected. can play files up to 1080 resolution fine. the chances of micro lags on changeover/custom starts seems to increase with higher resolution (no problems with 480 now) but can still be avoided by setting another custom start just after the position that is lagging.
+- .avi , .mov and .mkv containers also work. h.264 is best , mjpeg worked in a .mov container but not in .avi ... there was some issues with setting custom start in one of the .mkv files i tried - this might need some more investigation...

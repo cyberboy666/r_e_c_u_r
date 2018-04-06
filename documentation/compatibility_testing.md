@@ -11,7 +11,7 @@ clip | expectation | results
 120-mov-svq1.mov | i wouldnt expect/need this to play with apples custom codec | omx cant reconise codec
 240-webm-vp8.webm | i believe vp8 codec is supported on omx but not sure if webm container is | omx cant play webm
 360-webm-vp8.webm | same as above | ""
-480-avi-mjpeg.avi | this should play fine | wont map `dbus exception no reply`
+480-avi-mjpeg.avi | this should play fine | ~~wont map `dbus exception no reply`~~ on second try it does map but doesnt play - normal omx player opens but cant play it either
 480-flv-vp6.flv | i think this should work although not too worried about supporting flv ! | omx cant play this ?
 576-mov-mjpeg.mov | this should work | this works surprisingly well - never lags on load
 576-mp4-h264.mp4 | this should work fine | plays good, sometimes lags on custom start

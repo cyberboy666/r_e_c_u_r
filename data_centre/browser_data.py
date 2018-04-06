@@ -57,7 +57,7 @@ class BrowserData(object):
 
         for f in files:
             split_name = os.path.splitext(f)
-            if (split_name[1] in ['.mp4', '.mkv']):
+            if (split_name[1] in ['.mp4', '.mkv', '.avi', '.mov']):
                 self.browser_list.append(dict(name='{}{}'.format(indent, f), slot='-'))
 
     def _check_folder_state(self, folder_name):

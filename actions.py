@@ -19,7 +19,9 @@ class Actions(object):
         is_file, name = self.data.browser_data.extract_file_type_and_name_from_browser_format(
             self.data.return_browser_list()[self.display.selected_list_index]['name'])
         if is_file:
-            self.data.create_new_slot_mapping_in_first_open(name, self.display.bank_number)
+            is_successful = self.data.create_new_slot_mapping_in_first_open(name, self.display.bank_number)
+            if not is_successful:
+                self.message_handler.set_message('INFO', 'current bank is full')
         else:
             self.data.browser_data.update_open_folders(name)
         self.data.rewrite_browser_list()

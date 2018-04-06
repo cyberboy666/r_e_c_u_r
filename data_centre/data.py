@@ -59,8 +59,9 @@ class Data(object):
         has_location, location = self._get_path_for_file(file_name)
         print('file_name:{},has_location:{}, location:{}'.format(file_name,has_location, location))
         length = self._get_length_for_file(location)
-        new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1, rate=1)
-        self._update_a_slots_data(bank_number, slot_number, new_slot)
+        if length:
+            new_slot = dict(name=file_name, location=location, length=length, start=-1, end=-1, rate=1)
+            self._update_a_slots_data(bank_number, slot_number, new_slot)
 
     @staticmethod
     def clear_all_slots(bank_number):
@@ -169,10 +170,15 @@ class Data(object):
 
     def _get_length_for_file(self, path):
         if self.has_omx:
-            temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
-            duration = temp_player.duration()
-            temp_player.quit()
-            return duration
+            try:
+                temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
+                duration = temp_player.duration()
+                temp_player.quit()
+                return duration
+            except Exception as e:
+                print (e)
+                self.message_handler.set_message('INFO', 'cannot load video')
+                return None
         else:
             return -1
 

@@ -153,6 +153,7 @@ class video_player:
             pass
 
     def set_screen_size(self):
+        ## only dev mode is needed now that auto handles all modes... can be removed probably ...
         if self.data.get_screen_size_setting() == 'dev_mode':
             return '--win', '50,350,550,750'
         elif self.data.get_screen_size_setting() == 'composite_pal':

@@ -23,3 +23,5 @@ clip | expectation | results
 1080-mkv-h264-60mbps.mkv | dont expect this to work | suprizingly this video played though on pi (didnt even open on my computer.) however is showing a weird new bug where when the video finished , the next one wont load but also wont error...
 1080-mp4-h264.mp4 | hopefully this plays okay ?? | this wouldnt load , error getting video length : `dbus exception no reply` (although it played ok in normal omxplayer)
 error-mkv-mpeg4.mkv | should fail but not sure how.. | just wont load
+
+an interesting note : all the videos above behaved the same on hdmi and composite out except for 1080-mp4-h264 which didnt have the failing to load next problem , instead , would flash green for a bit at the start of each clip even on custom starts

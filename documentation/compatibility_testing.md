@@ -18,7 +18,7 @@ clip | expectation | results
 720-mkv-h264.mkv | this should play fine - interested if seeking / sublooping looks ok |
 720-mp4-h264.mp4 | this should play fine |
 720-mp4-h264-60fps | my computer struggles to play this |
-1080-avi-mpeg4.avi |
+1080-avi-mpeg4.avi | i think this should play ok |
 1080-flv-flv1.flv | wouldnt expect/need flv with custom codec |
 1080-mkv-h264-60mbps.mkv | dont expect this to work |
 1080-mp4-h264.mp4 | hopefully this plays okay ?? |

@@ -16,6 +16,8 @@ running midiox on my windows machine to test the cable also didnt help, it would
 
 something seems wrong with the dongle. it also seems like these cheep dongles are not very reliable or useful anyway according to [sy35er] on a yamahamusic forum
 
+update : by using ableton on my windows i could successfully send midi out off usb and receive it on deluge. still no luck reading midi to usb though. 
+
 ### serial midi from rpi gpio pin
 
 i believe it is possible to read midi in from an i/o pin (that can read serial) which might be desirable in some cases but this is a good start for now. this [instructable] explains how to input/output midi with the gpios, it looks like the tx/rx (serial?) pins on the pi3 are currently used/covered by the gpio screen that i am using. if i was serious about external circuits interfacing with pi/recur, i might look into using an lcd screen that doesnt use up the gpios. (would also be worth checking if piCapture would work with the gpio screen i have...)

@@ -38,4 +38,4 @@ besides the obvious triggering of clips and controlling parameters, it has also 
 [instructable]: http://www.instructables.com/id/PiMiDi-A-Raspberry-Pi-Midi-Box-or-How-I-Learned-to/
 [mido]: https://mido.readthedocs.io/en/latest/
 [midi-clock]: https://en.wikipedia.org/wiki/MIDI_beat_clock
-[]: https://yamahamusicians.com/forum/viewtopic.php?t=8218
+[sy35er]: https://yamahamusicians.com/forum/viewtopic.php?t=8218

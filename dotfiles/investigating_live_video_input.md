@@ -78,6 +78,10 @@ following the picamera docs , i will/have :
 - trying some simple python commands with camera
 - write some experimental recur code
 
+first hitch : i enabled the camera in the raspi-config , but it seems like the switching screens driver overrides this , so will have to update this too !
+
+besides that the preview / different parameters and effects work as expected. next step is to try recording something , converting it to mp4 and playing back on omxplayer 
+
 [picamera]: http://picamera.readthedocs.io/en/release-1.0/api.html
 [faq]: https://picamera.readthedocs.io/en/release-1.13/faq.html
 [adafruit]: https://learn.adafruit.com/adafruit-pitft-3-dot-5-touch-screen-for-raspberry-pi/easy-install-2

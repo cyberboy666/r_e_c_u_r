@@ -35,7 +35,7 @@ some things i want know are:
 
 ### research
 
-[cheep cameras] for raspi can be bought from china with 5 mega pixals / recording 1080p video for around $5usd. i have borrowed a camera which i think is a night-vision version to experiment with , although should order one of these myself.
+[cheep cameras] for raspi can be bought from china with 5 mega pixals / recording 1080p video for around $5usd. i have borrowed a camera ~~which i think is a night-vision version~~ to experiment with , although should order one of these myself.
 
 i started by reading the [picamera] python package docs. this seemed to have lots of options regarding recording video , including starting and stopping both previews and video recordings , the ability to set the resolution , framerate , shutter speed of the camera , switching preview to full screen or setting the size and position of it. 
 

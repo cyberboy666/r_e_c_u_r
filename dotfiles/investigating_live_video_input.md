@@ -56,9 +56,27 @@ the [adafruit tft display] mentioned above also uses the gpios to connect to the
 
 ### research continued : piCapture
 
+[picapture] is a video capture card designed for the raspberry pi to emulate the piCamera and take advantange of the pi's hardware accelaration. it comes as a 'hat' that also uses ic2 (or serial)
+to comunicate. there is a python package to access these addational options. 
 
+these come in two types :
 
+- standard def - composite and s-video in , $139usd
+- hi def - hdmi and component in $159usd
 
+im not sure which one i would like to try, but they sound cool ! would need to check the pins dont clash with the display but i think these should work together nicely !
+
+### getting started with piCamera
+
+following the picamera docs , i will/have :
+
+- plugged in the camera
+- turned on camera in the config
+- tried take an image
+- installed package with `sudo apt-get install python3-picamera`
+- run `sudo apt-get update` and  `sudo apt-get upgrade` (for firmware)
+- trying some simple python commands with camera
+- write some experimental recur code
 
 [picamera]: http://picamera.readthedocs.io/en/release-1.0/api.html
 [faq]: https://picamera.readthedocs.io/en/release-1.13/faq.html
@@ -67,3 +85,4 @@ the [adafruit tft display] mentioned above also uses the gpios to connect to the
 [raspi gpio]: https://www.raspberrypi.org/documentation/usage/gpio/
 [mcp3008]: https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
 [cheep cameras]: https://www.aliexpress.com/item/5MP-Camera-Module-Flex-Cable-Webcam-Video-1080-720p-For-Raspberry-Pi-2-3-Model-B/32860830711.html
+[picapture]: https://lintestsystems.com/products/picapture-sd1

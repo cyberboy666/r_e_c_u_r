@@ -19,6 +19,7 @@ BANK_DATA_JSON = 'display_data.json'
 NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
 SETTINGS_JSON = 'settings.json'
 KEYPAD_MAPPING = 'keypad_action_mapping.json'
+MIDI_MAPPING = 'midi_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
 EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
@@ -132,6 +133,10 @@ class Data(object):
     @staticmethod
     def get_keypad_mapping_data():
         return read_json(KEYPAD_MAPPING)
+
+    @staticmethod
+    def get_midi_mapping_data():
+        return read_json(MIDI_MAPPING)
 
     @staticmethod
     def get_sampler_data():

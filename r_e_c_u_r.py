@@ -7,6 +7,7 @@ from data_centre.data import Data
 from display_centre.display import Display
 from display_centre.messages import MessageHandler
 from user_input.numpad_input import NumpadInput
+from user_input.midi_input import MidiInput
 from video_centre.video_driver import VideoDriver
 import data_centre
 
@@ -23,7 +24,8 @@ message_handler = MessageHandler()
 data = Data(message_handler)
 
 # setup the video driver
-video_driver = VideoDriver(frame, message_handler, data)
+video_driver = VideoDriver(tk, message_handler, data)
+#capture = Capture()
 
 # setup the display
 display = Display(tk, video_driver, message_handler, data)
@@ -32,6 +34,7 @@ display = Display(tk, video_driver, message_handler, data)
 actions = Actions(tk, message_handler, data, video_driver, display)
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
+midi_input = MidiInput(tk, message_handler, display, actions, data)
 
 frame.pack()
 tk.attributes("-fullscreen", True)

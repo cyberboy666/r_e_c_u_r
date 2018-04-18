@@ -16,7 +16,7 @@ class VideoDriver(object):
             self.last_player = video_player(self.root, self.message_handler, self.data, 'a.a')
             self.current_player = video_player(self.root,self.message_handler, self.data, 'b.b')
             self.next_player = video_player(self.root, self.message_handler, self.data, 'c.c')
-            self.print_status()
+            #self.print_status()
             self.root.after(self.delay, self.begin_playing)
         else:
             self.last_player = fake_video_player()

@@ -1,11 +1,12 @@
 import subprocess
 
 class Actions(object):
-    def __init__(self, tk, message_handler, data, video_driver, display):
+    def __init__(self, tk, message_handler, data, video_driver, capture, display):
         self.tk = tk
         self.message_handler = message_handler
         self.data = data
         self.video_driver = video_driver
+        self.capture = capture
         self.display = display
         
 
@@ -156,6 +157,25 @@ class Actions(object):
         self.data.update_slot_end_to_this_time(current_bank, current_slot, -1)
         self.load_this_slot_into_next_player(current_slot)
 
+    def toggle_capture_preview(self):
+        is_previewing = self.capture.is_previewing()
+        if is_previewing:
+            self.capture.stop_preview()
+            if self.video_driver.current_player.status == 'PAUSED':
+                self.toggle_pause_on_player()
+        else:
+            self.capture.start_preview()
+            if self.video_driver.current_player.status != 'PAUSED':
+                self.toggle_pause_on_player()
+
+    def toggle_capture_recording(self):
+        is_recording = self.capture.is_recording()
+        if is_recording:
+            path_to_new_sample = self.capture.stop_recording()
+            # map new sample into next bank ?
+        else: 
+            self.capture.start_recording()
+
     def switch_display_to_hdmi(self):
         settings = self.data.get_settings_data()
         current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']
@@ -165,12 +185,8 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
 
     def switch_display_to_lcd(self):
-        settings = self.data.get_settings_data()
-        current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']
-        if('dev_mode' in current_screen_mode): 
-            self.run_script('switch_display_to_lcd')
-        else:
-            self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
+        self.run_script('switch_display_to_lcd')
+
 
     def set_composite_to_pal(self):
         self.run_script('set_composite_mode','2')

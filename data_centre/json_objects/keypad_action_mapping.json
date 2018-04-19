@@ -23,7 +23,8 @@
 	"f": {
 		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"]
 	},
-	"g": {},
+	"g": {
+        "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},
 	"h": {
 		"DEFAULT": ["cycle_display_mode"]
 	},

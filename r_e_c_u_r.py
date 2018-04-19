@@ -9,6 +9,7 @@ from display_centre.messages import MessageHandler
 from user_input.numpad_input import NumpadInput
 from user_input.midi_input import MidiInput
 from video_centre.video_driver import VideoDriver
+from video_centre.capture import Capture
 import data_centre
 
 # create tk object
@@ -25,13 +26,13 @@ data = Data(message_handler)
 
 # setup the video driver
 video_driver = VideoDriver(tk, message_handler, data)
-#capture = Capture()
+capture = Capture(tk, message_handler, data)
 
 # setup the display
 display = Display(tk, video_driver, message_handler, data)
 
 # setup the actions
-actions = Actions(tk, message_handler, data, video_driver, display)
+actions = Actions(tk, message_handler, data, video_driver, capture, display)
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)

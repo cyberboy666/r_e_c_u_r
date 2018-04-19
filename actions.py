@@ -20,6 +20,7 @@ class Actions(object):
         is_file, name = self.data.browser_data.extract_file_type_and_name_from_browser_format(
             self.data.return_browser_list()[self.display.selected_list_index]['name'])
         if is_file:
+            print('name: {}'.format(name))
             is_successful = self.data.create_new_slot_mapping_in_first_open(name, self.display.bank_number)
             if not is_successful:
                 self.message_handler.set_message('INFO', 'current bank is full')
@@ -158,7 +159,7 @@ class Actions(object):
         self.load_this_slot_into_next_player(current_slot)
 
     def toggle_capture_preview(self):
-        is_previewing = self.capture.is_previewing()
+        is_previewing = self.capture.is_previewing
         if is_previewing:
             self.capture.stop_preview()
             if self.video_driver.current_player.status == 'PAUSED':
@@ -169,12 +170,12 @@ class Actions(object):
                 self.toggle_pause_on_player()
 
     def toggle_capture_recording(self):
-        is_recording = self.capture.is_recording()
+        is_recording = self.capture.is_recording
         if is_recording:
-            path_to_new_sample = self.capture.stop_recording()
-            # map new sample into next bank ?
+            self.capture.stop_recording()
         else: 
             self.capture.start_recording()
+
 
     def switch_display_to_hdmi(self):
         settings = self.data.get_settings_data()

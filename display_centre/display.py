@@ -7,12 +7,12 @@ class Display(object):
     MENU_HEIGHT = 10
     SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
-    VIDEO_DISPLAY_TEXT = ' NOW [{}] {}          NEXT [{}] {}'
     VIDEO_DISPLAY_BANNER_TEXT = ' {} {} {}'
 
-    def __init__(self, tk, video_driver, message_handler, data):
+    def __init__(self, tk, video_driver, capture, message_handler, data):
         self.tk = tk
         self.video_driver = video_driver
+        self.capture = capture
         self.message_handler = message_handler
         self.data = data
 
@@ -155,9 +155,34 @@ class Display(object):
         banner = self.create_video_display_banner(start, end, crop_length, position)
         time_been = self.format_time_value(position - start)
         time_left = self.format_time_value(end - position)
+        capture_status = self._generate_capture_status()        
+
+        now_info = 'NOW [{}] {}'.format(now_slot, now_status)
+        next_info = 'NEXT [{}] {}'.format(next_slot, next_status)
+        capture_info = '{}'.format(capture_status)
 
         return self.VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left), \
-               ' NOW [{}] {}          NEXT [{}] {}'.format(now_slot, now_status, next_slot, next_status)
+               '{:17} {:10} {:17}'.format(now_info[17], capture_info[10], next_info[18])
+
+    def _generate_capture_status(self):
+        is_previewing = self.capture.is_previewing 
+        is_recording = self.capture.is_recording
+        rec_time = self.capture.get_recording_time()
+        capture_status = ''
+        if is_previewing and is_recording == True:
+            capture_status = '<{}>'.format('REC'+ self.format_time_value(rec_time))
+        elif is_previewing and is_recording == 'saving':
+            capture_status = '<{}>'.format('_saving_')
+        elif is_previewing:
+            capture_status = '<{}>'.format('_preview')
+        elif is_recording == True:
+            capture_status = '[{}]'.format('REC'+ self.format_time_value(rec_time))
+        elif is_recording == 'saving':
+            capture_status =  '[{}]'.format('_saving_')
+        else:
+            capture_status = ''
+
+        return capture_status
 
     @staticmethod
     def create_video_display_banner(start, end, crop_length, position):

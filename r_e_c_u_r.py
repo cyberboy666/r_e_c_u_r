@@ -29,7 +29,7 @@ video_driver = VideoDriver(tk, message_handler, data)
 capture = Capture(tk, message_handler, data)
 
 # setup the display
-display = Display(tk, video_driver, message_handler, data)
+display = Display(tk, video_driver, capture, message_handler, data)
 
 # setup the actions
 actions = Actions(tk, message_handler, data, video_driver, capture, display)

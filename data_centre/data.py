@@ -23,7 +23,7 @@ MIDI_MAPPING = 'midi_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
 EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
-PATH_TO_BROWSER = '/media/pi'
+PATHS_TO_BROWSER = ['/media/pi', '/home/pi/Videos' ]
 
 def read_json(file_name):
     with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:
@@ -37,7 +37,7 @@ def update_json(file_name, data):
 
 class Data(object):
     def __init__(self, message_handler):
-        self.browser_data = BrowserData(PATH_TO_BROWSER)
+        self.browser_data = BrowserData(PATHS_TO_BROWSER)
         self.message_handler = message_handler
 
         self.has_omx = self._try_import_omx()
@@ -189,9 +189,10 @@ class Data(object):
 
     def _get_path_for_file(self, file_name):
         ######## returns full path for a given file name ########
-        for root, dirs, files in os.walk(PATH_TO_BROWSER):
-            if file_name in files:
-                return True, '{}/{}'.format(root, file_name)
+        for path in PATHS_TO_BROWSER:    
+            for root, dirs, files in os.walk(path):
+                if file_name in files:
+                    return True, '{}/{}'.format(root, file_name)
         return False, ''
 
     @staticmethod

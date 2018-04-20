@@ -78,17 +78,19 @@ following the picamera docs , i will/have :
 - trying some simple python commands with camera
 - write some experimental recur code
 
-first hitch : i enabled the camera in the raspi-config , but it seems like the switching screens driver overrides this , so will have to update this too !
+first hitch : i enabled the camera in the raspi-config , but it seems like the switching screens driver overrides this , ~~so will have to update this too !~~ fixed this by adding a line to the config.txt
 
 besides that the preview / different parameters and effects work as expected. next step is to try recording something , converting it to mp4 and playing back on omxplayer.
 
 i have installed `sudo apt-get install gpac` and am using `subprocess.Popen` to run the `MP4Box` command from inside python. this way i can poll back into it and map the video only when its finished converting to stop blocking in the meantime. i also updated the display to show when the camera is previewing and recording. this all worked smoother than i expected.
 
-i also made a (suprizingly small) change to the browser to show the pi's videos folder next to the external devices. this will be useful for using the recordings saved and for copying files onto recurs disk. 
+i also made a (suprizingly small) change to the browser to show the pi's videos folder next to the external devices. this will be useful for using the recordings saved and for copying files onto recurs disk. (the copying feature has been depriotised since it can be done manually with mouse/keyboard and could be risky / might want a confermation window ...)
 
-another thing still to think about is how to protect from overfilling the sd card / external storage.
+another thing still to think about is how to protect from overfilling the sd card / external storage. 
+- i have done this by checking before starting to record and every 10 seconds during recording if the disk space is under 10mb in which case it warns and stops the recording.
 
-also displaying info when camera is not attached and catching other types of errors...
+also displaying info when camera is not attached and catching other types of errors... 
+- this will be handled by  bool enabling the capture. if it can not detect the camera it will not allow this to be enabled.
 
 [picamera]: http://picamera.readthedocs.io/en/release-1.0/api.html
 [faq]: https://picamera.readthedocs.io/en/release-1.13/faq.html

@@ -55,6 +55,10 @@ other things to try is learning how to use abelton as a midi controller and see 
 
 besides figuring out whats up with the incoming clock signal , another thing to experiment with is using a cc knob to control parameters in recur. there is nothing pressing i want for this but could try it with : fades , speed? , length of seeks , seeking? 
 
+i ended up trying cc with some camera paramters. there are plenty more interesting examples of continuous control there. it works well , but it seems like running the methods on every change when they are sequenced / coming in consistantly is a bit much for recur to respond in real time.
+
+one idea to reduce this is to only process a incoming cc message if it is outside a range for that channel - ie only action on every 3rd cc change for each control for example. - this works well. updating every 5 cc values had no lag under heavy use but looks quite jumpy. step size of 2 looks smooth but can lag quite a lot. i have it set to 4 atm but can revist when other features are under cv control etc. 
+
 
 
 

@@ -24,19 +24,37 @@ class MidiInput(object):
 
     def poll_midi_input(self):
         i = 0
+        cc_dict = dict()
         for message in self.midi_device.iter_pending():
-            print(message)
             i = i + 1
-            if not message.dict()['type'] == 'clock':        
-                self.on_midi_message(message)
-
+            message_dict = message.dict()
+            ## only listening to midi channel 1 for now , will make it seletcable later
+            if not message_dict['channel'] == 0:
+                pass
+            ## turning off noisey clock messages for now - may want to use them at some point
+            elif message_dict['type'] == 'clock':
+                pass
+            ## trying to only let through step cc messages to increase response time
+            elif message_dict['type'] == 'control_change':
+                control_number = message_dict['control']
+                if not control_number in cc_dict.keys():
+                    cc_dict[control_number] = message_dict['value']
+                else:
+                    step_size = 4
+                    ignore_range = range(cc_dict[control_number] - step_size,cc_dict[control_number] + step_size)
+                    if not message_dict['value'] in ignore_range:
+                        cc_dict[control_number] = message_dict['value']
+                        self.on_midi_message(message_dict)
+                print(cc_dict)
+            else:       
+                self.on_midi_message(message_dict)
+        if i > 0:
+            print('the number processed {}'.format(i))
         self.root.after(self.midi_delay, self.poll_midi_input)
 
 
-    def on_midi_message(self, message):
-        message_dict = message.dict()
+    def on_midi_message(self, message_dict):
         if message_dict['type'] == 'note_on' and message_dict['velocity'] == 0:
-            print('!!!!!')
             message_dict['type'] = 'note_off'
         mapped_message_name = message_dict['type']
         mapped_message_value = None

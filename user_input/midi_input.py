@@ -60,6 +60,7 @@ class MidiInput(object):
 
         if self.message_handler.function_on and len(this_mapping[mode]) > 1:
             method_name = this_mapping[mode][1]
+            self.message_handler.function_on = False
         else:
             method_name = this_mapping[mode][0]
 

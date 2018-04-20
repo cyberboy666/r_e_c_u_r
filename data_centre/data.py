@@ -196,6 +196,11 @@ class Data(object):
         return False, ''
 
     @staticmethod
+    def _get_mb_free_diskspace(path):
+        st = os.statvfs(path)
+        return st.f_bavail * st.f_frsize / 1024 / 1024
+
+    @staticmethod
     def _update_a_slots_data(bank_number, slot_number, slot_info):
         ######## overwrite a given slots info with new data ########
         memory_bank = read_json(BANK_DATA_JSON)

@@ -37,6 +37,7 @@ class NumpadInput(object):
         if self.message_handler.function_on and len(this_mapping[mode]) > 1:
             print('the action being called is {}'.format(this_mapping[mode][1]))
             getattr(self.actions, this_mapping[mode][1])()
+            self.message_handler.function_on = False
         else:
             print('the action being called is {}'.format(this_mapping[mode][0]))
             getattr(self.actions, this_mapping[mode][0])()

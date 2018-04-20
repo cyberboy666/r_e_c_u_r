@@ -52,14 +52,31 @@ class Capture(object):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return
+        if not self.check_available_disk_space():
+            return
         if self.device.closed:
             self.create_capture_device()
-        # need to check the space in destination (or check in a main loop somewhere ?)
         
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
         self.is_recording = True
         self.device.start_recording(self.video_dir + '/raw.h264')
+        self.monitor_disk_space()
+
+    def monitor_disk_space(self):
+        if self.is_recording:
+            if self.check_available_disk_space():
+                self.root.after(10000, self.monitor_disk_space)    
+            else:
+                self.stop_recording()
+
+    def check_available_disk_space(self):
+        mb_free = self.data._get_mb_free_diskspace(self.video_dir)
+        if mb_free < 10:
+            self.message_handler.set_message('INFO', 'insufficient space on disk')
+            return False
+        else:
+            return True
 
     def stop_recording(self):
         self.device.stop_recording()

@@ -115,4 +115,22 @@ class Capture(object):
         else:
             return False
 
+    def set_colour(self, u_value, v_value):
+        (u, v) = (128, 128)
+        if self.device.color_effects is not None:
+            (u, v) = self.device.color_effects
+
+        if u_value is not None:
+            u = u_value
+        if v_value is not None:
+            v = v_value
+        self.device.color_effects = (u, v)
+
+    
+
+
+
+
+
+
 

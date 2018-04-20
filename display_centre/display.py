@@ -162,7 +162,7 @@ class Display(object):
         capture_info = '{}'.format(capture_status)
 
         return self.VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left), \
-               '{:17} {:10} {:17}'.format(now_info[17], capture_info[10], next_info[18])
+               '{:17} {:10} {:17}'.format(now_info[:17], capture_info[:10], next_info[:18])
 
     def _generate_capture_status(self):
         is_previewing = self.capture.is_previewing 

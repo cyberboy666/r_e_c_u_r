@@ -24,7 +24,7 @@ class video_player:
 
     def try_load(self):
         load_attempts = 0
-        while(load_attempts < 4):
+        while(load_attempts < 2):
             load_attempts = load_attempts + 1
             if self.load():
                 print('load success')
@@ -40,7 +40,7 @@ class video_player:
         try:
             self.get_context_for_player()
             first_screen_arg, second_screen_arg = self.set_screen_size()
-            self.arguments = ['--no-osd', '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg] # , ] 
+            self.arguments = ['--no-osd', '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)

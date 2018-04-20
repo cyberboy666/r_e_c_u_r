@@ -2,7 +2,11 @@
 # http://www.raspberrypi.org/documentation/configuration/config-txt.md
 # Some settings may impact device functionality. See link above for details
 
+## gives more memory to the gpu for playing 1080 videos (might need to adjust this when using older pis with less memory)
 gpu_mem=448
+## enables the raspi camera
+start_x=1
+
 # uncomment if you get no picture on HDMI for a default "safe" mode
 #hdmi_safe=1
 

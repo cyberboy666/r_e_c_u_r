@@ -176,6 +176,18 @@ class Actions(object):
         else: 
             self.capture.start_recording()
 
+    def set_the_camera_colour_u_with_cc(self, amount):
+        u_value = self.convert_midi_cc_value(amount, 0, 255)
+        self.capture.set_colour(u_value, None)
+
+    def set_the_camera_colour_v_with_cc(self, amount):
+        v_value = self.convert_midi_cc_value(amount, 0, 255)
+        self.capture.set_colour(None, v_value)
+
+    @staticmethod
+    def convert_midi_cc_value(cc_value, min_param, max_param):
+        output_range = max_param - min_param
+        return int(( cc_value / 127 ) * output_range + min_param)
 
     def switch_display_to_hdmi(self):
         settings = self.data.get_settings_data()

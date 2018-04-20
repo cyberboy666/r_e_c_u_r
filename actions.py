@@ -165,8 +165,8 @@ class Actions(object):
             if self.video_driver.current_player.status == 'PAUSED':
                 self.toggle_pause_on_player()
         else:
-            self.capture.start_preview()
-            if self.video_driver.current_player.status != 'PAUSED':
+            is_successful = self.capture.start_preview()
+            if is_successful and self.video_driver.current_player.status != 'PAUSED':
                 self.toggle_pause_on_player()
 
     def toggle_capture_recording(self):

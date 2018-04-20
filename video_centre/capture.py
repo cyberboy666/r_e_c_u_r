@@ -1,7 +1,7 @@
 import os
 import subprocess
 import datetime
-from picamera import PiCamera
+import picamera
 
 class Capture(object):
     def __init__(self, root, message_handler, data):
@@ -17,14 +17,23 @@ class Capture(object):
 
     def create_capture_device(self):
         if self.use_capture:
-            self.device = PiCamera()
+            try:
+                self.device = picamera.PiCamera()
+            except picamera.exc.PiCameraError as e:
+                self.use_capture = False
+                print('camera exception is {}'.format(e))
+                self.message_handler.set_message('INFO', 'no capture device attached') 
 
     def start_preview(self):
+        if self.use_capture == False:
+            self.message_handler.set_message('INFO', 'capture not enabled')
+            return False
         if self.device.closed:
             self.create_capture_device()
         self.is_previewing = True
         self.device.start_preview()
-        self.set_preview_screen_size()            
+        self.set_preview_screen_size()
+        return True            
 
     def set_preview_screen_size(self):
         if self.data.get_screen_size_setting() == 'dev_mode':
@@ -40,6 +49,9 @@ class Capture(object):
             self.device.close()
 
     def start_recording(self):
+        if self.use_capture == False:
+            self.message_handler.set_message('INFO', 'capture not enabled')
+            return
         if self.device.closed:
             self.create_capture_device()
         # need to check the space in destination (or check in a main loop somewhere ?)
@@ -98,7 +110,7 @@ class Capture(object):
         return '{}/{}'.format(rec_dir,name), name 
 
     def get_recording_time(self):
-        if not self.device.recording or self.device.frame.timestamp == None:
+        if not self.device or not self.device.recording or self.device.frame.timestamp == None:
             return -1
         else:
             return self.device.frame.timestamp / 1000000

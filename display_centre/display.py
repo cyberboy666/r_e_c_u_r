@@ -167,7 +167,9 @@ class Display(object):
     def _generate_capture_status(self):
         is_previewing = self.capture.is_previewing 
         is_recording = self.capture.is_recording
-        rec_time = self.capture.get_recording_time()
+        rec_time = -1
+        if is_recording == True:
+            rec_time = self.capture.get_recording_time()
         capture_status = ''
         if is_previewing and is_recording == True:
             capture_status = '<{}>'.format('REC'+ self.format_time_value(rec_time))

@@ -23,7 +23,8 @@ MIDI_MAPPING = 'midi_action_mapping.json'
 EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
 EMPTY_BANK = [EMPTY_SLOT for i in range(10)]
 PATH_TO_DATA_OBJECTS = '{}/json_objects/'.format(get_the_current_dir_path())
-PATHS_TO_BROWSER = ['/media/pi', '/home/pi/Videos' ]
+PATH_TO_EXTERNAL_DEVICES = '/media/pi'
+PATHS_TO_BROWSER = [PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
 
 def read_json(file_name):
     with open(PATH_TO_DATA_OBJECTS + file_name) as data_file:
@@ -84,6 +85,8 @@ class Data(object):
         if memory_bank[bank_number][new_value]['location'] == '':
             print('its empty!')
             self.message_handler.set_message('INFO', 'the slot you pressed is empty')
+        elif self.is_this_path_broken(memory_bank[bank_number][new_value]['location']):
+            self.message_handler.set_message('INFO', 'no device found for this slot')
         else:
             update_json(NEXT_BANKSLOT_JSON, '{}-{}'.format(bank_number,new_value))
 
@@ -194,6 +197,17 @@ class Data(object):
                 if file_name in files:
                     return True, '{}/{}'.format(root, file_name)
         return False, ''
+
+    @staticmethod
+    def is_this_path_broken(path):
+        external_devices = os.listdir(PATH_TO_EXTERNAL_DEVICES)
+        has_device_in_path = PATH_TO_EXTERNAL_DEVICES in path
+        has_existing_device_in_path = any([(x in path) for x in external_devices])
+         
+        if has_device_in_path and  not has_existing_device_in_path:
+            return True
+        else:
+            return False
 
     @staticmethod
     def _get_mb_free_diskspace(path):

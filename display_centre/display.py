@@ -40,6 +40,7 @@ class Display(object):
         self.display_text.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
         self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="cyan")
         self.display_text.tag_configure("FUNCTION", background="cyan", foreground="black")
+        self.display_text.tag_configure("BROKEN_PATH", background="black", foreground="gray")
 
     def _load_display(self):
         self._load_title()
@@ -82,6 +83,9 @@ class Display(object):
             self.display_text.insert(END, '{:^4} {:<18} {:<4} {:<4} {:<4} \n'.format(
                 index, name_without_extension[0:22], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
+            if self.data.is_this_path_broken(slot['location']):
+                self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
         current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         if current_bank is self.bank_number:
             self.selected_list_index = current_slot

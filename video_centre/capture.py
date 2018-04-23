@@ -155,6 +155,10 @@ class Capture(object):
             v = v_value
         self.device.color_effects = (u, v)
 
+    def set_alpha(self, amount):
+        if self.device.preview is not None:
+            self.device.preview.alpha = amount
+
     
 
 

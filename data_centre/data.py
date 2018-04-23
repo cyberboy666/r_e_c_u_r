@@ -116,8 +116,8 @@ class Data(object):
         return self.browser_data.browser_list
 
     @classmethod
-    def split_bankslot_number(cls, slot_number):
-        split = slot_number.split('-')
+    def split_bankslot_number(cls, bankslot_number):
+        split = bankslot_number.split('-')
         is_bank_num_int , converted_bank_number = cls.try_convert_string_to_int(split[0])
         is_slot_num_int , converted_slot_number = cls.try_convert_string_to_int(split[1])
         return converted_bank_number, converted_slot_number

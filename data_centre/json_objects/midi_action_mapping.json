@@ -1,4 +1,7 @@
 {
+    "control_change 0": {
+		"DEFAULT": ["set_the_camera_alpha_cc"]
+	},
     "control_change 1": {
 		"DEFAULT": ["set_the_camera_colour_u_with_cc"]
 	},

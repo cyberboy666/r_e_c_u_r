@@ -183,6 +183,10 @@ class Actions(object):
         v_value = self.convert_midi_cc_value(amount, 0, 255)
         self.capture.set_colour(None, v_value)
 
+    def set_the_camera_alpha_cc(self, amount):
+        alpha_amount = self.convert_midi_cc_value(amount, 0, 255)
+        self.capture.set_alpha(alpha_amount)
+
     @staticmethod
     def convert_midi_cc_value(cc_value, min_param, max_param):
         output_range = max_param - min_param

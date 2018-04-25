@@ -1,36 +1,166 @@
 {
-"midi":
-    {
-    "INPUT": {"value": "enabled", "action": "cycle_setting_options", "options": ["enabled", "disabled"] },
-    "STATUS": {"value": "disconnected", "action": null, "options": [] },
-    "CHANNEL": {"value": 1, "action": null, "options": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] }
+    "capture": {
+        "DEVICE": {
+            "action": "enable_capture_device",
+            "options": [],
+            "value": "enabled"
+        },
+        "EFFECT": {
+            "action": null,
+            "options": [],
+            "value": ""
+        },
+        "EXPOSURE": {
+            "action": null,
+            "options": [],
+            "value": ""
+        },
+        "FRAMERATE": {
+            "action": null,
+            "options": [],
+            "value": ""
+        },
+        "RESOLUTION": {
+            "action": null,
+            "options": [],
+            "value": ""
+        }
     },
-"capture":
-    {
-    "DEVICE": {"value": "enabled", "action": "enable_capture_device", "options": [] },
-    "RESOLUTION": {"value": "", "action": null, "options": [] },
-    "FRAMERATE": {"value": "", "action": null, "options": [] },
-    "EXPOSURE": {"value": "", "action": null, "options": [] },
-    "EFFECT": {"value": "", "action": null, "options": [] }
+    "midi": {
+        "CHANNEL": {
+            "action": null,
+            "options": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16
+            ],
+            "value": 1
+        },
+        "INPUT": {
+            "action": "cycle_setting_options",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "enabled"
+        },
+        "STATUS": {
+            "action": null,
+            "options": [],
+            "value": "disconnected"
+        }
     },
-"sampler":
-    {
-    "NEXT": {"value": "now", "action": "cycle_setting_options", "options": ["now", "random", "playlist"] },
-    "TRIGGER": {"value": "loop", "action": "cycle_setting_options", "options": ["loop", "once", "once-gated"] },
-    "FIXED_LENGTH_MODE": {"value": "off", "action": "cycle_setting_options", "options": ["on","off"] },
-    "FIXED_LENGTH": {"value": "", "action": "set_fixed_length", "options": [] },
-    "RAND_START_MODE": {"value": "off", "action": "cycle_setting_options", "options": ["on","off"] }
+    "other": {
+        "DEV_MODE_RESET": {
+            "action": "switch_dev_mode",
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "on"
+        },
+        "QUIT": {
+            "action": "quit_the_program",
+            "options": [],
+            "value": null
+        }
     },
-"video":
-    {
-    "OUTPUT": {"value": "hdmi", "action": "change_output_mode", "options": [] },
-    "COMPOSITE_TYPE": {"value": "pal", "action": "change_composite_output_mode", "options": [] },
-    "SCREEN_MODE": {"value": "stretch", "action": "cycle_setting_options", "options": ["stretch","something else"] }
+    "sampler": {
+        "FIXED_LENGTH": {
+            "action": "set_fixed_length",
+            "options": [],
+            "value": ""
+        },
+        "FIXED_LENGTH_MODE": {
+            "action": "cycle_setting_options",
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "off"
+        },
+        "NEXT": {
+            "action": "cycle_setting_options",
+            "options": [
+                "now",
+                "random",
+                "playlist"
+            ],
+            "value": "now"
+        },
+        "RAND_START_MODE": {
+            "action": "cycle_setting_options",
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "off"
+        },
+        "TRIGGER": {
+            "action": "cycle_setting_options",
+            "options": [
+                "loop",
+                "once",
+                "once-gated"
+            ],
+            "value": "loop"
+        }
     },
-"other":
-    {
-    "DEV_MODE_RESET": {"value": "on", "action": "switch_dev_mode", "options": [] },
-    "QUIT": {"value": null, "action": "quit_the_program", "options": [] }
+    "video": {
+        "COMPOSITE_PROGRESSIVE": {
+            "action": "change_composite_setting",
+            "options": [
+                "off",
+                "on"
+            ],
+            "value": "off"
+        },
+        "COMPOSITE_RATIO": {
+            "action": "change_composite_setting",
+            "options": [
+                "4:3",
+                "14:9",
+                "16:9"
+            ],
+            "value": "4:3"
+        },
+        "COMPOSITE_TYPE": {
+            "action": "change_composite_setting",
+            "options": [
+                "PAL",
+                "NTSC"
+            ],
+            "value": "PAL"
+        },
+        "OUTPUT": {
+            "action": "change_output_mode",
+            "options": [
+                "hdmi",
+                "composite"
+            ],
+            "value": "hdmi"
+        },
+        "SCREEN_MODE": {
+            "action": "cycle_setting_options",
+            "options": [
+                "stretch",
+                "letterbox",
+                "fill"
+            ],
+            "value": "letterbox"
+        }
     }
 }
-

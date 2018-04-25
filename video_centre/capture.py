@@ -36,7 +36,7 @@ class Capture(object):
         return True            
 
     def set_preview_screen_size(self):
-        if self.data.get_screen_size_setting() == 'dev_mode':
+        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
             self.device.preview.fullscreen = False
             self.device.preview.window = (50, 350, 500, 400)
         else:
@@ -92,7 +92,7 @@ class Capture(object):
     def convert_raw_recording(self):
         recording_path , recording_name = self.generate_recording_path()
         try:
-            mp4box_process = subprocess.Popen(['MP4Box -add {} {}'.format(self.video_dir + '/raw.h264', recording_path)],shell=True)
+            mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
             return mp4box_process , recording_name
         except Exception as e:
             print(e)
@@ -108,10 +108,7 @@ class Capture(object):
         if process.poll() is not None:
             self.is_recording = False
             os.remove(self.video_dir + '/raw.h264')
-            #this is a bit clumsy and should be improved1
-            i = 0
-            while not self.data.create_new_slot_mapping_in_first_open(name, i):
-                i += i
+            self.data.create_new_slot_mapping_in_first_open(name)
         else:
             self.root.after(300, self.wait_for_recording_to_save, process, name)
 

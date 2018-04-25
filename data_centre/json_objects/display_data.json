@@ -1,1 +1,84 @@
-[[{"end": -1, "rate": 1, "length": 1132.04, "name": "mushroom-dreams.mp4", "location": "/media/pi/5EB5-664C/recur test videos/mushroom-dreams.mp4", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}, {"end": -1, "rate": 1, "length": -1, "name": "", "location": "", "start": -1}]]
+[
+    [
+        {
+            "end": -1,
+            "length": 1132.04,
+            "location": "/media/pi/5EB5-664C/recur test videos/mushroom-dreams.mp4",
+            "name": "mushroom-dreams.mp4",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": 6.96,
+            "location": "/home/pi/Videos/recordings/rec-2018-04-25-1.mp4",
+            "name": "rec-2018-04-25-1.mp4",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        },
+        {
+            "end": -1,
+            "length": -1,
+            "location": "",
+            "name": "",
+            "rate": 1,
+            "start": -1
+        }
+    ]
+]

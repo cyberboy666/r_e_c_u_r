@@ -177,6 +177,33 @@ class Actions(object):
         output_range = max_param - min_param
         return int(( cc_value / 127 ) * output_range + min_param)
 
+    def change_output_mode(self, setting_value):
+        if setting_value == 'hdmi':
+                subprocess.call(['tvservice', '-p'])
+                self._refresh_frame_buffer()
+        elif setting_value == 'composite':
+            self.change_composite_setting(setting_value)
+
+    def change_composite_setting(self, setting_value):
+        if setting_value == 'composite':
+            mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
+            aspect = self.data.settings['video']['COMPOSITE_RATIO']['value']
+            progressive = ''
+            if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'yes':
+                progressive = 'p'
+            subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)],shell=True)
+            self._refresh_frame_buffer()
+
+    @staticmethod
+    def _refresh_frame_buffer():
+        subprocess.run(["fbset -depth 16; fbset -depth 32; xrefresh -display :0" ], shell=True)
+
+    def switch_dev_mode(self, state):
+        if state == 'on':
+            self.run_script('switch_display_to_hdmi')
+        elif state == 'off':
+            self.run_script('switch_display_to_lcd')
+
     def switch_display_to_hdmi(self):
         settings = self.data.settings
         current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']

@@ -146,8 +146,8 @@ class SettingsMenu(Menu):
         for setting_folder_key, setting_folder_item in self.data.settings.items():
             if setting_folder_key in self.open_folders:
                 self.menu_list.append(dict(name='{}/'.format(setting_folder_key), value=''))
-                for setting_key, setting_details in setting_folder_item.items(): 
-                    self.menu_list.append(dict(name='   {}'.format(setting_key), value=self.data.make_empty_if_none(setting_details['value'])))
+                for setting_details_key, setting_details_item in setting_folder_item.items(): 
+                    self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
             else:   
                 self.menu_list.append(dict(name='{}|'.format(setting_folder_key), value=''))
 
@@ -155,7 +155,13 @@ class SettingsMenu(Menu):
         is_file, name = self.extract_file_type_and_name_from_menu_format(
             self.menu_list[self.selected_list_index]['name'])
         if is_file:
-            return True, self.data.return_setting_details(name)
+            folder, setting_name, setting_details = self.data.get_setting_and_folder_from_name(name)
+            if setting_details['value'] in setting_details['options']:
+                current_value_index = setting_details['options'].index(setting_details['value'])
+                new_value_index = (current_value_index + 1) % len(setting_details['options'])
+                setting_details = self.data.update_setting_value(folder, setting_name, setting_details['options'][new_value_index])
+            self.generate_settings_list()
+            return True, setting_details
         else:
             self.update_open_folders(name)
             self.generate_settings_list()

@@ -35,8 +35,10 @@ class VideoPlayer:
     def load(self):
         try:
             self.get_context_for_player()
-            first_screen_arg, second_screen_arg = self.set_screen_size()
+            is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
             self.arguments = ['--no-osd', '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
+            if not is_dev_mode:
+                self.arguments.append('-b')
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
@@ -148,11 +150,12 @@ class VideoPlayer:
         except:
             pass
 
-    def set_screen_size(self):
+    def set_screen_size_for_dev_mode(self):
         ## only dev mode is needed now that auto handles all modes... can be removed probably ...
-        if self.data.get_dev_mode_status() == 'on':
-            return '--win', '50,350,550,750'
+        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
+            return True, '--win', '50,350,550,750'
         else:
-            return '--aspect-mode', 'stretch'
+            aspect_mode = self.data.settings['video']['SCREEN_MODE']['value']
+            return False, '--aspect-mode', aspect_mode
 
 

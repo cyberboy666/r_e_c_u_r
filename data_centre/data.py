@@ -47,10 +47,13 @@ class Data(object):
 
     def _update_json(self, file_name, data):
         with open('{}{}'.format(self.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
-            json.dump(data, data_file)
+            json.dump(data, data_file, indent=4, sort_keys=True)
     
-    def get_dev_mode_status(self):
-        return self.settings['other']['DEV_MODE_RESET']['value']
+    def get_setting_and_folder_from_name(self, setting_name):
+        for folder_key , folder_item in self.settings.items():
+            for setting_key, setting_item in folder_item.items():
+                if setting_key == setting_name:
+                    return folder_key, setting_key, setting_item
 
     def create_new_slot_mapping_in_first_open(self, file_name):
         ######## used for mapping current video to next available slot ########
@@ -91,13 +94,6 @@ class Data(object):
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
             self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
 
-    def return_setting_details(self, name):
-        for setting_folder_key, setting_folder_item in self.settings.items():
-            for setting_key, setting_details in setting_folder_item.items():
-                if setting_key == name:
-                    return setting_details
-
-
     def check_if_setting_selection_is_action_otherwise_cycle_value(self, setting_index):
         ######## update the value of selected setting by cycling through valid options ########
         if(self.setting['options'][0] == 'run_action'):
@@ -105,6 +101,11 @@ class Data(object):
         else:
             self.cycle_setting_value(setting_index)
             return False, None
+
+    def update_setting_value(self, setting_folder, setting_name, setting_value):
+        self.settings[setting_folder][setting_name]['value'] = setting_value
+        self._update_json(self.SETTINGS_JSON, self.settings)
+        return self.settings[setting_folder][setting_name]
 
     def cycle_setting_value(self, setting_index):
         this_setting_option = self.settings[setting_index]['options']

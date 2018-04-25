@@ -1,17 +1,14 @@
 import logging
-import data_centre.data
-
 
 class MessageHandler(object):
     def __init__(self):
         self.current_message = [None, None, None]
         self.number_of_messages = 0
         self.logger = self.setup_logging()
-        self.function_on = False
 
     def setup_logging(self):
         logger = logging.getLogger('logfile')
-        current_dir = data_centre.data.get_the_current_dir_path() #TODO : this needs to be improved
+        current_dir = '/home/pi/r_e_c_u_r/'
         hdlr = logging.FileHandler(current_dir + 'logfile.log')
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr.setFormatter(formatter)

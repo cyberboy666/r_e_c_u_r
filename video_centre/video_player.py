@@ -1,10 +1,6 @@
-try:
-    from omxplayer.player import OMXPlayer
-except:
-    pass
+from omxplayer.player import OMXPlayer
 
-
-class video_player:
+class VideoPlayer:
     def __init__(self, root, message_handler, data, name):
         self.root = root
         self.message_handler = message_handler
@@ -154,32 +150,9 @@ class video_player:
 
     def set_screen_size(self):
         ## only dev mode is needed now that auto handles all modes... can be removed probably ...
-        if self.data.get_screen_size_setting() == 'dev_mode':
+        if self.data.get_dev_mode_status() == 'on':
             return '--win', '50,350,550,750'
-        elif self.data.get_screen_size_setting() == 'composite_pal':
-            return '--win', '0,0,768,576'
-        elif self.data.get_screen_size_setting() == 'composite_ntsc':
-            return '--win', '0,0,640,480'
-        elif self.data.get_screen_size_setting() == 'composite_converter':
-            return '--win', '45,15,970,760'
-        elif self.data.get_screen_size_setting() == 'XGA':
-            return '--win', '0,0,1024,768'
         else:
             return '--aspect-mode', 'stretch'
-
-
-class fake_video_player:
-    def __init__(self):
-        self.player = None
-        self.name = 'fake'
-        self.omx_running = False
-        self.status = 'N/A'
-        self.duration = 0
-        self.bankslot_number = '*-*'
-        self.start = -1
-        self.end = -1
-        self.length = 0
-        self.location = ''
-
 
 

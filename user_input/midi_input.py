@@ -8,19 +8,26 @@ class MidiInput(object):
         self.message_handler = message_handler
         self.display = display
         self.actions = actions
-        self.midi_mappings = data.get_midi_mapping_data()
+        self.data = data
+        self.midi_mappings = data.midi_mappings
         self.midi_device = None
         self.midi_delay = 1
-        #self.midi_mappings = data.get_midi_mapping_data()
-        self.open_port()
+        self.try_open_port()
 
-    def open_port(self):
-        midi_ports = mido.get_input_names()
-        midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]
-        if midi_device_on_port_20:
-            self.midi_device = mido.open_input(midi_device_on_port_20[0])
-            self.message_handler.set_message('INFO', 'listening to midi device {}'.format(self.midi_device.name))
-            self.poll_midi_input()
+    def try_open_port(self):
+        midi_setting = self.data.settings['midi']['INPUT']['value']
+        if midi_setting == 'enabled':
+            midi_ports = mido.get_input_names()
+            midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]
+            if midi_device_on_port_20:
+                if self.data.midi_status == 'disconnected':
+                    self.midi_device = mido.open_input(midi_device_on_port_20[0])
+                    self.data.midi_status = 'connected'
+                    self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
+                    self.poll_midi_input()
+            elif self.data.midi_status == 'connected':
+                self.data.midi_status = 'disconnected'
+        self.root.after(1000, self.try_open_port)
 
     def poll_midi_input(self):
         i = 0
@@ -50,6 +57,7 @@ class MidiInput(object):
                 self.on_midi_message(message_dict)
         if i > 0:
             print('the number processed {}'.format(i))
+             
         self.root.after(self.midi_delay, self.poll_midi_input)
 
 
@@ -71,14 +79,14 @@ class MidiInput(object):
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):
         this_mapping = self.midi_mappings[message_name]
-        if self.display.control_mode in this_mapping:
-            mode = self.display.control_mode
+        if self.data.control_mode in this_mapping:
+            mode = self.data.control_mode
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 
-        if self.message_handler.function_on and len(this_mapping[mode]) > 1:
+        if self.data.function_on and len(this_mapping[mode]) > 1:
             method_name = this_mapping[mode][1]
-            self.message_handler.function_on = False
+            self.data.function_on = False
         else:
             method_name = this_mapping[mode][0]
 

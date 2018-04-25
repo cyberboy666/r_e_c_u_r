@@ -7,7 +7,8 @@ class NumpadInput(object):
         self.message_handler = message_handler
         self.display = display
         self.actions = actions
-        self.key_mappings = data.get_keypad_mapping_data()
+        self.data = data
+        self.key_mappings = data.key_mappings
         self.bind_actions()
         self.in_0_event = False
         self.additional_0_in_event = 0
@@ -29,15 +30,15 @@ class NumpadInput(object):
 
     def run_action_for_mapped_key(self, key):
         this_mapping = self.key_mappings[key]
-        if self.display.control_mode in this_mapping:
-            mode = self.display.control_mode
+        if self.data.control_mode in this_mapping:
+            mode = self.data.control_mode
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 
-        if self.message_handler.function_on and len(this_mapping[mode]) > 1:
+        if self.data.function_on and len(this_mapping[mode]) > 1:
             print('the action being called is {}'.format(this_mapping[mode][1]))
             getattr(self.actions, this_mapping[mode][1])()
-            self.message_handler.function_on = False
+            self.data.function_on = False
         else:
             print('the action being called is {}'.format(this_mapping[mode][0]))
             getattr(self.actions, this_mapping[mode][0])()

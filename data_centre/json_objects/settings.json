@@ -1,1 +1,36 @@
-[{"options": ["dev_mode", "auto"], "name": "SCREEN_SIZE"}, {"options": ["run_action"], "name": "quit_the_program"}, {"options": ["run_action"], "name": "switch_display_to_hdmi"}, {"options": ["run_action"], "name": "switch_display_to_lcd"}, {"options": ["run_action"], "name": "set_composite_to_pal"}, {"options": ["run_action"], "name": "set_composite_to_ntsc"}]
+{
+"midi":
+    {
+    "INPUT": {"value": "enabled", "action": "cycle_setting_options", "options": ["enabled", "disabled"] },
+    "STATUS": {"value": "disconnected", "action": null, "options": [] },
+    "CHANNEL": {"value": 1, "action": null, "options": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] }
+    },
+"capture":
+    {
+    "DEVICE": {"value": "enabled", "action": "enable_capture_device", "options": [] },
+    "RESOLUTION": {"value": "", "action": null, "options": [] },
+    "FRAMERATE": {"value": "", "action": null, "options": [] },
+    "EXPOSURE": {"value": "", "action": null, "options": [] },
+    "EFFECT": {"value": "", "action": null, "options": [] }
+    },
+"sampler":
+    {
+    "NEXT": {"value": "now", "action": "cycle_setting_options", "options": ["now", "random", "playlist"] },
+    "TRIGGER": {"value": "loop", "action": "cycle_setting_options", "options": ["loop", "once", "once-gated"] },
+    "FIXED_LENGTH_MODE": {"value": "off", "action": "cycle_setting_options", "options": ["on","off"] },
+    "FIXED_LENGTH": {"value": "", "action": "set_fixed_length", "options": [] },
+    "RAND_START_MODE": {"value": "off", "action": "cycle_setting_options", "options": ["on","off"] }
+    },
+"video":
+    {
+    "OUTPUT": {"value": "hdmi", "action": "change_output_mode", "options": [] },
+    "COMPOSITE_TYPE": {"value": "pal", "action": "change_composite_output_mode", "options": [] },
+    "SCREEN_MODE": {"value": "stretch", "action": "cycle_setting_options", "options": ["stretch","something else"] }
+    },
+"other":
+    {
+    "DEV_MODE_RESET": {"value": "on", "action": "switch_dev_mode", "options": [] },
+    "QUIT": {"value": null, "action": "quit_the_program", "options": [] }
+    }
+}
+

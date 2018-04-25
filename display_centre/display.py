@@ -1,7 +1,7 @@
 from tkinter import Text, END
 import math
 import time
-
+import display_centre.menu as menu
 
 class Display(object):
     MENU_HEIGHT = 10
@@ -15,14 +15,12 @@ class Display(object):
         self.capture = capture
         self.message_handler = message_handler
         self.data = data
+        self.browser_menu = menu.BrowserMenu(self.data, self.MENU_HEIGHT)      
+        self.settings_menu = menu.SettingsMenu(self.data, self.MENU_HEIGHT)
 
-        self.display_mode = "SAMPLER"
-        self.control_mode = 'PLAYER'
-        self.bank_number = 0
-        self.top_menu_index = 0
-        self.selected_list_index = self.top_menu_index
-        self.browser_list = self.data.rewrite_browser_list()
-
+        #self.top_menu_index = 0
+        #self.selected_list_index = self.top_menu_index
+        
         self.display_text = self._create_display_text(self.tk)
         self._add_tags()
         self._update_screen_every_second()
@@ -63,21 +61,21 @@ class Display(object):
         self.display_text.tag_add("PLAYER_INFO", 3.0, end_of_banner)
 
     def _load_display_body(self):
-        if self.display_mode == 'BROWSER':
+        if self.data.display_mode == 'BROWSER':
             self._load_browser()
-        elif self.display_mode == 'SETTINGS':
+        elif self.data.display_mode == 'SETTINGS':
             self._load_settings()
         else:
             self._load_sampler()
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
-        self._highlight_this_row(self.selected_list_index - self.top_menu_index)
+        
 
     def _load_sampler(self):
-        bank_data = self.data.get_sampler_data()[self.bank_number]
+        bank_data = self.data.bank_data[self.data.bank_number]
         self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.insert(END, '{:^6} {:<16} {:<4} {:<4} {:<4} \n'.format(
-            '{}-slot'.format(self.bank_number), 'name', 'length', 'start', 'end'))
+            '{}-slot'.format(self.data.bank_number), 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
             self.display_text.insert(END, '{:^4} {:<18} {:<4} {:<4} {:<4} \n'.format(
@@ -87,13 +85,13 @@ class Display(object):
                 self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
         current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        if current_bank is self.bank_number:
+        if current_bank is self.data.bank_number:
             self.selected_list_index = current_slot
         else:
             self.selected_list_index = 0
 
     def _load_browser(self):
-        browser_list = self.data.return_browser_list()
+        browser_list = self.browser_menu.menu_list
         number_of_lines_displayed = 0
         self.display_text.insert(END, '------------------ <BROWSER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
@@ -111,9 +109,11 @@ class Display(object):
         for index in range(self.MENU_HEIGHT - number_of_browser_items):
             self.display_text.insert(END, '\n')
 
+        self._highlight_this_row(self.browser_menu.selected_list_index - self.browser_menu.top_menu_index)
+
     def _load_settings(self):
         line_count = 0
-        settings_list = self.data.get_settings_data()
+        settings_list = self.settings_menu.menu_list
         self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
@@ -123,11 +123,13 @@ class Display(object):
                 break
             if index >= self.top_menu_index:
                 setting = settings_list[index]
-                self.display_text.insert(END, '{:>23} {:<22} \n'.format(setting['name'], setting['options'][0][0:20]))
+                self.display_text.insert(END, '{:<23} {:<22} \n'.format(setting['name'], setting['value']))
                 line_count = line_count + 1
 
         for index in range(self.MENU_HEIGHT - number_of_settings_items):
             self.display_text.insert(END, '\n')
+
+        self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
 
     def _load_message(self):
         if self.message_handler.current_message[1]:
@@ -139,11 +141,11 @@ class Display(object):
                 self.message_handler.current_message[2] = False
                 message_length = 4000
                 self.tk.after(message_length, self.message_handler.clear_message)
-        elif self.message_handler.function_on:
+        elif self.data.function_on:
             self.display_text.insert(END, '{:^45}'.format('< FUNCTION KEY ON >'))
             self.display_text.tag_add('FUNCTION', 16.0,16.0 + self.SELECTOR_WIDTH)
         else:
-            self.display_text.insert(END, '{:8} {:<10}'.format('CONTROL:', self.control_mode))
+            self.display_text.insert(END, '{:8} {:<10}'.format('CONTROL:', self.data.control_mode))
             self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 
     def _highlight_this_row(self, row):
@@ -225,7 +227,7 @@ class Display(object):
         last_list_index = number_items_in_list - 1
         bottom_menu_index = self.top_menu_index + self.MENU_HEIGHT - 1
 
-        self._unhighlight_this_row(self.selected_list_index - self.top_menu_index)
+        ##self._unhighlight_this_row(self.selected_list_index - self.top_menu_index)
 
         if move_direction == 'down':
             if self.selected_list_index != last_list_index:
@@ -247,7 +249,7 @@ class Display(object):
                 if self.top_menu_index < 0:
                     self.top_menu_index = 0
 
-        self._highlight_this_row(self.selected_list_index - self.top_menu_index)
+        ##self._highlight_this_row(self.selected_list_index - self.top_menu_index)
 
         return
 

@@ -101,7 +101,7 @@ class Display(object):
         for index in range(number_of_browser_items):
             if number_of_lines_displayed >= self.MENU_HEIGHT:
                 break
-            if index >= self.top_menu_index:
+            if index >= self.browser_menu.top_menu_index:
                 path = browser_list[index]
                 self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:35], path['slot']))
                 number_of_lines_displayed = number_of_lines_displayed + 1
@@ -121,7 +121,7 @@ class Display(object):
         for index in range(number_of_settings_items):
             if line_count >= self.MENU_HEIGHT:
                 break
-            if index >= self.top_menu_index:
+            if index >= self.settings_menu.top_menu_index:
                 setting = settings_list[index]
                 self.display_text.insert(END, '{:<23} {:<22} \n'.format(setting['name'], setting['value']))
                 line_count = line_count + 1

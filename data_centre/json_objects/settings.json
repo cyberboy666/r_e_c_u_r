@@ -79,6 +79,14 @@
         }
     },
     "sampler": {
+        "ACTION_GATED": {
+            "action": null,
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "pause/hide"
+        },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
             "options": [],
@@ -92,14 +100,52 @@
             ],
             "value": "off"
         },
-        "NEXT": {
-            "action": "cycle_setting_options",
+        "LOAD_NEXT": {
+            "action": null,
             "options": [
                 "now",
                 "random",
                 "playlist"
             ],
             "value": "now"
+        },
+        "ON_ACTION": {
+            "action": null,
+            "options": [
+                "pause/hide",
+                "pause/show",
+                "play/hide",
+                "play/show"
+            ],
+            "value": "pause/hide"
+        },
+        "ON_FINISH": {
+            "action": null,
+            "options": [
+                "nothing",
+                "switch"
+            ],
+            "value": "pause/hide"
+        },
+        "ON_LOAD": {
+            "action": null,
+            "options": [
+                "pause/hide",
+                "pause/show",
+                "play/hide",
+                "play/show"
+            ],
+            "value": "pause/hide"
+        },
+        "ON_START": {
+            "action": null,
+            "options": [
+                "pause/hide",
+                "pause/show",
+                "play/hide",
+                "play/show"
+            ],
+            "value": "pause/hide"
         },
         "RAND_START_MODE": {
             "action": "cycle_setting_options",
@@ -108,15 +154,6 @@
                 "off"
             ],
             "value": "off"
-        },
-        "TRIGGER": {
-            "action": "cycle_setting_options",
-            "options": [
-                "loop",
-                "once",
-                "once-gated"
-            ],
-            "value": "loop"
         }
     },
     "video": {

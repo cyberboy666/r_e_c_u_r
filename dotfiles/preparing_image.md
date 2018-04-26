@@ -54,8 +54,11 @@ i am trying to flash the device using the unix command `dd` on a raspberry pi.
 
 - first check how much space is needed and name of device : `df -h`
 
-- do i need to mount the device : ??
+- ~~do i need to mount the device : ??~~
 
-- `dd if=/dev/mmcblk0 of=~/r_e_c_u_r-image.img bs=1M count=3000 iflag=fullblock`
+couldnt figure out how to not take entire card (including empty space) , so decided to try entire 4gg card, to a usb and then try compressing in down :
+
+- `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
+- `gzip -k recur.img` (to keep original)
 
 

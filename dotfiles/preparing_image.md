@@ -1,6 +1,6 @@
 # documenting the exact steps to creating the r_e_c_u_r raspbian image
 
-- downloaded the latest (2017-11-29) raspbian-raspbian-lite image from offical site.
+- downloaded the latest (~~2017-11-29~~ 2018-04-18) raspbian-raspbian-lite image from offical site.
 
 - flashed it to my sd using etcher
 
@@ -23,14 +23,14 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
  
  - download/install pixel + all the extra things needed for r_e_c_u_r : 
  ```
- sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev dbus-python python3-pip
+ sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev python3-pip python3-picamera gpac 
  
- pip3 install dbus-python omxplayer-wrapper
+ pip3 install dbus-python omxplayer-wrapper  mido python-rtmidi
  ```
 
 - now can set up auto desktop login using `sudo raspi-config`
 
-- pull down recur code : `git clone https://github.com/langolierz/r_e_c_u_r.git`
+- pull down recur code into home dir ~ : `git clone https://github.com/langolierz/r_e_c_u_r.git`
 
 - used `sudo nano ~/.config/lxsession/LXDE-pi/autostart` to add these lines : 
 ```
@@ -43,6 +43,8 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
 (im not sure exactly what each part does and if it works but is suppose to stop screensaver / hide cursor / remove on screen power warnings etc)
 
 - i then went into pi item -> Preferences and set a black background , small task bar , no screensaver  and went into the file explorer -> Edit -> Preferences -> Volume Managment -> unchecked 'show available options for removable media ...' 
+
+splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original : `sudo cp /usr/share/plymouth/theme/pix/splash-old.png` and then copied my own from a flash stick...
 
 ## flashing
 

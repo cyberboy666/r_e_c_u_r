@@ -93,6 +93,9 @@ class Actions(object):
     def toggle_pause_on_player(self):
         self.video_driver.current_player.toggle_pause()
 
+    def toggle_show_on_player(self):
+        self.video_driver.current_player.toggle_show()
+
     def seek_forward_on_player(self):    
         self.video_driver.current_player.seek(30)
 
@@ -176,6 +179,9 @@ class Actions(object):
     def _convert_midi_cc_value(cc_value, min_param, max_param):
         output_range = max_param - min_param
         return int(( cc_value / 127 ) * output_range + min_param)
+
+    def update_video_settings(self, setting_value):
+        self.video_driver.update_video_settings()
 
     def change_output_mode(self, setting_value):
         if setting_value == 'hdmi':

@@ -18,11 +18,13 @@ class VideoPlayer:
         self.location = ''
         self.load_attempts = 0
 
-    def try_load(self):
+        self.show_toggle_on = True
+
+    def try_load(self, show):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
-            if self.load():
+            if self.load(show):
                 print('load success')
                 return True
             else:
@@ -32,7 +34,7 @@ class VideoPlayer:
         return False
             
 
-    def load(self):
+    def load(self, show):
         try:
             self.get_context_for_player()
             is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
@@ -52,7 +54,7 @@ class VideoPlayer:
             print('{}: the duration is {}'.format(self.name, self.total_length))
             if self.start > 0.9:
                 self.set_position(self.start - 0.9)
-            self.pause_at_start()
+            self.pause_at_start(show)
             #print('set rate to {}'.format(self.rate))
             #self.omx_player.set_rate(self.rate)
             #self.load_attempts = 0
@@ -61,20 +63,26 @@ class VideoPlayer:
             #self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 
-    def pause_at_start(self):
+    def pause_at_start(self, show):
         position = self.get_position()
         start_threshold = round(self.start - 0.05,2)
         #print('is playing: {} , position : {} , start_threshold : {}'.format(self.omx_player.is_playing(), position, start_threshold))
         if position > start_threshold:
             self.status = 'LOADED'
-            self.omx_player.set_alpha(255)
+            #if show:
+             #   self.omx_player.set_alpha(255)
+            #else:
+             #   self.omx_player.set_alpha(0)
             self.omx_player.pause()
         elif self.omx_running:
-            self.root.after(5, self.pause_at_start)
+            self.root.after(5, self.pause_at_start, show)
 
-    def play(self):
+    def play(self, show):
         self.status = 'PLAYING'
-        #self.omx_player.set_alpha(255)
+        if show:
+            self.omx_player.set_alpha(255)
+        else:
+            self.omx_player.set_alpha(0)
         self.omx_player.play()
         self.pause_at_end()
 
@@ -91,7 +99,7 @@ class VideoPlayer:
     def reload(self):
         self.exit()
         self.omx_running = False
-        self.try_load()
+        self.try_load(True)
 
     def is_loaded(self):
         return self.status is 'LOADED'
@@ -118,6 +126,14 @@ class VideoPlayer:
     def toggle_pause(self):
         self.omx_player.play_pause()
         self.status = self.omx_player.playback_status().upper()
+
+    def toggle_show(self):
+        if self.show_toggle_on:
+            self.show_toggle_on = False
+            self.omx_player.set_alpha(0)
+        else:
+            self.show_toggle_on = True
+            self.omx_player.set_alpha(255)
 
     def seek(self, amount):
         position = self.get_position()

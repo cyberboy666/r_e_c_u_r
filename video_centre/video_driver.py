@@ -15,13 +15,26 @@ class VideoDriver(object):
         self.next_player = VideoPlayer(self.root, self.message_handler, self.data, 'c.c')
         self.root.after(self.delay, self.begin_playing)
 
+        self.switch_on_finish = self.data.settings['sampler']['ON_FINISH']['value'] == 'switch'
+        self.play_on_start = 'play' in self.data.settings['sampler']['ON_START']['value']
+        self.show_on_start = 'show' in self.data.settings['sampler']['ON_START']['value']
+        self.play_on_load = 'play' in self.data.settings['sampler']['ON_LOAD']['value']
+        self.show_on_load = 'show' in self.data.settings['sampler']['ON_LOAD']['value']
+        
+    def update_video_settings(self):
+        self.switch_on_finish = self.data.settings['sampler']['ON_FINISH']['value'] == 'switch'
+        self.play_on_start = 'play' in self.data.settings['sampler']['ON_START']['value']
+        self.show_on_start = 'show' in self.data.settings['sampler']['ON_START']['value']
+        self.show_on_load = 'show' == self.data.settings['sampler']['ON_LOAD']['value']
+        
+
     def print_status(self):
         print('l({}):{}, c({}):{}, n({}):{}'.format(self.last_player.name, self.last_player.status, self.current_player.name, self.current_player.status, self.next_player.name, self.next_player.status,))
         self.root.after(1000,self.print_status)
 
     def begin_playing(self):
         # TODO: the first clip will be a demo
-        if self.current_player.try_load():
+        if self.current_player.try_load(self.show_on_load):
             self.in_first_load_cycle = True
             self.wait_for_first_load()
         else:
@@ -50,9 +63,11 @@ class VideoDriver(object):
         #self.last_player.exit()
 
     def play_video(self):
-        self.current_player.play()
+        print(self.play_on_start)
+        if self.play_on_start:
+            self.current_player.play(self.show_on_start)
         self.last_player.exit()
-        self.next_player.try_load()
+        self.next_player.try_load(self.show_on_load)
         self.in_current_playing_cycle = True
         self.wait_for_next_cycle()
 
@@ -61,7 +76,8 @@ class VideoDriver(object):
             if self.current_player.is_finished():
                 self.in_current_playing_cycle = False
                 self.in_next_load_cycle = True
-                self.switch_if_next_is_loaded()
+                if self.switch_on_finish:
+                    self.switch_if_next_is_loaded()
             else:
                 self.root.after(self.delay, self.wait_for_next_cycle)
 
@@ -85,4 +101,7 @@ class VideoDriver(object):
     def exit_all_players(self):
         self.next_player.exit()
         self.current_player.exit()
+
+    def reload_next_player(self):
+        self.next_player.reload(self,show_on_load)
 

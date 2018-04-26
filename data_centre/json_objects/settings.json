@@ -80,7 +80,7 @@
     },
     "sampler": {
         "ACTION_GATED": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
                 "on",
                 "off"
@@ -93,7 +93,7 @@
             "value": ""
         },
         "FIXED_LENGTH_MODE": {
-            "action": "cycle_setting_options",
+            "action": "update_video_settings",
             "options": [
                 "on",
                 "off"
@@ -101,7 +101,7 @@
             "value": "off"
         },
         "LOAD_NEXT": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
                 "now",
                 "random",
@@ -110,7 +110,7 @@
             "value": "now"
         },
         "ON_ACTION": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
                 "pause/hide",
                 "pause/show",
@@ -120,35 +120,33 @@
             "value": "pause/hide"
         },
         "ON_FINISH": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
                 "nothing",
                 "switch"
             ],
-            "value": "pause/hide"
+            "value": "switch"
         },
         "ON_LOAD": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
-                "pause/hide",
-                "pause/show",
-                "play/hide",
-                "play/show"
+                "hide",
+                "show"
             ],
-            "value": "pause/hide"
+            "value": "show"
         },
         "ON_START": {
-            "action": null,
+            "action": "update_video_settings",
             "options": [
                 "pause/hide",
                 "pause/show",
                 "play/hide",
                 "play/show"
             ],
-            "value": "pause/hide"
+            "value": "play/show"
         },
         "RAND_START_MODE": {
-            "action": "cycle_setting_options",
+            "action": "update_video_settings",
             "options": [
                 "on",
                 "off"

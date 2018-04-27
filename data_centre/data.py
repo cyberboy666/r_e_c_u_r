@@ -79,8 +79,9 @@ class Data(object):
     def update_bank_number_by_amount(self, amount):
         if(self.bank_data[-1] != self.EMPTY_BANK):
             self.bank_data.append(self.EMPTY_BANK)
-        elif(self.bank_data[-1] == self.EMPTY_BANK and (len(self.bank_data) == 1 or self.bank_data[-2] == self.EMPTY_BANK)):
-            self.bank_data.pop()
+        elif(len(self.bank_data) > 1):
+            if self.bank_data[-2] == self.EMPTY_BANK:
+                self.bank_data.pop()
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
         self.bank_number = (self.bank_number+amount)%(len(self.bank_data))
         

@@ -29,3 +29,5 @@ now `uname -a` reads `.. 4.9.60-v7+ #1048 .. Fri Nov 3` and the player still wor
 pushed forward to v 4.14.20 which failed. pushing back: did this a few times. got it working on 4.9.78 but failing on 4.9.80. looks like it might be this issue : https://www.raspberrypi.org/forums/viewtopic.php?t=195178 - just need to figure out how to turn it off for testing
 
 found it ! i have the lastest firmware version and by adding `audio_pwm_mode=0` to the config it now plays as before . phew what a relief ! 
+
+gonna create new version of the image with this fixed , the wifi removed and the screensaver disabled.

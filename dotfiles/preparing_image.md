@@ -74,4 +74,14 @@ going to copy and zip in one (with larger byte size) :
 
 `sudo dd bs=4M if=/dev/mmcblk0 | gzip > /media/pi/FLASH DRIVE/r_e_c_u_r.img.gz`
 
+## removing empty space on pi image
 
+i had another go at this and might have had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gg image down to 2.9gg and then zipped down to 1.15gg (no saving here) , this would be more useful with larger cards though.
+
+- the flow is using dd to copy the image from the pi to an external drive `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
+
+- then use pishrink to reduce this image `sudo pishrink.sh recur.img`
+
+- then gzip to zip this : `sudo gzip recur.img`
+
+[pishrink]:https://github.com/Drewsif/PiShrink

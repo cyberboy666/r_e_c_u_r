@@ -23,7 +23,7 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
  
  - download/install pixel + all the extra things needed for r_e_c_u_r : 
  ```
- sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev python3-pip python3-picamera gpac 
+ sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev python3-pip unclutter python3-picamera gpac 
  
  pip3 install dbus-python omxplayer-wrapper  mido python-rtmidi
  ```

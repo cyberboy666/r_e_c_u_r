@@ -6,6 +6,8 @@
 gpu_mem=448
 ## enables the raspi camera
 start_x=1
+##fixes bug with playback freezing
+audio_pwm_mode=0
 
 # uncomment if you get no picture on HDMI for a default "safe" mode
 #hdmi_safe=1

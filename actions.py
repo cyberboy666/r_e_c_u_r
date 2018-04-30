@@ -211,16 +211,21 @@ class Actions(object):
             self.run_script('switch_display_to_lcd')
 
     def switch_display_to_hdmi(self):
-        settings = self.data.settings
-        current_screen_mode = [x['options'][0] for x in settings if x['name'] == 'SCREEN_SIZE']
-        if('dev_mode' in current_screen_mode): 
-            self.run_script('switch_display_to_hdmi')
-        else:
-            self.message_handler.set_message('INFO', 'must be in dev_mode to change display')
+        with open('/boot/config', 'r') as config: 
+            with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
+                if 'dtoverlay=waveshare35a:rotate=270' in config and 'dev/fb1' in framebuffer_conf:
+                    self.run_script('switch_display_to_hdmi')
+                else:
+                    self.message_handler.set_message('INFO', 'failed to switch display')
+        
 
     def switch_display_to_lcd(self):
-        self.run_script('switch_display_to_lcd')
-
+        with open('/boot/config', 'r') as config:
+            with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
+                if '##no_waveshare_overlay' in config and 'dev/fb0' in framebuffer_conf:
+                    self.run_script('switch_display_to_lcd')
+                else:
+                    self.message_handler.set_message('INFO', 'failed to switch display')
 
     def set_composite_to_pal(self):
         self.run_script('set_composite_mode','2')

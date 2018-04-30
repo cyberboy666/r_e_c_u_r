@@ -37,6 +37,8 @@ actions = Actions(tk, message_handler, data, video_driver, capture, display)
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
 
+actions.check_and_set_output_mode_on_boot()
+
 frame.pack()
 tk.attributes("-fullscreen", True)
 

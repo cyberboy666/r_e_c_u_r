@@ -161,7 +161,7 @@
                 "off",
                 "on"
             ],
-            "value": "off"
+            "value": "on"
         },
         "COMPOSITE_RATIO": {
             "action": "change_composite_setting",
@@ -170,7 +170,7 @@
                 "14:9",
                 "16:9"
             ],
-            "value": "4:3"
+            "value": "14:9"
         },
         "COMPOSITE_TYPE": {
             "action": "change_composite_setting",
@@ -178,7 +178,7 @@
                 "PAL",
                 "NTSC"
             ],
-            "value": "PAL"
+            "value": "NTSC"
         },
         "OUTPUT": {
             "action": "change_output_mode",

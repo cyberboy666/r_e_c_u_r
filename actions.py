@@ -190,19 +190,52 @@ class Actions(object):
         elif setting_value == 'composite':
             self.change_composite_setting(setting_value)
 
+    def check_and_set_output_mode_on_boot(self):
+        response = str(subprocess.check_output(['tvservice', '-s']))
+        if '0x80002' in response or '0x40002' in response:
+            self.data.update_setting_value('video', 'OUTPUT', 'composite')
+        else:
+            self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
+
     def change_composite_setting(self, setting_value):
         if setting_value == 'composite':
             mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
             aspect = self.data.settings['video']['COMPOSITE_RATIO']['value']
             progressive = ''
-            if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'yes':
+            if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'on':
                 progressive = 'p'
             subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)],shell=True)
             self._refresh_frame_buffer()
+            self.persist_composite_setting(mode, progressive, aspect)
 
     @staticmethod
     def _refresh_frame_buffer():
         subprocess.run(["fbset -depth 16; fbset -depth 32; xrefresh -display :0" ], shell=True)
+
+    def persist_composite_setting(self, mode, progressive, aspect):
+        sdtv_mode = ''
+        sdtv_aspect = ''
+        print('mode {} , prog {} aspect {} '.format(mode, progressive, aspect))
+        if mode == 'PAL' and progressive == 'p':
+            sdtv_mode = '18'
+        elif mode == 'PAL' and progressive == '':
+            sdtv_mode = '2'
+        elif mode == 'NTSC' and progressive == 'p':
+            sdtv_mode = '16'
+        elif mode == 'NTSC' and progressive == '':
+            sdtv_mode = '0'
+
+        if aspect == '4:3':
+            sdtv_aspect = '1'
+        elif aspect == '14:9':
+            sdtv_aspect = '2'
+        elif aspect == '16:9':
+            sdtv_aspect = '3'
+
+        self.update_config_settings(sdtv_mode, sdtv_aspect)
+
+    def update_config_settings(self, sdtv_mode, sdtv_aspect):
+        self.run_script('set_composite_mode',sdtv_mode, sdtv_aspect)
 
     def switch_dev_mode(self, state):
         if state == 'on':
@@ -227,21 +260,10 @@ class Actions(object):
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')
 
-    def set_composite_to_pal(self):
-        self.run_script('set_composite_mode','2')
-        self.message_handler.set_message('INFO', 'composite set to pal on next restart')
 
-    def set_composite_to_ntsc(self):
-        self.run_script('set_composite_mode','0')
-        self.message_handler.set_message('INFO', 'composite set to ntsc on next restart')
 
-    def run_script(self, script_name, script_argument=''):
-        try:
-            subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name),script_argument])
-        except Exception as e:
-            if hasattr(e, 'message'):
-                error_info = e.message
-            else:
-                error_info = e
-            self.message_handler.set_message('ERROR',error_info)
+    def run_script(self, script_name, first_argument='', second_argument=''):
+        print('first arg is {} , second is {}'.format(first_argument,second_argument))
+        subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name),first_argument, second_argument ])
+        
         

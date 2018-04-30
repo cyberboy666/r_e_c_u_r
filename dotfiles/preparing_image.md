@@ -1,6 +1,6 @@
 # documenting the exact steps to creating the r_e_c_u_r raspbian image
 
-- downloaded the latest (2017-11-29 ~~2018-04-18~~) raspbian-raspbian-lite image from offical site.
+- downloaded the latest (~~2017-11-29~~ 2018-04-18) raspbian-raspbian-lite image from offical site.
 
 - flashed it to my sd using etcher
 
@@ -53,6 +53,18 @@ creating internal storage folder in ~/Videos
 
 splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original : `sudo cp /usr/share/plymouth/theme/pix/splash-old.png` and then copied my own from a flash stick...
 
+## running lcd-driver files...
+
+(and custom config.txt / cmdline lines...)
+
+## making the config.txt and driver file writable so python can edit it
+
+i need to update the config.txt to change various video settings etc. at first i was running bash scripts from within python to do this. ~~i think it is better for all the logic to be done from inside the code, although my program does not have the permission needed to update these files. instead of giving the program root access , i want to just make the files it needs to edit writable.~~
+
+~~`sudo chmod 777 /boot/config.txt` and `sudo chmod 777 /usr/share/X11/xorg.conf.d/99-fbturbo.conf` i know this is kinda bad , but need some way of doing it ?~~
+
+the above didnt work. dbus not working in sudo. i am checking (reading) w python and writing with bash.
+
 ## flashing
 
 first remove my wifi connection !
@@ -74,4 +86,14 @@ going to copy and zip in one (with larger byte size) :
 
 `sudo dd bs=4M if=/dev/mmcblk0 | gzip > /media/pi/FLASH DRIVE/r_e_c_u_r.img.gz`
 
+## removing empty space on pi image
 
+i had another go at this and might have had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gg image down to 2.9gg and then zipped down to 1.15gg (no saving here) , this would be more useful with larger cards though.
+
+- the flow is using dd to copy the image from the pi to an external drive `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
+
+- then use pishrink to reduce this image `sudo pishrink.sh recur.img`
+
+- then gzip to zip this : `sudo gzip recur.img`
+
+[pishrink]:https://github.com/Drewsif/PiShrink

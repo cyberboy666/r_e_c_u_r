@@ -53,9 +53,36 @@ creating internal storage folder in ~/Videos
 
 splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original : `sudo cp /usr/share/plymouth/theme/pix/splash-old.png` and then copied my own from a flash stick...
 
-## running lcd-driver files...
+## lcd display drivers
 
-(and custom config.txt / cmdline lines...)
+these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).
+
+my screen only needs the LCD35-show and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching.
+
+## lines added to config.txt
+
+- commenting out hdmi_force to allow composite output: `#hdmi_force_hotplug=1`
+
+- add these lines to the config:
+```
+## gives more memory to the gpu for playing 1080 videos (might need to adjust this when using older pis with less memory)
+gpu_mem=448
+## enables the raspi camera
+start_x=1
+## fixes bug with playback freezing
+audio_pwm_mode=0
+
+## persisting composite settings
+sdtv_mode=0
+sdtv_aspect=1
+
+## switch for enabling lcd screen (the next line is being used even if its commented out)
+dtoverlay=waveshare35a:rotate=270
+```
+
+## changes to the cmdline.txt
+
+`quiet splash logo.nologo plymouth.ignore-serial-consoles` for quiet boot with splash screen 
 
 ## making the config.txt and driver file writable so python can edit it
 
@@ -63,7 +90,7 @@ i need to update the config.txt to change various video settings etc. at first i
 
 ~~`sudo chmod 777 /boot/config.txt` and `sudo chmod 777 /usr/share/X11/xorg.conf.d/99-fbturbo.conf` i know this is kinda bad , but need some way of doing it ?~~
 
-the above didnt work. dbus not working in sudo. i am checking (reading) w python and writing with bash.
+the above didnt work. also dbus not working in sudo. i am checking (reading) w python and writing with bash scripts.
 
 ## flashing
 
@@ -97,3 +124,4 @@ i had another go at this and might have had some success using [pishrink], follo
 - then gzip to zip this : `sudo gzip recur.img`
 
 [pishrink]:https://github.com/Drewsif/PiShrink
+[LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz

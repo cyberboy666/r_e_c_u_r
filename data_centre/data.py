@@ -95,25 +95,11 @@ class Data(object):
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
             self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
 
-    def check_if_setting_selection_is_action_otherwise_cycle_value(self, setting_index):
-        ######## update the value of selected setting by cycling through valid options ########
-        if(self.setting['options'][0] == 'run_action'):
-            return True,  self.setting['name']
-        else:
-            self.cycle_setting_value(setting_index)
-            return False, None
-
     def update_setting_value(self, setting_folder, setting_name, setting_value):
         self.settings[setting_folder][setting_name]['value'] = setting_value
         self._update_json(self.SETTINGS_JSON, self.settings)
         return self.settings[setting_folder][setting_name]
-
-    def cycle_setting_value(self, setting_index):
-        this_setting_option = self.settings[setting_index]['options']
-        this_setting_option= this_setting_option[len(this_setting_option)-1:]+this_setting_option[0:len(this_setting_option)-1]
-        self.settings[setting_index]['options'] = this_setting_option
-        self._update_json(self.SETTINGS_JSON, self.settings)
-        
+      
     @classmethod
     def split_bankslot_number(cls, bankslot_number):
         split = bankslot_number.split('-')

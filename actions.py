@@ -42,7 +42,7 @@ class Actions(object):
 
     def _load_this_slot_into_next_player(self, slot):
         self.data.update_next_slot_number(slot)
-        self.video_driver.next_player.reload()
+        self.video_driver.reload_next_player()
 
     def load_slot_0_into_next_player(self):
         self._load_this_slot_into_next_player(0)

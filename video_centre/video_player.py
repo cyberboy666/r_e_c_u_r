@@ -20,11 +20,11 @@ class VideoPlayer:
 
         self.show_toggle_on = True
 
-    def try_load(self, show):
+    def try_load(self, layer ,show):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
-            if self.load(show):
+            if self.load(layer, show):
                 print('load success')
                 return True
             else:
@@ -34,16 +34,16 @@ class VideoPlayer:
         return False
             
 
-    def load(self, show):
+    def load(self, layer , show):
         try:
             self.get_context_for_player()
             is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
-            self.arguments = ['--no-osd', '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
+            arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
             if not is_dev_mode:
-                self.arguments.append('-b')
+                arguments.append('-b')
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
-            self.omx_player = OMXPlayer(self.location, args=self.arguments, dbus_name=self.name)
+            self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
             self.omx_running = True
             self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
             if(self.end is -1): 
@@ -69,11 +69,11 @@ class VideoPlayer:
         #print('is playing: {} , position : {} , start_threshold : {}'.format(self.omx_player.is_playing(), position, start_threshold))
         if position > start_threshold:
             self.status = 'LOADED'
-            #if show:
-             #   self.omx_player.set_alpha(255)
-            #else:
-             #   self.omx_player.set_alpha(0)
-            self.omx_player.pause()
+            if show:
+                self.omx_player.set_alpha(255)
+            else:
+                self.omx_player.set_alpha(0)
+            #self.omx_player.pause()
         elif self.omx_running:
             self.root.after(5, self.pause_at_start, show)
 
@@ -96,10 +96,10 @@ class VideoPlayer:
         elif(self.omx_running):
             self.root.after(5, self.pause_at_end)
 
-    def reload(self):
+    def reload(self, layer, show):
         self.exit()
         self.omx_running = False
-        self.try_load(True)
+        self.try_load(layer, show)
 
     def is_loaded(self):
         return self.status is 'LOADED'

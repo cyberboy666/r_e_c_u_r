@@ -53,6 +53,14 @@ creating internal storage folder in ~/Videos
 
 splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original : `sudo cp /usr/share/plymouth/theme/pix/splash-old.png` and then copied my own from a flash stick...
 
+## running lcd-driver files...
+
+## making the config.txt and driver file writable so python can edit it
+
+i need to update the config.txt to change various video settings etc. at first i was running bash scripts from within python to do this. i think it is better for all the logic to be done from inside the code, although my program does not have the permission needed to update these files. instead of giving the program root access , i want to just make the files it needs to edit writable.
+
+`sudo chmod 777 /boot/config.txt` and `sudo chmod 777 /usr/share/X11/xorg.conf.d/99-fbturbo.conf` i know this is kinda bad , but need some way of doing it ?
+
 ## flashing
 
 first remove my wifi connection !

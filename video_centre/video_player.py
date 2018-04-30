@@ -73,7 +73,7 @@ class VideoPlayer:
                 self.omx_player.set_alpha(255)
             else:
                 self.omx_player.set_alpha(0)
-            #self.omx_player.pause()
+            self.omx_player.pause()
         elif self.omx_running:
             self.root.after(5, self.pause_at_start, show)
 

@@ -4,6 +4,8 @@ import datetime
 import picamera
 
 class Capture(object):
+    PREVIEW_LAYER = 255
+
     def __init__(self, root, message_handler, data):
         self.root = root
         self.message_handler = message_handler
@@ -33,6 +35,7 @@ class Capture(object):
         self.is_previewing = True
         self.device.start_preview()
         self.set_preview_screen_size()
+        self.device.preview.layer = self.PREVIEW_LAYER
         return True            
 
     def set_preview_screen_size(self):

@@ -2,7 +2,7 @@ from video_centre.video_player import VideoPlayer
 
 class VideoDriver(object):
 
-    MAX_LAYER = 1000000000
+    MAX_LAYER = 254
 
     def __init__(self, root, message_handler, data):
         self.root = root
@@ -34,6 +34,7 @@ class VideoDriver(object):
             self.layer = self.layer - 1
         else:
             self.layer = self.MAX_LAYER
+            self.current_player.reload(self.get_next_layer_value(), self.show_on_load)
         return self.layer
 
     def print_status(self):

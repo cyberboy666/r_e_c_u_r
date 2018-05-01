@@ -28,6 +28,8 @@ i have not modified any of the programs that are used in recur. they are all bei
 
 there are no restrictions on selling a product under any of these licenses.
 
+some [interesting discussion] around difference between modifying a gpl program and using one as a dependancy 
+
 there is no restrictions to permissive installer scripts downloading gpl licensed programs (or even the freeware fonts it seems) 
 
 for the non-software side of recur (the case etc) it can be licensed under cc , with apropriate [markings] for third party content (ie screen , usb keypad , raspberry pi)
@@ -35,3 +37,4 @@ for the non-software side of recur (the case etc) it can be licensed under cc , 
 [gpl]: https://en.wikipedia.org/wiki/GNU_General_Public_License#Use_of_licensed_software
 [proprietary license]: https://en.wikipedia.org/wiki/Core_fonts_for_the_Web
 [markings]: https://wiki.creativecommons.org/wiki/Marking/Creators/Marking_third_party_content
+[interesting discussion]: https://softwareengineering.stackexchange.com/questions/289785/can-i-distribute-a-gpl-executable-not-a-library-in-a-closed-source-application

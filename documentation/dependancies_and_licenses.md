@@ -12,7 +12,7 @@ dependancy | use | license
 rasbian | the os on pi | based on debian , made up of different licensed programs
 python | lanuage | open-source , gpl-compatible
 omxplayer | the media player | GPL-2.0
-omx python wrapper | | LGPL
+omx python wrapper | for controlling omxplayer | LGPL
 dbus-python | dependacy for omx wrapper | permissive, non-copyleft
 tkinter | the tui display | bsd
 picamera | interface with capture | bsd

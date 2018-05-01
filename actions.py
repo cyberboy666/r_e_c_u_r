@@ -163,6 +163,14 @@ class Actions(object):
         else: 
             self.capture.start_recording()
 
+    def toggle_screen_mirror(self):
+        if self.data.update_screen:
+            self.data.update_screen = False
+            subprocess.call(['sudo', 'systemctl', 'start', 'raspi2fb@1'])
+        else:
+            self.data.update_screen = True
+            subprocess.call(['sudo', 'systemctl', 'stop', 'raspi2fb@1'])
+
     def set_the_camera_colour_u_with_cc(self, amount):
         u_value = self._convert_midi_cc_value(amount, 0, 255)
         self.capture.set_colour(u_value, None)

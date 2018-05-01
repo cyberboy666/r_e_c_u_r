@@ -47,10 +47,10 @@
 		"DEFAULT": ["load_slot_4_into_next_player","increase_speed"]
 	},
 	"o": {
-		"DEFAULT": ["load_slot_5_into_next_player","print_speed"]
+		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"]
 	},
 	"p": {
-		"DEFAULT": ["load_slot_6_into_next_player"]
+		"DEFAULT": ["load_slot_6_into_next_player", "print_speed"]
 	},
 	"q": {
 		"DEFAULT": ["load_slot_7_into_next_player"]

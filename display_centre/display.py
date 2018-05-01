@@ -217,11 +217,12 @@ class Display(object):
         self.tk.after(500, self._update_screen_every_second)
 
     def refresh_display(self):
-        self.display_text.configure(state='normal')
-        self.display_text.delete(1.0, END)
-        self._load_display()
-        self.display_text.configure(state='disable')
-        self.display_text.focus_set()
+        if self.data.update_screen:
+            self.display_text.configure(state='normal')
+            self.display_text.delete(1.0, END)
+            self._load_display()
+            self.display_text.configure(state='disable')
+            self.display_text.focus_set()
 
     def navigate_menu(self, move_direction, number_items_in_list):
         last_list_index = number_items_in_list - 1

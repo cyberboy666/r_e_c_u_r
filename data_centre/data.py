@@ -31,6 +31,7 @@ class Data(object):
         self.control_mode = 'PLAYER'
         self.bank_number = 0
         self.midi_status = 'disconnected'
+        self.update_screen = True
         
         ### persisted data:
         self.bank_data = self._read_json(self.BANK_DATA_JSON)

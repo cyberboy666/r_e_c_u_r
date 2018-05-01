@@ -45,7 +45,7 @@ some [interesting discussion] around difference between modifying a gpl program 
 
 there is no restrictions to permissive installer scripts downloading gpl licensed programs (or even the freeware fonts it seems) 
 
-[license] : ../LICENSE.md
+[license]: ../LICENSE.md
 [GPL-3.0]: https://www.gnu.org/licenses/gpl-3.0.en.html
 [proprietary license]: https://en.wikipedia.org/wiki/Core_fonts_for_the_Web
 [markings]: https://wiki.creativecommons.org/wiki/Marking/Creators/Marking_third_party_content

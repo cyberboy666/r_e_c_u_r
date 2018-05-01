@@ -28,7 +28,9 @@ i have not modified any of the programs that are used in recur. they are all bei
 
 there are no restrictions on selling a product under any of these licenses.
 
-some [interesting discussion] around difference between modifying a gpl program and using one as a dependancy 
+some [interesting discussion] around difference between modifying a gpl program and using one as a dependancy , 
+- if it is part of the os it is ok.
+- if it is not 2-way interacting / sharing datastructures etc - just an input -> output usage it is ok
 
 there is no restrictions to permissive installer scripts downloading gpl licensed programs (or even the freeware fonts it seems) 
 

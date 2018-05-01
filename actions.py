@@ -183,6 +183,9 @@ class Actions(object):
     def update_video_settings(self, setting_value):
         self.video_driver.update_video_settings()
 
+    def update_capture_settings(self, setting_value):
+        self.capture.update_capture_settings()
+
     def change_output_mode(self, setting_value):
         if setting_value == 'hdmi':
                 subprocess.call(['tvservice', '-p'])

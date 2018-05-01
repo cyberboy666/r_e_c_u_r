@@ -2,6 +2,7 @@ import os
 import subprocess
 import datetime
 import picamera
+import fractions
 
 class Capture(object):
     PREVIEW_LAYER = 255
@@ -10,27 +11,50 @@ class Capture(object):
         self.root = root
         self.message_handler = message_handler
         self.data = data
-        self.use_capture = True
+        
         self.device = None
         self.is_recording = False
         self.is_previewing = False
         self.video_dir = '/home/pi/Videos/'
+        self.update_capture_settings()
         self.create_capture_device()
+
+        ## some capture settings
+
 
     def create_capture_device(self):
         if self.use_capture:
+            self.update_capture_settings()
             try:
-                self.device = picamera.PiCamera()
+                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
             except picamera.exc.PiCameraError as e:
                 self.use_capture = False
                 print('camera exception is {}'.format(e))
                 self.message_handler.set_message('INFO', 'no capture device attached') 
 
+    def update_capture_settings(self):
+        ##setting class variables
+        self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
+        self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
+        print('the resolution is {}'.format(self.resolution))
+        self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
+        print('the framerate is {}'.format(self.framerate))
+        ##update current instance (device) if in use
+        if self.device and not self.device.closed:
+            self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
+            self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
+            print('the shutter speed is {}'.format(self.device.shutter_speed))
+        ## can only update resolution and framerate if not recording
+            if not self.is_recording:
+                self.device.framerate = self.framerate
+                self.device.resolution = self.resolution
+            
+
     def start_preview(self):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return False
-        if self.device.closed:
+        if not self.device or self.device.closed:
             self.create_capture_device()
         self.is_previewing = True
         self.device.start_preview()
@@ -88,6 +112,7 @@ class Capture(object):
         self.is_recording = 'saving'        
         self.root.after(0, self.wait_for_recording_to_save, mp4box_process, recording_name)
 
+        self.update_capture_settings()
         # return path to the video
         if not self.device.preview:
             self.device.close()
@@ -159,8 +184,22 @@ class Capture(object):
         if self.device.preview is not None:
             self.device.preview.alpha = amount
 
-    
+    @staticmethod
+    def convert_resolution_value(setting_value):
+        split_values = setting_value.split('x')
+        return (int(split_values[0]), int(split_values[1]))
 
+    @staticmethod
+    def convert_framerate_value(setting_value):
+        return fractions.Fraction(setting_value).limit_denominator()
+
+    def convert_shutter_value(self, setting_value):
+        if setting_value == 'auto':
+            return 0
+        elif setting_value == 'max':
+            return int(1000000 / self.framerate)
+        else:
+            return int(fractions.Fraction(setting_value) * 1000000)
 
 
 

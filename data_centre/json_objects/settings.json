@@ -103,12 +103,12 @@
     },
     "sampler": {
         "ACTION_GATED": {
-            "action": "update_video_settings",
+            "action": null,
             "options": [
                 "on",
                 "off"
             ],
-            "value": "pause/hide"
+            "value": "on"
         },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
@@ -123,6 +123,14 @@
             ],
             "value": "off"
         },
+        "FUNC_GATED": {
+            "action": null,
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "on"
+        },
         "LOAD_NEXT": {
             "action": "update_video_settings",
             "options": [
@@ -135,12 +143,11 @@
         "ON_ACTION": {
             "action": "update_video_settings",
             "options": [
-                "pause/hide",
-                "pause/show",
-                "play/hide",
+                "show",
+                "play",
                 "play/show"
             ],
-            "value": "pause/hide"
+            "value": "play/show"
         },
         "ON_FINISH": {
             "action": "update_video_settings",
@@ -148,7 +155,7 @@
                 "nothing",
                 "switch"
             ],
-            "value": "nothing"
+            "value": "switch"
         },
         "ON_LOAD": {
             "action": "update_video_settings",
@@ -156,7 +163,7 @@
                 "hide",
                 "show"
             ],
-            "value": "hide"
+            "value": "show"
         },
         "ON_START": {
             "action": "update_video_settings",
@@ -166,7 +173,7 @@
                 "play/hide",
                 "play/show"
             ],
-            "value": "play/show"
+            "value": "pause/show"
         },
         "RAND_START_MODE": {
             "action": "update_video_settings",

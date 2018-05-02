@@ -63,6 +63,7 @@ class MidiInput(object):
 
     def on_midi_message(self, message_dict):
         if message_dict['type'] == 'note_on' and message_dict['velocity'] == 0:
+            ## edge case where on note of zero alternative for off note.
             message_dict['type'] = 'note_off'
         mapped_message_name = message_dict['type']
         mapped_message_value = None
@@ -74,7 +75,7 @@ class MidiInput(object):
         
         if mapped_message_name in self.midi_mappings.keys():
             self.run_action_for_mapped_message(mapped_message_name, mapped_message_value)
-        else:
+         else:
             print('{} is not in midi map'.format(mapped_message_name))
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):
@@ -92,7 +93,9 @@ class MidiInput(object):
 
         print('the action being called is {}'.format(method_name))
         self.call_method_name(method_name, mapped_message_value)
-        self.display.refresh_display()
+        ## only update screen if not cc - seeing if cc can respond faster if not refreshing screen on every action
+        if 'cc' not in message_name:
+            self.display.refresh_display()
 
     def call_method_name(self, method_name, argument=None):
         if argument is not None:

@@ -19,7 +19,6 @@ class VideoPlayer:
         self.load_attempts = 0
         self.alpha = 0
 
-        self.show_toggle_on = True
 
     def try_load(self, layer ,show):
         load_attempts = 0
@@ -130,7 +129,7 @@ class VideoPlayer:
         self.status = self.omx_player.playback_status().upper()
 
     def toggle_show(self):
-        if self.show_toggle_on:
+        if self.alpha > 127:
             self.show_toggle_on = False
             self.set_alpha_value(0)
         else:

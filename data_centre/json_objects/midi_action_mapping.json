@@ -20,7 +20,7 @@
 	},
 	"note_on 74": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
-		"PLAYER": ["toggle_pause_on_player"],
+		"PLAYER": ["toggle_action_on_player"],
 		"NAV_SETTINGS": ["enter_on_settings_selection"]
 	},
 	"note_on 75": {

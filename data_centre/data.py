@@ -26,6 +26,7 @@ class Data(object):
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
 
         ### state data
+        self.auto_repeat_on = True
         self.function_on = False
         self.display_mode = "SAMPLER"
         self.control_mode = 'PLAYER'
@@ -90,11 +91,14 @@ class Data(object):
     def update_next_slot_number(self,  new_value):
         if self.bank_data[self.bank_number][new_value]['location'] == '':
             self.message_handler.set_message('INFO', 'the slot you pressed is empty')
+            return False
         elif self.is_this_path_broken(self.bank_data[self.bank_number][new_value]['location']):
             self.message_handler.set_message('INFO', 'no device found for this slot')
+            return False
         else:
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
             self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
+            return True
 
     def update_setting_value(self, setting_folder, setting_name, setting_value):
         self.settings[setting_folder][setting_name]['value'] = setting_value

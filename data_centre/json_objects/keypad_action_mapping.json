@@ -11,7 +11,7 @@
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
-		"PLAYER": ["toggle_pause_on_player","toggle_show_on_player"],
+		"PLAYER": ["toggle_action_on_player","toggle_show_on_player"],
 		"NAV_SETTINGS": ["enter_on_settings_selection"]
 	},
 	"d": {

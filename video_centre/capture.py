@@ -36,14 +36,11 @@ class Capture(object):
         ##setting class variables
         self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
         self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
-        print('the resolution is {}'.format(self.resolution))
         self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
-        print('the framerate is {}'.format(self.framerate))
         ##update current instance (device) if in use
         if self.device and not self.device.closed:
             self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
             self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
-            print('the shutter speed is {}'.format(self.device.shutter_speed))
         ## can only update resolution and framerate if not recording
             if not self.is_recording:
                 self.device.framerate = self.framerate

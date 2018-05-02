@@ -36,13 +36,9 @@ class Actions(object):
     def clear_all_slots(self):
         self.data.clear_all_slots()
 
-    def quit_the_program(self):
-        self.video_driver.exit_all_players()
-        self.tk.destroy()
-
     def _load_this_slot_into_next_player(self, slot):
-        self.data.update_next_slot_number(slot)
-        self.video_driver.reload_next_player()
+        if self.data.update_next_slot_number(slot):
+            self.video_driver.reload_next_player()
 
     def load_slot_0_into_next_player(self):
         self._load_this_slot_into_next_player(0)
@@ -90,7 +86,15 @@ class Actions(object):
             self.data.display_mode = "SAMPLER"
             self.data.control_mode = 'PLAYER'
 
-    def toggle_pause_on_player(self):
+    def toggle_action_on_player(self):
+        play = 'play' in self.data.settings['sampler']['ON_ACTION']['value']
+        show = 'show' in self.data.settings['sampler']['ON_ACTION']['value']
+        if play:
+            self.toggle_play_on_player()
+        if show:
+            self.toggle_show_on_player()
+
+    def toggle_play_on_player(self):
         if self.data.player_mode == 'now':
             self.video_driver.current_player.toggle_pause()
         elif self.data.player_mode == 'next':
@@ -156,11 +160,11 @@ class Actions(object):
         if is_previewing:
             self.capture.stop_preview()
             if self.video_driver.current_player.status == 'PAUSED':
-                self.toggle_pause_on_player()
+                self.video_driver.current_player.toggle_pause()
         else:
             is_successful = self.capture.start_preview()
             if is_successful and self.video_driver.current_player.status != 'PAUSED':
-                self.toggle_pause_on_player()
+                self.video_driver.current_player.toggle_pause()
 
     def toggle_capture_recording(self):
         is_recording = self.capture.is_recording
@@ -283,10 +287,29 @@ class Actions(object):
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')
 
-
-
     def run_script(self, script_name, first_argument='', second_argument=''):
         print('first arg is {} , second is {}'.format(first_argument,second_argument))
         subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name),first_argument, second_argument ])
+           
+    def toggle_x_autorepeat(self):
+        if self.data.auto_repeat_on:
+            subprocess.call(['xset', 'r', 'off'])
+            self.data.auto_repeat_on = False
+        else:
+            subprocess.call(['xset', 'r', 'on'])
+            self.data.auto_repeat_on = True
+
+
+    def quit_the_program(self):
+        self.video_driver.exit_all_players()
+        self.toggle_x_autorepeat()
+        self.tk.destroy()
+
+
+
+
+
+
+
         
         

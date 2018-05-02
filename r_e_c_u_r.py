@@ -38,6 +38,7 @@ numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
 
 actions.check_and_set_output_mode_on_boot()
+actions.toggle_x_autorepeat()
 
 frame.pack()
 tk.attributes("-fullscreen", True)

@@ -113,7 +113,7 @@
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
             "options": [],
-            "value": ""
+            "value": 5
         },
         "FIXED_LENGTH_MODE": {
             "action": "update_video_settings",
@@ -128,7 +128,7 @@
             "options": [
                 "now",
                 "random",
-                "playlist"
+                "consecutive"
             ],
             "value": "now"
         },

@@ -156,7 +156,6 @@ class SettingsMenu(Menu):
             if setting_folder_key in self.open_folders:
                 self.menu_list.append(dict(name='{}/'.format(setting_folder_key), value=''))
                 order_list_name = '{}_ORDER'.format(setting_folder_key.upper())
-                print(order_list_name)
                 ordered_value = self.order_keys_from_list(setting_folder_item, getattr(self,order_list_name))
                 for (setting_details_key, setting_details_item) in ordered_value: 
                     self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))

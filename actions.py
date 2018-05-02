@@ -114,35 +114,35 @@ class Actions(object):
     def increase_speed(self):
         new_rate = self.video_driver.current_player.change_rate(0.5)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        self.data.update_slot_rate_to_this(current_bank, current_slot, new_rate)
+        self.data.update_slot_rate_to_this(current_slot, new_rate)
         self._load_this_slot_into_next_player(current_slot)
 
     def decrease_speed(self):
         new_rate = self.video_driver.current_player.change_rate(-0.5)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        self.data.update_slot_rate_to_this(current_bank, current_slot, new_rate)
+        self.data.update_slot_rate_to_this(current_slot, new_rate)
         self._load_this_slot_into_next_player(current_slot)
 
     def set_playing_sample_start_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         current_position = round(self.video_driver.current_player.get_position(),3)
-        self.data.update_slot_start_to_this_time(current_bank, current_slot, current_position)
+        self.data.update_slot_start_to_this_time(current_slot, current_position)
         self._load_this_slot_into_next_player(current_slot)
 
     def clear_playing_sample_start_time(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        self.data.update_slot_start_to_this_time(current_bank, current_slot, -1)
+        self.data.update_slot_start_to_this_time(current_slot, -1)
         self._load_this_slot_into_next_player(current_slot)
 
     def set_playing_sample_end_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         current_position = round(self.video_driver.current_player.get_position(),0)
-        self.data.update_slot_end_to_this_time(current_bank, current_slot, current_position)
+        self.data.update_slot_end_to_this_time(current_slot, current_position)
         self._load_this_slot_into_next_player(current_slot)
 
     def clear_playing_sample_end_time(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        self.data.update_slot_end_to_this_time(current_bank, current_slot, -1)
+        self.data.update_slot_end_to_this_time(current_slot, -1)
         self._load_this_slot_into_next_player(current_slot)
 
     def toggle_capture_preview(self):

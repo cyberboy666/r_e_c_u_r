@@ -2,9 +2,25 @@
     [
         {
             "end": -1,
-            "length": 804.245,
-            "location": "/media/pi/5EB5-664C/recur test videos/long_spinning.mp4",
-            "name": "long_spinning.mp4",
+            "length": 49.28,
+            "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_01.mp4",
+            "name": "colour_pixal_01.mp4",
+            "rate": 1,
+            "start": 3.979
+        },
+        {
+            "end": -1,
+            "length": 87.04,
+            "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_02.mp4",
+            "name": "colour_pixal_02.mp4",
+            "rate": 1,
+            "start": 4.49
+        },
+        {
+            "end": -1,
+            "length": 52.757,
+            "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_03.mp4",
+            "name": "colour_pixal_03.mp4",
             "rate": 1,
             "start": -1
         },
@@ -13,22 +29,6 @@
             "length": 40.533,
             "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_04.mp4",
             "name": "colour_pixal_04.mp4",
-            "rate": 1,
-            "start": -1
-        },
-        {
-            "end": -1,
-            "length": 5838.04,
-            "location": "/media/pi/5EB5-664C/MST3K_0310_Fugitive_Alien_xvid.avi",
-            "name": "MST3K_0310_Fugitive_Alien_xvid.avi",
-            "rate": 1,
-            "start": -1
-        },
-        {
-            "end": -1,
-            "length": -1,
-            "location": "",
-            "name": "",
             "rate": 1,
             "start": -1
         },

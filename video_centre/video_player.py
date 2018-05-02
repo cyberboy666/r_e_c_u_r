@@ -59,7 +59,8 @@ class VideoPlayer:
             #self.omx_player.set_rate(self.rate)
             #self.load_attempts = 0
             return True
-        except (ValueError, SystemError):
+        except (ValueError, SystemError) as e:
+            print(e)
             #self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 

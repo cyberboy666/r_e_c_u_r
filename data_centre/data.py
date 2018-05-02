@@ -88,7 +88,6 @@ class Data(object):
         
     def update_next_slot_number(self,  new_value):
         if self.bank_data[self.bank_number][new_value]['location'] == '':
-            print('its empty!')
             self.message_handler.set_message('INFO', 'the slot you pressed is empty')
         elif self.is_this_path_broken(self.bank_data[self.bank_number][new_value]['location']):
             self.message_handler.set_message('INFO', 'no device found for this slot')
@@ -123,10 +122,70 @@ class Data(object):
         end_value = next_slot_details['end']
         length = next_slot_details['length']
 
+        start_value, end_value = self._overwrite_values_with_sampler_settings(start_value, end_value, length)        
+
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
                        length=next_slot_details['length'], rate=next_slot_details['rate'], start=start_value, end=end_value,
                        bankslot_number=self.next_bankslot)
+
+        self._update_next_bankslot_value(slot_num)
         return context
+
+    def _overwrite_values_with_sampler_settings(self, start, end, length):
+        use_rand_start = self.settings['sampler']['RAND_START_MODE']['value'] == 'on'
+        use_fixed_length = self.settings['sampler']['FIXED_LENGTH_MODE']['value'] == 'on'
+        fixed_length_value = self.settings['sampler']['FIXED_LENGTH']['value']
+        if start == -1:
+            start = 0        
+        if end == -1:
+            end = length        
+        new_end = end
+        new_start = start
+
+        if use_fixed_length and use_rand_start:
+            max_increase = int(max(end - start - max(fixed_length_value, 4),0))
+            print('max increase is {} '.format(max_increase))
+            random_increase = randint(0,max_increase)
+            new_start = start + random_increase
+            new_end = min(new_start + fixed_length_value, end)
+        elif use_fixed_length and not use_rand_start:
+            new_end = min(new_start + fixed_length_value, end)
+        elif not use_fixed_length and use_rand_start:
+            max_increase = int(max(end - start - 4,0))
+            print('max increase is {} '.format(max_increase))
+            random_increase = randint(0,max_increase)
+            new_start = start + random_increase
+
+        print('new start: {}, new end: {} '.format(new_start, new_end))
+        return new_start, new_end
+
+    def _update_next_bankslot_value(self, slot_num):
+        next_setting = self.settings['sampler']['LOAD_NEXT']['value']
+        loaded_slots = self._get_list_of_loaded_slots_in_current_bank()
+        if loaded_slots:
+            if next_setting == 'random':
+                next_slot = loaded_slots[randint(0,len(loaded_slots)-1)]
+            elif next_setting == 'consecutive':
+                next_slot = self.get_next_loaded_slot(slot_num, loaded_slots)
+            else:
+                next_slot = slot_num
+
+            self.next_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
+            self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
+
+    def _get_list_of_loaded_slots_in_current_bank(self):
+        list_of_loaded_slots = []
+        for index, slot in enumerate(self.bank_data[self.bank_number]):
+            if slot['location'] != '' and not self.is_this_path_broken(slot['location']):
+                list_of_loaded_slots.append(index)
+        return list_of_loaded_slots
+
+    @staticmethod
+    def get_next_loaded_slot(current_slot, loaded_slots):
+        i = ( current_slot + 1 ) % len(loaded_slots)
+        while(i not in loaded_slots):
+            i = ( i + 1 ) % len(loaded_slots)
+        return i
 
     def update_slot_start_to_this_time(self, slot_number, position):
         self.bank_data[self.bank_number][slot_number]['start'] = position
@@ -150,7 +209,6 @@ class Data(object):
             print (e)
             self.message_handler.set_message('INFO', 'cannot load video')
             return None
-
 
 
     def _get_path_for_file(self, file_name):
@@ -188,87 +246,5 @@ class Data(object):
             return ''
         else:
             return input
-"""
-## methods from old BROWSERDATA class
 
-    def update_open_folders(self, folder_name):
-        if folder_name not in self.open_folders:
-            self.open_folders.append(folder_name)
-        else:
-            self.open_folders.remove(folder_name)
-            
-    def update_open_folders_for_settings(self, folder_name):
-        if folder_name not in self.settings_open_folders:
-            self.settings_open_folders.append(folder_name)
-        else:
-            self.settings_open_folders.remove(folder_name)
-
-    def generate_browser_list(self):
-        ######## starts the recursive process of listing all folders and video files to display ########
-        self.browser_list = []
-        for path in self.PATHS_TO_BROWSER:
-            self._add_folder_to_browser_list(path, 0)
-        
-        for browser_line in self.browser_list:
-            is_file, name = self.extract_file_type_and_name_from_browser_format(browser_line['name'])
-            if is_file:
-                is_slotted, bankslot_number = self._is_file_in_memory_bank(name)
-                if is_slotted:
-                    browser_line['slot'] = bankslot_number
-
-    def generate_settings_list(self, open_folders):
-        self.settings_list = []
-        for sub_setting in self.settings.keys():
-            if sub_setting in open_folders:
-                self.settings_list.append(dict(name=sub_setting + '/', value=''))
-                for setting in self.settings[sub_setting]:
-                    setting_value = self.make_empty_if_none(self.settings[sub_setting][setting]['value'])
-                    self.settings_list.append(dict(name=' ' + setting, value=setting_value))
-            else:   
-                self.settings_list.append(dict(name=sub_setting + '|', value=''))
-
-
-
-    @staticmethod
-    def extract_file_type_and_name_from_browser_format(dir_name):
-        # removes whitespace and folder state from display item ########
-        if dir_name.endswith('|') or dir_name.endswith('/'):
-            return False, dir_name.lstrip()[:-1]
-        else:
-            return True, dir_name.lstrip()
-
-    def _add_folder_to_browser_list(self, current_path, current_level):
-        ######## adds the folders and mp4 files at the current level to the results list. recursively recalls at deeper level if folder is open ########
-        # TODO make note of / investigate what happens with multiple folders of same name
-        root, dirs, files = next(os.walk(current_path))
-
-        indent = ' ' * 4 * (current_level)
-        for folder in dirs:
-            is_open, char = self._check_folder_state(folder)
-            self.browser_list.append(dict(name='{}{}{}'.format(indent, folder, char), slot='x'))
-            if (is_open):
-                next_path = '{}/{}'.format(root, folder)
-                next_level = current_level + 1
-                self._add_folder_to_browser_list(next_path, next_level)
-
-        for f in files:
-            split_name = os.path.splitext(f)
-            if (split_name[1] in ['.mp4', '.mkv', '.avi', '.mov']):
-                self.browser_list.append(dict(name='{}{}'.format(indent, f), slot='-'))
-
-    def _check_folder_state(self, folder_name):
-        ######## used for displaying folders as open or closed ########
-        if folder_name in self.open_folders:
-            return True, '/'
-        else:
-            return False, '|'
-
-    def _is_file_in_memory_bank(self, file_name):
-        ######## used for displaying the mappings in browser view ########
-        for bank_index, bank in enumerate(self.bank_data):
-            for slot_index, slot in enumerate(bank):
-                if file_name == slot['name']:
-                    return True, '{}-{}'.format(bank_index,slot_index)
-        return False, ''
-"""
 

@@ -157,17 +157,23 @@ class Capture(object):
         else:
             return self.device.frame.timestamp / 1000000
 
-    def is_previewing(self):
-        if self.device.closed or not self.device.preview:
-            return False
+    def get_preview_alpha(self):
+        if self.is_previewing:
+            return self.device.preview.alpha
         else:
-            return True
+            return 0
 
-    def is_recording(self):
-        if self.device.recording:
-            return True
-        else:
-            return False
+    #def is_previewing(self):
+     #   if self.device.closed or not self.device.preview:
+      #      return False
+        #else:
+          #  return True
+
+    #def is_recording(self):
+     #   if self.device.recording:
+       #     return True
+        #else:
+          #  return False
 
     def set_colour(self, u_value, v_value):
         (u, v) = (128, 128)

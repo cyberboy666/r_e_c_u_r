@@ -93,7 +93,7 @@
                 "on",
                 "off"
             ],
-            "value": "on"
+            "value": "off"
         },
         "QUIT": {
             "action": "quit_the_program",
@@ -121,7 +121,7 @@
                 "on",
                 "off"
             ],
-            "value": "off"
+            "value": "on"
         },
         "LOAD_NEXT": {
             "action": "update_video_settings",
@@ -174,7 +174,7 @@
                 "on",
                 "off"
             ],
-            "value": "off"
+            "value": "on"
         }
     },
     "video": {

@@ -7,7 +7,6 @@ class Display(object):
     MENU_HEIGHT = 10
     SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
-    VIDEO_DISPLAY_BANNER_TEXT = ' {} {} {}'
 
     def __init__(self, tk, video_driver, capture, message_handler, data):
         self.tk = tk
@@ -35,9 +34,10 @@ class Display(object):
         self.display_text.tag_configure("DISPLAY_MODE", background="black", foreground="magenta")
         self.display_text.tag_configure("ERROR_MESSAGE", background="red", foreground="white")
         self.display_text.tag_configure("INFO_MESSAGE", background="blue", foreground="white")
-        self.display_text.tag_configure("PLAYER_INFO", background="black", foreground="yellow")
-        self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="cyan")
-        self.display_text.tag_configure("FUNCTION", background="cyan", foreground="black")
+        self.display_text.tag_configure("NOW_PLAYER_INFO", background="black", foreground="yellow")
+        self.display_text.tag_configure("NEXT_PLAYER_INFO", background="black", foreground="cyan")
+        self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="VioletRed1")
+        self.display_text.tag_configure("FUNCTION", background="yellow", foreground="black")
         self.display_text.tag_configure("BROKEN_PATH", background="black", foreground="gray")
 
     def _load_display(self):
@@ -52,13 +52,20 @@ class Display(object):
         self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def _load_player(self):
-        text, banner = self._get_info_for_player()
-        end_of_text = float("3." + str(len(text)))
-        end_of_banner = float("3." + str(len(banner)))
-        self.display_text.insert(END, text + '\n')
-        self.display_text.tag_add("PLAYER_INFO", 2.0, end_of_text)
-        self.display_text.insert(END, banner + '\n')
-        self.display_text.tag_add("PLAYER_INFO", 3.0, end_of_banner)
+        if self.data.player_mode == 'now':
+            now_banner = self._get_banner_for_player('now')
+            self.display_text.insert(END, now_banner + '\n')
+            self.display_text.tag_add("NOW_PLAYER_INFO", 2.0, 2.0 + self.SELECTOR_WIDTH)
+        elif self.data.player_mode == 'next':
+            next_banner = self._get_banner_for_player('next')
+            self.display_text.insert(END, next_banner + '\n')
+            self.display_text.tag_add("NEXT_PLAYER_INFO", 2.0, 2.0 + self.SELECTOR_WIDTH)
+
+        status = self._get_status_for_player()
+        self.display_text.insert(END, status + '\n')
+        self.display_text.tag_add("NOW_ALPHA", 3.0, 3.17)
+        self.display_text.tag_add("CAPTURE_ALPHA", 3.18, 3.29)
+        self.display_text.tag_add("NEXT_ALPHA", 3.29, 3.47)      
 
     def _load_display_body(self):
         if self.data.display_mode == 'BROWSER':
@@ -156,19 +163,24 @@ class Display(object):
         self.display_text.tag_remove("SELECT", self.ROW_OFFSET + row,
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
-    def _get_info_for_player(self):
-        now_slot, now_status, next_slot, next_status, position, crop_length, start, end = self.video_driver.get_info_for_player_display()
-        banner = self.create_video_display_banner(start, end, crop_length, position)
-        time_been = self.format_time_value(position - start)
-        time_left = self.format_time_value(end - position)
+    def _get_status_for_player(self):
+        now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()
         capture_status = self._generate_capture_status()        
+        preview_alpha = self.capture.get_preview_alpha()
+
+        self._set_colour_from_alpha(now_alpha, preview_alpha, next_alpha)        
 
         now_info = 'NOW [{}] {}'.format(now_slot, now_status)
         next_info = 'NEXT [{}] {}'.format(next_slot, next_status)
         capture_info = '{}'.format(capture_status)
+        return  '{:17} {:10} {:17}'.format(now_info[:17], capture_info[:10], next_info[:18])
 
-        return self.VIDEO_DISPLAY_BANNER_TEXT.format(time_been, banner, time_left), \
-               '{:17} {:10} {:17}'.format(now_info[:17], capture_info[:10], next_info[:18])
+    def _get_banner_for_player(self,player):
+        start, end, position = self.video_driver.get_player_info_for_banner(player)
+        banner = self.create_video_display_banner(start, end, position)
+        time_been = self.format_time_value(position - start)
+        time_left = self.format_time_value(end - position)
+        return ' {:5} {} {:5}'.format(time_been, banner, time_left)
 
     def _generate_capture_status(self):
         is_previewing = self.capture.is_previewing 
@@ -193,8 +205,7 @@ class Display(object):
         return capture_status
 
     @staticmethod
-    def create_video_display_banner(start, end, crop_length, position):
-        
+    def create_video_display_banner(start, end, position):
         banner_list = ['[', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
@@ -205,12 +216,33 @@ class Display(object):
             banner_list[0] = '<'
         elif position > end:
             banner_list[max] = '>'
-        elif crop_length != 0:
+        elif end - start != 0:
             marker = int(math.floor(float(position - start) /
-                                    float(crop_length) * (max - 1)) + 1)
+                                    float(end - start) * (max - 1)) + 1)
             banner_list[marker] = '*'
 
         return ''.join(banner_list)
+
+    def _set_colour_from_alpha(self, now_alpha, preview_alpha, next_alpha):
+        upper_bound = 150
+        ### scale values
+        scaled_now = int(( now_alpha / 255 ) * (255 - upper_bound) + upper_bound)
+        scaled_preview = int(( preview_alpha / 255 ) * (255 - upper_bound) + upper_bound)
+        scaled_next = int(( next_alpha / 255 ) * (255 - upper_bound) + upper_bound)
+        
+        ### convert to hex
+        now_colour = self.hex_from_rgb(scaled_now, scaled_now, 0)
+        capture_colour = self.hex_from_rgb(255 * self.capture.is_recording, 0, scaled_preview)
+        next_colour = self.hex_from_rgb(0, scaled_next, scaled_next)
+        ### update the colours
+        self.display_text.tag_configure("NOW_ALPHA", background="black", foreground=now_colour)
+        self.display_text.tag_configure("CAPTURE_ALPHA", background="black", foreground=capture_colour)
+        self.display_text.tag_configure("NEXT_ALPHA", background="black", foreground=next_colour) 
+
+    @staticmethod
+    def hex_from_rgb(r, g, b):
+        return '#%02x%02x%02x' % (r, g, b)
+
 
     def _update_screen_every_second(self):
         self.refresh_display()
@@ -223,36 +255,6 @@ class Display(object):
             self._load_display()
             self.display_text.configure(state='disable')
             self.display_text.focus_set()
-
-    def navigate_menu(self, move_direction, number_items_in_list):
-        last_list_index = number_items_in_list - 1
-        bottom_menu_index = self.top_menu_index + self.MENU_HEIGHT - 1
-
-        ##self._unhighlight_this_row(self.selected_list_index - self.top_menu_index)
-
-        if move_direction == 'down':
-            if self.selected_list_index != last_list_index:
-                if self.selected_list_index == bottom_menu_index:
-                    self.top_menu_index += 1
-                self.selected_list_index += 1
-            else:
-                self.top_menu_index = 0
-                self.selected_list_index = self.top_menu_index
-
-        elif move_direction == 'up':
-            if self.selected_list_index != 0:
-                if self.selected_list_index == self.top_menu_index:
-                    self.top_menu_index -= 1
-                self.selected_list_index -= 1
-            else:
-                self.selected_list_index = last_list_index
-                self.top_menu_index = last_list_index - (self.MENU_HEIGHT - 1)
-                if self.top_menu_index < 0:
-                    self.top_menu_index = 0
-
-        ##self._highlight_this_row(self.selected_list_index - self.top_menu_index)
-
-        return
 
     @staticmethod
     def format_time_value(time_in_seconds):

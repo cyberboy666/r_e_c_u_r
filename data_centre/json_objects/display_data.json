@@ -6,7 +6,7 @@
             "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_01.mp4",
             "name": "colour_pixal_01.mp4",
             "rate": 1,
-            "start": 3.979
+            "start": -1
         },
         {
             "end": -1,
@@ -14,7 +14,7 @@
             "location": "/media/pi/5EB5-664C/recur test videos/colour_pixal_02.mp4",
             "name": "colour_pixal_02.mp4",
             "rate": 1,
-            "start": 4.49
+            "start": -1
         },
         {
             "end": -1,
@@ -34,9 +34,9 @@
         },
         {
             "end": -1,
-            "length": -1,
-            "location": "",
-            "name": "",
+            "length": 804.245,
+            "location": "/media/pi/5EB5-664C/recur test videos/long_spinning.mp4",
+            "name": "long_spinning.mp4",
             "rate": 1,
             "start": -1
         },

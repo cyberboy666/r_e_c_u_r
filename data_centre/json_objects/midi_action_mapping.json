@@ -24,7 +24,7 @@
 		"NAV_SETTINGS": ["enter_on_settings_selection"]
 	},
 	"note_on 75": {
-		"DEFAULT": ["trigger_next_player"]
+		"DEFAULT": ["switch_to_next_player"]
 	},
 	"note_on 76": {
 		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"]

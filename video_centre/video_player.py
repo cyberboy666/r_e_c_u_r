@@ -17,6 +17,7 @@ class VideoPlayer:
         self.crop_length = 0.0
         self.location = ''
         self.load_attempts = 0
+        self.alpha = 0
 
         self.show_toggle_on = True
 
@@ -40,7 +41,7 @@ class VideoPlayer:
             is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
             arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
             if not is_dev_mode:
-                arguments.append('-b')
+                arguments.append('-b') ##=0x000000FF')
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
@@ -71,9 +72,9 @@ class VideoPlayer:
         if position > start_threshold:
             self.status = 'LOADED'
             if show:
-                self.omx_player.set_alpha(255)
+                self.set_alpha_value(255)
             else:
-                self.omx_player.set_alpha(0)
+                self.set_alpha_value(0)
             self.omx_player.pause()
         elif self.omx_running:
             self.root.after(5, self.pause_at_start, show)
@@ -81,9 +82,9 @@ class VideoPlayer:
     def play(self, show):
         self.status = 'PLAYING'
         if show:
-            self.omx_player.set_alpha(255)
+            self.set_alpha_value(255)
         else:
-            self.omx_player.set_alpha(0)
+            self.set_alpha_value(0)
         self.omx_player.play()
         self.pause_at_end()
 
@@ -131,10 +132,14 @@ class VideoPlayer:
     def toggle_show(self):
         if self.show_toggle_on:
             self.show_toggle_on = False
-            self.omx_player.set_alpha(0)
+            self.set_alpha_value(0)
         else:
             self.show_toggle_on = True
-            self.omx_player.set_alpha(255)
+            self.set_alpha_value(255)
+
+    def set_alpha_value(self, amount):
+        self.omx_player.set_alpha(amount)
+        self.alpha = amount
 
     def seek(self, amount):
         position = self.get_position()

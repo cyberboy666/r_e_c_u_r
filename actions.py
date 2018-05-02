@@ -74,7 +74,7 @@ class Actions(object):
     def load_slot_9_into_next_player(self):
         self._load_this_slot_into_next_player(9)
 
-    def trigger_next_player(self):
+    def switch_to_next_player(self):
         self.video_driver.switch_players_and_play_video()
 
     def cycle_display_mode(self):
@@ -91,10 +91,16 @@ class Actions(object):
             self.data.control_mode = 'PLAYER'
 
     def toggle_pause_on_player(self):
-        self.video_driver.current_player.toggle_pause()
+        if self.data.player_mode == 'now':
+            self.video_driver.current_player.toggle_pause()
+        elif self.data.player_mode == 'next':
+            self.video_driver.next_player.toggle_pause()
 
     def toggle_show_on_player(self):
-        self.video_driver.current_player.toggle_show()
+        if self.data.player_mode == 'now':
+            self.video_driver.current_player.toggle_show()
+        elif self.data.player_mode == 'next':
+            self.video_driver.next_player.toggle_show()
 
     def seek_forward_on_player(self):    
         self.video_driver.current_player.seek(30)
@@ -170,6 +176,12 @@ class Actions(object):
         else:
             self.data.update_screen = True
             subprocess.call(['sudo', 'systemctl', 'stop', 'raspi2fb@1'])
+
+    def toggle_player_mode(self):
+        if self.data.player_mode == 'now':
+            self.data.player_mode = 'next'
+        elif self.data.player_mode == 'next':
+            self.data.player_mode = 'now'
 
     def set_the_camera_colour_u_with_cc(self, amount):
         u_value = self._convert_midi_cc_value(amount, 0, 255)

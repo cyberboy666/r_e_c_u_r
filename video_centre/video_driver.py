@@ -42,7 +42,6 @@ class VideoDriver(object):
         self.root.after(1000,self.print_status)
 
     def begin_playing(self):
-        # TODO: the first clip will be a demo
         if self.current_player.try_load(self.get_next_layer_value(), self.show_on_load):
             self.in_first_load_cycle = True
             self.wait_for_first_load()
@@ -62,14 +61,15 @@ class VideoDriver(object):
         self.in_current_playing_cycle = False
         self.in_next_load_cycle = True
 
-        self.switch_if_next_is_loaded()
+        self.switch_players()
 
     def switch_players(self):
         temp_player = self.last_player
         self.last_player = self.current_player
         self.current_player = self.next_player
         self.next_player = temp_player
-        #self.last_player.exit()
+
+        self.play_video()
 
     def play_video(self):
         print(self.play_on_start)
@@ -95,17 +95,22 @@ class VideoDriver(object):
             if self.next_player.is_loaded():
                 self.in_next_load_cycle = False
                 self.switch_players()
-                self.play_video()
             else:
                 if self.next_player.status != 'ERROR':
                     self.root.after(self.delay, self.switch_if_next_is_loaded)
                 else:
                     self.in_next_load_cycle = False
 
-    def get_info_for_player_display(self):
-        return self.current_player.bankslot_number, self.current_player.status, self.next_player.bankslot_number, \
-            self.next_player.status, self.current_player.get_position(), self.current_player.crop_length, \
-            self.current_player.start, self.current_player.end
+
+    def get_player_info_for_status(self):
+        return self.current_player.bankslot_number, self.current_player.status, self.current_player.alpha, \
+                   self.next_player.bankslot_number, self.next_player.status, self.next_player.alpha
+
+    def get_player_info_for_banner(self, player):
+        if player == 'now':
+            return self.current_player.start, self.current_player.end, self.current_player.get_position()
+        elif player == 'next':
+            return self.next_player.start, self.next_player.end, self.next_player.get_position()
 
     def exit_all_players(self):
         self.next_player.exit()

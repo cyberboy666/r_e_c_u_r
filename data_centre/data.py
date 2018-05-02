@@ -231,6 +231,25 @@ class Data(object):
         else:
             return False
 
+    def get_background_colour(self):
+        colour_name = self.settings['video']['BACKGROUND_COLOUR']['value']
+        colour_argb = (255,0,0,0)
+        if colour_name == "black":
+            colour_argb = (255,0,0,0)
+        elif colour_name == "white":
+            colour_argb = (255,255,255,255)
+        elif colour_name == "green":
+            colour_argb = (255,0,255,0)
+        elif colour_name == "blue":
+            colour_argb = (255,0,0,255)
+        elif colour_name == "pink":
+            colour_argb = (255,255,0,255)
+        elif colour_name == "none":
+            colour_argb = (0,0,0,0)
+        colour_hex = '%02x%02x%02x%02x' % colour_argb
+        print(colour_hex)
+        return colour_hex
+
     @staticmethod
     def _get_mb_free_diskspace(path):
         st = os.statvfs(path)

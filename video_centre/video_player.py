@@ -41,7 +41,7 @@ class VideoPlayer:
             is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
             arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
             if not is_dev_mode:
-                arguments.append('-b') ##=0x000000FF')
+                arguments.append('--blank=0x{}'.format(self.data.get_background_colour()))
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
             self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)

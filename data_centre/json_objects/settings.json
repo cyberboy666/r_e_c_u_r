@@ -93,7 +93,7 @@
                 "on",
                 "off"
             ],
-            "value": "off"
+            "value": "on"
         },
         "QUIT": {
             "action": "quit_the_program",
@@ -121,7 +121,7 @@
                 "on",
                 "off"
             ],
-            "value": "on"
+            "value": "off"
         },
         "LOAD_NEXT": {
             "action": "update_video_settings",
@@ -148,7 +148,7 @@
                 "nothing",
                 "switch"
             ],
-            "value": "switch"
+            "value": "nothing"
         },
         "ON_LOAD": {
             "action": "update_video_settings",
@@ -156,7 +156,7 @@
                 "hide",
                 "show"
             ],
-            "value": "show"
+            "value": "hide"
         },
         "ON_START": {
             "action": "update_video_settings",
@@ -178,6 +178,18 @@
         }
     },
     "video": {
+        "BACKGROUND_COLOUR": {
+            "action": null,
+            "options": [
+                "pink",
+                "blue",
+                "black",
+                "white",
+                "green",
+                "none"
+            ],
+            "value": "none"
+        },
         "COMPOSITE_PROGRESSIVE": {
             "action": "change_composite_setting",
             "options": [

@@ -137,16 +137,28 @@ class BrowserMenu(Menu):
 
 
 class SettingsMenu(Menu):
+
+    FOLDER_ORDER = ['sampler', 'video', 'midi', 'capture', 'other' ]
+    SAMPLER_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
+    VIDEO_ORDER = ['OUTPUT', 'SCREEN_MODE']
+    MIDI_ORDER = ['INPUT', 'STATUS']
+    CAPTURE_ORDER = ['DEVICE']
+    OTHER_ORDER = []
+
     def __init__(self, data, menu_height):
         Menu.__init__(self, data, menu_height)
         self.generate_settings_list()
 
     def generate_settings_list(self):
         self.menu_list = []
-        for setting_folder_key, setting_folder_item in self.data.settings.items():
+        ordered_folders = self.order_keys_from_list(self.data.settings, self.FOLDER_ORDER)
+        for (setting_folder_key, setting_folder_item) in ordered_folders:
             if setting_folder_key in self.open_folders:
                 self.menu_list.append(dict(name='{}/'.format(setting_folder_key), value=''))
-                for setting_details_key, setting_details_item in setting_folder_item.items(): 
+                order_list_name = '{}_ORDER'.format(setting_folder_key.upper())
+                print(order_list_name)
+                ordered_value = self.order_keys_from_list(setting_folder_item, getattr(self,order_list_name))
+                for (setting_details_key, setting_details_item) in ordered_value: 
                     self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
             else:   
                 self.menu_list.append(dict(name='{}|'.format(setting_folder_key), value=''))
@@ -167,6 +179,21 @@ class SettingsMenu(Menu):
             self.generate_settings_list()
             return False, ''
         
+    @staticmethod
+    def order_keys_from_list(dictionary, order_list):
+        ordered_tuple_list = []
+        for order_key in order_list:
+            if order_key in dictionary:
+                ordered_tuple_list.append((order_key, dictionary[order_key]))
+        for  other_key in sorted(dictionary):
+            if other_key not in [i[0] for i in ordered_tuple_list]:
+                ordered_tuple_list.append((other_key, dictionary[other_key]))
+        return ordered_tuple_list
+
+
+
+
+
 
 
 

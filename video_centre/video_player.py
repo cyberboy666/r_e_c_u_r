@@ -93,6 +93,7 @@ class VideoPlayer:
         if(position > end_threshold):
             self.status = 'FINISHED'
             self.omx_player.pause()
+            
             print('its paused at end!')
         elif(self.omx_running):
             self.root.after(5, self.pause_at_end)

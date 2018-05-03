@@ -149,7 +149,6 @@ class Data(object):
 
         if use_fixed_length and use_rand_start:
             max_increase = int(max(end - start - max(fixed_length_value, 4),0))
-            print('max increase is {} '.format(max_increase))
             random_increase = randint(0,max_increase)
             new_start = start + random_increase
             new_end = min(new_start + fixed_length_value, end)
@@ -157,11 +156,9 @@ class Data(object):
             new_end = min(new_start + fixed_length_value, end)
         elif not use_fixed_length and use_rand_start:
             max_increase = int(max(end - start - 4,0))
-            print('max increase is {} '.format(max_increase))
             random_increase = randint(0,max_increase)
             new_start = start + random_increase
 
-        print('new start: {}, new end: {} '.format(new_start, new_end))
         return new_start, new_end
 
     def _update_next_bankslot_value(self, slot_num):

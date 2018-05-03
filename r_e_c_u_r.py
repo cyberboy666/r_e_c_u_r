@@ -43,7 +43,12 @@ actions.toggle_x_autorepeat()
 frame.pack()
 tk.attributes("-fullscreen", True)
 
-try:
-    tk.mainloop()
-except:
-    message_handler.set_message(traceback.print_tb(sys.exc_traceback, limit=1, file=sys.stdout))
+def handle_error(exc, val, tb):
+    print('traceback for error : {}'.format(traceback.format_exc()))
+    message_handler.set_message('ERROR', val, traceback.format_exc())
+
+tk.report_callback_exception = handle_error
+
+
+tk.mainloop()
+

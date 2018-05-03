@@ -98,11 +98,7 @@ class MidiInput(object):
 
     def call_method_name(self, method_name, argument=None):
         if argument is not None:
-           # try:
             getattr(self.actions, method_name)(argument)
-            #except TypeError as e:
-             #   print(e)
-             #   self.message_handler.set_message('INFO', 'bad midi cc mapping')
         else:
             getattr(self.actions, method_name)()
 

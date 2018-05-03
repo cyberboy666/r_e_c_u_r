@@ -225,6 +225,7 @@ class Display(object):
 
     def _set_colour_from_alpha(self, now_alpha, preview_alpha, next_alpha):
         upper_bound = 150
+        is_recording = self.capture.is_recording == True
         ### scale values
         scaled_now = int(( now_alpha / 255 ) * (255 - upper_bound) + upper_bound)
         scaled_preview = int(( preview_alpha / 255 ) * (255 - upper_bound) + upper_bound)
@@ -232,7 +233,7 @@ class Display(object):
         
         ### convert to hex
         now_colour = self.hex_from_rgb(scaled_now, scaled_now, 0)
-        capture_colour = self.hex_from_rgb(255 * self.capture.is_recording, 0, scaled_preview)
+        capture_colour = self.hex_from_rgb(255 * is_recording, 100, scaled_preview )
         next_colour = self.hex_from_rgb(0, scaled_next, scaled_next)
         ### update the colours
         self.display_text.tag_configure("NOW_ALPHA", background="black", foreground=now_colour)
@@ -242,7 +243,6 @@ class Display(object):
     @staticmethod
     def hex_from_rgb(r, g, b):
         return '#%02x%02x%02x' % (r, g, b)
-
 
     def _update_screen_every_second(self):
         self.refresh_display()

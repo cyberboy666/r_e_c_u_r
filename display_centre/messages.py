@@ -17,7 +17,7 @@ class MessageHandler(object):
         return logger
 
     def set_message(self, message_type, message, stacktrace=''):
-        self.current_message = [message_type, message, True]
+        self.current_message = [message_type, str(message), True]
         self.number_of_messages = self.number_of_messages + 1
         if message_type is 'ERROR':
             self.logger.error('ERROR MESSAGE IS: {} \n STACKTRACE IS: {}'.format(message, stacktrace))

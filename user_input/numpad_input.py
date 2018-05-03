@@ -1,5 +1,7 @@
 import string
 import datetime
+import traceback
+import sys
 
 class NumpadInput(object):
     def __init__(self, root, message_handler, display, actions, data):
@@ -29,6 +31,11 @@ class NumpadInput(object):
         else:
             print('{} is not in keypad map'.format(event.char))
 
+    def on_key_release(self, event):
+            numpad = list(string.ascii_lowercase[0:19])
+            if event.char in numpad:
+                self.check_key_release_settings(event.char)
+
     def run_action_for_mapped_key(self, key):
         this_mapping = self.key_mappings[key]
         if self.data.control_mode in this_mapping:
@@ -47,10 +54,7 @@ class NumpadInput(object):
       
         self.display.refresh_display()
 
-    def on_key_release(self, event):
-        numpad = list(string.ascii_lowercase[0:19])
-        if event.char in numpad:
-            self.check_key_release_settings(event.char)
+
 
     def check_key_release_settings(self, key):
         

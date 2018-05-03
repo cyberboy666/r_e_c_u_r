@@ -50,25 +50,25 @@
         },
         {
             "end": -1,
-            "length": -1,
-            "location": "",
-            "name": "",
+            "length": 7.4,
+            "location": "/home/pi/Videos/recordings/rec-2018-05-03-0.mp4",
+            "name": "rec-2018-05-03-0.mp4",
             "rate": 1,
             "start": -1
         },
         {
             "end": -1,
-            "length": -1,
-            "location": "",
-            "name": "",
+            "length": 2.32,
+            "location": "/home/pi/Videos/recordings/rec-2018-05-03-1.mp4",
+            "name": "rec-2018-05-03-1.mp4",
             "rate": 1,
             "start": -1
         },
         {
             "end": -1,
-            "length": -1,
-            "location": "",
-            "name": "",
+            "length": 3.36,
+            "location": "/home/pi/Videos/recordings/rec-2018-05-03-2.mp4",
+            "name": "rec-2018-05-03-2.mp4",
             "rate": 1,
             "start": -1
         },

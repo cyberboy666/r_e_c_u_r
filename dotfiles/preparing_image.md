@@ -23,7 +23,7 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
  
  - download/install pixel + all the extra things needed for r_e_c_u_r : 
  ```
- sudo apt-get install -y raspberrypi-ui-mods git python3-tk ttf-mscorefonts-installer omxplayer libdbus-glib-1-dev python3-pip unclutter python3-picamera gpac 
+ sudo apt-get install -y raspberrypi-ui-mods git python3-tk omxplayer libdbus-glib-1-dev python3-pip unclutter python3-picamera gpac 
  
  pip3 install dbus-python omxplayer-wrapper  mido python-rtmidi
  ```
@@ -43,21 +43,21 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
 
 and remove the line `@point-rpi` 
 
-(im not sure exactly what each part does and if it works but is suppose to stop screensaver / hide cursor / remove on screen power warnings etc)
+these are suppose to stop screensaver / hide cursor / remove on screen power warnings etc
 
 - i then went into pi item -> Preferences and set a black background , small task bar , no screensaver  and went into the file explorer -> Edit -> Preferences -> Volume Managment -> unchecked 'show available options for removable media ...' 
 
 and made taskbar auto hide...
 
-creating internal storage folder in ~/Videos
+created internal storage folder in ~/Videos
 
-splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original : `sudo cp /usr/share/plymouth/theme/pix/splash-old.png` and then copied my own from a flash stick...
+splash screen : can set a custom splash screen by setting an image at `/usr/share/plymouth/themes/pix/splash.png` , i made a copy of the original, and then copied my own from a flash stick...
 
 ## lcd display drivers
 
 these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).
 
-my screen only needs the LCD35-show and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching.
+my screen only needs the LCD35-show-180 and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching.
 
 ## lines added to config.txt
 
@@ -77,34 +77,22 @@ sdtv_mode=0
 sdtv_aspect=1
 
 ## switch for enabling lcd screen (the next line is being used even if its commented out)
-dtoverlay=waveshare35a:rotate=270
+##no_waveshare_overlay
 ```
 
 ## changes to the cmdline.txt
 
 `quiet splash logo.nologo plymouth.ignore-serial-consoles` for quiet boot with splash screen 
 
-## making the config.txt and driver file writable so python can edit it
-
-i need to update the config.txt to change various video settings etc. at first i was running bash scripts from within python to do this. ~~i think it is better for all the logic to be done from inside the code, although my program does not have the permission needed to update these files. instead of giving the program root access , i want to just make the files it needs to edit writable.~~
-
-~~`sudo chmod 777 /boot/config.txt` and `sudo chmod 777 /usr/share/X11/xorg.conf.d/99-fbturbo.conf` i know this is kinda bad , but need some way of doing it ?~~
-
-the above didnt work. also dbus not working in sudo. i am checking (reading) w python and writing with bash scripts.
-
 ## flashing
 
 first remove my wifi connection !
 
-i am trying to flash the device using the unix command `dd` on a raspberry pi.
+i will flash the device using the unix command `dd` on a raspberry pi.
 
 - i want my image to not contain empty space so it can fit on smaller sd cards (4gigs)
 
 - first check how much space is needed and name of device : `df -h`
-
-- ~~do i need to mount the device : ??~~
-
-couldnt figure out how to not take entire card (including empty space) , so decided to try entire 4gg card, to a usb and then try compressing in down :
 
 - `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
 - `gzip -k recur.img` (to keep original)
@@ -115,11 +103,11 @@ going to copy and zip in one (with larger byte size) :
 
 ## removing empty space on pi image
 
-i had another go at this and might have had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gg image down to 2.9gg and then zipped down to 1.15gg (no saving here) , this would be more useful with larger cards though.
+i had another go at this and might have had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gg image down to 2.9gg and then zipped down to 1.15gg, (this would be more useful with larger cards though).
 
 - the flow is using dd to copy the image from the pi to an external drive `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
 
-- then use pishrink to reduce this image `sudo pishrink.sh recur.img`
+- then use pishrink to reduce this image `sudo pishrink.sh recur.img` <- try without auto disk expand ?
 
 - then gzip to zip this : `sudo gzip recur.img`
 

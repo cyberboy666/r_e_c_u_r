@@ -29,7 +29,7 @@ i started a [board] of some features i would like to explore
 ## documentation:
 
 - [operating] - how to use r_e_c_u_r
-- [building] - how to build r_e_c_u_r
+- [building] - how to diy r_e_c_u_r
 - [developing] - how to contribute to r_e_c_u_r
 
 ## status

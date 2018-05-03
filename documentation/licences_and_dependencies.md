@@ -28,7 +28,6 @@ picamera | interface with capture | BSD
 mido | interface with midi | MIT
 python-rt-midi | midi backend | MIT / modified MIT
 gpac (mp4box) | creating mp4 file | LGPL
-mscorefonts | the current display font (may need to change this) | freeware under a [proprietary license]
 git | used to install and update | GPL-2.0
 
 ## some research / thoughts about how licences work and interact.
@@ -43,11 +42,10 @@ some [interesting discussion] around difference between modifying a gpl program 
 - if it is part of the os it is ok.
 - if it is not 2-way interacting / sharing datastructures etc - just an input -> output usage it is ok
 
-there is no restrictions to permissive installer scripts downloading gpl licensed programs (or even the freeware fonts it seems) 
+there is no restrictions to permissive installer scripts downloading gpl licensed programs
 
 [license]: ../LICENSE.md
 [GPL-3.0]: https://www.gnu.org/licenses/gpl-3.0.en.html
-[proprietary license]: https://en.wikipedia.org/wiki/Core_fonts_for_the_Web
 [markings]: https://wiki.creativecommons.org/wiki/Marking/Creators/Marking_third_party_content
 [interesting discussion]: https://softwareengineering.stackexchange.com/questions/289785/can-i-distribute-a-gpl-executable-not-a-library-in-a-closed-source-application
 [Creative Commons Attribution-ShareAlike 4.0 International License]: https://creativecommons.org/licenses/by-sa/4.0/

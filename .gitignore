@@ -1,4 +1,6 @@
 *.pyc
 *.log
 .vscode
-path_to_browser.json
+./json_objects/display_data.json
+./json_objects/next_bankslot_number.json
+./json_objects/settings.json

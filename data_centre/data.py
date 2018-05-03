@@ -13,10 +13,11 @@ class Data(object):
     BANK_DATA_JSON = 'display_data.json'
     NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
     SETTINGS_JSON = 'settings.json'
+    DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
     MIDI_MAPPING_JSON = 'midi_action_mapping.json'
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
-    PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/data_centre/json_objects/'
+    PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
 
     def __init__(self, message_handler):
@@ -35,10 +36,19 @@ class Data(object):
         self.update_screen = True
         self.player_mode = 'now'
         
-        ### persisted data:
-        self.bank_data = self._read_json(self.BANK_DATA_JSON)
-        self.next_bankslot = self._read_json(self.NEXT_BANKSLOT_JSON)
-        self.settings = self._read_json(self.SETTINGS_JSON)
+        ### persisted data (use default if doesnt exits):
+        self.bank_data = [self.EMPTY_BANK]
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
+            self.bank_data = self._read_json(self.BANK_DATA_JSON)
+
+        self.next_bankslot = '0-0'
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.NEXT_BANKSLOT_JSON):
+            self.next_bankslot = self._read_json(self.NEXT_BANKSLOT_JSON)
+
+        self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
+            self.settings = self._read_json(self.SETTINGS_JSON)
+
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         

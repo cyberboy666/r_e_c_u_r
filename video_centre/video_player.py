@@ -8,7 +8,7 @@ class VideoPlayer:
         self.omx_player = None
         self.name = name
         self.omx_running = False
-        self.status = 'N/A'
+        self.status = 'EMPTY'
         self.total_length = 0.0
         self.bankslot_number = '*-*'
         self.start = -1.0
@@ -43,6 +43,9 @@ class VideoPlayer:
                 arguments.append('--blank=0x{}'.format(self.data.get_background_colour()))
             self.status = 'LOADING'
             print('the location is {}'.format(self.location))
+            if self.location == '':
+                self.status = 'EMPTY'
+                return True
             self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
             self.omx_running = True
             self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
@@ -167,7 +170,7 @@ class VideoPlayer:
     def exit(self):
         try:
             self.omx_player.quit()
-            self.status = 'N/A'
+            self.status = 'EMPTY'
             self.omx_running = False
         except:
             pass

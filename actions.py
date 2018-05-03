@@ -220,11 +220,22 @@ class Actions(object):
             self.change_composite_setting(setting_value)
 
     def check_and_set_output_mode_on_boot(self):
+        #### checking if pi display mode is composite
         response = str(subprocess.check_output(['tvservice', '-s']))
         if '0x80002' in response or '0x40002' in response:
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
+
+    def check_dev_mode(self):
+        #### check if in dev mode:(ie not using the lcd screen)
+        with open('/boot/config.txt', 'r') as config:
+                if '##no_waveshare_overlay' in config.read():
+                    print('it is in !')
+                    self.data.update_setting_value('other','DEV_MODE_RESET', 'on')
+                else:
+                    print('it is not in !')
+                    self.data.update_setting_value('other','DEV_MODE_RESET', 'off')
 
     def change_composite_setting(self, setting_value):
         if setting_value == 'composite':
@@ -268,23 +279,23 @@ class Actions(object):
 
     def switch_dev_mode(self, state):
         if state == 'on':
-            self.run_script('switch_display_to_hdmi')
+            self.switch_display_to_hdmi()
         elif state == 'off':
-            self.run_script('switch_display_to_lcd')
+            self.switch_display_to_lcd()
 
     def switch_display_to_hdmi(self):
-        with open('/boot/config', 'r') as config: 
+        with open('/boot/config.txt', 'r') as config: 
             with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
-                if 'dtoverlay=waveshare35a:rotate=270' in config and 'dev/fb1' in framebuffer_conf:
+                if 'dtoverlay=waveshare35a:rotate=270' in config.read() and 'dev/fb1' in framebuffer_conf.read():
                     self.run_script('switch_display_to_hdmi')
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')
         
 
     def switch_display_to_lcd(self):
-        with open('/boot/config', 'r') as config:
+        with open('/boot/config.txt', 'r') as config:
             with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
-                if '##no_waveshare_overlay' in config and 'dev/fb0' in framebuffer_conf:
+                if '##no_waveshare_overlay' in config.read() and 'dev/fb0' in framebuffer_conf.read():
                     self.run_script('switch_display_to_lcd')
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')

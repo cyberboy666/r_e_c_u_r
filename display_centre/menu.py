@@ -1,8 +1,9 @@
 import os
 
 class Menu(object):
-    def __init__(self, data, menu_height):
-        self.data = data        
+    def __init__(self, data, message_handler, menu_height):
+        self.data = data
+        self.message_handler = message_handler        
         self.open_folders = []
         self.menu_list = []
         self.menu_height = menu_height
@@ -79,8 +80,8 @@ class Menu(object):
             return True, dir_name.lstrip()
 
 class BrowserMenu(Menu):    
-    def __init__(self, data, menu_height):
-        Menu.__init__(self, data, menu_height)
+    def __init__(self, data, message_handler, menu_height):
+        Menu.__init__(self, data, message_handler, menu_height)
         self.generate_browser_list()
 
     def generate_browser_list(self):
@@ -145,8 +146,8 @@ class SettingsMenu(Menu):
     CAPTURE_ORDER = ['DEVICE']
     OTHER_ORDER = []
 
-    def __init__(self, data, menu_height):
-        Menu.__init__(self, data, menu_height)
+    def __init__(self, data, message_handler, menu_height):
+        Menu.__init__(self, data, message_handler, menu_height)
         self.generate_settings_list()
 
     def generate_settings_list(self):

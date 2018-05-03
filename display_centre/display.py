@@ -14,8 +14,8 @@ class Display(object):
         self.capture = capture
         self.message_handler = message_handler
         self.data = data
-        self.browser_menu = menu.BrowserMenu(self.data, self.MENU_HEIGHT)      
-        self.settings_menu = menu.SettingsMenu(self.data, self.MENU_HEIGHT)
+        self.browser_menu = menu.BrowserMenu(self.data, self.message_handler, self.MENU_HEIGHT)      
+        self.settings_menu = menu.SettingsMenu(self.data, self.message_handler, self.MENU_HEIGHT)
 
         #self.top_menu_index = 0
         #self.selected_list_index = self.top_menu_index

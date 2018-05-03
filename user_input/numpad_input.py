@@ -1,6 +1,4 @@
 import string
-import datetime
-import traceback
 import sys
 
 class NumpadInput(object):

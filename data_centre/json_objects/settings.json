@@ -113,7 +113,7 @@
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
             "options": [],
-            "value": 5
+            "value": 1.18
         },
         "FIXED_LENGTH_MODE": {
             "action": "update_video_settings",
@@ -121,7 +121,18 @@
                 "on",
                 "off"
             ],
-            "value": "off"
+            "value": "on"
+        },
+        "FIXED_LENGTH_MULTIPLY": {
+            "action": null,
+            "options": [
+                1,
+                2,
+                4,
+                8,
+                16
+            ],
+            "value": 4
         },
         "FUNC_GATED": {
             "action": null,
@@ -138,7 +149,7 @@
                 "random",
                 "consecutive"
             ],
-            "value": "now"
+            "value": "random"
         },
         "ON_ACTION": {
             "action": "update_video_settings",

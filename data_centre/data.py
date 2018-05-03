@@ -140,6 +140,8 @@ class Data(object):
         use_rand_start = self.settings['sampler']['RAND_START_MODE']['value'] == 'on'
         use_fixed_length = self.settings['sampler']['FIXED_LENGTH_MODE']['value'] == 'on'
         fixed_length_value = self.settings['sampler']['FIXED_LENGTH']['value']
+        fixed_length_multiply = self.settings['sampler']['FIXED_LENGTH_MULTIPLY']['value']
+        total_fixed_length = fixed_length_value * fixed_length_multiply
         if start == -1:
             start = 0        
         if end == -1:
@@ -148,12 +150,12 @@ class Data(object):
         new_start = start
 
         if use_fixed_length and use_rand_start:
-            max_increase = int(max(end - start - max(fixed_length_value, 4),0))
+            max_increase = int(max(end - start - max(total_fixed_length, 4),0))
             random_increase = randint(0,max_increase)
             new_start = start + random_increase
-            new_end = min(new_start + fixed_length_value, end)
+            new_end = min(new_start + total_fixed_length, end)
         elif use_fixed_length and not use_rand_start:
-            new_end = min(new_start + fixed_length_value, end)
+            new_end = min(new_start + total_fixed_length, end)
         elif not use_fixed_length and use_rand_start:
             max_increase = int(max(end - start - 4,0))
             random_increase = randint(0,max_increase)

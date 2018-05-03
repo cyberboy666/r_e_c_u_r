@@ -1,4 +1,5 @@
 import subprocess
+import data_centre.length_setter as length_setter
 
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, capture, display):
@@ -28,10 +29,11 @@ class Actions(object):
     def enter_on_settings_selection(self):
         is_setting, setting = self.display.settings_menu.enter_on_setting_selection()
         if is_setting:
-            if setting['value'] is None:
-                getattr(self, setting['action'])()
-            else:
-                getattr(self, setting['action'])(setting['value'])
+            if setting['action']:
+                if setting['value'] is None:
+                    getattr(self, setting['action'])()
+                else:
+                    getattr(self, setting['action'])(setting['value'])
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
@@ -305,8 +307,21 @@ class Actions(object):
         self.toggle_x_autorepeat()
         self.tk.destroy()
 
+    def set_fixed_length(self, value):
+        self.data.control_mode = 'LENGTH_SET'
+        self.message_handler.set_message('INFO', 'tap: ■ ;   < > : back')
+        self.fixed_length_setter = length_setter.FixedLengthSetter(self.data)
 
 
+    def return_to_default_control_mode(self):
+        if self.data.control_mode == 'LENGTH_SET':
+            pass
+        self.data.control_mode = 'NAV_SETTINGS'
+
+    def record_fixed_length(self):
+        if self.fixed_length_setter:
+            self.fixed_length_setter.record_input()
+        self.display.settings_menu.generate_settings_list()
 
 
 

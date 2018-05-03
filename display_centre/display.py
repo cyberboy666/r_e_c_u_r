@@ -81,21 +81,19 @@ class Display(object):
         bank_data = self.data.bank_data[self.data.bank_number]
         self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:^6} {:<16} {:<4} {:<4} {:<4} \n'.format(
+        self.display_text.insert(END, '{:>6} {:<20} {:>6} {:<5} {:<5} \n'.format(
             '{}-slot'.format(self.data.bank_number), 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
-            self.display_text.insert(END, '{:^4} {:<18} {:<4} {:<4} {:<4} \n'.format(
-                index, name_without_extension[0:22], self.format_time_value(slot['length']),
+            self.display_text.insert(END, '{:^6} {:<20} {:^6} {:>5} {:<5} \n'.format(
+                index, name_without_extension[0:20], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
             if self.data.is_this_path_broken(slot['location']):
                 self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
         current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         if current_bank is self.data.bank_number:
-            self.selected_list_index = current_slot
-        else:
-            self.selected_list_index = 0
+            self._highlight_this_row(current_slot)
 
     def _load_browser(self):
         browser_list = self.browser_menu.menu_list
@@ -110,7 +108,7 @@ class Display(object):
                 break
             if index >= self.browser_menu.top_menu_index:
                 path = browser_list[index]
-                self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:35], path['slot']))
+                self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:38], path['slot']))
                 number_of_lines_displayed = number_of_lines_displayed + 1
 
         for index in range(self.MENU_HEIGHT - number_of_browser_items):
@@ -130,7 +128,7 @@ class Display(object):
                 break
             if index >= self.settings_menu.top_menu_index:
                 setting = settings_list[index]
-                self.display_text.insert(END, '{:<23} {:<22} \n'.format(setting['name'], setting['value']))
+                self.display_text.insert(END, '{:<23} {:<22} \n'.format(setting['name'][0:22], setting['value']))
                 line_count = line_count + 1
 
         for index in range(self.MENU_HEIGHT - number_of_settings_items):
@@ -140,7 +138,7 @@ class Display(object):
 
     def _load_message(self):
         if self.message_handler.current_message[1]:
-            self.display_text.insert(END, '{:5} {:38}'.format(
+            self.display_text.insert(END, '{:5} {:42} \n'.format(
                 self.message_handler.current_message[0], self.message_handler.current_message[1][0:38]))
             self.display_text.tag_add('{}_MESSAGE'.format(
                 self.message_handler.current_message[0]), 16.0,16.0 + self.SELECTOR_WIDTH)
@@ -149,10 +147,10 @@ class Display(object):
                 message_length = 4000
                 self.tk.after(message_length, self.message_handler.clear_message)
         elif self.data.function_on:
-            self.display_text.insert(END, '{:^45}'.format('< FUNCTION KEY ON >'))
+            self.display_text.insert(END, '{:^47} \n'.format('< FUNCTION KEY ON >'))
             self.display_text.tag_add('FUNCTION', 16.0,16.0 + self.SELECTOR_WIDTH)
         else:
-            self.display_text.insert(END, '{:8} {:<10}'.format('CONTROL:', self.data.control_mode))
+            self.display_text.insert(END, '{:8} {:<10} \n'.format('CONTROL:', self.data.control_mode))
             self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 
     def _highlight_this_row(self, row):

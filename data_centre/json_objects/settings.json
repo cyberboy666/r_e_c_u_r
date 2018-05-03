@@ -108,7 +108,7 @@
                 "on",
                 "off"
             ],
-            "value": "on"
+            "value": "off"
         },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
@@ -129,7 +129,7 @@
                 "on",
                 "off"
             ],
-            "value": "on"
+            "value": "off"
         },
         "LOAD_NEXT": {
             "action": "update_video_settings",
@@ -147,7 +147,7 @@
                 "play",
                 "play/show"
             ],
-            "value": "play/show"
+            "value": "play"
         },
         "ON_FINISH": {
             "action": "update_video_settings",
@@ -173,7 +173,7 @@
                 "play/hide",
                 "play/show"
             ],
-            "value": "pause/show"
+            "value": "play/show"
         },
         "RAND_START_MODE": {
             "action": "update_video_settings",

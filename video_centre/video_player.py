@@ -20,11 +20,11 @@ class VideoPlayer:
         self.alpha = 0
 
 
-    def try_load(self, layer ,show):
+    def try_load(self, layer):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
-            if self.load(layer, show):
+            if self.load(layer):
                 print('load success')
                 return True
             else:
@@ -34,7 +34,7 @@ class VideoPlayer:
         return False
             
 
-    def load(self, layer , show):
+    def load(self, layer):
         try:
             self.get_context_for_player()
             is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
@@ -54,37 +54,37 @@ class VideoPlayer:
             print('{}: the duration is {}'.format(self.name, self.total_length))
             if self.start > 0.9:
                 self.set_position(self.start - 0.9)
-            self.pause_at_start(show)
-            #print('set rate to {}'.format(self.rate))
-            #self.omx_player.set_rate(self.rate)
-            #self.load_attempts = 0
+            if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
+                self.set_alpha_value(255)
+            else:
+                self.set_alpha_value(0)
+            self.pause_at_start()
             return True
         except (ValueError, SystemError) as e:
             print(e)
             #self.message_handler.set_message('ERROR', 'load attempt fail')
             return False
 
-    def pause_at_start(self, show):
+    def pause_at_start(self):
         position = self.get_position()
-        start_threshold = round(self.start - 0.05,2)
-        #print('is playing: {} , position : {} , start_threshold : {}'.format(self.omx_player.is_playing(), position, start_threshold))
+        start_threshold = round(self.start - 0.02,2)
         if position > start_threshold:
-            self.status = 'LOADED'
-            if show:
-                self.set_alpha_value(255)
-            else:
-                self.set_alpha_value(0)
-            self.omx_player.pause()
+            if self.status == 'LOADING':
+                self.status = 'LOADED'
+                self.omx_player.pause()
         elif self.omx_running:
-            self.root.after(5, self.pause_at_start, show)
+            self.root.after(5, self.pause_at_start)
 
-    def play(self, show):
-        self.status = 'PLAYING'
-        if show:
+    def start_video(self):
+        if 'show' in self.data.settings['sampler']['ON_START']['value']:
             self.set_alpha_value(255)
         else:
             self.set_alpha_value(0)
-        self.omx_player.play()
+        if 'play' in self.data.settings['sampler']['ON_START']['value']:
+            self.status = 'PLAYING'
+            self.omx_player.play()
+        else:
+            self.status = 'START'
         self.pause_at_end()
 
     def pause_at_end(self):
@@ -97,10 +97,10 @@ class VideoPlayer:
         elif(self.omx_running):
             self.root.after(5, self.pause_at_end)
 
-    def reload(self, layer, show):
+    def reload(self, layer):
         self.exit()
         self.omx_running = False
-        self.try_load(layer, show)
+        self.try_load(layer)
 
     def is_loaded(self):
         return self.status is 'LOADED'

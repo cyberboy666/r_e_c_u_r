@@ -71,7 +71,7 @@ class Actions(object):
         self._load_this_slot_into_next_player(9)
 
     def switch_to_next_player(self):
-        self.video_driver.switch_players_and_play_video()
+        self.video_driver.switch_players_and_start_video()
 
     def cycle_display_mode(self):
         self.display.top_menu_index = 0

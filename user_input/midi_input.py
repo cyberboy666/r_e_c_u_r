@@ -60,7 +60,6 @@ class MidiInput(object):
              
         self.root.after(self.midi_delay, self.poll_midi_input)
 
-
     def on_midi_message(self, message_dict):
         if message_dict['type'] == 'note_on' and message_dict['velocity'] == 0:
             ## edge case where on note of zero alternative for off note.
@@ -75,7 +74,7 @@ class MidiInput(object):
         
         if mapped_message_name in self.midi_mappings.keys():
             self.run_action_for_mapped_message(mapped_message_name, mapped_message_value)
-         else:
+        else:
             print('{} is not in midi map'.format(mapped_message_name))
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):

@@ -25,24 +25,22 @@ class VideoDriver(object):
 
     def update_video_settings(self):
         self.switch_on_finish = self.data.settings['sampler']['ON_FINISH']['value'] == 'switch'
-        self.play_on_start = 'play' in self.data.settings['sampler']['ON_START']['value']
-        self.show_on_start = 'show' in self.data.settings['sampler']['ON_START']['value']
-        self.show_on_load = 'show' == self.data.settings['sampler']['ON_LOAD']['value']
         
     def get_next_layer_value(self):
         if self.layer > 0:
             self.layer = self.layer - 1
         else:
             self.layer = self.MAX_LAYER
-            self.current_player.reload(self.get_next_layer_value(), self.show_on_load)
+            self.current_player.reload(self.get_next_layer_value())
         return self.layer
 
     def print_status(self):
-        print('l({}):{}, c({}):{}, n({}):{}'.format(self.last_player.name, self.last_player.status, self.current_player.name, self.current_player.status, self.next_player.name, self.next_player.status,))
+        print('l({}):{}, c({}):{}, n({}):{}'.format(self.last_player.name, self.last_player.status, self.current_player.name, \
+        self.current_player.status, self.next_player.name, self.next_player.status,))
         self.root.after(1000,self.print_status)
 
     def begin_playing(self):
-        if self.current_player.try_load(self.get_next_layer_value(), self.show_on_load):
+        if self.current_player.try_load(self.get_next_layer_value()):
             self.in_first_load_cycle = True
             self.wait_for_first_load()
         else:
@@ -52,11 +50,11 @@ class VideoDriver(object):
         if self.in_first_load_cycle:
             if self.current_player.is_loaded():
                 self.in_first_load_cycle = False
-                self.play_video()
+                self.start_video()
             else:
                 self.root.after(self.delay, self.wait_for_first_load)
 
-    def switch_players_and_play_video(self):
+    def switch_players_and_start_video(self):
         self.in_first_load_cycle = False
         self.in_current_playing_cycle = False
         self.in_next_load_cycle = True
@@ -69,14 +67,12 @@ class VideoDriver(object):
         self.current_player = self.next_player
         self.next_player = temp_player
 
-        self.play_video()
+        self.start_video()
 
-    def play_video(self):
-        print(self.play_on_start)
-        if self.play_on_start:
-            self.current_player.play(self.show_on_start)
+    def start_video(self):
+        self.current_player.start_video()
         self.last_player.exit()
-        self.next_player.try_load(self.get_next_layer_value() ,self.show_on_load)
+        self.next_player.try_load(self.get_next_layer_value())
         self.in_current_playing_cycle = True
         self.wait_for_next_cycle()
 
@@ -117,5 +113,5 @@ class VideoDriver(object):
         self.current_player.exit()
 
     def reload_next_player(self):
-        self.next_player.reload(self.get_next_layer_value(), self.show_on_load)
+        self.next_player.reload(self.get_next_layer_value())
 

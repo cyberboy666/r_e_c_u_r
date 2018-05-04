@@ -44,7 +44,7 @@ langolierz@gmail.com
 
 all feedback is apreciated. if you want to donate to this project you can do so with the above email via paypal : everything i receive will go into making __r_e_c_u_r__ better.
 
-[vectorfront]: ./documentation/vectorfront.png
+[vectorfront]: ./documentation/vectorfront_keys.png
 [board]: https://trello.com/b/mmJJFyrp/feature-ideas
 [operating]: documentation/operate_docs.md
 [building]: documentation/build_docs.md

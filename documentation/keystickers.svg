@@ -18,18 +18,7 @@
    sodipodi:docname="keystickers.svg"
    enable-background="new">
   <defs
-     id="defs2">
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter5528">
-      <feBlend
-         inkscape:collect="always"
-         mode="screen"
-         in2="BackgroundImage"
-         id="feBlend5530" />
-    </filter>
-  </defs>
+     id="defs2" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -97,15 +86,15 @@
          id="text5462"
          y="13.338742"
          x="19.363272"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="fill:#000000;stroke-width:0.2;"
+           style="fill:#000000;stroke-width:0.2"
            id="tspan5460"
            y="13.338742"
            x="19.363272"
            sodipodi:role="line"><tspan
              id="tspan5458"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338742"
              x="19.363272">CLR BNK</tspan></tspan></text>
       <path
@@ -147,7 +136,7 @@
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          x="19.363272"
          y="13.338742"
          id="text5453"
@@ -157,10 +146,10 @@
            x="19.363272"
            y="13.338742"
            id="tspan5451"
-           style="fill:#000000;stroke-width:0.2;"><tspan
+           style="fill:#000000;stroke-width:0.2"><tspan
              x="19.363272"
              y="13.338742"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan5449">CLR BNK</tspan></tspan></text>
     </g>
     <g
@@ -180,15 +169,15 @@
          id="text5423"
          y="13.338742"
          x="19.363272"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="fill:#000000;stroke-width:0.2;"
+           style="fill:#000000;stroke-width:0.2"
            id="tspan5421"
            y="13.338742"
            x="19.363272"
            sodipodi:role="line"><tspan
              id="tspan5419"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338742"
              x="19.363272">CLR BNK</tspan></tspan></text>
       <text
@@ -225,7 +214,7 @@
          id="rect10-9-4" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          x="19.363272"
          y="13.338742"
          id="text5373"
@@ -235,10 +224,10 @@
            x="19.363272"
            y="13.338742"
            id="tspan5371"
-           style="fill:#000000;stroke-width:0.2;"><tspan
+           style="fill:#000000;stroke-width:0.2"><tspan
              x="19.363272"
              y="13.338742"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan5369">CLR BNK</tspan></tspan></text>
       <text
          xml:space="preserve"
@@ -344,7 +333,7 @@
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          x="19.363272"
          y="13.338742"
          id="text5562"
@@ -354,10 +343,10 @@
            x="19.363272"
            y="13.338742"
            id="tspan5560"
-           style="fill:#000000;stroke-width:0.2;"><tspan
+           style="fill:#000000;stroke-width:0.2"><tspan
              x="19.363272"
              y="13.338742"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan5558">CLR BNK</tspan></tspan></text>
     </g>
     <g
@@ -396,15 +385,15 @@
          id="text5553"
          y="13.338743"
          x="19.484882"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="stroke-width:0.2;fill:#000000;"
+           style="fill:#000000;stroke-width:0.2"
            id="tspan5551"
            y="13.338743"
            x="19.484882"
            sodipodi:role="line"><tspan
              id="tspan5549"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338743"
              x="19.484882">CLR BNK</tspan></tspan></text>
     </g>
@@ -579,9 +568,9 @@
              id="tspan1081">FN</tspan></tspan></text>
     </g>
     <g
+       style="display:inline"
        transform="translate(38.383333,22.37619)"
-       id="g4563-4-4"
-       style="filter:url(#filter5528)"
+       id="g4563-7-11"
        inkscape:label="h">
       <rect
          style="stroke-width:0.26458332"
@@ -589,7 +578,12 @@
          x="16.706545"
          height="10"
          width="13.5"
-         id="rect10-9-8" />
+         id="rect10-4-0" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3725-6-7"
+         d="M 18.427709,11.82312 H 28.485381"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.5033133px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#ff00ff;fill-opacity:1;stroke:none;stroke-width:0.3284356"
@@ -606,28 +600,23 @@
              y="8.9443064"
              style="font-weight:bold;font-size:3.5033133px;fill:#ff00ff;stroke-width:0.3284356"
              id="tspan1039">DSPLY</tspan></tspan></text>
-      <path
-         inkscape:connector-curvature="0"
-         id="path3725-8-3"
-         d="M 18.427709,11.82312 H 28.485381"
-         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          inkscape:label="text5373"
          transform="scale(0.93646137,1.0678497)"
-         id="text5507"
+         id="text5571-1"
          y="13.338742"
          x="19.363272"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="fill:#000000;stroke-width:0.2;"
+           style="fill:#000000;stroke-width:0.2"
+           id="tspan5569-6"
            y="13.338742"
            x="19.363272"
-           sodipodi:role="line"
-           id="tspan5541">func<tspan
-   id="tspan5503"
-   style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
-   y="13.338742"
-   x="19.363272" /></tspan></text>
+           sodipodi:role="line"><tspan
+             id="tspan5567-5"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+             y="13.338742"
+             x="19.363272">CLR BNK</tspan></tspan></text>
     </g>
     <g
        transform="translate(24.883333,22.37619)"
@@ -646,22 +635,22 @@
          d="M 18.427709,11.82312 H 28.485381"
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
-         x="19.363272"
-         y="13.338742"
-         id="text5536"
+         inkscape:label="text5373"
          transform="scale(0.93646137,1.0678497)"
-         inkscape:label="text5373"><tspan
-           sodipodi:role="line"
-           x="19.363272"
+         id="text5571"
+         y="13.338742"
+         x="19.363272"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+         xml:space="preserve"><tspan
+           style="fill:#000000;stroke-width:0.2"
+           id="tspan5569"
            y="13.338742"
-           id="tspan5534"
-           style="fill:#000000;stroke-width:0.2;"><tspan
-             x="19.363272"
+           x="19.363272"
+           sodipodi:role="line"><tspan
+             id="tspan5567"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338742"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
-             id="tspan5532">CLR BNK</tspan></tspan></text>
+             x="19.363272">CLR BNK</tspan></tspan></text>
     </g>
     <g
        transform="translate(11.383333,22.37619)"
@@ -761,7 +750,7 @@
     </g>
     <g
        id="g5192"
-       transform="translate(-6.3500003)"
+       transform="translate(-6.3500063)"
        inkscape:label="d">
       <rect
          style="stroke-width:0.26458332"
@@ -792,15 +781,15 @@
          id="text5498"
          y="24.856813"
          x="74.939934"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="fill:#000000;stroke-width:0.2;"
+           style="fill:#000000;stroke-width:0.2"
            id="tspan5496"
            y="24.856813"
            x="74.939934"
            sodipodi:role="line"><tspan
              id="tspan5494"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="24.856813"
              x="74.939934">CLR BNK</tspan></tspan></text>
       <path
@@ -842,7 +831,7 @@
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.2;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          x="19.363272"
          y="13.338742"
          id="text5489"
@@ -852,10 +841,10 @@
            x="19.363272"
            y="13.338742"
            id="tspan5487"
-           style="fill:#000000;stroke-width:0.2;"><tspan
+           style="fill:#000000;stroke-width:0.2"><tspan
              x="19.363272"
              y="13.338742"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan5485">CLR BNK</tspan></tspan></text>
     </g>
     <g

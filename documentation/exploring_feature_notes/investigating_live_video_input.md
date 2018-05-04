@@ -50,9 +50,7 @@ $ MP4Box -add input.h264 output.mp4
 
 the [faq] also addresses the 'can i preview to the lcd screen' question : looks like no - atleast not without copying the exact framebuffer , similar to my experiments displaying omx on the lcd screen. (this still might be possible in the world of openCv but off the table for now! - or maybe not even then - this [adafruit] tutorial talks about the limitations of displaying on a tft screen - "accelerated software will never appear on the PiTFT (it is unaccelerated framebuffer only)" ) 
 
-### an unrelated aside : 
 
-the [adafruit tft display] mentioned above also uses the gpios to connect to the pi - in particular it uses 5 spi pins and two standard pin outs. by cross refferencing the [raspi gpio] docs it does not use either of the rx serial pin , which would be needed if i were to receive midi directly (rather than through usb), it also leaves plenty of pins for receiving cv from a [mcp3008] through software spi for example. it is likely that my gpio lcd screen comunicates with the pi in a similar way and that i could figure out a way to connect these extentions if desired.
 
 ### research continued : piCapture
 
@@ -95,8 +93,6 @@ also displaying info when camera is not attached and catching other types of err
 [picamera]: http://picamera.readthedocs.io/en/release-1.0/api.html
 [faq]: https://picamera.readthedocs.io/en/release-1.13/faq.html
 [adafruit]: https://learn.adafruit.com/adafruit-pitft-3-dot-5-touch-screen-for-raspberry-pi/easy-install-2
-[adafruit tft display]: https://www.adafruit.com/product/2441
-[raspi gpio]: https://www.raspberrypi.org/documentation/usage/gpio/
-[mcp3008]: https://learn.adafruit.com/raspberry-pi-analog-to-digital-converters/mcp3008
+
 [cheep cameras]: https://www.aliexpress.com/item/5MP-Camera-Module-Flex-Cable-Webcam-Video-1080-720p-For-Raspberry-Pi-2-3-Model-B/32860830711.html
 [picapture]: https://lintestsystems.com/products/picapture-sd1

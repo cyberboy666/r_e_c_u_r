@@ -132,7 +132,7 @@ i exported the image using unix command `dd` from the raspberry pi i wanted an i
 
 i had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gb image down to 2.9gb and then zipped down to 1.15gb, (this would be more useful with larger cards though).
 
-- the flow is using dd to copy the image from the pi to an external drive `dd if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
+- the flow is using dd to copy the image from the pi to an external drive `sudo dd bs=4M if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
 
 - then use pishrink to reduce this image `sudo pishrink.sh recur.img` <- try without auto disk expand ?
 

@@ -64,6 +64,27 @@ these are the drivers for the waveshare displays that work on the cheep lcd i or
 
 my screen only needs the LCD35-show-180 and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching. (or keep em if you wanna flip the screen or try calibrating the touch screen)
 
+## installing raspi2fb
+
+i decided to use AndrewFromMelbourne's [raspi2fb] to get a approx of output on the lcd screen. following their readme i installed :
+
+`sudo apt-get install cmake libbsd-dev`
+
+ pulled down the code from home dir  `git clone https://github.com/AndrewFromMelbourne/raspi2fb.git` 
+ 
+ moved into the folder then ran the following commands : 
+ ```
+ mkdir build
+cd build
+cmake ..
+make
+sudo make install
+sudo cp ../raspi2fb@.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable raspi2fb@1.service
+```
+a line to Popen inside the python code toggles this on and off from here.
+
 ## lines added to config.txt
 
 - commenting out hdmi_force to allow composite output: `#hdmi_force_hotplug=1`
@@ -119,3 +140,4 @@ i had some success using [pishrink], following the instructions on readme exactl
 
 [pishrink]:https://github.com/Drewsif/PiShrink
 [LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz
+[raspi2fb]: https://github.com/AndrewFromMelbourne/raspi2fb

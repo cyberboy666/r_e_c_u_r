@@ -35,38 +35,38 @@ class VideoPlayer:
             
 
     def load(self, layer):
-        try:
-            self.get_context_for_player()
-            is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
-            arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
-            if not is_dev_mode:
-                arguments.append('--blank=0x{}'.format(self.data.get_background_colour()))
-            self.status = 'LOADING'
-            print('the location is {}'.format(self.location))
-            if self.location == '':
-                self.status = 'EMPTY'
-                return True
-            self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
-            self.omx_running = True
-            self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
-            if(self.end is -1): 
-                self.end = self.total_length
-            if(self.start is -1):
-                self.start = 0
-            self.crop_length = self.end - self.start
-            print('{}: the duration is {}'.format(self.name, self.total_length))
-            if self.start > 0.9:
-                self.set_position(self.start - 0.9)
-            if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
-                self.set_alpha_value(255)
-            else:
-                self.set_alpha_value(0)
-            self.pause_at_start()
+        #try:
+        self.get_context_for_player()
+        is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
+        arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
+        if not is_dev_mode:
+            arguments.append('--blank=0x{}'.format(self.data.get_background_colour()))
+        self.status = 'LOADING'
+        print('the location is {}'.format(self.location))
+        if self.location == '':
+            self.status = 'EMPTY'
             return True
-        except (ValueError, SystemError) as e:
-            print(e)
+        self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
+        self.omx_running = True
+        self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
+        if(self.end is -1): 
+            self.end = self.total_length
+        if(self.start is -1):
+            self.start = 0
+        self.crop_length = self.end - self.start
+        print('{}: the duration is {}'.format(self.name, self.total_length))
+        if self.start > 0.9:
+            self.set_position(self.start - 0.9)
+        if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
+            self.set_alpha_value(255)
+        else:
+            self.set_alpha_value(0)
+        self.pause_at_start()
+        return True
+        #except (ValueError, SystemError) as e:
+          #  print(e)
             #self.message_handler.set_message('ERROR', 'load attempt fail')
-            return False
+            #return False
 
     def pause_at_start(self):
         position = self.get_position()

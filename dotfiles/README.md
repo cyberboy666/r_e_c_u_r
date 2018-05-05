@@ -35,7 +35,7 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
 
 ## download the code in this repo:
 
-- pull down recur code into home dir ~ : `git clone https://github.com/langolierz/r_e_c_u_r.git ~`
+- pull down recur code into home dir ~ : `git clone https://github.com/langolierz/r_e_c_u_r.git`
 
 ## quiet x and run my launcher script on boot:
 

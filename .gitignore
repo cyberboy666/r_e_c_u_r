@@ -1,6 +1,6 @@
 *.pyc
 *.log
 .vscode
-~/r_e_c_u_r/json_objects/display_data.json
-~/r_e_c_u_r/json_objects/next_bankslot_number.json
-~/r_e_c_u_r/json_objects/settings.json
+json_objects/display_data.json
+json_objects/next_bankslot_number.json
+json_objects/settings.json

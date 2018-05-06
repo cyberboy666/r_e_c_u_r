@@ -23,7 +23,7 @@ class Data(object):
     def __init__(self, message_handler):
         self.message_handler = message_handler
         
-        self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
+        #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
 
         ### state data
@@ -37,7 +37,7 @@ class Data(object):
         self.player_mode = 'now'
         
         ### persisted data (use default if doesnt exits):
-        self.bank_data = [self.EMPTY_BANK]
+        self.bank_data = [self.create_empty_bank()]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
@@ -52,6 +52,10 @@ class Data(object):
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         
+    @staticmethod
+    def create_empty_bank():
+        empty_slot = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
+        return [empty_slot for i in range(10)]
      
     def _read_json(self, file_name):
         with open(self.PATH_TO_DATA_OBJECTS + file_name) as data_file:
@@ -86,14 +90,15 @@ class Data(object):
             self._update_a_slots_data(slot_number, new_slot)
 
     def clear_all_slots(self):
-        self.bank_data[self.bank_number] = self.EMPTY_BANK
+        self.bank_data[self.bank_number] = self.create_empty_bank()
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
 
     def update_bank_number_by_amount(self, amount):
-        if(self.bank_data[-1] != self.EMPTY_BANK):
-            self.bank_data.append(self.EMPTY_BANK)
+        empty_bank = self.create_empty_bank()
+        if(self.bank_data[-1] != empty_bank):
+            self.bank_data.append(empty_bank)
         elif(len(self.bank_data) > 1):
-            if self.bank_data[-2] == self.EMPTY_BANK:
+            if self.bank_data[-2] == empty_bank:
                 self.bank_data.pop()
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
         self.bank_number = (self.bank_number+amount)%(len(self.bank_data))

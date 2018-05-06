@@ -11,20 +11,23 @@
 	"note_on 72": {
 		"NAV_BROWSER": ["move_browser_selection_up"],
 		"PLAYER": ["seek_back_on_player"],
-		"NAV_SETTINGS": ["move_settings_selection_up"]
+		"NAV_SETTINGS": ["move_settings_selection_up"],
+        "LENGTH_SET": ["return_to_default_control_mode"]
 	},
 	"note_on 73": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
 		"PLAYER": ["seek_forward_on_player"],
-		"NAV_SETTINGS": ["move_settings_selection_down"]
+		"NAV_SETTINGS": ["move_settings_selection_down"],
+        "LENGTH_SET": ["return_to_default_control_mode"]
 	},
 	"note_on 74": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
-		"PLAYER": ["toggle_action_on_player"],
-		"NAV_SETTINGS": ["enter_on_settings_selection"]
+		"PLAYER": ["toggle_action_on_player","toggle_show_on_player"],
+		"NAV_SETTINGS": ["enter_on_settings_selection"],
+        "LENGTH_SET": ["record_fixed_length"]
 	},
 	"note_on 75": {
-		"DEFAULT": ["switch_to_next_player"]
+		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"]
 	},
 	"note_on 76": {
 		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"]
@@ -32,7 +35,8 @@
 	"note_on 77": {
 		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"]
 	},
-	"note_on 78": {},
+	"note_on 78": {
+        "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},
 	"note_on 79": {
 		"DEFAULT": ["cycle_display_mode"]
 	},
@@ -49,13 +53,13 @@
 		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"]
 	},
 	"note_on 84": {
-		"DEFAULT": ["load_slot_3_into_next_player","decrease_speed"]
+		"DEFAULT": ["load_slot_3_into_next_player"]
 	},
 	"note_on 85": {
-		"DEFAULT": ["load_slot_4_into_next_player","increase_speed"]
+		"DEFAULT": ["load_slot_4_into_next_player"]
 	},
 	"note_on 86": {
-		"DEFAULT": ["load_slot_5_into_next_player","print_speed"]
+		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"]
 	},
 	"note_on 87": {
 		"DEFAULT": ["load_slot_6_into_next_player"]

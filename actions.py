@@ -37,6 +37,7 @@ class Actions(object):
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
+        self.display.browser_menu.generate_browser_list()
 
     def _load_this_slot_into_next_player(self, slot):
         if self.data.update_next_slot_number(slot):
@@ -118,10 +119,13 @@ class Actions(object):
         self.data.function_on = not self.data.function_on
 
     def next_bank(self):
+
         self.data.update_bank_number_by_amount(1)
+        print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
 
     def previous_bank(self):
         self.data.update_bank_number_by_amount(-1)
+        print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
               
     def increase_speed(self):
         new_rate = self.video_driver.current_player.change_rate(0.5)
@@ -176,12 +180,15 @@ class Actions(object):
             self.capture.start_recording()
 
     def toggle_screen_mirror(self):
-        if self.data.update_screen:
-            self.data.update_screen = False
-            subprocess.call(['sudo', 'systemctl', 'start', 'raspi2fb@1'])
+        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'off':
+            if self.data.update_screen:
+                self.data.update_screen = False
+                subprocess.call(['sudo', 'systemctl', 'start', 'raspi2fb@1'])
+            else:
+                self.data.update_screen = True
+                subprocess.call(['sudo', 'systemctl', 'stop', 'raspi2fb@1'])
         else:
-            self.data.update_screen = True
-            subprocess.call(['sudo', 'systemctl', 'stop', 'raspi2fb@1'])
+            self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
     def toggle_player_mode(self):
         if self.data.player_mode == 'now':
@@ -206,6 +213,9 @@ class Actions(object):
         output_range = max_param - min_param
         return int(( cc_value / 127 ) * output_range + min_param)
 
+    def get_midi_status(self):
+        self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
+
     def update_video_settings(self, setting_value):
         self.video_driver.update_video_settings()
 
@@ -226,6 +236,11 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
+            #### this is to work around a bug where 1080 videos on hdmi drop out ...
+            subprocess.call(['tvservice --sdtvon="PAL 4:3"'],shell=True)
+            self._refresh_frame_buffer()
+            subprocess.call(['tvservice', '-p'])
+            self._refresh_frame_buffer()
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -259,11 +274,11 @@ class Actions(object):
         if mode == 'PAL' and progressive == 'p':
             sdtv_mode = '18'
         elif mode == 'PAL' and progressive == '':
-            sdtv_mode = '2'
+            sdtv_mode = '02'
         elif mode == 'NTSC' and progressive == 'p':
             sdtv_mode = '16'
         elif mode == 'NTSC' and progressive == '':
-            sdtv_mode = '0'
+            sdtv_mode = '00'
 
         if aspect == '4:3':
             sdtv_aspect = '1'

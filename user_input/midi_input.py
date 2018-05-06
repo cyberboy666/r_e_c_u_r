@@ -16,6 +16,7 @@ class MidiInput(object):
 
     def try_open_port(self):
         midi_setting = self.data.settings['midi']['INPUT']['value']
+        print('try open port : midi setting is {}'.format(midi_setting))
         if midi_setting == 'enabled':
             midi_ports = mido.get_input_names()
             midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]
@@ -57,7 +58,6 @@ class MidiInput(object):
                 self.on_midi_message(message_dict)
         if i > 0:
             print('the number processed {}'.format(i))
-             
         self.root.after(self.midi_delay, self.poll_midi_input)
 
     def on_midi_message(self, message_dict):

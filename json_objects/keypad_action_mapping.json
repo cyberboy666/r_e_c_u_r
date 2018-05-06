@@ -44,16 +44,16 @@
 		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"]
 	},
 	"m": {
-		"DEFAULT": ["load_slot_3_into_next_player","decrease_speed"]
+		"DEFAULT": ["load_slot_3_into_next_player"]
 	},
 	"n": {
-		"DEFAULT": ["load_slot_4_into_next_player","increase_speed"]
+		"DEFAULT": ["load_slot_4_into_next_player"]
 	},
 	"o": {
 		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"]
 	},
 	"p": {
-		"DEFAULT": ["load_slot_6_into_next_player", "print_speed"]
+		"DEFAULT": ["load_slot_6_into_next_player"]
 	},
 	"q": {
 		"DEFAULT": ["load_slot_7_into_next_player"]

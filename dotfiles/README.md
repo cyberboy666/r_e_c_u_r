@@ -99,7 +99,7 @@ start_x=1
 audio_pwm_mode=0
 
 ## persisting composite settings
-sdtv_mode=0
+sdtv_mode=00
 sdtv_aspect=1
 
 ## switch for enabling lcd screen (the next line is being used even if its commented out)
@@ -120,7 +120,7 @@ you can find the current keymappings using `xmodmap -pke` and for the specifical
     xmodmap -pke | grep Nu >> defaultKeymap
 
 which prints only the default numpad keys to a file for reference later.
-keys can be manually remapped using `xmodmap -e "keycode 82=a" for testing.
+keys can be manually remapped using `xmodmap -e "keycode 82=a"` for testing.
 
 In order to have the custom keymap work on startup we have added the line `xmodmap ~/r_e_c_u_r/dotfiles/.remap` to the launcher script where the file `.remap` has a list of the keycodes that you want to include.
 
@@ -134,10 +134,10 @@ i had some success using [pishrink], following the instructions on readme exactl
 
 - the flow is using dd to copy the image from the pi to an external drive `sudo dd bs=4M if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
 
-- then use pishrink to reduce this image `sudo pishrink.sh recur.img` <- try without auto disk expand ?
+- then use pishrink to reduce this image `sudo pishrink.sh -s recur.img` it fails the first time but works straight after - not sure why !
 
 - then gzip to zip this : `sudo gzip recur.img`
 
-[pishrink]:https://github.com/Drewsif/PiShrink
+[pishrink]: https://github.com/Drewsif/PiShrink
 [LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz
 [raspi2fb]: https://github.com/AndrewFromMelbourne/raspi2fb

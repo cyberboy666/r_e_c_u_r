@@ -10,7 +10,7 @@
 
 ## controls
 
-(put picture with controls here...)
+![keys][./vectorfront_keys.png]
 
 the controls on r_e_c_u_r work by mapping `keys` to `actions`. this map can be fully customised by editing the respective json file.
 

@@ -10,7 +10,7 @@
 
 ## controls
 
-![keys][./vectorfront_keys.png]
+![keys][keys]
 
 the controls on r_e_c_u_r work by mapping `keys` to `actions`. this map can be fully customised by editing the respective json file.
 
@@ -86,3 +86,4 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 [browser_example]: browser_example.jpg
 [sampler_example]: sampler_example.jpg
 [settings_example]: settings_example.jpg
+[keys]: ./vectorfront_keys.png

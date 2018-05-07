@@ -3,7 +3,7 @@
  
  ![vectorfront][vectorfront]
  
-__r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from the _keypad_ to control omxplayer's `video out` while displaying a simple text user interface on the _rpi lcd screen_ 
+__r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from a _keypad_ to control omxplayer's `video out` while displaying a simple text user interface on a _rpi lcd screen_ 
 
 ## features
 

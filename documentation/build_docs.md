@@ -26,21 +26,21 @@ other bits and pieces:
 
 ## print some things
 
-- i 3d printed my enclosure using these files for the top and bottom. if you dont have access to a printer you can upload these files to a popular printing service in you region (eg ...)
+- i 3d printed my enclosure using these files for the [top] and [bottom]. if you dont have access to a printer you can upload these files to a popular printing service in you region (eg ...)
 
 - 2d print these [key stickers] if you want to use the default key mapping, or modify the svg file (in inkscape or something) to create your own. you could print them onto vinyl, label paper or just normal paper  and attach with with double sided tape...
 
 ## put it together
 
-- using [etcher] (or otherwise) flash the micro sd with my modified image of rasbian (or follow these [instructions to install] from scratch.)
+- using [etcher] (or otherwise) flash the micro sd with my [modified image] of rasbian (or follow these [instructions to install] from scratch.)
 
 - insert sd card into pi
 
-- attach the lcd screen via the pi header pins so it fits exactly ontop of the pi. (some little spacers could be used to support the top corners of the screen)
-
 - use the 4 small screws to attach pi+screen to the bottom piece of enclosure
 
-- fasten the keypad to the bottom; i used some double sided tap along raised strips
+- attach the lcd screen via the pi header pins so it fits exactly ontop of the pi. (some little spacers could be used to support the top corners of the screen)
+
+- put a battery in the keypad , insert its usb dongle into the pi. fasten the keypad to the baseplate; i used some double sided tap along raised strips.
 
 - use the 6 large screws to hold the top panel to the bottom
 
@@ -54,7 +54,10 @@ you are done ! wasnt that easy ?
 [main parts]: build_all.jpg
 [raspberry pi screen]:https://www.aliexpress.com/item/3-5-Inch-TFT-LCD-Moudle-For-Raspberry-Pi-2-Model-B-RPI-B-raspberry-pi/32707058182.html?spm=a2g0s.13010208.99999999.262.bV4EPV
 [usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[top]: ./topplate.stl
+[bottom]: ./baseplate.stl
 [key stickers]: https://docs.google.com/document/d/1vhXv5QTfyUqsZuMdQu1lh2dMfEk5HMNVyp8uhrc-I2w/edit?usp=sharing
 [etcher]: https://etcher.io
+[modified image]: https://drive.google.com/file/d/1nUR2u-75oxgvVScTUb_DrJdZZpJJqyKc/view?usp=sharing
 [operate docs]: ./operate_docs.md
 [instructions to install]: ../dotfiles/README.md 

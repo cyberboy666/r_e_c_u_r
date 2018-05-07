@@ -54,7 +54,7 @@ these are suppose to stop screensaver / hide cursor / remove on screen power war
 
 - i then went into pi item -> Preferences and set a black background , small task bar , no screensaver  and went into the file explorer -> Edit -> Preferences -> Volume Managment -> unchecked 'show available options for removable media ...' and made taskbar auto hide...
 
-- created internal storage folder in ~/ 
+- created internal storage folder in ~/Videos 
 
 - set a custom splash screen by replacing splash.png an image at `/usr/share/plymouth/themes/pix/splash.png`with my original. i made a copy of the original, and then copied my own from a flash stick...
 

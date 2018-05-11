@@ -16,7 +16,7 @@ class MidiInput(object):
 
     def try_open_port(self):
         midi_setting = self.data.settings['midi']['INPUT']['value']
-        print('try open port : midi setting is {}'.format(midi_setting))
+        #print('try open port : midi setting is {}'.format(midi_setting))
         if midi_setting == 'enabled':
             midi_ports = mido.get_input_names()
             midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]

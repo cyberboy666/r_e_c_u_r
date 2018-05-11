@@ -7,6 +7,7 @@ class Display(object):
     MENU_HEIGHT = 10
     SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
+    TITLE = '================== r_e_c_u_r =================='
 
     def __init__(self, tk, video_driver, capture, message_handler, data):
         self.tk = tk
@@ -26,7 +27,7 @@ class Display(object):
 
     @staticmethod
     def _create_display_text(tk):
-        return Text(tk, bg="black", fg="white", font=('Liberation Mono', 13))
+        return Text(tk, bg="black", fg="white", font=('Liberation Mono', 13), undo=False)
 
     def _add_tags(self):
         self.display_text.tag_configure("SELECT", background="white", foreground="black")
@@ -39,16 +40,17 @@ class Display(object):
         self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="VioletRed1")
         self.display_text.tag_configure("FUNCTION", background="yellow", foreground="black")
         self.display_text.tag_configure("BROKEN_PATH", background="black", foreground="gray")
-
+        
     def _load_display(self):
         self._load_title()
         self._load_player()
         self._load_display_body()
         self._load_message()
+        #print('the number of tags are {}'.format(len(self.display_text.tag_names())))
         self.display_text.pack()
 
     def _load_title(self):
-        self.display_text.insert(END, '================== r_e_c_u_r ================== \n')
+        self.display_text.insert(END, self.TITLE + ' \n')
         self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def _load_player(self):

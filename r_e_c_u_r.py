@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 import traceback
 from tkinter import Tk, Frame
 import sys
+import tracemalloc
 
 from actions import Actions
 from data_centre.data import Data

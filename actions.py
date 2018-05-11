@@ -1,5 +1,8 @@
 import subprocess
+import tracemalloc
 import data_centre.length_setter as length_setter
+import sys
+import os
 
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, capture, display):
@@ -232,7 +235,7 @@ class Actions(object):
     def check_and_set_output_mode_on_boot(self):
         #### checking if pi display mode is composite
         response = str(subprocess.check_output(['tvservice', '-s']))
-        if '0x80002' in response or '0x40002' in response:
+        if 'PAL' in response or 'NTSC' in response:
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
@@ -332,6 +335,11 @@ class Actions(object):
         self.video_driver.exit_all_players()
         self.toggle_x_autorepeat()
         self.tk.destroy()
+
+    def restart_the_program(self):
+        self.quit_the_program()
+        os.execv('/usr/bin/python3', [sys.argv[0],'/home/pi/r_e_c_u_r/r_e_c_u_r.py'])
+        
 
     def set_fixed_length(self, value):
         self.data.control_mode = 'LENGTH_SET'

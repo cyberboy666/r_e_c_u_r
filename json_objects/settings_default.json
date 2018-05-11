@@ -95,6 +95,11 @@
             ],
             "value": "off"
         },
+        "RESTART_PROGRAM": {
+            "action": "restart_the_program",
+            "options": [],
+            "value": null
+        },
         "QUIT": {
             "action": "quit_the_program",
             "options": [],

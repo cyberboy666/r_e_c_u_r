@@ -10,7 +10,7 @@
 
 ## controls
 
-(put picture with controls here...)
+![keys][keys]
 
 the controls on r_e_c_u_r work by mapping `keys` to `actions`. this map can be fully customised by editing the respective json file.
 
@@ -78,7 +78,7 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 - shows a blue bar for `INFO` messages
 - shows a red bar for `ERROR` messages - full message and trace for these can be found in the log files
 
-(put image and info here)
+![message_example][message_example]
 
 [3.5mm trrs]: https://www.adafruit.com/product/2881
 [display_image]: display_parts.jpg
@@ -86,3 +86,5 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 [browser_example]: browser_example.jpg
 [sampler_example]: sampler_example.jpg
 [settings_example]: settings_example.jpg
+[keys]: ./vectorfront_keys.png
+[message_example]: ./message_example.jpg

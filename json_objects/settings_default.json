@@ -81,9 +81,9 @@
             "value": "disabled"
         },
         "STATUS": {
-            "action": null,
+            "action": "get_midi_status",
             "options": [],
-            "value": "disconnected"
+            "value": null
         }
     },
     "other": {

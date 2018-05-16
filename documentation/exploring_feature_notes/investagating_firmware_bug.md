@@ -1,6 +1,6 @@
 ## firmware bug
 
-at some point i must have updated the raspi firmware. this caused the recur application to present a bug that makes it basicly unusable:
+at some point i must have updated the raspi firmware. this caused the recur application to present a bug that makes it basically unusable:
 
 ### the bug
 
@@ -12,7 +12,7 @@ the video freezes / lags often , usually at the same spot : 10s in, 2minutes in 
 
 - i created a new version of recur from the newest (april) version of stretch. this also displays the bug.
 
-- finally i created a new version of recur from the older vesrion (november) and made sure to not install any of the new packages (midi / capture). this worked without the bug on an old version of the code ! wahoo. i now tried installing those new packages and running the update code. still working !
+- finally i created a new version of recur from the older version (november) and made sure to not install any of the new packages (midi / capture). this worked without the bug on an old version of the code ! wahoo. i now tried installing those new packages and running the update code. still working !
 
 - next i created an image of this working recur. (known issues with the image so far : screen saver is on, our home wifi is included)
 
@@ -28,6 +28,6 @@ now `uname -a` reads `.. 4.9.60-v7+ #1048 .. Fri Nov 3` and the player still wor
 
 pushed forward to v 4.14.20 which failed. pushing back: did this a few times. got it working on 4.9.78 but failing on 4.9.80. looks like it might be this issue : https://www.raspberrypi.org/forums/viewtopic.php?t=195178 - just need to figure out how to turn it off for testing
 
-found it ! i have the lastest firmware version and by adding `audio_pwm_mode=0` to the config it now plays as before . phew what a relief ! 
+found it ! i have the latest firmware version and by adding `audio_pwm_mode=0` to the config it now plays as before . phew what a relief ! 
 
 gonna create new version of the image with this fixed , the wifi removed and the screensaver disabled.

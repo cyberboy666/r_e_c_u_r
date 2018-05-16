@@ -1,3 +1,6 @@
+
+# some of what follows is out of date since i have improved a number of problems since i did this. i will have to revisit this page with updates soon !
+
 # compatibility testing
 
 so far i have only been using a small selection of video files while running **r_e_c_u_r** .
@@ -19,8 +22,8 @@ clip | expectation | results
 720-mp4-h264.mp4 | this should play fine | plays good, sometimes lags on load
 720-mp4-h264-60fps | ~~my computer struggles to play this~~ think just a laggy video | plays suprisingly well - never lags on custom start
 1080-avi-mpeg4.avi | i think this should play ok | does play - sometimes struggles to load the next loop though - similar to the other 1080 one but a bit better (seems to load if current video is paused)
-1080-flv-flv1.flv | wouldnt expect/need flv with custom codec | omx doesnt reconise codec
-1080-mkv-h264-60mbps.mkv | dont expect this to work | suprizingly this video played though on pi (didnt even open on my computer.) however is showing a weird new bug where when the video finished , the next one wont load but also wont error... _UPDATE: works now gpu has more memory_
+1080-flv-flv1.flv | wouldnt expect/need flv with custom codec | omx doesnt recognize codec
+1080-mkv-h264-60mbps.mkv | dont expect this to work | surprisingly this video played though on pi (didnt even open on my computer.) however is showing a weird new bug where when the video finished , the next one wont load but also wont error... _UPDATE: works now gpu has more memory_
 1080-mp4-h264.mp4 | hopefully this plays okay ?? | this wouldnt load , error getting video length : `dbus exception no reply` (although it played ok in normal omxplayer) _UPDATE: works now gpu has more memory_
 error-mkv-mpeg4.mkv | should fail but not sure how.. | just wont load
 
@@ -38,5 +41,5 @@ UPDATE: turns out the 1080 files couldnt load because the pi hadnt been assigned
 
 # summary of findings :
 
-- .mp4 containers witht h.264 codec seems to be the best format - long videos play fine (tested up to 3 hours) besides some display confusion for durations over 99 minutes as expected. can play files up to 1080 resolution fine. the chances of micro lags on changeover/custom starts seems to increase with higher resolution (no problems with 480 now) but can still be avoided by setting another custom start just after the position that is lagging.
+- .mp4 containers with h.264 codec seems to be the best format - long videos play fine (tested up to 3 hours) besides some display confusion for durations over 99 minutes as expected. can play files up to 1080 resolution fine. the chances of micro lags on changeover/custom starts seems to increase with higher resolution (no problems with 480 now) but can still be avoided by setting another custom start just after the position that is lagging.
 - .avi , .mov and .mkv containers also work. h.264 is best , mjpeg worked in a .mov container but not in .avi ... there was some issues with setting custom start in one of the .mkv files i tried - this might need some more investigation...

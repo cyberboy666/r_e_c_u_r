@@ -6,7 +6,7 @@ i believe it is possible to read midi in from an i/o pin (that can read serial) 
 
 ### gpio pins : 
 
-the [adafruit tft display] mentioned above also uses the gpios to connect to the pi - in particular it uses 5 spi pins and two standard pin outs. by cross refferencing the [raspi gpio] docs it does not use either of the rx serial pin , which would be needed if i were to receive midi directly (rather than through usb), it also leaves plenty of pins for receiving cv from a [mcp3008] through software spi for example. it is likely that my gpio lcd screen comunicates with the pi in a similar way and that i could figure out a way to connect these extentions if desired.
+the [adafruit tft display] mentioned above also uses the gpios to connect to the pi - in particular it uses 5 spi pins and two standard pin outs. by cross referencing the [raspi gpio] docs it does not use either of the rx serial pin , which would be needed if i were to receive midi directly (rather than through usb), it also leaves plenty of pins for receiving cv from a [mcp3008] through software spi for example. it is likely that my gpio lcd screen communicates with the pi in a similar way and that i could figure out a way to connect these extensions if desired.
 
 [instructable]: http://www.instructables.com/id/PiMiDi-A-Raspberry-Pi-Midi-Box-or-How-I-Learned-to/
 [adafruit tft display]: https://www.adafruit.com/product/2441

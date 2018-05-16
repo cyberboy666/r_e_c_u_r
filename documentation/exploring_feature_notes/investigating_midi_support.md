@@ -18,9 +18,6 @@ something seems wrong with the dongle. it also seems like these cheep dongles ar
 
 update : by using ableton on my windows i could successfully send midi out off usb and receive it on deluge. still no luck reading midi to usb though. 
 
-### serial midi from rpi gpio pin
-
-i believe it is possible to read midi in from an i/o pin (that can read serial) which might be desirable in some cases but this is a good start for now. this [instructable] explains how to input/output midi with the gpios, it looks like the tx/rx (serial?) pins on the pi3 are currently used/covered by the gpio screen that i am using. if i was serious about external circuits interfacing with pi/recur, i might look into using an lcd screen that doesnt use up the gpios. (would also be worth checking if piCapture would work with the gpio screen i have...)
 
 ### usb midi
 
@@ -37,17 +34,17 @@ besides the obvious triggering of clips and controlling parameters, it has also 
 i install mido and rtmidi for backend : `pip3 install mido python-rtmidi`,
 i called `mido.get_input_names()` and searched the results for the first containing the substring `20:0` (this is the port my devices came up as - will need to investigate further why this is and if it will be the case for all external usb midi devices)
 
-from here i called a polling meathod that reads the next message coming from that port and if there is one will call into the mapping function (from json file)
+from here i called a polling method that reads the next message coming from that port and if there is one will call into the mapping function (from json file)
 
 i created a midi_action.json mapping in the same format as the key press but with `type (value)` as the keys. eg `note_on 70` is an example, `clock` is another. for now i have mapped exactly the same as with the key presses
 
-this works perfectly for pressing keys on the deluge and seeing the corrosonding action on recur. even when pressing keys with the sequencer running (lots of clock messages being sent) it still responds quickly and consistantly. however when triggering the same notes from the sequencer, it seems to drop lots on the notes : usaully only picking up either note_on or note_off , sometimes both and sometimes neither.
+this works perfectly for pressing keys on the deluge and seeing the corresponding action on recur. even when pressing keys with the sequencer running (lots of clock messages being sent) it still responds quickly and consistently. however when triggering the same notes from the sequencer, it seems to drop lots on the notes : usually only picking up either note_on or note_off , sometimes both and sometimes neither.
 
 I tried changing the way recur handles the incoming messages (working through a list of unprocessed messages rather than one at a time) , but this didnt help - its not a problem of response time as can be shown by pressing keys with sequencer on. even looking at the raw input to the port on `aseqdump -p 20` i can see some messages missing. i updated the deluge firmware to a stable release but no changes.
 
 however when i tried turning off the clock messages from the deluge , the sequencer messages started coming through clearly ! and it syncs up nicely... how strange.
 
-### futher clock debugging
+### further clock debugging
 
 other things to try is learning how to use abelton as a midi controller and see whether it works there with/without clock messages. could also try other gear that can output midi / controllers with recur and try deluge with other computer / gear 
 
@@ -55,9 +52,9 @@ other things to try is learning how to use abelton as a midi controller and see 
 
 besides figuring out whats up with the incoming clock signal , another thing to experiment with is using a cc knob to control parameters in recur. there is nothing pressing i want for this but could try it with : fades , speed? , length of seeks , seeking? 
 
-i ended up trying cc with some camera paramters. there are plenty more interesting examples of continuous control there. it works well , but it seems like running the methods on every change when they are sequenced / coming in consistantly is a bit much for recur to respond in real time.
+i ended up trying cc with some camera parameters. there are plenty more interesting examples of continuous control there. it works well , but it seems like running the methods on every change when they are sequenced / coming in consistently is a bit much for recur to respond in real time.
 
-one idea to reduce this is to only process a incoming cc message if it is outside a range for that channel - ie only action on every 3rd cc change for each control for example. - this works well. updating every 5 cc values had no lag under heavy use but looks quite jumpy. step size of 2 looks smooth but can lag quite a lot. i have it set to 4 atm but can revist when other features are under cv control etc. 
+one idea to reduce this is to only process a incoming cc message if it is outside a range for that channel - ie only action on every 3rd cc change for each control for example. - this works well. updating every 5 cc values had no lag under heavy use but looks quite jumpy. step size of 2 looks smooth but can lag quite a lot. i have it set to 4 atm but can revisit when other features are under cv control etc. 
 
 
 

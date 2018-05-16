@@ -38,7 +38,7 @@ other bits and pieces:
 
 - use the 4 small screws to attach pi+screen to the bottom piece of enclosure
 
-- attach the lcd screen via the pi header pins so it fits exactly ontop of the pi. (some little spacers could be used to support the top corners of the screen)
+- attach the lcd screen via the pi header pins so it fits exactly on top of the pi. (some little spacers could be used to support the top corners of the screen)
 
 - put a battery in the keypad , insert its usb dongle into the pi. fasten the keypad to the baseplate; i used some double sided tap along raised strips.
 

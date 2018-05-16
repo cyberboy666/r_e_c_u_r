@@ -2,23 +2,23 @@
 
 ### background
 
-a common feature of audio samplers is the ability to 'live sample' ie have a line in to the device and use this to record a sample directly onto it - usally to be played back again imedantly as part of a performance.
+a common feature of audio samplers is the ability to 'live sample' ie have a line in to the device and use this to record a sample directly onto it - usually to be played back again immediately  as part of a performance.
 
-from what i can tell some hardware video samplers also offer this feature. it would be interesting to explore the possiblity of this with recur. some ways to record video into recur include:
+from what i can tell some hardware video samplers also offer this feature. it would be interesting to explore the possibility of this with recur. some ways to record video into recur include:
 
 - a usb dongle / external capture card
 - using a pi camera for live video or rescanning off a screen
-- piCapture : a custom video card built for pi to use the pi cam protical
+- piCapture : a custom video card built for pi to use the pi cam protocol
 
 the first option seems fiddly and difficult / a compromise. i might be interested in trying to capture with a Blackmagic Intensity Shuttle if i get one some day...
 
-options 2 and 3 both seem plausable, and hopefully will be interchangable once things are working (piCapture claims to act exactly like a piCam so should painless). also this allows both a cheap/hacky solution (rescanning through $2 camera) or a more professional option ($130 addation) and i can start experimenting now with a cheep cam before investing in the expensive piCapture.
+options 2 and 3 both seem plausible, and hopefully will be interchangeable once things are working (piCapture claims to act exactly like a piCam so should painless). also this allows both a cheap/hacky solution (rescanning through $2 camera) or a more professional option ($130 addition) and i can start experimenting now with a cheep cam before investing in the expensive piCapture.
 
 i know piCam and piCapture recommend using python and there is libraries for this
 
 ### things to find out
 
-i want to know how plausable it would be to add live sampling to my current recur stack (gpio lcd screen, omxplayer video backend).
+i want to know how plausible it would be to add live sampling to my current recur stack (gpio lcd screen, omxplayer video backend).
 
 some things i want know are:
 
@@ -35,7 +35,7 @@ some things i want know are:
 
 ### research
 
-[cheep cameras] for raspi can be bought from china with 5 mega pixals / recording 1080p video for around $5usd. i have borrowed a camera ~~which i think is a night-vision version~~ to experiment with , although should order one of these myself.
+[cheep cameras] for raspi can be bought from china with 5 mega pixels / recording 1080p video for around $5usd. i have borrowed a camera ~~which i think is a night-vision version~~ to experiment with , although should order one of these myself.
 
 i started by reading the [picamera] python package docs. this seemed to have lots of options regarding recording video , including starting and stopping both previews and video recordings , the ability to set the resolution , framerate , shutter speed of the camera , switching preview to full screen or setting the size and position of it. 
 
@@ -48,14 +48,14 @@ $ sudo apt-get install gpac
 $ MP4Box -add input.h264 output.mp4
 ```
 
-the [faq] also addresses the 'can i preview to the lcd screen' question : looks like no - atleast not without copying the exact framebuffer , similar to my experiments displaying omx on the lcd screen. (this still might be possible in the world of openCv but off the table for now! - or maybe not even then - this [adafruit] tutorial talks about the limitations of displaying on a tft screen - "accelerated software will never appear on the PiTFT (it is unaccelerated framebuffer only)" ) 
+the [faq] also addresses the 'can i preview to the lcd screen' question : looks like no - at least not without copying the exact framebuffer , similar to my experiments displaying omx on the lcd screen. (this still might be possible in the world of openCv but off the table for now! - or maybe not even then - this [adafruit] tutorial talks about the limitations of displaying on a tft screen - "accelerated software will never appear on the PiTFT (it is unaccelerated framebuffer only)" ) 
 
 
 
 ### research continued : piCapture
 
-[picapture] is a video capture card designed for the raspberry pi to emulate the piCamera and take advantange of the pi's hardware accelaration. it comes as a 'hat' that also uses ic2 (or serial)
-to comunicate. there is a python package to access these addational options. 
+[picapture] is a video capture card designed for the raspberry pi to emulate the piCamera and take advantage of the pi's hardware acceleration. it comes as a 'hat' that also uses ic2 (or serial)
+to communicate. there is a python package to access these additional options. 
 
 these come in two types :
 
@@ -82,7 +82,7 @@ besides that the preview / different parameters and effects work as expected. ne
 
 i have installed `sudo apt-get install gpac` and am using `subprocess.Popen` to run the `MP4Box` command from inside python. this way i can poll back into it and map the video only when its finished converting to stop blocking in the meantime. i also updated the display to show when the camera is previewing and recording. this all worked smoother than i expected.
 
-i also made a (suprizingly small) change to the browser to show the pi's videos folder next to the external devices. this will be useful for using the recordings saved and for copying files onto recurs disk. (the copying feature has been depriotised since it can be done manually with mouse/keyboard and could be risky / might want a confermation window ...)
+i also made a (surprisingly small) change to the browser to show the pi's videos folder next to the external devices. this will be useful for using the recordings saved and for copying files onto recurs disk. (the copying feature has been de-prioritized since it can be done manually with mouse/keyboard and could be risky / might want a confirmation window ...)
 
 another thing still to think about is how to protect from overfilling the sd card / external storage. 
 - i have done this by checking before starting to record and every 10 seconds during recording if the disk space is under 10mb in which case it warns and stops the recording.

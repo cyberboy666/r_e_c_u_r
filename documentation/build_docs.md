@@ -58,6 +58,6 @@ you are done ! wasnt that easy ?
 [bottom]: ./baseplate.stl
 [key stickers]: ./keystickers.svg
 [etcher]: https://etcher.io
-[modified image]: https://drive.google.com/file/d/1nUR2u-75oxgvVScTUb_DrJdZZpJJqyKc/view?usp=sharing
+[modified image]: https://drive.google.com/file/d/1UzPWNh8K7WY87WIb9VZ-b2Y6nvowQTwd/view?usp=sharing
 [operate docs]: ./operate_docs.md
 [instructions to install]: ../dotfiles/README.md 

@@ -24,7 +24,7 @@
         },
         "IMAGE_EFFECT": {
             "action": "update_capture_settings",
-            "options": [],
+            "options": ["none","sketch", "solarize", "oilpaint", "cartoon", "colorswap"],
             "value": "none"
         },
         "RESOLUTION": {
@@ -145,7 +145,7 @@
                 "on",
                 "off"
             ],
-            "value": "off"
+            "value": "on"
         },
         "LOAD_NEXT": {
             "action": "update_video_settings",
@@ -212,6 +212,14 @@
                 "none"
             ],
             "value": "black"
+        },
+        "HDMI_MODE": {
+            "action": "change_hdmi_settings",
+            "options": [
+                "preferred",
+                "CEA 4 HDMI"
+            ],
+            "value": "preferred"
         },
         "COMPOSITE_PROGRESSIVE": {
             "action": "change_composite_setting",

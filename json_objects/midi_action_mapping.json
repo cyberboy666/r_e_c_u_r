@@ -1,11 +1,17 @@
 {
     "control_change 0": {
-		"DEFAULT": ["set_the_camera_alpha_cc"]
+		"DEFAULT": ["set_the_current_video_alpha_cc"]
 	},
     "control_change 1": {
-		"DEFAULT": ["set_the_camera_colour_u_with_cc"]
+		"DEFAULT": ["set_the_next_video_alpha_cc"]
 	},
     "control_change 2": {
+		"DEFAULT": ["set_the_camera_alpha_cc"]
+	},
+    "control_change 3": {
+		"DEFAULT": ["set_the_camera_colour_u_with_cc"]
+	},
+    "control_change 4": {
 		"DEFAULT": ["set_the_camera_colour_v_with_cc"]
 	},
 	"note_on 72": {

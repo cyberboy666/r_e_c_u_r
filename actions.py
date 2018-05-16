@@ -211,6 +211,14 @@ class Actions(object):
         alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
         self.capture.set_alpha(alpha_amount)
 
+    def set_the_current_video_alpha_cc(self, amount):
+        alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
+        self.video_driver.current_player.set_alpha_value(alpha_amount)
+
+    def set_the_next_video_alpha_cc(self, amount):
+        alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
+        self.video_driver.next_player.set_alpha_value(alpha_amount)
+
     @staticmethod
     def _convert_midi_cc_value(cc_value, min_param, max_param):
         output_range = max_param - min_param
@@ -227,10 +235,17 @@ class Actions(object):
 
     def change_output_mode(self, setting_value):
         if setting_value == 'hdmi':
-                subprocess.call(['tvservice', '-p'])
-                self._refresh_frame_buffer()
+            self.change_hdmi_settings(setting_value)
         elif setting_value == 'composite':
             self.change_composite_setting(setting_value)
+
+    def change_hdmi_settings(self, setting_value):
+        if self.data.settings['video']['OUTPUT']['value'] == 'hdmi':
+            if self.data.settings['video']['HDMI_MODE']['value'] == 'preferred':
+                subprocess.call(['tvservice', '-p'])
+            elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
+                subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
+            self._refresh_frame_buffer()
 
     def check_and_set_output_mode_on_boot(self):
         #### checking if pi display mode is composite
@@ -239,11 +254,12 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
+            self.data.update_setting_value('video', 'HDMI_MODE', 'preferred')
             #### this is to work around a bug where 1080 videos on hdmi drop out ...
-            subprocess.call(['tvservice --sdtvon="PAL 4:3"'],shell=True)
-            self._refresh_frame_buffer()
-            subprocess.call(['tvservice', '-p'])
-            self._refresh_frame_buffer()
+            #subprocess.call(['tvservice --sdtvon="PAL 4:3"'],shell=True)
+            #self._refresh_frame_buffer()
+            #subprocess.call(['tvservice', '-p'])
+            #self._refresh_frame_buffer()
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)

@@ -24,6 +24,8 @@ other bits and pieces:
 
 - a stable 5volt, 1A microUsb power supply
 
+- some rubber feet for the bottom ? i had [these rubber feet] around from a previous project that work nicely
+
 ## print some things
 
 - i 3d printed my enclosure using these files for the [top] and [bottom]. if you dont have access to a printer you can upload these files to a popular printing service in you region (eg ...)
@@ -61,3 +63,4 @@ you are done ! wasnt that easy ?
 [modified image]: https://drive.google.com/file/d/1UzPWNh8K7WY87WIb9VZ-b2Y6nvowQTwd/view?usp=sharing
 [operate docs]: ./operate_docs.md
 [instructions to install]: ../dotfiles/README.md 
+[these rubber feet]: https://www.aliexpress.com/item/40-Self-Adhesive-Rubber-Bumper-Stopper-Non-slip-Feet-Door-Buffer-Pads-Furniture-DIY-Tool/32849514475.html?spm=a2g0s.9042311.0.0.6ee14c4dFXynVK

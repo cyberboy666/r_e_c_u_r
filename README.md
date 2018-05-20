@@ -5,6 +5,10 @@
  
 __r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from the _keypad_ to control omxplayer's `video out` while displaying a simple text user interface on the _rpi lcd screen_ 
 
+## in-depth video demo
+
+[![video-walkthrough][video-thumbnail]](http://www.youtube.com/watch?v=FKKDr7pLpp0)
+
 ## features
 
 - seamlessly loop video through rpi's HDMI or composite out
@@ -45,6 +49,7 @@ langolierz@gmail.com
 all feedback is appreciated. if you want to donate to this project you can do so with the above email via paypal : everything i receive will go into improving __r_e_c_u_r__. cheers to Leo Browning for the 3d modelling and vector art and to Ben Caldwell for heaps of help with the code!
 
 [vectorfront]: ./documentation/vectorfront_keys.png
+[video-thumbnail]: ./documentation/video-thumbnail.jpg
 [board]: https://trello.com/b/mmJJFyrp/feature-ideas
 [operating]: documentation/operate_docs.md
 [building]: documentation/build_docs.md

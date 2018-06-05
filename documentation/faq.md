@@ -1,3 +1,4 @@
+
 # frequently asked questions
 
 a place to document the questions and thoughts asked about r_e_c_u_r so far. if you have any other questions please ask them in the fb group or get in touch directly.
@@ -41,3 +42,4 @@ to get to these you will probably need a usb keyboard (a usb mouse can help too)
 [keypad_action_mapping.json]: /json_files/keypad_action_mapping.json
 [develop page]: /documentation/develop_docs.md
 [build]: /documentation/build_docs.md
+

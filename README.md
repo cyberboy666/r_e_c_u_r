@@ -46,6 +46,8 @@ The nature of this project is to be open-ended and community driven. my r_e_c_u_
 
 langolierz@gmail.com
 
+also facebook user group : https://www.facebook.com/groups/114465402691215/
+
 all feedback is appreciated. if you want to donate to this project you can do so with the above email via paypal : everything i receive will go into improving __r_e_c_u_r__. cheers to Leo Browning for the 3d modelling and vector art and to Ben Caldwell for heaps of help with the code!
 
 [vectorfront]: ./documentation/vectorfront_keys.png

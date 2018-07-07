@@ -36,6 +36,22 @@ to get to these you will probably need a usb keyboard (a usb mouse can help too)
 - if you are happy with command line this can be accessed by pressing ctrl+alt+f1 from keyboard (ctrl+alt+f7 will return to recur)
 - if you would rather navigate from a mouse, the recur program can be exited by pressing `.` key. moving the mouse to bottom of screen should bring up raspi toolbar where filebrowser can be opened etc
 
+### note : also you can copy videos to the `internal storage` folder inside this Videos folder if space on the sd allows
+
+## when i use the hdmi out on my tv/projector/screen the video keeps dropping out ?
+
+yes - this seems to be the pi responding to running out of memory when two videos are loaded at 1080 resolution on some displays. to fix this you need to change the `HDMI_MODE` setting to `CEA 4 HDMI`, this sets the pi output to 720 which should play without dropout (even playing 1080 videos)
+
+## when playing short loops <=3s or manually switching players quickly sometimes the player crashes / gets stuck `LOADING` ...
+
+hmm - this does happen sometimes. in my experence pressing the video key you want to load again then the switch key will get the video playing again. I havnt been able to create crashes that require a reset, but if you do please let me know.
+
+## when setting the start/end points of a clip there is a small lag before starting the next cycle .. can i improve this ?
+
+this could happen because your cycle is too short to allow the NEXT video to load before NOW has finished. making your cycle a little longer could make a difference here.
+
+HOWEVER, i have also noticed that this lag can happen even with longer clips sometimes and i dont know why. it seems that resetting the `start` point can sometimes fix it. i wish i could figure out why this happens... if you have any insight hmu ! i feel like this could be improved if understood !
+
 [correct cable]: https://www.adafruit.com/product/2881
 [my cable]: https://www.aliexpress.com/item/4-poles-3-5mm-Mini-AV-Male-to-3RCA-Female-M-F-Audio-Video-Cable-Stereo/32769544207.html
 [.keymap]: /dotfiles/.keymap

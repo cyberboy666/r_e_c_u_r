@@ -50,7 +50,7 @@ hmm - this does happen sometimes. in my experence pressing the video key you wan
 
 this could happen because your cycle is too short to allow the NEXT video to load before NOW has finished. making your cycle a little longer could make a difference here.
 
-HOWEVER, i have also noticed that this lag can happen even with longer clips sometimes and i dont know why. it seems that resetting the `start` point can sometimes fix it. i wish i could figure out why this happens... if you have any insight hmu ! i feel like this could be improved if understood !
+HOWEVER, i have also noticed that this lag can happen even with longer clips sometimes and i dont know why. it seems that resetting the `start` point can sometimes fix it. i wish i could figure out why this happens... if you have any insight hmu ! i feel like this could be improved if understood ! (this could be a limitation of seeking in a H264 container ... )
 
 [correct cable]: https://www.adafruit.com/product/2881
 [my cable]: https://www.aliexpress.com/item/4-poles-3-5mm-Mini-AV-Male-to-3RCA-Female-M-F-Audio-Video-Cable-Stereo/32769544207.html

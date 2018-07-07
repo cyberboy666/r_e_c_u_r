@@ -42,6 +42,10 @@ to get to these you will probably need a usb keyboard (a usb mouse can help too)
 
 yes - this seems to be the pi responding to running out of memory when two videos are loaded at 1080 resolution on some displays. to fix this you need to change the `HDMI_MODE` setting to `CEA 4 HDMI`, this sets the pi output to 720 which should play without dropout (even playing 1080 videos)
 
+## my video files do not show up in the browser ?
+
+at the moment recur will filter out all files that do not have a '.mp4' (recommended), '.mkv', '.mov' or '.avi' file extension in their name. (so you can not try to map .docx, .jpeg /other obvs non-video files) ..perhaps there is a better way to tell if a file is video without reading the extension ?
+
 ## when playing short loops <=3s or manually switching players quickly sometimes the player crashes / gets stuck `LOADING` ...
 
 hmm - this does happen sometimes. in my experence pressing the video key you want to load again then the switch key will get the video playing again. I havnt been able to create crashes that require a reset, but if you do please let me know.

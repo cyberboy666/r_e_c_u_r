@@ -12,7 +12,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     vec2 q = fragCoord.xy / u_Resolution.xy;
     vec2 uv = 0.5 + (q-0.5)*(0.9 + 0.1*sin(0.2*u_Time));
 
-    vec3 oricol = texture( iChannel0, vec2(q.x,1.0-q.y) ).xyz;
+    vec3 oricol = texture( u_Channel0, vec2(q.x,1.0-q.y) ).xyz;
     vec3 col;
 
     col.r = texture(u_Channel0,vec2(uv.x+0.003,-uv.y)).x;

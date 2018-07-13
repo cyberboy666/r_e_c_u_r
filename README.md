@@ -1,4 +1,10 @@
+
+## c_o_n_j_u_r branch
+
+WIP branch for intergrating with my experimental alternative openframeworks backend [c_o_n_j_u_r]
+
 # r_e_c_u_r
+
  an open diy py/pi based video sampler
  
  ![vectorfront][vectorfront]
@@ -50,6 +56,7 @@ also facebook user group : https://www.facebook.com/groups/114465402691215/
 
 all feedback is appreciated. if you want to donate to this project you can do so with the above email via paypal : everything i receive will go into improving __r_e_c_u_r__. cheers to Leo Browning for the 3d modelling and vector art and to Ben Caldwell for heaps of help with the code!
 
+[c_o_n_j_u_r]: https://github.com/langolierz/c_o_n_j_u_r
 [vectorfront]: ./documentation/vectorfront_keys.png
 [video-thumbnail]: ./documentation/video-thumbnail.jpg
 [board]: https://trello.com/b/mmJJFyrp/feature-ideas

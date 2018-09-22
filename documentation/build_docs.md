@@ -4,6 +4,8 @@ disclaimer - this is a cheap and diy approach to getting a r_e_c_u_r video sampl
 
 ## get some parts
 
+for using other parts and other questions check out the [faq] , or get in touch.
+
 these are the parts you need to get. to reduce shipping costs to nz i sourced them through aliexpress.com but you could equally get them from ebay or elsewhere.
 
 ### main parts:
@@ -24,6 +26,8 @@ other bits and pieces:
 
 - a stable 5volt, 1A microUsb power supply
 
+- some rubber feet for the bottom ? i had [these rubber feet] around from a previous project that work nicely
+
 ## print some things
 
 - i 3d printed my enclosure using these files for the [top] and [bottom]. if you dont have access to a printer you can upload these files to a popular printing service in you region (eg ...)
@@ -32,15 +36,15 @@ other bits and pieces:
 
 ## put it together
 
-- using [etcher] (or otherwise) flash the micro sd with my [modified image] of rasbian (or follow these [instructions to install] from scratch.)
+- using [etcher] (or otherwise) flash the micro sd with my [modified image] of raspbian (or follow these [instructions to install] from scratch.)
 
 - insert sd card into pi
 
 - use the 4 small screws to attach pi+screen to the bottom piece of enclosure
 
-- attach the lcd screen via the pi header pins so it fits exactly ontop of the pi. (some little spacers could be used to support the top corners of the screen)
+- attach the lcd screen via the pi header pins so it fits exactly on top of the pi. (some little spacers could be used to support the top corners of the screen)
 
-- put a battery in the keypad , insert its usb dongle into the pi. fasten the keypad to the baseplate; i used some double sided tap along raised strips.
+- put a battery in the keypad , insert its usb dongle into the pi. fasten the keypad to the baseplate; i used some double sided tap along raised strips - although now im thinking superglue might hold better...
 
 - use the 6 large screws to hold the top panel to the bottom
 
@@ -58,6 +62,8 @@ you are done ! wasnt that easy ?
 [bottom]: ./baseplate.stl
 [key stickers]: ./keystickers.svg
 [etcher]: https://etcher.io
-[modified image]: https://drive.google.com/file/d/1nUR2u-75oxgvVScTUb_DrJdZZpJJqyKc/view?usp=sharing
+[modified image]: https://drive.google.com/file/d/1SlqM13jxLlk_zajXgdub1fpu-k76jE1e/view?usp=sharing
 [operate docs]: ./operate_docs.md
 [instructions to install]: ../dotfiles/README.md 
+[these rubber feet]: https://www.aliexpress.com/item/40-Self-Adhesive-Rubber-Bumper-Stopper-Non-slip-Feet-Door-Buffer-Pads-Furniture-DIY-Tool/32849514475.html?spm=a2g0s.9042311.0.0.6ee14c4dFXynVK
+[faq]: ./faq.md

@@ -95,6 +95,14 @@
             ],
             "value": "off"
         },
+        "VIDEO_BACKEND": {
+            "action": null,
+            "options": [
+                "omxplayer",
+                "openframeworks"
+            ],
+            "value": "omxplayer"
+        },
         "RESTART_PROGRAM": {
             "action": "restart_the_program",
             "options": [],

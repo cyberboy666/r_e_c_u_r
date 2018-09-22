@@ -349,6 +349,7 @@ class Actions(object):
 
     def quit_the_program(self):
         self.video_driver.exit_all_players()
+        self.video_driver.exit_osc_server()
         self.toggle_x_autorepeat()
         self.tk.destroy()
 

@@ -122,7 +122,6 @@ class Actions(object):
         self.data.function_on = not self.data.function_on
 
     def next_bank(self):
-
         self.data.update_bank_number_by_amount(1)
         print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
 
@@ -232,6 +231,10 @@ class Actions(object):
 
     def update_capture_settings(self, setting_value):
         self.capture.update_capture_settings()
+
+    def change_piCapture_input(self, setting_value):
+        if self.data.settings['capture']['TYPE']['value'] == 'piCaptureSd1':
+            subprocess.call(['pivideo', '-s', setting_value])
 
     def change_output_mode(self, setting_value):
         if setting_value == 'hdmi':

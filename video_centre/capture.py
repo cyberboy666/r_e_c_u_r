@@ -37,7 +37,8 @@ class Capture(object):
         self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
         self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
         self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
-        if self.data.settings['capture']['TYPE']['value'] == "piCaptureSD1":
+        self.capture_type = self.data.settings['capture']['TYPE']['value']
+        if self.capture_type == "piCaptureSd1":
             self.sensor_mode = 6
         else:
             self.sensor_mode = 0 
@@ -65,10 +66,13 @@ class Capture(object):
         return True            
 
     def set_capture_settings(self):
-        if self.sensor_mode == 6:
+        if self.capture_type == "piCaptureSd1":
+            self.device.sensor_mode = 6
             self.device.awb_mode = "off"
             self.device.awb_gains = 1.0
             self.device.exposure_mode = "off"
+        else:
+            self.sensor_mode = 0
             
 
     def set_preview_screen_size(self):

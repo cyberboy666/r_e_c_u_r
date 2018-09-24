@@ -16,6 +16,7 @@ class Data(object):
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
     MIDI_MAPPING_JSON = 'midi_action_mapping.json'
+    ANALOG_MAPPING_JSON = 'analog_action_mapping.json'
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
     PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
@@ -51,6 +52,7 @@ class Data(object):
 
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
+        self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
         
     @staticmethod
     def create_empty_bank():

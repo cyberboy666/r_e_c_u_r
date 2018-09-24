@@ -198,30 +198,21 @@ class Actions(object):
         elif self.data.player_mode == 'next':
             self.data.player_mode = 'now'
 
-    def set_the_camera_colour_u_with_cc(self, amount):
-        u_value = self._convert_midi_cc_value(amount, 0, 255)
-        self.capture.set_colour(u_value, None)
+    def set_the_camera_colour_u_continuous(self, amount):
+        self.capture.set_colour(amount*255, None)
 
-    def set_the_camera_colour_v_with_cc(self, amount):
-        v_value = self._convert_midi_cc_value(amount, 0, 255)
-        self.capture.set_colour(None, v_value)
+    def set_the_camera_colour_v_continuous(self, amount):
+        self.capture.set_colour(None, amount*255)
 
-    def set_the_camera_alpha_cc(self, amount):
-        alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
-        self.capture.set_alpha(alpha_amount)
+    def set_the_camera_alpha_continuous(self, amount):
+        self.capture.set_alpha(amount*255)
 
-    def set_the_current_video_alpha_cc(self, amount):
-        alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
-        self.video_driver.current_player.set_alpha_value(alpha_amount)
+    def set_the_current_video_alpha_continuous(self, amount):
+        self.video_driver.current_player.set_alpha_value(amount*255)
 
-    def set_the_next_video_alpha_cc(self, amount):
-        alpha_amount = self._convert_midi_cc_value(amount, 0, 255)
-        self.video_driver.next_player.set_alpha_value(alpha_amount)
+    def set_the_next_video_alpha_continuous(self, amount):
+        self.video_driver.next_player.set_alpha_value(amount*255)
 
-    @staticmethod
-    def _convert_midi_cc_value(cc_value, min_param, max_param):
-        output_range = max_param - min_param
-        return int(( cc_value / 127 ) * output_range + min_param)
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))

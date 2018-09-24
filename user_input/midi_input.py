@@ -91,9 +91,13 @@ class MidiInput(object):
             method_name = this_mapping[mode][0]
 
         print('the action being called is {}'.format(method_name))
-        self.call_method_name(method_name, mapped_message_value)
-        ## only update screen if not cc - seeing if cc can respond faster if not refreshing screen on every action
-        if 'cc' not in message_name:
+        if mapped_message_value is not None:
+            norm_message_value = mapped_message_value/127 
+        else:
+            norm_message_value = None
+        self.call_method_name(method_name, norm_message_value)
+        ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
+        if 'continuous' not in message_name:
             self.display.refresh_display()
 
     def call_method_name(self, method_name, argument=None):

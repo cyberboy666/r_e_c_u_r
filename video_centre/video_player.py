@@ -141,8 +141,9 @@ class VideoPlayer:
             self.set_alpha_value(255)
 
     def set_alpha_value(self, amount):
-        self.omx_player.set_alpha(amount)
-        self.alpha = amount
+        if self.omx_player:
+            self.omx_player.set_alpha(amount)
+            self.alpha = amount
 
     def seek(self, amount):
         position = self.get_position()

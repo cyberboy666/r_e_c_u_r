@@ -11,6 +11,7 @@ from display_centre.display import Display
 from display_centre.messages import MessageHandler
 from user_input.numpad_input import NumpadInput
 from user_input.midi_input import MidiInput
+from user_input.analog_input import AnalogInput
 from video_centre.video_driver import VideoDriver
 from video_centre.capture import Capture
 import data_centre
@@ -39,6 +40,7 @@ actions = Actions(tk, message_handler, data, video_driver, capture, display)
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
+analog_input = AnalogInput(tk, message_handler, display, actions, data)
 
 actions.check_and_set_output_mode_on_boot()
 actions.check_dev_mode()

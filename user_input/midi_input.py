@@ -36,8 +36,8 @@ class MidiInput(object):
         for message in self.midi_device.iter_pending():
             i = i + 1
             message_dict = message.dict()
-            ## only listening to midi channel 1 for now , will make it seletcable later
-            if not message_dict['channel'] == 0:
+            midi_channel = midi_setting = self.data.settings['midi']['CHANNEL']['value'] - 1
+            if not message_dict['channel'] == midi_channel:
                 pass
             ## turning off noisey clock messages for now - may want to use them at some point
             elif message_dict['type'] == 'clock':

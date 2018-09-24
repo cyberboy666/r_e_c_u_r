@@ -9,8 +9,8 @@ class AnalogInput(object):
         self.actions = actions
         self.data = data
         self.analog_mappings = data.analog_mappings
-        self.midi_device = None
         self.analog_delay = 50
+        self.last_readings = [0,0,0,0,0,0,0,0]
 
         SPI_PORT   = 1
         SPI_DEVICE = 2
@@ -26,11 +26,12 @@ class AnalogInput(object):
 
     def poll_analog_inputs(self):
         if self.data.settings['other']['ANALOG_INPUT']['value'] == 'enabled':
-            for i in range(0,8):
+            for i in range(0,8):        
                 if str(i) in self.analog_mappings:
-                    print('{} is in the mapping'.format(i))
-                    reading = self.analog_input.read_adc(i)
-                    self.run_action_for_mapped_channel(i, reading)
+                    this_reading = self.analog_input.read_adc(i)
+                    if this_reading - self.last_readings[i] > 3:
+                        self.run_action_for_mapped_channel(i, this_reading)
+                    self.last_readings[i] = this_reading
             self.root.after(self.analog_delay, self.poll_analog_inputs)
         else:
             self.check_if_listening_enabled()

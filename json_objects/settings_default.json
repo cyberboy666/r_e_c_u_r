@@ -1,5 +1,25 @@
 {
     "capture": {
+        "TYPE": {
+            "action": "update_capture_settings",
+            "options": [
+                "piCamera",
+                "piCaptureSd1"
+            ],
+            "value": "piCaptureSd1"
+        },
+        "PICAPTURE_INPUT": {
+            "action": "change_piCapture_input",
+            "options": [
+                "auto",
+                "video1",
+                "video2",
+                "video3",
+                "svideo",
+                "component"
+            ],
+            "value": "video1"
+        },
         "DEVICE": {
             "action": "update_capture_settings",
             "options": [
@@ -87,6 +107,14 @@
         }
     },
     "other": {
+        "ANALOG_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "DEV_MODE_RESET": {
             "action": "switch_dev_mode",
             "options": [
@@ -227,7 +255,7 @@
                 "preferred",
                 "CEA 4 HDMI"
             ],
-            "value": "preferred"
+            "value": "CEA 4 HDMI"
         },
         "COMPOSITE_PROGRESSIVE": {
             "action": "change_composite_setting",

@@ -27,6 +27,41 @@ PIN NO.| SYMBOL | DESCRIPTION
 
 from this i should b able to work out which pins i can use for midi in and for analog-to-digital inputs (also piCapture needs some inputs too)
 
+# gpio inputs for recur:
+
+here are the pins needed for different parts of the recur connections:
+
+note that pins 1 to 26 are covered by the lcd screen, even though not all are used by it
+
+## lcd screen 
+
+as stated above, the screen uses the following pins:
+- 1 , 17 : 3.3v
+- 2, 4 : 5v
+- 11 : TP_IQR (for touch panel)
+- 18 : LCD_RS
+- 19 : LCD_SI
+- 21 : TP_SO (touch panel output)
+- 22 : reset
+- 23 : LCD_SCK
+- 24 : LCD_CS
+- 26 : TP_CS
+
+## piCapture
+
+piCapture be default will use pins 3, 5, 7 to comunicate 
+
+## serial-midi in
+
+pin 10 (rx) is needed for midi in plus 3.3v (combined with octocoupler 6n138 etc and resistors)
+
+## analog in
+
+using a MCP3008 via hardware SPI, can connect up to 8 analog inputs using pins 35, 36, 38, 40 (SPI1) + 3.3v , can also connect with software SPI with any four pins if more inputs were needed. these inputs can be used for pots/sliders & gate/cv jacks. by default will react to 0-3.3v. if wanting to use larger range than this will need some kind of scaling electronics (tl074d?)
+
+providing 4 pins on under the lcd screen cover can be accessed by the board (and 3.3v can be distributed) i should be able to create a circuit that connects all these inputs to the pi. 
+
+
 [instructable]: http://www.instructables.com/id/PiMiDi-A-Raspberry-Pi-Midi-Box-or-How-I-Learned-to/
 [adafruit tft display]: https://www.adafruit.com/product/2441
 [raspi gpio]: https://www.raspberrypi.org/documentation/usage/gpio/

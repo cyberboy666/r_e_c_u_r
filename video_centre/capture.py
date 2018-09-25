@@ -26,7 +26,7 @@ class Capture(object):
         if self.use_capture:
             self.update_capture_settings()
             try:
-                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
+                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
             except picamera.exc.PiCameraError as e:
                 self.use_capture = False
                 print('camera exception is {}'.format(e))
@@ -37,6 +37,11 @@ class Capture(object):
         self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
         self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
         self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
+        self.capture_type = self.data.settings['capture']['TYPE']['value']
+        if self.capture_type == "piCaptureSd1":
+            self.sensor_mode = 6
+        else:
+            self.sensor_mode = 0 
         ##update current instance (device) if in use
         if self.device and not self.device.closed:
             self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
@@ -56,8 +61,19 @@ class Capture(object):
         self.is_previewing = True
         self.device.start_preview()
         self.set_preview_screen_size()
+        self.set_capture_settings()
         self.device.preview.layer = self.PREVIEW_LAYER
         return True            
+
+    def set_capture_settings(self):
+        if self.capture_type == "piCaptureSd1":
+            self.device.sensor_mode = 6
+            self.device.awb_mode = "off"
+            self.device.awb_gains = 1.0
+            self.device.exposure_mode = "off"
+        else:
+            self.sensor_mode = 0
+            
 
     def set_preview_screen_size(self):
         if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
@@ -117,8 +133,12 @@ class Capture(object):
     def convert_raw_recording(self):
         recording_path , recording_name = self.generate_recording_path()
         try:
-            mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
-            return mp4box_process , recording_name
+            if self.sensor_mode == 6:
+                mp4box_process = subprocess.Popen(['MP4Box', '-fps', '60', '-add', self.video_dir + '/raw.h264', recording_path])
+                return mp4box_process , recording_name
+            else:
+                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
+                return mp4box_process , recording_name
         except Exception as e:
             print(e)
             if hasattr(e, 'message'):

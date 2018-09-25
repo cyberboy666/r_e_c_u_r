@@ -59,7 +59,7 @@ HOWEVER, i have also noticed that this lag can happen even with longer clips som
 [correct cable]: https://www.adafruit.com/product/2881
 [my cable]: https://www.aliexpress.com/item/4-poles-3-5mm-Mini-AV-Male-to-3RCA-Female-M-F-Audio-Video-Cable-Stereo/32769544207.html
 [.keymap]: /dotfiles/.keymap
-[keypad_action_mapping.json]: /json_files/keypad_action_mapping.json
+[keypad_action_mapping.json]: /json_objects/keypad_action_mapping.json
 [develop page]: /documentation/develop_docs.md
 [build]: /documentation/build_docs.md
 

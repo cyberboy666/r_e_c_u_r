@@ -36,8 +36,8 @@ class MidiInput(object):
         for message in self.midi_device.iter_pending():
             i = i + 1
             message_dict = message.dict()
-            ## only listening to midi channel 1 for now , will make it seletcable later
-            if not message_dict['channel'] == 0:
+            midi_channel = midi_setting = self.data.settings['midi']['CHANNEL']['value'] - 1
+            if not message_dict['channel'] == midi_channel:
                 pass
             ## turning off noisey clock messages for now - may want to use them at some point
             elif message_dict['type'] == 'clock':
@@ -91,9 +91,13 @@ class MidiInput(object):
             method_name = this_mapping[mode][0]
 
         print('the action being called is {}'.format(method_name))
-        self.call_method_name(method_name, mapped_message_value)
-        ## only update screen if not cc - seeing if cc can respond faster if not refreshing screen on every action
-        if 'cc' not in message_name:
+        if mapped_message_value is not None:
+            norm_message_value = mapped_message_value/127 
+        else:
+            norm_message_value = None
+        self.call_method_name(method_name, norm_message_value)
+        ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
+        if 'continuous' not in message_name:
             self.display.refresh_display()
 
     def call_method_name(self, method_name, argument=None):

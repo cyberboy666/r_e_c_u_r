@@ -247,7 +247,7 @@
                 "preferred",
                 "CEA 4 HDMI"
             ],
-            "value": "preferred"
+            "value": "CEA 4 HDMI"
         },
         "COMPOSITE_PROGRESSIVE": {
             "action": "change_composite_setting",

@@ -236,7 +236,7 @@ class Actions(object):
     def change_hdmi_settings(self, setting_value):
         if self.data.settings['video']['OUTPUT']['value'] == 'hdmi':
             if self.data.settings['video']['HDMI_MODE']['value'] == 'preferred':
-                subprocess.call(['tvservice', '-p'])
+                subprocess.call(['tvservice', '-p'], shell=True)
             elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
                 subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
             self._refresh_frame_buffer()

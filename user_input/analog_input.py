@@ -12,14 +12,18 @@ class AnalogInput(object):
         self.analog_delay = 50
         self.last_readings = [0,0,0,0,0,0,0,0]
 
-        SPI_PORT   = 1
-        SPI_DEVICE = 2
-        self.analog_input = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
         self.check_if_listening_enabled()
         
 
     def check_if_listening_enabled(self):
         if self.data.settings['other']['ANALOG_INPUT']['value'] == 'enabled':
+            if not self.analog_input:
+                try:
+                    SPI_PORT   = 1
+                    SPI_DEVICE = 2
+                    self.analog_input = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+                except:
+                    self.message_handler('INFO', 'analog inputs not connected')
             self.poll_analog_inputs()
         else:
             self.root.after(1000, self.check_if_listening_enabled)

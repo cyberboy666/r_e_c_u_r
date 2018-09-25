@@ -216,7 +216,8 @@ class Display(object):
             banner_list[0] = '<'
         elif position > end:
             banner_list[max] = '>'
-        elif end - start != 0:
+        elif end - start != 0 and position:
+            print('start value is {}, end value is {}, position is {}'.format(start, end, position))
             marker = int(math.floor(float(position - start) /
                                     float(end - start) * (max - 1)) + 1)
             banner_list[marker] = '*'

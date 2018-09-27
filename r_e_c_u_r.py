@@ -58,6 +58,7 @@ analog_input = AnalogInput(tk, message_handler, display, actions, data)
 
 actions.check_and_set_output_mode_on_boot()
 actions.check_dev_mode()
+actions.check_if_should_start_openframeworks()
 actions.toggle_x_autorepeat()
 
 frame.pack()

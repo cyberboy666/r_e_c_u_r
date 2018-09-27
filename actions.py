@@ -287,6 +287,28 @@ class Actions(object):
                     print('it is not in !')
                     self.data.update_setting_value('other','DEV_MODE_RESET', 'off')
 
+    def check_if_should_start_openframeworks(self):
+        if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
+            pass
+            subprocess.Popen(["make run --directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r" ], shell=True)
+
+    def exit_openframeworks(self):
+        self.video_driver.osc_client.send_message("/exit", True)
+
+    def toggle_of_screen_size(self, value):
+        if value == 'dev':
+            self.video_driver.osc_client.send_message("/dev_mode", True)
+        else:
+            self.video_driver.osc_client.send_message("/dev_mode", False)
+
+    def switch_video_backend(self, state):
+        if state == 'openframeworks':
+            self.check_if_should_start_openframeworks()
+        elif state == 'omxplayer':
+            self.exit_openframeworks()
+        self.video_driver.reset_all_players()
+        
+
     def change_composite_setting(self, setting_value):
         if setting_value == 'composite':
             mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
@@ -365,6 +387,7 @@ class Actions(object):
 
     def quit_the_program(self):
         self.video_driver.exit_all_players()
+        self.exit_openframeworks()
         self.exit_osc_server('','')
         self.toggle_x_autorepeat()
         self.tk.destroy()

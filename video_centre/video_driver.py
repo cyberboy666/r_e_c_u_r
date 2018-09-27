@@ -17,14 +17,10 @@ class VideoDriver(object):
         
         self.layer = self.MAX_LAYER
 
-        if(self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks'):
-            self.last_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'a.a')
-            self.current_player = AltVideoPlayer(self.root,self.message_handler, self.data, self.osc_client, 'b.b')
-            self.next_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'c.c')
-        else:
-            self.last_player = VideoPlayer(self.root, self.message_handler, self.data, 'a.a')
-            self.current_player = VideoPlayer(self.root,self.message_handler, self.data, 'b.b')
-            self.next_player = VideoPlayer(self.root, self.message_handler, self.data, 'c.c')
+        self.last_player = None
+        self.current_player = None
+        self.next_player = None
+        self.reset_all_players()
         
         self.root.after(self.delay, self.begin_playing)
         self.print_status()
@@ -117,8 +113,24 @@ class VideoDriver(object):
             return self.next_player.start, self.next_player.end, self.next_player.get_position()
 
     def exit_all_players(self):
-        self.next_player.exit()
-        self.current_player.exit()
+        if self.next_player:
+            self.next_player.exit()
+        if self.current_player:
+            self.current_player.exit()  
+        if self. last_player:
+            self.last_player.exit()
+
+    def reset_all_players(self):
+        self.exit_all_players()
+
+        if(self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks'):
+            self.last_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'a.a')
+            self.current_player = AltVideoPlayer(self.root,self.message_handler, self.data, self.osc_client, 'b.b')
+            self.next_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'c.c')
+        else:
+            self.last_player = VideoPlayer(self.root, self.message_handler, self.data, 'a.a')
+            self.current_player = VideoPlayer(self.root,self.message_handler, self.data, 'b.b')
+            self.next_player = VideoPlayer(self.root, self.message_handler, self.data, 'c.c')
 
     def reload_next_player(self):
         self.next_player.reload(self.get_next_layer_value())

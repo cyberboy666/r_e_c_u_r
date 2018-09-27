@@ -123,8 +123,16 @@
             ],
             "value": "off"
         },
+        "OF_SCREEN_SIZE": {
+            "action": "toggle_of_screen_size",
+            "options": [
+                "full",
+                "dev"
+            ],
+            "value": "dev"
+        },
         "VIDEO_BACKEND": {
-            "action": null,
+            "action": "switch_video_backend",
             "options": [
                 "omxplayer",
                 "openframeworks"

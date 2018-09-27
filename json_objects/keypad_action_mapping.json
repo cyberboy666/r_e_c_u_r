@@ -3,18 +3,21 @@
 		"NAV_BROWSER": ["move_browser_selection_up"],
 		"PLAYER": ["seek_back_on_player"],
 		"NAV_SETTINGS": ["move_settings_selection_up"],
+		"NAV_SHADERS": ["move_shaders_selection_up"],
         "LENGTH_SET": ["return_to_default_control_mode"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
 		"PLAYER": ["seek_forward_on_player"],
 		"NAV_SETTINGS": ["move_settings_selection_down"],
+		"NAV_SHADERS": ["move_shaders_selection_down"],
         "LENGTH_SET": ["return_to_default_control_mode"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
 		"PLAYER": ["toggle_action_on_player","toggle_show_on_player"],
 		"NAV_SETTINGS": ["enter_on_settings_selection"],
+		"NAV_SHADERS": ["enter_on_shaders_selection"],
         "LENGTH_SET": ["record_fixed_length"]
 	},
 	"d": {
@@ -53,7 +56,7 @@
 		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"]
 	},
 	"p": {
-		"DEFAULT": ["load_slot_6_into_next_player"]
+		"DEFAULT": ["load_slot_6_into_next_player","toggle_shaders"]
 	},
 	"q": {
 		"DEFAULT": ["load_slot_7_into_next_player"]

@@ -3,6 +3,12 @@ import tracemalloc
 import data_centre.length_setter as length_setter
 import sys
 import os
+from pythonosc import osc_message_builder
+from pythonosc import dispatcher
+from pythonosc import osc_server
+from pythonosc import dispatcher
+import threading
+import argparse
 
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, capture, shaders, display):
@@ -13,6 +19,7 @@ class Actions(object):
         self.capture = capture
         self.shaders = shaders
         self.display = display
+        self.server = self.setup_osc_server()
         
 
     def move_browser_selection_down(self):
@@ -38,6 +45,15 @@ class Actions(object):
                     getattr(self, setting['action'])()
                 else:
                     getattr(self, setting['action'])(setting['value'])
+
+    def move_shaders_selection_down(self):
+        self.shaders.shaders_menu.navigate_menu_down()
+
+    def move_shaders_selection_up(self):
+        self.shaders.shaders_menu.navigate_menu_up()
+
+    def enter_on_shaders_selection(self):
+        self.shaders.enter_on_shaders_selection()
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
@@ -81,10 +97,8 @@ class Actions(object):
         self.video_driver.switch_players_and_start_video()
 
     def cycle_display_mode(self):
-        self.display.top_menu_index = 0
-        self.display.selected_list_index = self.display.top_menu_index
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["SHADERS",'SHAD_BROWSER']]
+            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["SHADERS",'NAV_SHADERS']]
         else:
             display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
 
@@ -193,6 +207,12 @@ class Actions(object):
                 subprocess.call(['sudo', 'systemctl', 'stop', 'raspi2fb@1'])
         else:
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
+
+    def toggle_shaders(self):
+        if self.shaders.selected_status == 'RUNNING':
+            self.shaders.stop_selected_shader()
+        else:
+            self.shaders.start_selected_shader()
 
     def toggle_player_mode(self):
         if self.data.player_mode == 'now':
@@ -345,7 +365,7 @@ class Actions(object):
 
     def quit_the_program(self):
         self.video_driver.exit_all_players()
-        self.video_driver.exit_osc_server('','')
+        self.exit_osc_server('','')
         self.toggle_x_autorepeat()
         self.tk.destroy()
 
@@ -371,7 +391,30 @@ class Actions(object):
         self.display.settings_menu.generate_settings_list()
 
 
+    def setup_osc_server(self):
+        server_parser = argparse.ArgumentParser()
+        server_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
+        server_parser.add_argument("--port", type=int, default=9000, help="the port")
 
+        server_args = server_parser.parse_args()
+
+        this_dispatcher = dispatcher.Dispatcher()
+        this_dispatcher.map("/player/a/position", self.video_driver.receive_position, "a.a")
+        this_dispatcher.map("/player/b/position", self.video_driver.receive_position, "b.b")
+        this_dispatcher.map("/player/c/position", self.video_driver.receive_position, "c.c")
+        this_dispatcher.map("/player/a/status", self.video_driver.receive_status, "a.a")
+        this_dispatcher.map("/player/b/status", self.video_driver.receive_status, "b.b")
+        this_dispatcher.map("/player/c/status", self.video_driver.receive_status, "c.c")
+        this_dispatcher.map("/shutdown", self.exit_osc_server)
+        #this_dispatcher.map("/player/a/status", self.set_status)
+
+        server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
+        server_thread = threading.Thread(target=server.serve_forever)
+        server_thread.start()
+        return server
+
+    def exit_osc_server(self, unused_addr, args):
+        self.server.shutdown()
 
         
         

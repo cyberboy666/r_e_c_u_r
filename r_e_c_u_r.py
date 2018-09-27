@@ -4,6 +4,8 @@ import traceback
 from tkinter import Tk, Frame
 import sys
 import tracemalloc
+import argparse
+from pythonosc import udp_client
 
 from actions import Actions
 from data_centre.data import Data
@@ -29,10 +31,20 @@ message_handler = MessageHandler()
 
 data = Data(message_handler)
 
+def setup_osc_client():
+    client_parser = argparse.ArgumentParser()
+    client_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
+    client_parser.add_argument("--port", type=int, default=8000, help="the port")
+
+    client_args = client_parser.parse_args()
+
+    return udp_client.SimpleUDPClient(client_args.ip, client_args.port)
+
+osc_client = setup_osc_client()
 # setup the video driver
-video_driver = VideoDriver(tk, message_handler, data)
-capture = Capture(tk, message_handler, data)
-shaders = Shaders(tk, message_handler, data)
+video_driver = VideoDriver(tk, osc_client, message_handler, data)
+capture = Capture(tk, osc_client, message_handler, data)
+shaders = Shaders(tk, osc_client, message_handler, data)
 
 # setup the display
 display = Display(tk, video_driver, capture, shaders, message_handler, data)
@@ -54,6 +66,8 @@ tk.attributes("-fullscreen", True)
 def handle_error(exc, val, tb):
     print('traceback for error : {}'.format(traceback.format_exc()))
     message_handler.set_message('ERROR', val, traceback.format_exc())
+
+
 
 tk.report_callback_exception = handle_error
 

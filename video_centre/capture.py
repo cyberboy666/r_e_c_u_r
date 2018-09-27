@@ -7,8 +7,9 @@ import fractions
 class Capture(object):
     PREVIEW_LAYER = 255
 
-    def __init__(self, root, message_handler, data):
+    def __init__(self, root, osc_client, message_handler, data):
         self.root = root
+        self.osc_client = osc_client
         self.message_handler = message_handler
         self.data = data
         

@@ -1,19 +1,13 @@
 from video_centre.video_player import VideoPlayer
 from video_centre.alt_video_player import AltVideoPlayer
 
-from pythonosc import osc_message_builder
-from pythonosc import udp_client
-from pythonosc import dispatcher
-from pythonosc import osc_server
-import argparse
-import threading
-
 class VideoDriver(object):
 
     MAX_LAYER = 254
 
-    def __init__(self, root, message_handler, data):
+    def __init__(self, root, osc_client, message_handler, data):
         self.root = root
+        self.osc_client = osc_client
         self.message_handler = message_handler
         self.data = data
         self.delay = 50
@@ -21,9 +15,6 @@ class VideoDriver(object):
         self.in_current_playing_cycle = False
         self.in_next_load_cycle = False
         
-        self.server = self.setup_osc_server()
-        self.osc_client = self.setup_osc_client()
-
         self.layer = self.MAX_LAYER
 
         if(self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks'):
@@ -135,40 +126,6 @@ class VideoDriver(object):
     def exit_last_player_after_delay(self):
         self.root.after(100, self.last_player.exit)
 
-    def setup_osc_client(self):
-        client_parser = argparse.ArgumentParser()
-        client_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
-        client_parser.add_argument("--port", type=int, default=8000, help="the port")
-
-        client_args = client_parser.parse_args()
-
-        return udp_client.SimpleUDPClient(client_args.ip, client_args.port)
-
-    def setup_osc_server(self):
-        server_parser = argparse.ArgumentParser()
-        server_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
-        server_parser.add_argument("--port", type=int, default=9000, help="the port")
-
-        server_args = server_parser.parse_args()
-
-        this_dispatcher = dispatcher.Dispatcher()
-        this_dispatcher.map("/player/a/position", self.receive_position, "a.a")
-        this_dispatcher.map("/player/b/position", self.receive_position, "b.b")
-        this_dispatcher.map("/player/c/position", self.receive_position, "c.c")
-        this_dispatcher.map("/player/a/status", self.receive_status, "a.a")
-        this_dispatcher.map("/player/b/status", self.receive_status, "b.b")
-        this_dispatcher.map("/player/c/status", self.receive_status, "c.c")
-        this_dispatcher.map("/shutdown", self.exit_osc_server)
-        #this_dispatcher.map("/player/a/status", self.set_status)
-
-        server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
-        server_thread = threading.Thread(target=server.serve_forever)
-        server_thread.start()
-        return server
-
-    def exit_osc_server(self, unused_addr, args):
-        self.server.shutdown()
-
     def receive_position(self, unused_addr, player_name, args):
         print("the position of  player {} is set to {}".format(player_name,args))
         for player in [self.next_player, self.current_player, self.last_player]:
@@ -182,3 +139,5 @@ class VideoDriver(object):
             if player_name[0] in player.name:
                 player.status = args
                 break
+
+

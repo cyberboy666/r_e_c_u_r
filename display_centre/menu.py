@@ -171,6 +171,8 @@ class ShadersMenu(Menu):
 
     def __init__(self, data, message_handler, menu_height):
         Menu.__init__(self, data, message_handler, menu_height)
+        #self.top_menu_index = 1
+        #self.selected_list_index = 1
 
     def generate_raw_shaders_list(self):
         ######## starts the recursive process of listing all folders and shader files to display ########
@@ -192,7 +194,7 @@ class ShadersMenu(Menu):
             if (is_open):
                 next_path = '{}/{}'.format(root, folder)
                 next_level = current_level + 1
-                self._add_folder_to_shader_list(next_path, next_level)
+                self._add_folder_to_shaders_list(next_path, next_level)
 
         for f in files:
             split_name = os.path.splitext(f)

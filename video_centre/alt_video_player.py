@@ -103,7 +103,7 @@ class AltVideoPlayer:
     def toggle_pause(self):
         if self.status == "PLAYING":
             self.client.send_message("/player/{}/pause".format(self.name[0]), True)
-        elif self.status == "PAUSED":
+        elif self.status == "PAUSED" or self.status == "LOADED":
             self.client.send_message("/player/{}/play".format(self.name[0]), True)
         else:
             print("error toggling pause when video is neither playing or paused")

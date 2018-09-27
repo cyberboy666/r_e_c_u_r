@@ -47,30 +47,6 @@ class Menu(object):
         else:
             return False, '|'
  
-    def generate_browser_list(self):
-        ######## starts the recursive process of listing all folders and video files to display ########
-        self.browser_list = []
-        for path in PATHS_TO_BROWSER:
-            self._add_folder_to_browser_list(path, 0)
-        
-        for browser_line in self.browser_list:
-            is_file, name = self.extract_file_type_and_name_from_browser_format(browser_line['name'])
-            if is_file:
-                is_slotted, bankslot_number = self._is_file_in_memory_bank(name)
-                if is_slotted:
-                    browser_line['slot'] = bankslot_number
-        
-    def generate_settings_list(self):
-        self.settings_list = []
-        for sub_setting in self.settings.keys():
-            if sub_setting in self.settings_open_folders:
-                self.settings_list.append(dict(name=sub_setting + '/', value=''))
-                for setting in self.settings[sub_setting]:
-                    setting_value = self.make_empty_if_none(self.settings[sub_setting][setting]['value'])
-                    self.settings_list.append(dict(name=' ' + setting, value=setting_value))
-            else:   
-                self.settings_list.append(dict(name=sub_setting + '|', value=''))
-
     @staticmethod
     def extract_file_type_and_name_from_menu_format(dir_name):
         # removes whitespace and folder state from display item ########
@@ -147,6 +123,7 @@ class SettingsMenu(Menu):
     OTHER_ORDER = []
 
     def __init__(self, data, message_handler, menu_height):
+
         Menu.__init__(self, data, message_handler, menu_height)
         self.generate_settings_list()
 
@@ -190,9 +167,37 @@ class SettingsMenu(Menu):
                 ordered_tuple_list.append((other_key, dictionary[other_key]))
         return ordered_tuple_list
 
+class ShadersMenu(Menu):
 
+    def __init__(self, data, message_handler, menu_height):
+        Menu.__init__(self, data, message_handler, menu_height)
 
+    def generate_raw_shaders_list(self):
+        ######## starts the recursive process of listing all folders and shader files to display ########
+        self.menu_list = []
+        for path in self.data.PATHS_TO_SHADERS:
+            self._add_folder_to_shaders_list(path, 0)
+        return self.menu_list
+   
 
+    def _add_folder_to_shaders_list(self, current_path, current_level):
+        ######## adds the folders and shader files at the current level to the results list. recursively recalls at deeper level if folder is open ########
+        
+        root, dirs, files = next(os.walk(current_path))
+
+        indent = ' ' * 4 * (current_level)
+        for folder in dirs:
+            is_open, char = self._check_folder_state(folder)
+            self.menu_list.append(dict(name='{}{}{}'.format(indent, folder, char), is_shader=False))
+            if (is_open):
+                next_path = '{}/{}'.format(root, folder)
+                next_level = current_level + 1
+                self._add_folder_to_shader_list(next_path, next_level)
+
+        for f in files:
+            split_name = os.path.splitext(f)
+            if (split_name[1].lower() in ['.frag', '.shader', '.glsl', '.glslf', '.shader', '.fsh']):
+                self.menu_list.append(dict(name='{}{}'.format(indent, f), is_shader=True))
 
 
 

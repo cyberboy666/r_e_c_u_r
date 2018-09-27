@@ -9,14 +9,16 @@ class Display(object):
     ROW_OFFSET = 6.0
     TITLE = '================== r_e_c_u_r =================='
 
-    def __init__(self, tk, video_driver, capture, message_handler, data):
+    def __init__(self, tk, video_driver, capture, shaders, message_handler, data):
         self.tk = tk
         self.video_driver = video_driver
         self.capture = capture
+        self.shaders = shaders
         self.message_handler = message_handler
         self.data = data
         self.browser_menu = menu.BrowserMenu(self.data, self.message_handler, self.MENU_HEIGHT)      
         self.settings_menu = menu.SettingsMenu(self.data, self.message_handler, self.MENU_HEIGHT)
+        self.shaders_menu = self.shaders.shaders_menu
 
         #self.top_menu_index = 0
         #self.selected_list_index = self.top_menu_index
@@ -74,8 +76,10 @@ class Display(object):
             self._load_browser()
         elif self.data.display_mode == 'SETTINGS':
             self._load_settings()
-        else:
+        elif self.data.display_mode == 'SAMPLER':
             self._load_sampler()
+        elif self.data.display_mode == 'SHADERS':
+            self._load_shaders()
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         
 
@@ -137,6 +141,36 @@ class Display(object):
             self.display_text.insert(END, '\n')
 
         self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
+
+    def _load_shaders(self):
+        line_count = 0
+        self.display_text.insert(END, '------------------ <SHADERS> ------------------ \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
+        ## showing current shader info:
+        shader = self.shaders.selected_shader
+        self.display_text.insert(END, '{<6}:{<1}{<2} {^26} {<4}:{^5} \n'.format \
+            (self.shaders.selected_status,shader[shad_type], \
+            shader[shad_index], shader[name][0:26], '--:--' ))
+        for i in range(shader[param_number]):
+            self.display_text.insert(END, 'x{}{<2} '.format(i, self.shaders.selected_param_values[i]))
+        self.display_text.insert(END,'\n')
+        self.display_text.tag_add("COLUMN_NAME", 5.0, 7.0)
+        ## showing list of other shaders:
+        shaders_list = self.shaders.shaders_menu_list
+        number_of_shader_items = len(shaders_list)
+        shader_menu_height = self.MENU_HEIGHT - 1
+        for index in range(number_of_shader_items):
+            if line_count > shader_menu_height :
+                break
+            if index >= self.shaders.shaders_menu.top_menu_index:
+                shader_line = shaders_list[index]
+                self.display_text.insert(END, '{:<30} {<2}'.format(shader_line['name'][0:30], shader_line['shad_type']))
+                line_count = line_count + 1
+        for index in range(shader_menu_height - number_of_shader_items):
+            self.display_text.insert(END, '\n')        
+
+        self._highlight_this_row(self.shaders.shaders_menu.selected_list_index - self.shaders.shaders_menu.top_menu_index)
+
 
     def _load_message(self):
         if self.message_handler.current_message[1]:

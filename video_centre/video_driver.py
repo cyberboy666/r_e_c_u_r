@@ -158,6 +158,7 @@ class VideoDriver(object):
         this_dispatcher.map("/player/a/status", self.receive_status, "a.a")
         this_dispatcher.map("/player/b/status", self.receive_status, "b.b")
         this_dispatcher.map("/player/c/status", self.receive_status, "c.c")
+        this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
@@ -165,7 +166,7 @@ class VideoDriver(object):
         server_thread.start()
         return server
 
-    def exit_osc_server(self):
+    def exit_osc_server(self, unused_addr, args):
         self.server.shutdown()
 
     def receive_position(self, unused_addr, player_name, args):

@@ -26,6 +26,7 @@ class Data(object):
         
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
+        self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Shaders' ]
 
         ### state data
         self.auto_repeat_on = True

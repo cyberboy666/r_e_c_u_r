@@ -5,12 +5,13 @@ import sys
 import os
 
 class Actions(object):
-    def __init__(self, tk, message_handler, data, video_driver, capture, display):
+    def __init__(self, tk, message_handler, data, video_driver, capture, shaders, display):
         self.tk = tk
         self.message_handler = message_handler
         self.data = data
         self.video_driver = video_driver
         self.capture = capture
+        self.shaders = shaders
         self.display = display
         
 
@@ -82,15 +83,16 @@ class Actions(object):
     def cycle_display_mode(self):
         self.display.top_menu_index = 0
         self.display.selected_list_index = self.display.top_menu_index
-        if self.data.display_mode == "BROWSER":
-            self.data.display_mode = "SETTINGS"
-            self.data.control_mode = 'NAV_SETTINGS'
-        elif self.data.display_mode == "SAMPLER":
-            self.data.display_mode = "BROWSER"
-            self.data.control_mode = 'NAV_BROWSER'
-        elif self.data.display_mode == "SETTINGS":
-            self.data.display_mode = "SAMPLER"
-            self.data.control_mode = 'PLAYER'
+        if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
+            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["SHADERS",'SHAD_BROWSER']]
+        else:
+            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
+
+        current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
+        next_mode_index = (current_mode_index + 1) % len(display_modes) 
+        self.data.display_mode = display_modes[next_mode_index][0]
+        self.data.control_mode = display_modes[next_mode_index][1]
+
 
     def toggle_action_on_player(self):
         play = 'play' in self.data.settings['sampler']['ON_ACTION']['value']
@@ -343,7 +345,7 @@ class Actions(object):
 
     def quit_the_program(self):
         self.video_driver.exit_all_players()
-        self.video_driver.exit_osc_server()
+        self.video_driver.exit_osc_server('','')
         self.toggle_x_autorepeat()
         self.tk.destroy()
 

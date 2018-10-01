@@ -146,16 +146,18 @@ class Actions(object):
         print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
               
     def increase_speed(self):
+        print("increasing speed !")
         new_rate = self.video_driver.current_player.change_rate(0.5)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
-        self._load_this_slot_into_next_player(current_slot)
+        #self._load_this_slot_into_next_player(current_slot)
 
     def decrease_speed(self):
+        print("increasing speed !")
         new_rate = self.video_driver.current_player.change_rate(-0.5)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
-        self._load_this_slot_into_next_player(current_slot)
+        #self._load_this_slot_into_next_player(current_slot)
 
     def set_playing_sample_start_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
@@ -281,10 +283,8 @@ class Actions(object):
         #### check if in dev mode:(ie not using the lcd screen)
         with open('/boot/config.txt', 'r') as config:
                 if '##no_waveshare_overlay' in config.read():
-                    print('it is in !')
                     self.data.update_setting_value('other','DEV_MODE_RESET', 'on')
                 else:
-                    print('it is not in !')
                     self.data.update_setting_value('other','DEV_MODE_RESET', 'off')
 
     def check_if_should_start_openframeworks(self):
@@ -368,6 +368,7 @@ class Actions(object):
         with open('/boot/config.txt', 'r') as config:
             with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
                 if '##no_waveshare_overlay' in config.read() and 'dev/fb0' in framebuffer_conf.read():
+                    print('running the switch script')
                     self.run_script('switch_display_to_lcd')
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')

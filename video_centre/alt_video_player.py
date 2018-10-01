@@ -38,12 +38,7 @@ class AltVideoPlayer:
             
 
     def load(self, layer):
-        #try:
         self.get_context_for_player()
-        #is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
-        #arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
-        #if not is_dev_mode:
-         #   arguments.append('--blank=0x{}'.format(self.data.get_background_colour()))
         print('the location is {}'.format(self.location))
         if self.location == '':
             self.status = 'EMPTY'
@@ -53,7 +48,7 @@ class AltVideoPlayer:
             self.end = self.total_length
         if(self.start is -1):
             self.start = 0
-        self.client.send_message("/player/{}/load".format(self.name[0]), [self.location, self.start / self.total_length, self.end / self.total_length])
+        self.client.send_message("/player/{}/load".format(self.name[0]), [self.location, self.start / self.total_length, self.end / self.total_length, self.rate])
         self.crop_length = self.end - self.start
         if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
             self.set_alpha_value(255)
@@ -93,6 +88,7 @@ class AltVideoPlayer:
 
     def get_context_for_player(self):
         next_context = self.data.get_next_context()
+        print('the context is {}'.format(next_context))
         self.location = next_context['location']
         self.total_length = next_context['length']
         self.start = next_context['start']
@@ -129,16 +125,18 @@ class AltVideoPlayer:
             self.message_handler.set_message('INFO', 'can not seek outside range')
 
     def change_rate(self, amount):
-        pass
-        #new_rate = self.rate + amount
-        #if (new_rate > self.omx_player.minimum_rate() and new_rate < self.omx_player.maximum_rate()):
-         #   updated_speed = self.omx_player.set_rate(new_rate)
-          #  self.rate = new_rate
-            #print('max rate {} , min rate {} '.format(self.omx_player.maximum_rate() ,self.omx_player.minimum_rate()))
-            #return new_rate
-        #else:
-          #  self.message_handler.set_message('INFO', 'can not set speed outside of range')
-            #return self.rate
+        if self.rate is None:
+            self.rate = 1
+
+        new_rate = self.rate + amount
+        print('new rate is being set to {}'.format(new_rate))
+        if new_rate >=  0 and new_rate <= 3:
+            self.client.send_message("/player/{}/speed".format(self.name[0]), new_rate)
+            self.rate = new_rate
+            return new_rate
+        else:
+            self.message_handler.set_message('INFO', 'can not set speed outside of range')
+            return self.rate
 
     def get_position(self):
         return self.position
@@ -148,7 +146,7 @@ class AltVideoPlayer:
 
     def exit(self):
         try:
-            self.client.send_message("/player/{}/quit".format(self.name[0]),True) 
+            #self.client.send_message("/player/{}/quit".format(self.name[0]),True) 
             self.player_running = False
         except:
             pass

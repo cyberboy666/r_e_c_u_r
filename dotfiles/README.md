@@ -60,11 +60,10 @@ these are suppose to stop screensaver / hide cursor / remove on screen power war
 
 ## lcd display drivers
 
-~~these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).~~
+these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).~~
 
-~~my screen only needs the LCD35-show-180 and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching. (or keep em if you wanna flip the screen or try calibrating the touch screen)~~
+my screen only needs the LCD35-show-180 and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching. (or keep em if you wanna flip the screen or try calibrating the touch screen)
 
-not sure if you need to do any of this now ...
 
 ## installing raspi2fb
 
@@ -94,7 +93,7 @@ a line to Popen inside the python code toggles this on and off from here.
 - add these lines to the config:
 ```
 ## gives more memory to the gpu for playing 1080 videos (might need to adjust this when using older pis with less memory)
-gpu_mem=448
+gpu_mem=600
 ## enables the raspi camera
 start_x=1
 ## fixes bug with playback freezing

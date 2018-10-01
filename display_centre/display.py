@@ -197,7 +197,9 @@ class Display(object):
 
     def _get_status_for_player(self):
         now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()
+
         capture_status = self._generate_capture_status()        
+            
         preview_alpha = self.capture.get_preview_alpha()
 
         self._set_colour_from_alpha(now_alpha, preview_alpha, next_alpha)        

@@ -176,8 +176,16 @@ class Capture(object):
             return self.device.frame.timestamp / 1000000
 
     def get_preview_alpha(self):
-        if self.is_previewing:
-            return self.device.preview.alpha
+        if self.is_previewing and self.device is not None:
+            try:
+                return self.device.preview.alpha
+            except Exception as e:
+                print(e)
+                if hasattr(e, 'message'):
+                    error_info = e.message
+                else:
+                    error_info = e
+                self.message_handler.set_message('ERROR',error_info)            
         else:
             return 0
 

@@ -136,7 +136,8 @@ class VideoDriver(object):
         self.next_player.reload(self.get_next_layer_value())
 
     def exit_last_player_after_delay(self):
-        self.root.after(100, self.last_player.exit)
+        self.last_player.exit()        
+        #self.root.after(100, self.last_player.exit)
 
     def receive_position(self, unused_addr, player_name, args):
         print("the position of  player {} is set to {}".format(player_name,args))

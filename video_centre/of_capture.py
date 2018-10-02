@@ -1,14 +1,12 @@
 import os
 import subprocess
 import datetime
-import picamera
 import fractions
 
-class Capture(object):
-    PREVIEW_LAYER = 255
-
-    def __init__(self, root, message_handler, data):
+class OfCapture(object):
+    def __init__(self, root, osc_client, message_handler, data):
         self.root = root
+        self.osc_client = osc_client
         self.message_handler = message_handler
         self.data = data
         
@@ -17,20 +15,17 @@ class Capture(object):
         self.is_previewing = False
         self.video_dir = '/home/pi/Videos/'
         self.update_capture_settings()
-        self.create_capture_device()
+        #self.create_capture_device()
 
-        ## some capture settings
-
-
-    def create_capture_device(self):
-        if self.use_capture:
-            self.update_capture_settings()
-            try:
-                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
-            except picamera.exc.PiCameraError as e:
-                self.use_capture = False
-                print('camera exception is {}'.format(e))
-                self.message_handler.set_message('INFO', 'no capture device attached') 
+    #def create_capture_device(self):
+    #    if self.use_capture:
+    #        self.update_capture_settings()
+    #        try:
+    #            self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+    #        except picamera.exc.PiCameraError as e:
+    #            self.use_capture = False
+    #            print('camera exception is {}'.format(e))
+    #            self.message_handler.set_message('INFO', 'no capture device attached') 
 
     def update_capture_settings(self):
         ##setting class variables
@@ -56,46 +51,26 @@ class Capture(object):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return False
-        if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
-            self.osc_client.send_message("/capture/start", True)
-            self.is_previewing = True
-            return True
-        else:
-            if not self.device or self.device.closed:
-                self.create_capture_device()
-            self.is_previewing = True
-            self.device.start_preview()
-            self.set_preview_screen_size()
-            self.set_capture_settings()
-            self.device.preview.layer = self.PREVIEW_LAYER
-            return True            
+
+        self.is_previewing = True
+        self.set_capture_settings()
+        self.osc_client.send_message("/capture/preview/start", True)
+        return True
 
     def set_capture_settings(self):
         if self.capture_type == "piCaptureSd1":
-            self.device.sensor_mode = 6
-            self.device.awb_mode = "off"
-            self.device.awb_gains = 1.0
-            self.device.exposure_mode = "off"
+            pass
+            #self.device.sensor_mode = 6
+            #self.device.awb_mode = "off"
+            #self.device.awb_gains = 1.0
+            #self.device.exposure_mode = "off"
         else:
-            self.sensor_mode = 0
+            pass
+            #self.sensor_mode = 0
             
-
-    def set_preview_screen_size(self):
-        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
-            self.device.preview.fullscreen = False
-            self.device.preview.window = (50, 350, 500, 400)
-        else:
-            self.device.preview.fullscreen = True
-
     def stop_preview(self):
-        if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
-            self.osc_client.send_message("/capture/stop", True)
-            self.is_previewing = False
-        else:
-            self.device.stop_preview()
-            self.is_previewing = False
-            if not self.device.recording:
-                self.device.close()
+        self.osc_client.send_message("/capture/preview/stop", True)
+        self.is_previewing = False
 
     def start_recording(self):
         if self.use_capture == False:
@@ -103,13 +78,12 @@ class Capture(object):
             return
         if not self.check_available_disk_space():
             return
-        if self.device is None or self.device.closed:
-            self.create_capture_device()
         
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
         self.is_recording = True
-        self.device.start_recording(self.video_dir + '/raw.h264')
+        #self.device.start_recording(self.video_dir + '/raw.h264')
+        self.osc_client.send_message("/capture/record/start", True)
         self.monitor_disk_space()
 
     def monitor_disk_space(self):
@@ -128,7 +102,8 @@ class Capture(object):
             return True
 
     def stop_recording(self):
-        self.device.stop_recording()
+        #self.device.stop_recording()
+        self.osc_client.send_message("/capture/record/stop", True)
         #set status to saving
         mp4box_process, recording_name = self.convert_raw_recording()
         self.is_recording = 'saving'        
@@ -178,39 +153,20 @@ class Capture(object):
         return '{}/{}'.format(rec_dir,name), name 
 
     def get_recording_time(self):
-        if not self.device or not self.device.recording or self.device.frame.timestamp == None:
-            return -1
-        else:
-            return self.device.frame.timestamp / 1000000
+        pass
+        #if not self.device or not self.device.recording or self.device.frame.timestamp == None:
+        #   return -1
+        #else:
+        #    return self.device.frame.timestamp / 1000000
 
     def get_preview_alpha(self):
-        if self.is_previewing and self.device is not None:
-            try:
-                return self.device.preview.alpha
-            except Exception as e:
-                print(e)
-                if hasattr(e, 'message'):
-                    error_info = e.message
-                else:
-                    error_info = e
-                self.message_handler.set_message('ERROR',error_info)
-                return 0
-            return 0
+        return 0
 
     def set_colour(self, u_value, v_value):
-        (u, v) = (128, 128)
-        if self.device.color_effects is not None:
-            (u, v) = self.device.color_effects
-
-        if u_value is not None:
-            u = u_value
-        if v_value is not None:
-            v = v_value
-        self.device.color_effects = (u, v)
+        pass
 
     def set_alpha(self, amount):
-        if self.device.preview is not None:
-            self.device.preview.alpha = amount
+        pass
 
     @staticmethod
     def convert_resolution_value(setting_value):

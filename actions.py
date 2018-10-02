@@ -9,18 +9,27 @@ from pythonosc import osc_server
 from pythonosc import dispatcher
 import threading
 import argparse
+from video_centre.capture import Capture
+from video_centre.of_capture import OfCapture
 
 class Actions(object):
-    def __init__(self, tk, message_handler, data, video_driver, capture, shaders, display):
+    def __init__(self, tk, message_handler, data, video_driver, shaders, display, osc_client):
         self.tk = tk
         self.message_handler = message_handler
         self.data = data
         self.video_driver = video_driver
-        self.capture = capture
         self.shaders = shaders
         self.display = display
+        self.osc_client = osc_client
+        self.create_capture_object('value')
         self.server = self.setup_osc_server()
         
+    def create_capture_object(self, value):
+        if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
+            self.capture = OfCapture(self.tk, self.osc_client, self.message_handler, self.data)
+        else:
+            self.capture = Capture(self.tk, self.message_handler, self.data)
+        self.display.capture = self.capture
 
     def move_browser_selection_down(self):
         self.display.browser_menu.navigate_menu_down()
@@ -191,6 +200,13 @@ class Actions(object):
             is_successful = self.capture.start_preview()
             if is_successful and self.video_driver.current_player.status != 'PAUSED':
                 self.video_driver.current_player.toggle_pause()
+
+## these are temp for testing !
+    def start_of_capture_preview(self):
+        self.osc_client.send_message("/capture/start", True)
+
+    def stop_of_capture_preview(self):
+        self.osc_client.send_message("/capture/stop", True)
 
     def toggle_capture_recording(self):
         is_recording = self.capture.is_recording

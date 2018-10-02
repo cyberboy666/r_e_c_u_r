@@ -15,7 +15,7 @@ from user_input.numpad_input import NumpadInput
 from user_input.midi_input import MidiInput
 from user_input.analog_input import AnalogInput
 from video_centre.video_driver import VideoDriver
-from video_centre.capture import Capture
+#from video_centre.capture import Capture
 from video_centre.shaders import Shaders
 import data_centre
 
@@ -43,14 +43,14 @@ def setup_osc_client():
 osc_client = setup_osc_client()
 # setup the video driver
 video_driver = VideoDriver(tk, osc_client, message_handler, data)
-capture = Capture(tk, osc_client, message_handler, data)
+#capture = Capture(tk, osc_client, message_handler, data)
 shaders = Shaders(tk, osc_client, message_handler, data)
 
 # setup the display
-display = Display(tk, video_driver, capture, shaders, message_handler, data)
+display = Display(tk, video_driver, shaders, message_handler, data)
 
 # setup the actions
-actions = Actions(tk, message_handler, data, video_driver, capture, shaders, display)
+actions = Actions(tk, message_handler, data, video_driver, shaders, display, osc_client)
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)

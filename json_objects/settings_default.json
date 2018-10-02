@@ -131,6 +131,14 @@
             ],
             "value": "dev"
         },
+        "USE_OF_CAPTURE": {
+            "action": "create_capture_object",
+            "options": [
+                "yes",
+                "no"
+            ],
+            "value": "no"
+        },
         "VIDEO_BACKEND": {
             "action": "switch_video_backend",
             "options": [

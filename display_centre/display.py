@@ -9,10 +9,10 @@ class Display(object):
     ROW_OFFSET = 6.0
     TITLE = '================== r_e_c_u_r =================='
 
-    def __init__(self, tk, video_driver, capture, shaders, message_handler, data):
+    def __init__(self, tk, video_driver, shaders, message_handler, data):
         self.tk = tk
         self.video_driver = video_driver
-        self.capture = capture
+        self.capture = None
         self.shaders = shaders
         self.message_handler = message_handler
         self.data = data
@@ -198,9 +198,17 @@ class Display(object):
     def _get_status_for_player(self):
         now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()
 
-        capture_status = self._generate_capture_status()        
+        if self.capture is not None:
+            capture_status = self._generate_capture_status()
+            preview_alpha = self.capture.get_preview_alpha()
+        else:
+            capture_status = ''
+            preview_alpha = 0
             
-        preview_alpha = self.capture.get_preview_alpha()
+
+        if preview_alpha == None:
+            preview_alpha = 0
+        #print('capture alpha is {}'.format(preview_alpha))
 
         self._set_colour_from_alpha(now_alpha, preview_alpha, next_alpha)        
 
@@ -260,7 +268,10 @@ class Display(object):
 
     def _set_colour_from_alpha(self, now_alpha, preview_alpha, next_alpha):
         upper_bound = 150
-        is_recording = self.capture.is_recording == True
+        if self.capture is not None:
+            is_recording = self.capture.is_recording == True
+        else:
+            is_recording = False
         ### scale values
         scaled_now = int(( now_alpha / 255 ) * (255 - upper_bound) + upper_bound)
         scaled_preview = int(( preview_alpha / 255 ) * (255 - upper_bound) + upper_bound)

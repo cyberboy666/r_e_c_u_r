@@ -56,10 +56,6 @@ class Capture(object):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return False
-        if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
-            self.osc_client.send_message("/capture/start", True)
-            self.is_previewing = True
-            return True
         else:
             if not self.device or self.device.closed:
                 self.create_capture_device()
@@ -88,14 +84,11 @@ class Capture(object):
             self.device.preview.fullscreen = True
 
     def stop_preview(self):
-        if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
-            self.osc_client.send_message("/capture/stop", True)
-            self.is_previewing = False
-        else:
-            self.device.stop_preview()
-            self.is_previewing = False
-            if not self.device.recording:
-                self.device.close()
+
+        self.device.stop_preview()
+        self.is_previewing = False
+        if not self.device.recording:
+            self.device.close()
 
     def start_recording(self):
         if self.use_capture == False:

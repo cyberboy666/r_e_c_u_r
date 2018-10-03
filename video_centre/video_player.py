@@ -129,8 +129,9 @@ class VideoPlayer:
         self.rate = next_context['rate']
 
     def toggle_pause(self):
-        self.omx_player.play_pause()
-        self.status = self.omx_player.playback_status().upper()
+        if self.omx_player is not None:
+            self.omx_player.play_pause()
+            self.status = self.omx_player.playback_status().upper()
 
     def toggle_show(self):
         if self.alpha > 127:

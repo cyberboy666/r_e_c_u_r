@@ -62,7 +62,9 @@ class Actions(object):
         self.shaders.shaders_menu.navigate_menu_up()
 
     def enter_on_shaders_selection(self):
-        self.shaders.enter_on_shaders_selection()
+        is_shader, selected_shader = self.shaders.enter_on_shaders_selection()
+        if is_shader and selected_shader['shad_type'] == 'gen' and self.shaders.selected_status == '▶':
+            self.video_driver.current_player.toggle_pause()
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
@@ -227,10 +229,16 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
     def toggle_shaders(self):
-        if self.shaders.selected_status == 'RUNNING':
+        if self.shaders.selected_status == '▶':
             self.shaders.stop_selected_shader()
-        else:
+            if self.shaders.selected_shader['shad_type'] == 'gen':
+                self.video_driver.current_player.toggle_pause()
+        elif self.shaders.selected_status == '■':
             self.shaders.start_selected_shader()
+            if self.shaders.selected_shader['shad_type'] == 'gen':
+                self.video_driver.current_player.toggle_pause()
+        else:
+            self.message_handler.set_message('INFO', 'no shader loaded')
 
     def toggle_player_mode(self):
         if self.data.player_mode == 'now':

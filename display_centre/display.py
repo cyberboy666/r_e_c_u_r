@@ -148,11 +148,11 @@ class Display(object):
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
         ## showing current shader info:
         shader = self.shaders.selected_shader
-        self.display_text.insert(END, '{:<6}:{:<1}{:<2} {:^10} '.format \
-            (self.shaders.selected_status,shader['shad_type'], \
-            shader['shad_index'], shader['name'][0:26] ))
+        self.display_text.insert(END, '{:<1}:{:<1}{:<2} {:<17} '.format \
+            (self.shaders.selected_status,shader['shad_type'][0], \
+            format(shader['shad_index'],'02d'), shader['name'][0:17] ))
         for i in range(min(4,shader['param_number'])):
-            self.display_text.insert(END, 'x{}:{:<2} '.format(i, self.shaders.selected_param_values[i]))
+            self.display_text.insert(END, 'x{}:{num:02d} '.format(i, num=self.shaders.selected_param_values[i]))
         self.display_text.insert(END,'\n')
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         ## showing list of other shaders:

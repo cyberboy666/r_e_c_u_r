@@ -16,20 +16,20 @@ class Shaders(object):
         if self.shaders_menu_list is not None:
             pass
                  
-        self.selected_status = '-'
-        self.selected_param_values = [0,0,0,0,0,0,0,0]
+        self.selected_status = '-' ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_param_values = [0,0,0,0]
         #self.load_selected_shader()
 
     def generate_shaders_list(self):
         shaders_menu_list = []
         raw_list = self.shaders_menu.generate_raw_shaders_list()
-        print('raw list is {}: '.format(raw_list))
+        shad_i = 0
         for line in raw_list:
-            shad_i = 0
             if line['is_shader']:
                 has_path, path = self.get_path_for_shader(line['name'])
                 shad_type = self.determine_if_shader_file_is_processing(path)
                 parameter_number = self.determine_shader_parameter_number(path)
+                #print('shader index is {}'.format(shad_i))
                 shaders_menu_list.append(dict(name=line['name'],is_shader=True,shad_type=shad_type,param_number=parameter_number,path=path,shad_index=shad_i))
                 shad_i = shad_i +1
             else:
@@ -46,23 +46,39 @@ class Shaders(object):
         return False, ''
 
     def determine_if_shader_file_is_processing(self, path):
-        return True
+        with open(path, 'r') as selected_shader:
+                shader_text = selected_shader.read()
+                if '//pro-shader' in shader_text:
+                    return 'pro'
+                elif '//gen-shader' in shader_text:
+                    return 'gen'
+
+                else:
+                    return '-'
 
     def determine_shader_parameter_number(self, path):
-        return 4
+        max_amount = 4
+        with open(path, 'r') as selected_shader:
+            shader_text = selected_shader.read()
+            for i in range(max_amount):
+                if 'uniform float u_x{}'.format(i) not in shader_text:
+                    return i
+            return max_amount
 
     def load_selected_shader(self):
         print(self.selected_shader)
-        is_proc = self.selected_shader['shad_type'] == 'p'
-        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],is_proc,self.selected_shader['param_number']])
+        is_pro = self.selected_shader['shad_type'] == 'pro'
+        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],is_pro,self.selected_shader['param_number']])
+        if not self.selected_status == '▶':
+            self.selected_status = '■'
 
     def start_selected_shader(self):
         self.osc_client.send_message("/shader/start", True)
-        self.selected_status = 'RUNNING'
+        self.selected_status = '▶'
 
     def stop_selected_shader(self):
         self.osc_client.send_message("/shader/stop", True)
-        self.selected_status = 'READY'
+        self.selected_status = '■'
 
     def enter_on_shaders_selection(self):
         index = self.shaders_menu.selected_list_index
@@ -74,3 +90,4 @@ class Shaders(object):
         else:
             self.shaders_menu.update_open_folders(name)
         self.shaders_menu_list = self.generate_shaders_list()
+        return is_file, self.selected_shader

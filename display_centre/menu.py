@@ -198,7 +198,7 @@ class ShadersMenu(Menu):
 
         for f in files:
             split_name = os.path.splitext(f)
-            if (split_name[1].lower() in ['.frag', '.shader', '.glsl', '.glslf', '.shader', '.fsh']):
+            if (split_name[1].lower() in ['.frag', '.shader', '.glsl', '.glslf', '.fsh']):
                 self.menu_list.append(dict(name='{}{}'.format(indent, f), is_shader=True))
 
 

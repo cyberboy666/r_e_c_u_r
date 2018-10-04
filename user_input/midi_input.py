@@ -1,6 +1,7 @@
 import string
 import datetime
 import mido
+import subprocess
 
 class MidiInput(object):
     def __init__(self, root, message_handler, display, actions, data):
@@ -12,23 +13,34 @@ class MidiInput(object):
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
         self.midi_delay = 1
+        self.serial_port_process = None
         self.try_open_port()
 
     def try_open_port(self):
         midi_setting = self.data.settings['midi']['INPUT']['value']
         #print('try open port : midi setting is {}'.format(midi_setting))
-        if midi_setting == 'enabled':
-            midi_ports = mido.get_input_names()
-            midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]
-            if midi_device_on_port_20:
-                if self.data.midi_status == 'disconnected':
-                    self.midi_device = mido.open_input(midi_device_on_port_20[0])
-                    self.data.midi_status = 'connected'
-                    self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
-                    self.poll_midi_input()
-            elif self.data.midi_status == 'connected':
-                self.data.midi_status = 'disconnected'
+        if midi_setting == 'usb':
+            self.stop_serial_port_process()
+            self.open_this_port_and_start_listening(20)
+        elif midi_setting == 'serial':
+            self.create_serial_port_process()
+            self.open_this_port_and_start_listening(128)
+        else:
+            self.stop_serial_port_process()     
         self.root.after(1000, self.try_open_port)
+
+    def open_this_port_and_start_listening(self, port_number):
+        midi_ports = mido.get_input_names()
+        print('midi ports are {}'.format(midi_ports))
+        midi_device_on_port = [s for s in midi_ports if '{}:0'.format(port_number) in s]
+        if midi_device_on_port:
+            if self.data.midi_status == 'disconnected':
+                self.midi_device = mido.open_input(midi_device_on_port[0])
+                self.data.midi_status = 'connected'
+                self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
+                self.poll_midi_input()
+        elif self.data.midi_status == 'connected':
+            self.data.midi_status = 'disconnected'
 
     def poll_midi_input(self):
         i = 0
@@ -106,6 +118,15 @@ class MidiInput(object):
         else:
             getattr(self.actions, method_name)()
 
+    def create_serial_port_process(self):
+        if self.serial_port_process == None:
+            self.serial_port_process = subprocess.Popen("exec " + "ttymidi -s /dev/serial0 -b 38400 -n serial", shell=True)
+            print('created the serial port process ? {}'.format(self.serial_port_process))        
+
+    def stop_serial_port_process(self):
+        if self.serial_port_process is not None:
+            self.serial_port_process.kill()
+            self.serial_port_process = None
 
 
 

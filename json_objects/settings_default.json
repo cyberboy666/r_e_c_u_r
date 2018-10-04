@@ -95,7 +95,8 @@
         "INPUT": {
             "action": null,
             "options": [
-                "enabled",
+                "usb",
+                "serial",
                 "disabled"
             ],
             "value": "disabled"

@@ -19,9 +19,16 @@ class AnalogInput(object):
         if self.data.settings['other']['ANALOG_INPUT']['value'] == 'enabled':
             if not self.analog_input:
                 try:
-                    SPI_PORT   = 1
-                    SPI_DEVICE = 2
-                    self.analog_input = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+                    ## note - using software spi for now although on the same pins as the hardware spi described below because hardware spi wasnt working with lcd display
+                    #SPI_PORT   = 1
+                    #SPI_DEVICE = 2
+                    #self.analog_input = Adafruit_MCP3008.MCP3008(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
+                    CLK  = 21
+                    MISO = 19
+                    MOSI = 20
+                    CS   = 16
+                    self.analog_input = Adafruit_MCP3008.MCP3008(clk=CLK, cs=CS, miso=MISO, mosi=MOSI)
+
                 except:
                     self.message_handler('INFO', 'analog inputs not connected')
             self.poll_analog_inputs()

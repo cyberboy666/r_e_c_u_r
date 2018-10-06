@@ -4,30 +4,35 @@
 		"PLAYER": ["seek_back_on_player"],
 		"NAV_SETTINGS": ["move_settings_selection_up"],
 		"NAV_SHADERS": ["move_shaders_selection_up"],
-        "LENGTH_SET": ["return_to_default_control_mode"]
+        "LENGTH_SET": ["return_to_default_control_mode"],
+        "SHADER_PARAM": ["decrease_this_param"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
 		"PLAYER": ["seek_forward_on_player"],
 		"NAV_SETTINGS": ["move_settings_selection_down"],
 		"NAV_SHADERS": ["move_shaders_selection_down"],
-        "LENGTH_SET": ["return_to_default_control_mode"]
+        "LENGTH_SET": ["return_to_default_control_mode"],
+        "SHADER_PARAM": ["increase_this_param"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
 		"PLAYER": ["toggle_action_on_player","toggle_show_on_player"],
 		"NAV_SETTINGS": ["enter_on_settings_selection"],
 		"NAV_SHADERS": ["enter_on_shaders_selection"],
-        "LENGTH_SET": ["record_fixed_length"]
+        "LENGTH_SET": ["record_fixed_length"],
+        "SHADER_PARAM": ["return_to_default_control_mode"]
 	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"]
 	},
 	"e": {
-		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"]
+		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"],
+        "SHADER_PARAM": ["decrease_param_focus"]
 	},
 	"f": {
-		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"]
+		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"],
+        "SHADER_PARAM": ["increase_param_focus"]
 	},
 	"g": {
         "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},

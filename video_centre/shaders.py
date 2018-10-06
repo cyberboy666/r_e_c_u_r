@@ -3,6 +3,7 @@ import os
 
 class Shaders(object):
     MENU_HEIGHT = 10
+    PARAM_STEP = 0.2
     EMPTY_SHADER = dict(name='none',is_shader=True,shad_type='-',param_number=0,path='-',shad_index=0)
     def __init__(self, root, osc_client, message_handler, data):
         self.root = root
@@ -11,13 +12,14 @@ class Shaders(object):
         self.data = data
         self.shaders_menu = menu.ShadersMenu(self.data, self.message_handler, self.MENU_HEIGHT )
         self.selected_shader = self.EMPTY_SHADER
+        self.focused_param = None
         self.shaders_menu_list = self.generate_shaders_list()
         print(self.shaders_menu_list)
         if self.shaders_menu_list is not None:
             pass
                  
         self.selected_status = '-' ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
-        self.selected_param_values = [0,0,0,0]
+        self.selected_param_values = [0.0,0.0,0.0,0.0]
         #self.load_selected_shader()
 
     def generate_shaders_list(self):
@@ -67,6 +69,7 @@ class Shaders(object):
 
     def load_selected_shader(self):
         print(self.selected_shader)
+        self.selected_param_values = [0.0,0.0,0.0,0.0]
         is_pro = self.selected_shader['shad_type'] == 'pro'
         self.osc_client.send_message("/shader/load", [self.selected_shader['path'],is_pro,self.selected_shader['param_number']])
         if not self.selected_status == '▶':
@@ -84,10 +87,39 @@ class Shaders(object):
         index = self.shaders_menu.selected_list_index
         is_file, name = self.shaders_menu.extract_file_type_and_name_from_menu_format(
             self.shaders_menu_list[index]['name'])
-        if is_file:
+        is_selected_shader = False
+        if is_file and name == self.selected_shader['name']:
+            is_selected_shader = True
+        elif is_file:
             self.selected_shader = self.shaders_menu_list[index]
             self.load_selected_shader()
         else:
             self.shaders_menu.update_open_folders(name)
         self.shaders_menu_list = self.generate_shaders_list()
-        return is_file, self.selected_shader
+        return is_file, is_selected_shader, self.selected_shader
+
+    def increase_this_param(self):
+        param = self.focused_param
+        current_amount = self.selected_param_values[param]
+        amount = self.get_new_param_amount(current_amount,self.PARAM_STEP)
+        self.set_param_to_amount(param, amount)
+
+    def decrease_this_param(self):
+        param = self.focused_param
+        current_amount = self.selected_param_values[param]
+        amount = self.get_new_param_amount(current_amount,-self.PARAM_STEP)
+        self.set_param_to_amount(param, amount)
+    
+    @staticmethod
+    def get_new_param_amount(current, change):
+        if current + change > 1:
+            return 1
+        elif current + change < 0:
+            return 0
+        else: 
+            return current + change
+    
+    def set_param_to_amount(self, param, amount):
+        self.osc_client.send_message("/shader/param", [param, amount] )
+        self.selected_param_values[param] = amount
+        

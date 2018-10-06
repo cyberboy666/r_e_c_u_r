@@ -152,7 +152,10 @@ class Display(object):
             (self.shaders.selected_status,shader['shad_type'][0], \
             format(shader['shad_index'],'02d'), shader['name'][0:17] ))
         for i in range(min(4,shader['param_number'])):
-            self.display_text.insert(END, 'x{}:{num:02d} '.format(i, num=self.shaders.selected_param_values[i]))
+            display_param = self.format_param_value(self.shaders.selected_param_values[i])
+            if display_param == 100:
+                display_param == 99
+            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
         self.display_text.insert(END,'\n')
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         ## showing list of other shaders:
@@ -317,3 +320,10 @@ class Display(object):
             return ''
         else:
             return value
+
+    @staticmethod
+    def format_param_value(value):
+        display_param = int(100 * value)
+        if display_param == 100:
+            display_param = 99
+        return display_param

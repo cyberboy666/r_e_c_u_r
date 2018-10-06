@@ -62,8 +62,12 @@ class Actions(object):
         self.shaders.shaders_menu.navigate_menu_up()
 
     def enter_on_shaders_selection(self):
-        is_shader, selected_shader = self.shaders.enter_on_shaders_selection()
-        if is_shader and selected_shader['shad_type'] == 'gen' and self.shaders.selected_status == '▶':
+        ##want to select shader if its not selected, and want to enter 'param' mode if it already is
+        is_shader, is_selected_shader, selected_shader = self.shaders.enter_on_shaders_selection()
+        print('is selected shader: {}'.format(is_selected_shader))
+        if is_selected_shader and selected_shader['param_number'] > 0:
+            self.set_shader_param_mode()
+        elif is_shader and selected_shader['shad_type'] == 'gen' and self.shaders.selected_status == '▶':
             self.video_driver.current_player.toggle_pause()
 
     def clear_all_slots(self):
@@ -421,6 +425,22 @@ class Actions(object):
         self.quit_the_program()
         os.execv('/usr/bin/python3', [sys.argv[0],'/home/pi/r_e_c_u_r/r_e_c_u_r.py'])
         
+    def set_shader_param_mode(self):
+        self.data.control_mode = 'SHADER_PARAM'
+        self.message_handler.set_message('INFO', '[ ]: focus  < >: level ■: back')
+        self.shaders.focused_param = 0
+
+    def increase_this_param(self):
+        self.shaders.increase_this_param()
+
+    def decrease_this_param(self):
+        self.shaders.decrease_this_param()
+
+    def increase_param_focus(self):
+        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader['param_number']
+
+    def decrease_param_focus(self):
+        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader['param_number']
 
     def set_fixed_length(self, value):
         self.data.control_mode = 'LENGTH_SET'
@@ -430,8 +450,9 @@ class Actions(object):
 
     def return_to_default_control_mode(self):
         if self.data.control_mode == 'LENGTH_SET':
-            pass
-        self.data.control_mode = 'NAV_SETTINGS'
+            self.data.control_mode = 'NAV_SETTINGS'
+        if self.data.control_mode == 'SHADER_PARAM':
+            self.data.control_mode = 'NAV_SHADERS'
 
     def record_fixed_length(self):
         if self.fixed_length_setter:

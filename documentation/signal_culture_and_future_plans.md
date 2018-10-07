@@ -65,6 +65,7 @@ here are some things im thinking about doing/trying from here:
 
 - get this messy web of features polished enough that its worth creating a new sd img so others can flash and try these software updates out (im including a switch between omxplayer backend to retain existing functionallity, and the option to try and test the more experimental openframeworks backend )
 - investigate sending external control (midi + analog readings) straight to openframeworks rather than python. this probably involves sacrificing some of the customablity of mapping any input to any action for a performance increase (as it is i doubt my python code is fast enough to respond to eurorack without noticable stepping...)
+- create another video demo to show these new aspects
 - create a new physical version : this time using a raspi compute board on a custom pcb for eurorack standand with cv/trigger in circuits , faceplate and using the numpad detached via wifi (probably 20hp)
 - hopefully have the software running stable enough and a buildpipe thats slightly more optimized than 'wait 9 hours for the case to print' so that small assembled runs become feasible for getting these to non-diy-ers
 - investigate the feasiblity of creating even more accessable stripped version (composite only?) on the raspi0 (probaby not feasible but iv been constantly suprized at what gpu accelerated sbc's can do!)

@@ -45,10 +45,25 @@ at SC i created a circuit that allows 8 analog inputs (4 pots, 4 0-5v cv) and se
 
 having defined these different areas of the __r_e_c_u_r__ video instrument, we also have created some powerful combinations (some are trival/obvious like _i_n_c_u_r_ + _r_e_c_u_r_ for external sequencing of video samples, or _c_a_p_t_u_r_ + _r_e_c_u_r_ for recording live input directly followed by sampling it) others include:
 
+- _i_n_c_u_r_ + _c_o_n_j_u_r_ : shaders can be written to respond in real time based on user input. usaully this is in the form of the mouse-x&y position. for recur i have defined normalized parameter inputs that can be used to manipulate any portion of the glsl code. having knobs or cv control over these parameters greatly increases the playablity of the shaders.
+
 - _r_e_c_u_r_ + _c_o_n_j_u_r_ : at first i was thinking of video-files and glsl-shaders as seperate sources for creating video. however then i discovered how you can also _use_ a glsl-shader to process a video-file (shaders can take textures as input, one of which can be a video), leading me to make the distintion in recur between _generating shaders_ and _processing shaders_ .
 
 - c_a_p_t_u_r_ + _c_o_n_j_u_r_ : not only can _processing shaders_ accept video as a texture-input, they can also take texture from a live input (a camera or capture card for example). this means recur can also be used to process live video input in real time.
 
 ## direction
 
-what started as a simple solution for seamless prerecorded video playback is starting to look something closer to the video equivalent to audios groovebox - where a (good) groovebox may include sampling, sequencing, synth-presets, audio-effects and live-input/effect-through , this new __r_e_c_u_r__ + _i_n_c_u_r_ + _c_o_n_j_u_r_ + _c_a_p_t_u_r_ may come close to a fully open, customizable and diy video analogue.
+what started as a simple solution for seamless prerecorded video playback is starting to look something closer to the video equivalent to audios groovebox - where a (good) groovebox may include sampling, sequencing, synth-presets, audio-effects and live-input/effect-through , this new __r_e_c_u_r__ + _i_n_c_u_r_ + _c_o_n_j_u_r_ + _c_a_p_t_u_r_ may come close to a fully open, customizable and diy digital video analogue.
+
+## future plans
+
+much of what is outlined above is in varying stages of development. proofs of concepts have been compeleted, but lots of the new (esp openframework) code is buggy and needs tidying and testing. for example my incur circuit is thrown together on perf-board and soldered straight to the pi...
+
+here are some things im thinking about doing/trying from here:
+
+- get this messy web of features polished enough that its worth creating a new sd img so others can flash and try these software updates out (im including a switch between omxplayer backend to retain existing functionallity, and the option to try and test the more experimental openframeworks backend )
+- investigate sending external control (midi + analog readings) straight to openframeworks rather than python. this probably involves sacrificing some of the customablity of mapping any input to any action for a performance increase (as it is i doubt my python code is fast enough to respond to eurorack without noticable stepping...)
+- create a new physical version : this time using a raspi compute board on a custom pcb for eurorack standand with cv/trigger in circuits , faceplate and using the numpad detached via wifi (probably 20hp)
+- hopefully have the software running stable enough and a buildpipe thats slightly more optimized than 'wait 9 hours for the case to print' so that small assembled runs become feasible for getting these to non-diy-ers
+- investigate the feasiblity of creating even more accessable stripped version (composite only?) on the raspi0 (probaby not feasible but iv been constantly suprized at what gpu accelerated sbc's can do!)
+- colaberate on creating some workshops for: _intro to video hardware instruments : some hacky open diy projects_ ...

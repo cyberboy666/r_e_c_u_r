@@ -15,6 +15,8 @@ _an optional extension for live sampling through the pi camera input_
 
 this was paritally included in v1 although limited to inputs from the rpi-camera. while at SC i had the chance to try it with a piCaptureSd1 hat which allows sd video input from composite, component and svideo. some settings have been added to improve the captur image.
 
+- TODO : experiment with capture from usb-webcam and cheep usb capure cards. with prob be lowfi and or laggy but also still fun.
+
 ## c_o_n_j_u_r
 
 _an alternative openframeworks backend for extended video control and glsl-shader intergration_

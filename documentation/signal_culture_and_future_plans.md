@@ -21,9 +21,9 @@ this was paritally included in v1 although limited to inputs from the rpi-camera
 
 _an alternative openframeworks backend for extended video control and glsl-shader intergration_
 
-this is the largest addition from the v1 release. although omxplayer is a gpu-accelerated videoplayer that is stable and forgiving it is designed as a mediaplayer for watching films etc, not as a platform for creative coding. r_e_c_u_r can sequence omxplayer to playback samples exactly how they are (and seek etc for sublooping) but is limiting for any futher playback manipulation - even varying playback speed was quite difficult through omxplayer.
+this is the largest addition from the v1 release. although omxplayer is a gpu-accelerated videoplayer that is stable and forgiving it is designed as a mediaplayer for watching films etc, not as a platform for creative coding. r_e_c_u_r can sequence omxplayer to playback samples exactly how they are (and seek etc for sublooping) .
 
-openframeworks is more suited for video manipulation and opens a lot of possiblites to how the samples can be played. one example is the ability to adjust the playback speed, including playing videos backwards.
+openframeworks is more suited for video manipulation and opens a lot of possiblites to how the samples can be played.
 
 ### shaders
 

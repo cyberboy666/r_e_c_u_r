@@ -11,7 +11,7 @@ class AnalogInput(object):
         self.analog_mappings = data.analog_mappings
         self.analog_delay = 50
         self.last_readings = [0,0,0,0,0,0,0,0]
-
+        self.analog_input = None
         self.check_if_listening_enabled()
         
 
@@ -40,7 +40,7 @@ class AnalogInput(object):
             for i in range(0,8):        
                 if str(i) in self.analog_mappings:
                     this_reading = self.analog_input.read_adc(i)
-                    if this_reading - self.last_readings[i] > 3:
+                    if abs(this_reading - self.last_readings[i]) > 2:
                         self.run_action_for_mapped_channel(i, this_reading)
                     self.last_readings[i] = this_reading
             self.root.after(self.analog_delay, self.poll_analog_inputs)

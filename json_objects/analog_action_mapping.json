@@ -1,5 +1,15 @@
 {
-    "7": {
-		"DEFAULT": ["set_the_current_video_alpha_continuous"]
+    "0": {
+		"DEFAULT": ["set_the_shader_param_0_continuous"]
+	},
+    "1": {
+		"DEFAULT": ["set_the_shader_param_1_continuous"]
+	},
+    "2": {
+		"DEFAULT": ["set_the_shader_param_2_continuous"]
+	},
+    "3": {
+		"DEFAULT": ["set_the_shader_param_3_continuous"]
 	}
+
 }

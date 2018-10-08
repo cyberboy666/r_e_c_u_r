@@ -128,9 +128,9 @@ class AltVideoPlayer:
         if self.rate is None:
             self.rate = 1
 
-        new_rate = self.rate + amount
+        new_rate = amount #self.rate + amount
         print('new rate is being set to {}'.format(new_rate))
-        if new_rate >=  0 and new_rate <= 3:
+        if new_rate >=  -3 and new_rate <= 3:
             self.client.send_message("/player/{}/speed".format(self.name[0]), new_rate)
             self.rate = new_rate
             return new_rate
@@ -144,12 +144,17 @@ class AltVideoPlayer:
     def set_position(self, position):
         self.client.send_message("/player/{}/position".format(self.name[0]), position / self.total_length)
 
+    def exit_after_delay(self):
+        self.root.after(100, self.exit)
+
     def exit(self):
+        #self.last_player.exit()        
         try:
-            #self.client.send_message("/player/{}/quit".format(self.name[0]),True) 
+            self.client.send_message("/player/{}/quit".format(self.name[0]),True) 
             self.player_running = False
         except:
             pass
+
 
     ## not sure if i am going to implement this atm 
     def set_screen_size_for_dev_mode(self):

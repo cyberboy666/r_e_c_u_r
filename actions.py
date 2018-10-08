@@ -162,14 +162,14 @@ class Actions(object):
               
     def increase_speed(self):
         print("increasing speed !")
-        new_rate = self.video_driver.current_player.change_rate(0.5)
+        new_rate = self.video_driver.current_player.change_rate(1)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
         #self._load_this_slot_into_next_player(current_slot)
 
     def decrease_speed(self):
         print("increasing speed !")
-        new_rate = self.video_driver.current_player.change_rate(-0.5)
+        new_rate = self.video_driver.current_player.change_rate(-1)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
         #self._load_this_slot_into_next_player(current_slot)
@@ -265,6 +265,17 @@ class Actions(object):
     def set_the_next_video_alpha_continuous(self, amount):
         self.video_driver.next_player.set_alpha_value(amount*255)
 
+    def set_the_shader_param_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount)
+
+    def set_the_shader_param_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount)
+
+    def set_the_shader_param_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount)
+
+    def set_the_shader_param_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount)
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
@@ -296,6 +307,7 @@ class Actions(object):
     def check_and_set_output_mode_on_boot(self):
         #### checking if pi display mode is composite
         response = str(subprocess.check_output(['tvservice', '-s']))
+        print('tvservice response is {}'.format(response))
         if 'PAL' in response or 'NTSC' in response:
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
@@ -379,8 +391,10 @@ class Actions(object):
 
     def switch_dev_mode(self, state):
         if state == 'on':
+            self.video_driver.osc_client.send_message("/dev_mode", True)
             self.switch_display_to_hdmi()
         elif state == 'off':
+            self.video_driver.osc_client.send_message("/dev_mode", False)
             self.switch_display_to_lcd()
 
     def switch_display_to_hdmi(self):

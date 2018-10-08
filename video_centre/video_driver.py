@@ -75,7 +75,7 @@ class VideoDriver(object):
 
     def start_video(self):
         self.current_player.start_video()
-        self.exit_last_player_after_delay()
+        self.last_player.exit()    
         self.next_player.try_load(self.get_next_layer_value())
         self.in_current_playing_cycle = True
         self.wait_for_next_cycle()
@@ -135,12 +135,8 @@ class VideoDriver(object):
     def reload_next_player(self):
         self.next_player.reload(self.get_next_layer_value())
 
-    def exit_last_player_after_delay(self):
-        self.last_player.exit()        
-        #self.root.after(100, self.last_player.exit)
-
     def receive_position(self, unused_addr, player_name, args):
-        print("the position of  player {} is set to {}".format(player_name,args))
+        #print("the position of  player {} is set to {}".format(player_name,args))
         for player in [self.next_player, self.current_player, self.last_player]:
             if player_name[0] in player.name :
                 player.position = args * player.total_length

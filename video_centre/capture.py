@@ -27,9 +27,9 @@ class Capture(object):
             self.update_capture_settings()
             try:
                 self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
-                self.message_handler.set_message('INFO', 'capture didnt error ?')
             except picamera.exc.PiCameraError as e:
                 self.use_capture = False
+                self.data.settings['capture']['DEVICE']['value'] = 'disabled'
                 print('camera exception is {}'.format(e))
                 self.message_handler.set_message('INFO', 'no capture device attached') 
 
@@ -60,6 +60,8 @@ class Capture(object):
         else:
             if not self.device or self.device.closed:
                 self.create_capture_device()
+                if self.use_capture == False:
+                    return False
             self.is_previewing = True
             self.device.start_preview()
             self.set_preview_screen_size()
@@ -99,6 +101,8 @@ class Capture(object):
             return
         if self.device is None or self.device.closed:
             self.create_capture_device()
+            if self.use_capture == False:
+                return
         
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)

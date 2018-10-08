@@ -40,6 +40,7 @@ class Display(object):
         self.display_text.tag_configure("NOW_PLAYER_INFO", background="black", foreground="yellow")
         self.display_text.tag_configure("NEXT_PLAYER_INFO", background="black", foreground="cyan")
         self.display_text.tag_configure("COLUMN_NAME", background="black", foreground="VioletRed1")
+        self.display_text.tag_configure("SHADER_PARAM", background="VioletRed1", foreground="black")
         self.display_text.tag_configure("FUNCTION", background="yellow", foreground="black")
         self.display_text.tag_configure("BROKEN_PATH", background="black", foreground="gray")
         
@@ -171,6 +172,8 @@ class Display(object):
         for index in range(self.MENU_HEIGHT - number_of_shader_items):
             self.display_text.insert(END, '\n')        
         self._highlight_this_row(self.shaders.shaders_menu.selected_list_index - self.shaders.shaders_menu.top_menu_index)
+        if self.data.control_mode == "SHADER_PARAM":
+            self._highlight_this_param(self.shaders.focused_param)
 
 
     def _load_message(self):
@@ -197,6 +200,13 @@ class Display(object):
     def _unhighlight_this_row(self, row):
         self.display_text.tag_remove("SELECT", self.ROW_OFFSET + row,
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
+
+    def _highlight_this_param(self, param_num):
+        param_row = self.ROW_OFFSET - 1
+        column_offset = 0.24
+        param_length = 0.05
+        self.display_text.tag_add("SHADER_PARAM", param_row + column_offset + param_num*param_length,
+param_row + column_offset + (param_num+1)*param_length)
 
     def _get_status_for_player(self):
         now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()
@@ -262,7 +272,7 @@ class Display(object):
         elif position > end:
             banner_list[max] = '>'
         elif end - start != 0 and not math.isnan(position) :
-            print('start value is {}, end value is {}, position is {}'.format(start, end, position))
+            #print('start value is {}, end value is {}, position is {}'.format(start, end, position))
             marker = int(math.floor(float(position - start) /
                                     float(end - start) * (max - 1)) + 1)
             banner_list[marker] = '*'

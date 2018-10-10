@@ -24,7 +24,10 @@ class Capture(object):
 
     def create_capture_device(self):
         if self.use_capture:
+            if self.piCapture_with_no_source():
+                return
             self.update_capture_settings()
+            
             try:
                 self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
             except picamera.exc.PiCameraError as e:
@@ -32,6 +35,16 @@ class Capture(object):
                 self.data.settings['capture']['DEVICE']['value'] = 'disabled'
                 print('camera exception is {}'.format(e))
                 self.message_handler.set_message('INFO', 'no capture device attached') 
+
+    def piCapture_with_no_source(self):
+        is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
+        if 'Video Processor was not found' not in str(is_piCapture):
+            self.data.settings['capture']['TYPE']['value'] = "piCaptureSd1"
+            is_source = subprocess.check_output(['pivideo', '--query', 'lock'])
+            if 'No active video detected' in str(is_source):
+                self.message_handler.set_message('INFO', 'piCapture detected w no input source')
+                return True
+        return False
 
     def update_capture_settings(self):
         ##setting class variables
@@ -226,6 +239,9 @@ class Capture(object):
             return int(1000000 / self.framerate)
         else:
             return int(fractions.Fraction(setting_value) * 1000000)
+
+    def receive_state(self, unused_addr, args):
+        pass
 
 
 

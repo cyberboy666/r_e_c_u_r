@@ -2,6 +2,7 @@ import os
 import subprocess
 import datetime
 import fractions
+import picamera
 
 class OfCapture(object):
     def __init__(self, root, osc_client, message_handler, data):
@@ -10,22 +11,39 @@ class OfCapture(object):
         self.message_handler = message_handler
         self.data = data
         
-        self.device = None
+        self.has_capture = False
         self.is_recording = False
         self.is_previewing = False
         self.video_dir = '/home/pi/Videos/'
         self.update_capture_settings()
         #self.create_capture_device()
 
-    #def create_capture_device(self):
-    #    if self.use_capture:
-    #        self.update_capture_settings()
+    def create_capture_device(self):
+        if self.use_capture:
+            if self.piCapture_with_no_source():
+                print('its picapture with no source !')
+                return
+            self.update_capture_settings()
+            if not self.check_if_attached_with_picamera():
+                return
+            print('sending setup message !')
+            self.osc_client.send_message("/capture/setup", True)
     #        try:
     #            self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
     #        except picamera.exc.PiCameraError as e:
     #            self.use_capture = False
     #            print('camera exception is {}'.format(e))
     #            self.message_handler.set_message('INFO', 'no capture device attached') 
+
+    def piCapture_with_no_source(self):
+        is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
+        if 'Video Processor was not found' not in str(is_piCapture):
+            self.data.settings['capture']['TYPE']['value'] = "piCaptureSd1"
+            is_source = subprocess.check_output(['pivideo', '--query', 'lock'])
+            if 'No active video detected' in str(is_source):
+                self.message_handler.set_message('INFO', 'piCapture detected w no input source')
+                return True
+        return False
 
     def update_capture_settings(self):
         ##setting class variables
@@ -37,20 +55,34 @@ class OfCapture(object):
             self.sensor_mode = 6
         else:
             self.sensor_mode = 0 
-        ##update current instance (device) if in use
-        if self.device and not self.device.closed:
-            self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
-            self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
-        ## can only update resolution and framerate if not recording
-            if not self.is_recording:
-                self.device.framerate = self.framerate
-                self.device.resolution = self.resolution
+
+        #self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
+        #self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
+        
+        #self.device.framerate = self.framerate
+        #self.device.resolution = self.resolution
             
+    def check_if_attached_with_picamera(self):
+        try:
+            device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+            device.close()
+            return True
+        except picamera.exc.PiCameraError as e:
+            self.use_capture = False
+            self.data.settings['capture']['DEVICE']['value'] = 'disabled'
+            print('camera exception is {}'.format(e))
+            self.message_handler.set_message('INFO', 'no capture device attached')
+            return False
 
     def start_preview(self):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return False
+        else:
+            if not self.has_capture:
+                self.create_capture_device()
+                if self.use_capture == False:
+                    return False
 
         self.is_previewing = True
         self.set_capture_settings()
@@ -75,7 +107,13 @@ class OfCapture(object):
     def start_recording(self):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
-            return
+            return False
+        else:
+            if not self.has_capture:
+                self.create_capture_device()
+                if self.use_capture == False:
+                    return False
+
         if not self.check_available_disk_space():
             return
         
@@ -111,18 +149,12 @@ class OfCapture(object):
 
         self.update_capture_settings()
         # return path to the video
-        if not self.device.preview:
-            self.device.close()
 
     def convert_raw_recording(self):
         recording_path , recording_name = self.generate_recording_path()
         try:
-            if self.sensor_mode == 6:
-                mp4box_process = subprocess.Popen(['MP4Box', '-fps', '60', '-add', self.video_dir + '/raw.h264', recording_path])
-                return mp4box_process , recording_name
-            else:
-                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
-                return mp4box_process , recording_name
+            mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
+            return mp4box_process , recording_name
         except Exception as e:
             print(e)
             if hasattr(e, 'message'):
@@ -153,7 +185,7 @@ class OfCapture(object):
         return '{}/{}'.format(rec_dir,name), name 
 
     def get_recording_time(self):
-        pass
+        return -1
         #if not self.device or not self.device.recording or self.device.frame.timestamp == None:
         #   return -1
         #else:
@@ -185,5 +217,13 @@ class OfCapture(object):
         else:
             return int(fractions.Fraction(setting_value) * 1000000)
 
+    def receive_state(self, unused_addr, args):
+        if args:
+            self.has_capture = True
+            self.message_handler.set_message('INFO', 'capture device attached') 
+        else:
+            self.has_capture = False
+            self.message_handler.set_message('INFO', 'no capture device attached') 
+            
 
 

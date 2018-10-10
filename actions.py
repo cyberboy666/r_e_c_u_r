@@ -329,7 +329,6 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            pass
             subprocess.Popen(["make run --directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r" ], shell=True)
 
     def exit_openframeworks(self):
@@ -488,6 +487,7 @@ class Actions(object):
         this_dispatcher.map("/player/a/status", self.video_driver.receive_status, "a.a")
         this_dispatcher.map("/player/b/status", self.video_driver.receive_status, "b.b")
         this_dispatcher.map("/player/c/status", self.video_driver.receive_status, "c.c")
+        this_dispatcher.map("/capture/is_setup", self.capture.receive_state)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 

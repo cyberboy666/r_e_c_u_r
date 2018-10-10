@@ -163,7 +163,7 @@ class Display(object):
         shaders_list = self.shaders.shaders_menu_list
         number_of_shader_items = len(shaders_list)
         for index in range(number_of_shader_items):
-            if line_count > self.MENU_HEIGHT :
+            if line_count >= self.MENU_HEIGHT :
                 break
             if index >= self.shaders.shaders_menu.top_menu_index:
                 shader_line = shaders_list[index]
@@ -205,8 +205,9 @@ class Display(object):
         param_row = self.ROW_OFFSET - 1
         column_offset = 0.24
         param_length = 0.05
-        self.display_text.tag_add("SHADER_PARAM", param_row + column_offset + param_num*param_length,
-param_row + column_offset + (param_num+1)*param_length)
+        self.display_text.tag_add("SHADER_PARAM", round(param_row + column_offset + param_num*param_length,2),
+round(param_row + column_offset + (param_num+1)*param_length, 2))
+
 
     def _get_status_for_player(self):
         now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()

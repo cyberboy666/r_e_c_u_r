@@ -113,7 +113,7 @@ class Actions(object):
 
     def cycle_display_mode(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["SHADERS",'NAV_SHADERS']]
+            display_modes = [["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["BROWSER",'NAV_BROWSER'],["SHADERS",'NAV_SHADERS']]
         else:
             display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
 

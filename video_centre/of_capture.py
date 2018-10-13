@@ -22,7 +22,7 @@ class OfCapture(object):
         if self.use_capture:
             if self.piCapture_with_no_source():
                 print('its picapture with no source !')
-                return
+                return False
             self.update_capture_settings()
             if not self.check_if_attached_with_picamera():
                 return
@@ -80,8 +80,8 @@ class OfCapture(object):
             return False
         else:
             if not self.has_capture:
-                self.create_capture_device()
-                if self.use_capture == False:
+                is_created = self.create_capture_device()
+                if self.use_capture == False or not is_created:
                     return False
 
         self.is_previewing = True
@@ -110,8 +110,8 @@ class OfCapture(object):
             return False
         else:
             if not self.has_capture:
-                self.create_capture_device()
-                if self.use_capture == False:
+                is_created = self.create_capture_device()
+                if self.use_capture == False or not is_created:
                     return False
 
         if not self.check_available_disk_space():

@@ -25,16 +25,18 @@ class Capture(object):
     def create_capture_device(self):
         if self.use_capture:
             if self.piCapture_with_no_source():
-                return
+                return False
             self.update_capture_settings()
             
             try:
                 self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+                return True
             except picamera.exc.PiCameraError as e:
                 self.use_capture = False
                 self.data.settings['capture']['DEVICE']['value'] = 'disabled'
                 print('camera exception is {}'.format(e))
-                self.message_handler.set_message('INFO', 'no capture device attached') 
+                self.message_handler.set_message('INFO', 'no capture device attached')
+                return False
 
     def piCapture_with_no_source(self):
         is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
@@ -72,8 +74,8 @@ class Capture(object):
             return False
         else:
             if not self.device or self.device.closed:
-                self.create_capture_device()
-                if self.use_capture == False:
+                is_created = self.create_capture_device()
+                if self.use_capture == False or not is_created:
                     return False
             self.is_previewing = True
             self.device.start_preview()
@@ -113,8 +115,8 @@ class Capture(object):
         if not self.check_available_disk_space():
             return
         if self.device is None or self.device.closed:
-            self.create_capture_device()
-            if self.use_capture == False:
+            is_created = self.create_capture_device()
+            if self.use_capture == False or not is_created:
                 return
         
         if not os.path.exists(self.video_dir):

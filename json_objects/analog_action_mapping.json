@@ -10,6 +10,19 @@
 	},
     "3": {
 		"DEFAULT": ["set_the_shader_param_3_continuous"]
-	}
+	},
+   "4": {
+                "DEFAULT": ["set_the_shader_param_0_continuous"]
+        },
+    "5": {
+                "DEFAULT": ["set_the_shader_param_1_continuous"]
+        },
+    "6": {
+                "DEFAULT": ["set_the_shader_param_2_continuous"]
+        },
+    "7": {
+                "DEFAULT": ["set_the_shader_param_3_continuous"]
+        }
+
 
 }

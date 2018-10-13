@@ -151,7 +151,7 @@ class Display(object):
         shader = self.shaders.selected_shader
         self.display_text.insert(END, '{:<1}:{:<1}{:<2} {:<17} '.format \
             (self.shaders.selected_status,shader['shad_type'][0], \
-            format(shader['shad_index'],'02d'), shader['name'][0:17] ))
+            format(shader['shad_index'],'02d'), shader['name'].lstrip()[0:17] ))
         for i in range(min(4,shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_values[i])
             if display_param == 100:

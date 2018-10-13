@@ -28,7 +28,9 @@ class Shaders(object):
         shad_i = 0
         for line in raw_list:
             if line['is_shader']:
-                has_path, path = self.get_path_for_shader(line['name'])
+                stripped_name = line['name'].lstrip()
+                has_path, path = self.get_path_for_shader(stripped_name)
+                print('shader {} , has path {} it is {}'.format(stripped_name, has_path, path))
                 shad_type = self.determine_if_shader_file_is_processing(path)
                 parameter_number = self.determine_shader_parameter_number(path)
                 #print('shader index is {}'.format(shad_i))
@@ -48,6 +50,7 @@ class Shaders(object):
         return False, ''
 
     def determine_if_shader_file_is_processing(self, path):
+        print('the path is {}'.format(path))
         with open(path, 'r') as selected_shader:
                 shader_text = selected_shader.read()
                 if '//pro-shader' in shader_text:
@@ -88,7 +91,8 @@ class Shaders(object):
         is_file, name = self.shaders_menu.extract_file_type_and_name_from_menu_format(
             self.shaders_menu_list[index]['name'])
         is_selected_shader = False
-        if is_file and name == self.selected_shader['name']:
+        print('for the current selection the shader path is {} , and its name is {} , the check says is it a shader {} , '.format(self.shaders_menu_list[index]['path'], self.shaders_menu_list[index]['name'] ,self.shaders_menu_list[index]['is_shader']))
+        if is_file and name == self.selected_shader['name'].lstrip():
             is_selected_shader = True
         elif is_file:
             self.selected_shader = self.shaders_menu_list[index]

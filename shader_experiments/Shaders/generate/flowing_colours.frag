@@ -1,4 +1,5 @@
 // copied from http://glslsandbox.com/e#47821.0
+//gen-shader
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -6,12 +7,13 @@ precision mediump float;
 #extension GL_OES_standard_derivatives : enable
 
 uniform float u_time;
-uniform vec2 u_mouse;
+uniform float u_x0;
+uniform float u_x1;
 uniform vec2 u_resolution;
 
 void main( void ) {
 
-	vec2 position = ( gl_FragCoord.xy / u_resolution.xy ) + u_mouse / 4.0;
+	vec2 position = ( gl_FragCoord.xy / u_resolution.xy ) + (u_resolution.x * u_x0, u_resolution.y * u_x1) / 4.0;
 
 	float color = 0.0;
 	color += sin( position.x * cos( u_time / 15.0 ) * 80.0 ) + cos( position.y * cos( u_time / 15.0 ) * 10.0 );

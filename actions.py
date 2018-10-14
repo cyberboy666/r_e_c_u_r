@@ -329,7 +329,7 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            subprocess.Popen(["make run --directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r" ], shell=True)
+            subprocess.Popen(["make run --directory=~/openFrameworks10/apps/myApps/c_o_n_j_u_r" ], shell=True)
 
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)

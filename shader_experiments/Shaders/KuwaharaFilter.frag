@@ -3,27 +3,27 @@
 //
 // Originally Created by Matthew Fargo on 2014/06/23.
 //
-
-  uniform sampler2D inputImageTexture;
-  uniform float u_x0;
+//#version 120
+    varying vec2 v_texcoord;
+  uniform sampler2D u_tex0;
+  uniform int radius;
 
   const vec2 src_size = vec2 (1.0 / 680.0, 1.0 / 1024.0);
 
   void main (void) {
-      highp int index = int(u_x0 * 10.0);
-      vec2 uv = gl_TexCoord[0].xy;
+      //highp int radius = int(u_x0 * 10.0);
 
-      vec4 textureColor = texture2D(inputImageTexture, uv);
+      vec4 textureColor = texture2D(u_tex0, v_texcoord);
 
       float n = float((radius + 1) * (radius + 1));
       int i; int j;
       vec3 m0 = vec3(0.0); vec3 m1 = vec3(0.0); vec3 m2 = vec3(0.0); vec3 m3 = vec3(0.0);
       vec3 s0 = vec3(0.0); vec3 s1 = vec3(0.0); vec3 s2 = vec3(0.0); vec3 s3 = vec3(0.0);
-      vec3 c;
+      vec3 c;   
 
-      for (j = -radius; j <= 0; ++j)  {
-          for (i = -radius; i <= 0; ++i)  {
-              c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+      for(j = radius; j <= 0; ++j)  {
+          for(i = radius; i <= 0; ++i)  {
+              c = texture2D(u_tex0, v_texcoord + vec2(i,j) * src_size).rgb;
               m0 += c;
               s0 += c * c;
           }
@@ -31,7 +31,7 @@
 
       for (j = -radius; j <= 0; ++j)  {
           for (i = 0; i <= radius; ++i)  {
-              c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+              c = texture2D(u_tex0, v_texcoord + vec2(i,j) * src_size).rgb;
               m1 += c;
               s1 += c * c;
           }
@@ -39,7 +39,7 @@
 
       for (j = 0; j <= radius; ++j)  {
           for (i = 0; i <= radius; ++i)  {
-              c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+              c = texture2D(u_tex0, v_texcoord + vec2(i,j) * src_size).rgb;
               m2 += c;
               s2 += c * c;
           }
@@ -47,7 +47,7 @@
 
       for (j = 0; j <= radius; ++j)  {
           for (i = -radius; i <= 0; ++i)  {
-              c = texture2D(inputImageTexture, uv + vec2(i,j) * src_size).rgb;
+              c = texture2D(u_tex0, v_texcoord + vec2(i,j) * src_size).rgb;
               m3 += c;
               s3 += c * c;
           }

@@ -1,7 +1,7 @@
 //  KuwaharaFilter.cpp
 //  filterSandbox
 //
-// Originally Created by Matthew Fargo on 2014/06/23.
+// Originally Created by Matthew Fargo on 2014/06/23
 //
 //#version 120
     varying vec2 v_texcoord;

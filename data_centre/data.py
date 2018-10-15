@@ -35,6 +35,7 @@ class Data(object):
         self.control_mode = 'PLAYER'
         self.bank_number = 0
         self.midi_status = 'disconnected'
+        self.midi_port_index = 0
         self.update_screen = True
         self.player_mode = 'now'
         

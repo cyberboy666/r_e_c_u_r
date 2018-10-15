@@ -105,6 +105,11 @@
             "action": "get_midi_status",
             "options": [],
             "value": null
+        },
+        "CYCLE_PORT": {
+            "action": "cycle_midi_port_index",
+            "options": [],
+            "value": null
         }
     },
     "other": {

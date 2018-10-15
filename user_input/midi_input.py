@@ -12,29 +12,34 @@ class MidiInput(object):
         self.data = data
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
+        self.midi_setting = None
+        self.port_index = 0
         self.midi_delay = 40
         self.try_open_port()
 
     def try_open_port(self):
-        midi_setting = self.data.settings['midi']['INPUT']['value']
+        #self.data.midi_status = 'disconnected'
+        self.midi_setting = self.data.settings['midi']['INPUT']['value']
+        self.port_index = self.data.midi_port_index
         #print('try open port : midi setting is {}'.format(midi_setting))
-        if midi_setting == 'usb':
+        if self.midi_setting == 'usb':
             self.actions.stop_serial_port_process()
-            self.open_this_port_and_start_listening(20)
-        elif midi_setting == 'serial':
+            self.open_this_port_and_start_listening('20')
+        elif self.midi_setting == 'serial':
             self.actions.create_serial_port_process()
-            self.open_this_port_and_start_listening(128)
+            self.open_this_port_and_start_listening('serial')
         else:
             self.actions.stop_serial_port_process()     
+            self.data.midi_status = 'disconnected'
         self.root.after(1000, self.try_open_port)
 
-    def open_this_port_and_start_listening(self, port_number):
+    def open_this_port_and_start_listening(self, port_phrase):
         midi_ports = mido.get_input_names()
-        #print('midi ports are {}'.format(midi_ports))
-        midi_device_on_port = [s for s in midi_ports if '{}:0'.format(port_number) in s]
+        midi_device_on_port = [s for s in midi_ports if port_phrase in s]
         if midi_device_on_port:
             if self.data.midi_status == 'disconnected':
-                self.midi_device = mido.open_input(midi_device_on_port[0])
+                subport_index = self.port_index % len(midi_device_on_port) 
+                self.midi_device = mido.open_input(midi_device_on_port[subport_index])
                 self.data.midi_status = 'connected'
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
                 self.poll_midi_input()
@@ -76,7 +81,10 @@ class MidiInput(object):
         if i > 0:
             pass
             #print('the number processed {}'.format(i))
-        self.root.after(self.midi_delay, self.poll_midi_input)
+        if self.data.settings['midi']['INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+            self.root.after(self.midi_delay, self.poll_midi_input)
+        else:
+            self.data.midi_status = 'disconnected'
 
     def on_midi_message(self, message_dict):
         if message_dict['type'] == 'note_on' and message_dict['velocity'] == 0:

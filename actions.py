@@ -21,14 +21,20 @@ class Actions(object):
         self.shaders = shaders
         self.display = display
         self.osc_client = osc_client
-        self.create_capture_object('value')
+        self.of_capture = OfCapture(self.tk, self.osc_client, self.message_handler, self.data)
+        self.python_capture = self.capture = Capture(self.tk, self.message_handler, self.data)
+        self.capture = None
+        self.serial_port_process = None
+        self.set_capture_object('value')
         self.server = self.setup_osc_server()
         
-    def create_capture_object(self, value):
+    def set_capture_object(self, value):
         if self.data.settings['other']['USE_OF_CAPTURE']['value'] == 'yes':
-            self.capture = OfCapture(self.tk, self.osc_client, self.message_handler, self.data)
+            self.python_capture.close_capture()
+            self.capture = self.of_capture
         else:
-            self.capture = Capture(self.tk, self.message_handler, self.data)
+            self.python_capture.close_capture()
+            self.capture = self.python_capture
         self.display.capture = self.capture
 
     def move_browser_selection_down(self):
@@ -207,12 +213,6 @@ class Actions(object):
             if is_successful and self.video_driver.current_player.status != 'PAUSED':
                 self.video_driver.current_player.toggle_pause()
 
-## these are temp for testing !
-    def start_of_capture_preview(self):
-        self.osc_client.send_message("/capture/start", True)
-
-    def stop_of_capture_preview(self):
-        self.osc_client.send_message("/capture/stop", True)
 
     def toggle_capture_recording(self):
         is_recording = self.capture.is_recording
@@ -329,7 +329,7 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            subprocess.Popen(["make run --directory=~/openFrameworks10/apps/myApps/c_o_n_j_u_r" ], shell=True)
+            subprocess.Popen(["make run --directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r" ], shell=True)
 
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
@@ -431,6 +431,7 @@ class Actions(object):
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
         self.exit_osc_server('','')
+        self.stop_serial_port_process()
         self.toggle_x_autorepeat()
         self.tk.destroy()
 
@@ -499,5 +500,14 @@ class Actions(object):
     def exit_osc_server(self, unused_addr, args):
         self.server.shutdown()
 
+    def create_serial_port_process(self):
+        if self.serial_port_process == None:
+            self.serial_port_process = subprocess.Popen("exec " + "ttymidi -s /dev/serial0 -b 38400 -n serial", shell=True)
+            print('created the serial port process ? {}'.format(self.serial_port_process))        
+
+    def stop_serial_port_process(self):
+        if self.serial_port_process is not None:
+            self.serial_port_process.kill()
+            self.serial_port_process = None
         
         

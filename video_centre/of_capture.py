@@ -24,8 +24,8 @@ class OfCapture(object):
                 print('its picapture with no source !')
                 return False
             self.update_capture_settings()
-            if not self.check_if_attached_with_picamera():
-                return
+            #if not self.check_if_attached_with_picamera():
+            #    return
             print('sending setup message !')
             self.osc_client.send_message("/capture/setup", True)
     #        try:
@@ -63,6 +63,7 @@ class OfCapture(object):
         #self.device.resolution = self.resolution
             
     def check_if_attached_with_picamera(self):
+        print('about to try open pcamera to check..')
         try:
             device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
             device.close()
@@ -218,12 +219,14 @@ class OfCapture(object):
             return int(fractions.Fraction(setting_value) * 1000000)
 
     def receive_state(self, unused_addr, args):
-        if args:
+        if args == 1.0:
             self.has_capture = True
             self.message_handler.set_message('INFO', 'capture device attached') 
         else:
             self.has_capture = False
-            self.message_handler.set_message('INFO', 'no capture device attached') 
-            
+            self.message_handler.set_message('INFO', 'no capture device attached')
+        print('the has capture is set to {}'.format(self.has_capture))
 
+    def close_capture(self):
+        pass
 

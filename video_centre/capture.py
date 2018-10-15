@@ -245,5 +245,10 @@ class Capture(object):
     def receive_state(self, unused_addr, args):
         pass
 
+    def close_capture(self):
+        if self.device is not None:
+            print('closing the old camera...')
+            self.device.close() 
+
 
 

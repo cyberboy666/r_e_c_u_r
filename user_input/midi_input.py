@@ -12,26 +12,25 @@ class MidiInput(object):
         self.data = data
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
-        self.midi_delay = 1
-        self.serial_port_process = None
+        self.midi_delay = 40
         self.try_open_port()
 
     def try_open_port(self):
         midi_setting = self.data.settings['midi']['INPUT']['value']
         #print('try open port : midi setting is {}'.format(midi_setting))
         if midi_setting == 'usb':
-            self.stop_serial_port_process()
+            self.actions.stop_serial_port_process()
             self.open_this_port_and_start_listening(20)
         elif midi_setting == 'serial':
-            self.create_serial_port_process()
+            self.actions.create_serial_port_process()
             self.open_this_port_and_start_listening(128)
         else:
-            self.stop_serial_port_process()     
+            self.actions.stop_serial_port_process()     
         self.root.after(1000, self.try_open_port)
 
     def open_this_port_and_start_listening(self, port_number):
         midi_ports = mido.get_input_names()
-        print('midi ports are {}'.format(midi_ports))
+        #print('midi ports are {}'.format(midi_ports))
         midi_device_on_port = [s for s in midi_ports if '{}:0'.format(port_number) in s]
         if midi_device_on_port:
             if self.data.midi_status == 'disconnected':
@@ -49,6 +48,7 @@ class MidiInput(object):
             i = i + 1
             message_dict = message.dict()
             midi_channel = midi_setting = self.data.settings['midi']['CHANNEL']['value'] - 1
+
             if not message_dict['channel'] == midi_channel:
                 pass
             ## turning off noisey clock messages for now - may want to use them at some point
@@ -57,19 +57,25 @@ class MidiInput(object):
             ## trying to only let through step cc messages to increase response time
             elif message_dict['type'] == 'control_change':
                 control_number = message_dict['control']
+                #print('control number is {} , cc_dict.keys is {}'.format(control_number, cc_dict.keys() ))
                 if not control_number in cc_dict.keys():
                     cc_dict[control_number] = message_dict['value']
+                    self.on_midi_message(message_dict)
                 else:
-                    step_size = 4
+                    step_size = 3
                     ignore_range = range(cc_dict[control_number] - step_size,cc_dict[control_number] + step_size)
+                    #print('value is {} and ignore range is {}'.format(message_dict['value'], ignore_range ))
                     if not message_dict['value'] in ignore_range:
                         cc_dict[control_number] = message_dict['value']
+                        #print(message_dict)
                         self.on_midi_message(message_dict)
-                print(cc_dict)
+                    #print(cc_dict)
+
             else:       
                 self.on_midi_message(message_dict)
         if i > 0:
-            print('the number processed {}'.format(i))
+            pass
+            #print('the number processed {}'.format(i))
         self.root.after(self.midi_delay, self.poll_midi_input)
 
     def on_midi_message(self, message_dict):
@@ -105,6 +111,7 @@ class MidiInput(object):
         print('the action being called is {}'.format(method_name))
         if mapped_message_value is not None:
             norm_message_value = mapped_message_value/127 
+            
         else:
             norm_message_value = None
         self.call_method_name(method_name, norm_message_value)
@@ -118,15 +125,7 @@ class MidiInput(object):
         else:
             getattr(self.actions, method_name)()
 
-    def create_serial_port_process(self):
-        if self.serial_port_process == None:
-            self.serial_port_process = subprocess.Popen("exec " + "ttymidi -s /dev/serial0 -b 38400 -n serial", shell=True)
-            print('created the serial port process ? {}'.format(self.serial_port_process))        
 
-    def stop_serial_port_process(self):
-        if self.serial_port_process is not None:
-            self.serial_port_process.kill()
-            self.serial_port_process = None
 
 
 

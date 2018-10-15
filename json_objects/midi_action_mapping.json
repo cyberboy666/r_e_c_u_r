@@ -14,6 +14,18 @@
     "control_change 4": {
 		"DEFAULT": ["set_the_camera_colour_v_continuous"]
 	},
+    "control_change 74": {
+		"DEFAULT": ["set_the_shader_param_0_continuous"]
+	},
+    "control_change 71": {
+		"DEFAULT": ["set_the_shader_param_1_continuous"]
+	},
+    "control_change 76": {
+		"DEFAULT": ["set_the_shader_param_2_continuous"]
+	},
+    "control_change 77": {
+		"DEFAULT": ["set_the_shader_param_3_continuous"]
+	},
 	"note_on 72": {
 		"NAV_BROWSER": ["move_browser_selection_up"],
 		"PLAYER": ["seek_back_on_player"],

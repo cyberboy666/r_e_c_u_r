@@ -133,7 +133,7 @@
             "value": "dev"
         },
         "USE_OF_CAPTURE": {
-            "action": "create_capture_object",
+            "action": "set_capture_object",
             "options": [
                 "yes",
                 "no"

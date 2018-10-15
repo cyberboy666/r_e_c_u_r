@@ -1,6 +1,6 @@
 # documenting all the steps from old img of recur to working with new features
 
-- gonna start with a `sudo raspi-update` and `sudo apt-get update -y; sudo apt-get upgrade - y`
+- gonna start with a `sudo raspi-update` and `sudo apt-get update -y; sudo apt-get upgrade -y`
 
 ## setup
 
@@ -25,6 +25,7 @@ i had of10 zipped on a flashdrive already (wget errored about insecure connectio
 
 - `sudo pip3 install Adafruit_GPIO Adafruit_MCP3008 RPi.GPIO pivideo python-osc` (tried to install threading but didnt work...)
  - (note atleast pivideo needs to be installed with sudo.), also needs `sudo pip3 install serial``
+- pip3 install gitpython
 - `sudo apt-get install glslviewer`
 
 ### installing ttymidi :

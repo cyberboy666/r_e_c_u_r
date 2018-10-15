@@ -121,6 +121,11 @@
             ],
             "value": "disabled"
         },
+        "UPDATE_CODE": {
+            "action": "try_pull_code_and_reset",
+            "options": [],
+            "value": null
+        },
         "DEV_MODE_RESET": {
             "action": "switch_dev_mode",
             "options": [

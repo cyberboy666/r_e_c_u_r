@@ -24,10 +24,11 @@ class OfCapture(object):
                 print('its picapture with no source !')
                 return False
             self.update_capture_settings()
-            #if not self.check_if_attached_with_picamera():
-            #    return
+            if not self.check_if_attached_with_picamera():
+                return
+            
             print('sending setup message !')
-            self.osc_client.send_message("/capture/setup", True)
+            self.osc_client.send_message("/capture/setup", self.capture_type)
     #        try:
     #            self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
     #        except picamera.exc.PiCameraError as e:

@@ -14,7 +14,6 @@ class Shaders(object):
         self.selected_shader = self.EMPTY_SHADER
         self.focused_param = None
         self.shaders_menu_list = self.generate_shaders_list()
-        print(self.shaders_menu_list)
         if self.shaders_menu_list is not None:
             pass
                  
@@ -30,7 +29,6 @@ class Shaders(object):
             if line['is_shader']:
                 stripped_name = line['name'].lstrip()
                 has_path, path = self.get_path_for_shader(stripped_name)
-                print('shader {} , has path {} it is {}'.format(stripped_name, has_path, path))
                 shad_type = self.determine_if_shader_file_is_processing(path)
                 parameter_number = self.determine_shader_parameter_number(path)
                 #print('shader index is {}'.format(shad_i))
@@ -50,7 +48,6 @@ class Shaders(object):
         return False, ''
 
     def determine_if_shader_file_is_processing(self, path):
-        print('the path is {}'.format(path))
         with open(path, 'r') as selected_shader:
                 shader_text = selected_shader.read()
                 if '//pro-shader' in shader_text:
@@ -71,7 +68,6 @@ class Shaders(object):
             return max_amount
 
     def load_selected_shader(self):
-        print(self.selected_shader)
         self.selected_param_values = [0.0,0.0,0.0,0.0]
         is_pro = self.selected_shader['shad_type'] == 'pro'
         self.osc_client.send_message("/shader/load", [self.selected_shader['path'],is_pro,self.selected_shader['param_number']])
@@ -91,7 +87,6 @@ class Shaders(object):
         is_file, name = self.shaders_menu.extract_file_type_and_name_from_menu_format(
             self.shaders_menu_list[index]['name'])
         is_selected_shader = False
-        print('for the current selection the shader path is {} , and its name is {} , the check says is it a shader {} , '.format(self.shaders_menu_list[index]['path'], self.shaders_menu_list[index]['name'] ,self.shaders_menu_list[index]['is_shader']))
         if is_file and name == self.selected_shader['name'].lstrip():
             is_selected_shader = True
         elif is_file:

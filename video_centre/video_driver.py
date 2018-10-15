@@ -24,7 +24,7 @@ class VideoDriver(object):
         
         self.root.after(self.delay, self.begin_playing)
         self.print_status()
-        self.update_video_settings()
+        #self.update_video_settings()
 
 
     def update_video_settings(self):

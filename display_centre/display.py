@@ -88,13 +88,13 @@ class Display(object):
         bank_data = self.data.bank_data[self.data.bank_number]
         self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
-        self.display_text.insert(END, '{:>6} {:<17} {:>5} {:<5} {:<5} {:<4}\n'.format(
-            '{}-slot'.format(self.data.bank_number), 'name', 'length', 'start', 'end', 'spd'))
+        self.display_text.insert(END, '{:>6} {:<17} {:>5} {:<5} {:<5} \n'.format(
+            '{}-slot'.format(self.data.bank_number), 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
-            self.display_text.insert(END, '{:^6} {:<17} {:^5} {:>5} {:<5} {:>4}\n'.format(
+            self.display_text.insert(END, '{:^6} {:<17} {:^5} {:>5} {:<5} \n'.format(
                 index, name_without_extension[0:17], self.format_time_value(slot['length']),
-                self.format_time_value(slot['start']), self.format_time_value(slot['end']),self.format_speed_value(slot['rate'])))
+                self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
             if self.data.is_this_path_broken(slot['location']):
                 self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)

@@ -1,4 +1,5 @@
 //pro-shader
+//written by Tim Caldwell
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -8,9 +9,6 @@ uniform sampler2D u_tex0;
 uniform vec2 u_resolution;
 uniform float u_time;
 uniform float u_x0;
-uniform float u_x1;
-uniform float u_x2;
-uniform float u_x3;
 
 vec3 rgb2grayscale(vec3 c)
 {

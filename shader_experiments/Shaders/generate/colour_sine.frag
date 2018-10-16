@@ -1,3 +1,6 @@
+//gen-shader
+//written by Tim Caldwell
+// a simple example of how to use continuous parameters to perform switching functions
 #ifdef GL_ES
 precision mediump float;
 #endif

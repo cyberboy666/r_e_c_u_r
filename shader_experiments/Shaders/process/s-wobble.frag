@@ -1,4 +1,5 @@
 //pro-shader
+//written by Tim Caldwell
 #ifdef GL_ES
 precision highp float;
 #endif

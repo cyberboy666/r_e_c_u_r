@@ -1,3 +1,4 @@
+// this is the default.vert shader used by conjur , it ensures that the frag shaders run by glslViewer will also run in openframeworks
 attribute vec4 position;
 attribute vec4  color;
 attribute vec3  normal;

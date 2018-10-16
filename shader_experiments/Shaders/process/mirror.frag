@@ -1,4 +1,6 @@
 //pro-shader
+//written by Tim Caldwell
+//this is a basic example of how to effect input textures position
 #ifdef GL_ES
 precision mediump float;
 #endif

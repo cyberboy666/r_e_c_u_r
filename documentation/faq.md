@@ -27,6 +27,14 @@ if you are using a full usbkeyboard, you should be able to just press a - s keys
 
 you can also flatten out the FN actions and add new actions (such as shortcuts / hotkeys) to map to the extra keys. hopefully more info about this will be on the [develop page] at some point. 
 
+## i want to edit a keymapping or do something on the pi without looking at the lcd screen
+
+i also get sick of looking at the lil screen for developing , from the OTHER settings you can run DEV_MODE_RESET , when it reboots the hdmi is the main output and your video out should be in a smaller window.
+
+## i keep getting a yellow lightening bolt in the upper right corner ?
+
+this is the pi signaling it is underpowererd. running video and the lcd screen and powering a harddrive and a camera etc etc starts to add up. i havnt had any problems using a 2a supply..
+
 ## how can i access / delete files i have created using capture ?
 
 these are saved to the user Videos folder at path : `/home/pi/Videos/recordings`
@@ -48,7 +56,7 @@ at the moment recur will filter out all files that do not have a '.mp4' (recomme
 
 ## when playing short loops <=3s or manually switching players quickly sometimes the player crashes / gets stuck `LOADING` ...
 
-hmm - this does happen sometimes. in my experence pressing the video key you want to load again then the switch key will get the video playing again. I havnt been able to create crashes that require a reset, but if you do please let me know.
+hmm - this does happen sometimes. in my experience pressing the video key you want to load again then the switch key will get the video playing again. I havnt been able to create crashes that require a reset, but if you do please let me know.
 
 ## when setting the start/end points of a clip there is a small lag before starting the next cycle .. can i improve this ?
 

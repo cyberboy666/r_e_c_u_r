@@ -35,9 +35,11 @@ i had of10 zipped on a flashdrive already (wget errored about insecure connectio
 
 ## setup:
 
-need to delete the old settings : `rm json_objects/settings.json` and create a `Shaders` folder, 
+need to delete the old settings : `rm json_objects/settings.json` and create a `Shaders` folder, also need to put default.vert shader in there for any shaders to work !
 
 i think will need to turn on the i2c and serial interfacing... (and maybe that serial switvhing thing .. oh and the clocking for midi serial ...  )
+
+NOTE: need to disable console logging and enable seial through the raspi-config !
 
 these amount to the following in the config:
 ```

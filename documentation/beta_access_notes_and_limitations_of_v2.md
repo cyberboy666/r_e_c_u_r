@@ -4,7 +4,7 @@ while at signal culture the concept of what recur could do underwent a large eno
 
 you can read the highlevel overview / roadmap of what v2 is about in the [signal_culture_and_future_plans] doc.
 
-this doc will explain how to try out and use the new features, and also keep track of the known issues and my thoughts/ plans to fix them. if any testers find addational bugs i will keep track of them here.
+this doc will explain how to try out and use the new features, and also keep track of the known issues and my thoughts/ plans to fix them. if any testers find additional bugs i will keep track of them here.
 
 ## flashing the new img.
 
@@ -18,7 +18,7 @@ with this new img recur should be exactly as usable as before in the default con
 
 ## c_a_p_t_u_r 
 
-piCaptureSd1 compatabilty is now built in (this sets the sensor mode, autowhite balance and exposure to optimise picaptures input )to captur, you can now see a 'TYPE' option in capture subsetting which allows to switch between these settings and standand piCamera settings. also included in same menu is PICAPTURE_INPUT , which should allow software switching between differnet sources on the card.
+piCaptureSd1 compatibility is now built in (this sets the sensor mode, autowhite balance and exposure to optimise picaptures input )to captur, you can now see a 'TYPE' option in capture subsetting which allows to switch between these settings and standard piCamera settings. also included in same menu is PICAPTURE_INPUT , which should allow software switching between different sources on the card.
 
 FUTURE NOTE: if i or anyone ever wants to try with a piCaptureHd1 (or that other hdmi-to-pi board floating around) custom settings for these could be added here...
 
@@ -26,7 +26,7 @@ FUTURE NOTE: if i or anyone ever wants to try with a piCaptureHd1 (or that other
 
 ### hardware
 
-the program is now set up to read inputs from more external devices. i have been working with a little circuit that connects to the gpio pins. i hope to have a little pcb that can be attached as an option. more info about this will be available soon. here is the schematic i am using. it is just a standand midi-serial to RX , plus a MCP3008 a2d taking 4 linear pots and 4 (0-5v) cv inputs.
+the program is now set up to read inputs from more external devices. i have been working with a little circuit that connects to the gpio pins. i hope to have a little pcb that can be attached as an option. more info about this will be available soon. here is the schematic i am using. it is just a standard midi-serial to RX , plus a MCP3008 a2d taking 4 linear pots and 4 (0-5v) cv inputs.
 
 the GPIO pins i am using are:
 
@@ -39,13 +39,13 @@ the GPIO pins i am using are:
 - 38 -> DIN
 - 40 -> CLK
 
-NOTE: any of the 5v,3v3, GND could be used, (and infact any 4 pins for SPI too with a small code change since its using softwareSPI right now. those pins are also possible with hardwareSPI although i couldnt get this working with the lcd-driver - might investigate this further if the performance over spi becomes the bottle neck  )
+NOTE: any of the 5v,3v3, GND could be used, (and in fact any 4 pins for SPI too with a small code change since its using softwareSPI right now. those pins are also possible with hardwareSPI although i couldnt get this working with the lcd-driver - might investigate this further if the performance over spi becomes the bottle neck  )
 
-i will write more about how to wire this up when/if a pcb is ready. because of the lcd-screen/picapture using the gpio header, i decided the easist way to access the pins was to solder wires from a IDE cable onto the bottom of the pi board. this wasnt so difficult even with my limited soldering skills... and then the IDE socket can be plugged in and out of the incur circuit as desired. 
+i will write more about how to wire this up when/if a pcb is ready. because of the lcd-screen/picapture using the gpio header, i decided the easiest way to access the pins was to solder wires from a IDE cable onto the bottom of the pi board. this wasnt so difficult even with my limited soldering skills... and then the IDE socket can be plugged in and out of the incur circuit as desired. 
  
 ### software
 
-reading from the a2d can be enabled with the ANALOG_INPUT option in the OTHER subsetting. these mappings are made in the [analog_action_mapping.json], i would only have this on when using it as it will increase load etc. the response speed can be tweeked a bit from analog_input.py , although the current python archetcure does limit how fast these read. moving this to openframeworks is one way i am thinking about to improve this.
+reading from the a2d can be enabled with the ANALOG_INPUT option in the OTHER subsetting. these mappings are made in the [analog_action_mapping.json], i would only have this on when using it as it will increase load etc. the response speed can be tweaked a bit from analog_input.py , although the current python architecure does limit how fast these read. moving this to openframeworks is one way i am thinking about to improve this.
 
 din-midi input over serial is now also an option. in the MIDI subsetting the INPUT option now cycles through usb , serial and disabled. again i would only have these listening if midi was being used. 
 
@@ -53,15 +53,15 @@ another new MIDI option is called CYCLE_PORT - this is kind of vague, but i noti
 
 ## c_o_n_j_u_r
 
-this is the biggest and least stable addition to vanilla recur. basically i wanted to experiment with replacing the OMXPLAYER backend for loading and controllingvideo playback with OPENFRAMEWORKS videoplayers (talking over OSC). 
+this is the biggest and least stable addition to vanilla recur. basically i wanted to experiment with replacing the OMXPLAYER backend for loading and controlling video playback with OPENFRAMEWORKS videoplayers (talking over OSC). 
 
-the existing stable OMXPLAYER backend option is still avaliable and is the default. if you want to try c_o_n_j_u_r you will need to switch backends in the OTHER subsetting.
+the existing stable OMXPLAYER backend option is still available and is the default. if you want to try c_o_n_j_u_r you will need to switch backends in the OTHER subsetting.
 
 once in this mode, you can try loading and switching a sample just as before (ie press `0` , watch for `NEXT LOADED` then hit `->`), 
 
 if the video is a box in bottom left corner OF thinks its in dev mode , selecting the OF_SCREEN_SIZE option in OTHER subsetting a few times should fix this (i just need python to  tell of when dev mode is changing - should fix soon)
 
-most of the usual sampling fuctions should work same as before. loading , switching , pausing , rand-start etc. at this point some of the VIDEO settings such as BACKGROUND_COLOUR and SCREEN_MODE do not work here. (it is possible to implement these but low prioty for me rn...)  
+most of the usual sampling functions should work same as before. loading , switching , pausing , rand-start etc. at this point some of the VIDEO settings such as BACKGROUND_COLOUR and SCREEN_MODE do not work here. (it is possible to implement these but low prioty for me rn...)  
 
 it seems like sampling video through openframeworks is more demanding on cpu than omxplayer. from running some tests, my SD videos through composite out run fine but even 720 etc starts to lag (unlike omxplayer which either plays full fps or nothing , of can slow right down when its struggling ). __i would recommend using this for SD video only__
 
@@ -79,7 +79,7 @@ see [this page] for more info on writing shaders for conjur. if a shader output 
 
 ## c_o_n_j_u_r + c_a_p_t_u_r
 
-running live input through a processing shader is an exciting possiblity once you have live input and processing shaders already. this also is responsable for aprox half my time/stress while at SC !
+running live input through a processing shader is an exciting possibility once you have live input and processing shaders already. this also is responsible for aprox half my time/stress while at SC !
 
 to process the captur input with a glsl-shader it needs to be read from openframeworks using ofxRPiCameraGrabber addon rather than the piCapture python package. for all other sampling / previewing uses i recommend using the python (default) option , (even if you are in openframeworks-backend mode, you can still capture/sample as before, and process these samples etc)
 
@@ -89,6 +89,6 @@ to process the captur input with a glsl-shader it needs to be read from openfram
 
 
 
-[signal_culture_and_future_plans]: /signal_culture_and_future_plans.md
-[analog_action_mapping.json] : ../json_objects/analog_action_mapping.json
+[signal_culture_and_future_plans]: signal_culture_and_future_plans.md
+[analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
 [this page]: https://github.com/langolierz/c_o_n_j_u_r/notes_on_shader_formats.md

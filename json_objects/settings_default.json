@@ -199,17 +199,18 @@
             ],
             "value": "off"
         },
-        "SEEK_TIME_JUMP": {
+        "SEEK_TIME": {
             "action": null,
             "options": [
                 0.5,
                 1,
                 5,
                 10,
-                30
+                15,
+                30,
+                60
             ],
-            "value": 5,
-            "seconds": 30
+            "value": 5
         }    
     },
     "video": {

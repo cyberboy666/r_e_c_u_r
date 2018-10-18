@@ -57,7 +57,8 @@ you are done ! wasnt that easy ?
 [raspberry pi3]:https://www.aliexpress.com/item/RS-Version-2016-New-Raspberry-Pi-3-Model-B-Board-1GB-LPDDR2-BCM2837-Quad-Core-Ras/32789942633.html?spm=a2g0s.9042311.0.0.FkRWty
 [main parts]: build_all.jpg
 [raspberry pi screen]:https://www.aliexpress.com/item/3-5-Inch-TFT-LCD-Moudle-For-Raspberry-Pi-2-Model-B-RPI-B-raspberry-pi/32707058182.html?spm=a2g0s.13010208.99999999.262.bV4EPV
-[usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[usb keypad (AliExpress)]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[usb keypad (Amazon)]:https://www.amazon.com/gp/product/B076GZDC14/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1&fbclid=IwAR3fNd1z0Cu137GE0ONYP2vmoTm0rJIvDA9plHlvCjNGZrSZFsV_naCHax0
 [top]: ./topplate.stl
 [bottom]: ./baseplate.stl
 [key stickers]: ./keystickers.svg

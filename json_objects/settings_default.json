@@ -198,7 +198,19 @@
                 "off"
             ],
             "value": "off"
-        }
+        },
+        "SEEK_TIME_JUMP": {
+            "action": null,
+            "options": [
+                0.5,
+                1,
+                5,
+                10,
+                30
+            ],
+            "value": 5,
+            "seconds": 30
+        }    
     },
     "video": {
         "BACKGROUND_COLOUR": {

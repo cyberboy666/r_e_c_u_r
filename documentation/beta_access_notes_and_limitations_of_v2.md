@@ -10,7 +10,7 @@ this doc will explain how to try out and use the new features, and also keep tra
 
 when i have created and uploaded the new img you can download it from here and flash to your sd card in the same way as before (note in case anyone was using a 4gg sd card before, you will need more than that now im pretty sure)
 
-## recieving updates
+## receiving updates
 
 with this new img recur should be exactly as usable as before in the default configuration, with the options to enable some new features if you want. (incase you are on the fence about trying it).
 
@@ -22,11 +22,13 @@ piCaptureSd1 compatibility is now built in (this sets the sensor mode, autowhite
 
 FUTURE NOTE: if i or anyone ever wants to try with a piCaptureHd1 (or that other hdmi-to-pi board floating around) custom settings for these could be added here...
 
+also keen to try with usb-web-cam / cheep capture cards for lofi/locost options ...
+
 ## i_n_c_u_r
 
 ### hardware
 
-the program is now set up to read inputs from more external devices. i have been working with a little circuit that connects to the gpio pins. i hope to have a little pcb that can be attached as an option. more info about this will be available soon. here is the schematic i am using. it is just a standard midi-serial to RX , plus a MCP3008 a2d taking 4 linear pots and 4 (0-5v) cv inputs.
+the program is now set up to read inputs from more external devices. i have been working with a little circuit that connects to the gpio pins. i hope to have a little pcb that can be attached as an option. more info about this will be available soon. here is the [schematic] i am using. it is just a standard midi-serial to RX , plus a MCP3008 a2d taking 4 linear pots and 4 (0-5v) cv inputs.
 
 the GPIO pins i am using are:
 
@@ -61,9 +63,11 @@ once in this mode, you can try loading and switching a sample just as before (ie
 
 if the video is a box in bottom left corner OF thinks its in dev mode , selecting the OF_SCREEN_SIZE option in OTHER subsetting a few times should fix this (i just need python to  tell of when dev mode is changing - should fix soon)
 
-most of the usual sampling functions should work same as before. loading , switching , pausing , rand-start etc. at this point some of the VIDEO settings such as BACKGROUND_COLOUR and SCREEN_MODE do not work here. (it is possible to implement these but low prioty for me rn...)  
+most of the usual sampling functions should work same as before. loading , switching , pausing , sublooping, rand-start etc. at this point some of the VIDEO settings such as BACKGROUND_COLOUR and SCREEN_MODE do not work here. (it is possible to implement these but low prioty for me rn...)  
 
 it seems like sampling video through openframeworks is more demanding on cpu than omxplayer. from running some tests, my SD videos through composite out run fine but even 720 etc starts to lag (unlike omxplayer which either plays full fps or nothing , of can slow right down when its struggling ). __i would recommend using this for SD video only__
+
+also, i have noticed occasionally the openframeworks app will crash (usually with a specific video file/action on this file it cant handle.) when this happens the output will freeze.. this is a critical error i want to priotize reducing / handling more gracefully. if you can reproduce this let me know how, for now a soft reset will restart another working version of OF-app , however the crashed one will still be in memory which is not ideal. the only way to stop it i know now is killing the process in task manager , or a hard reset. im sure theres other ways so will be working on improving this ! 
 
 ### shaders
 
@@ -85,10 +89,12 @@ to process the captur input with a glsl-shader it needs to be read from openfram
 
 - to truely process live input you need to switch the USE_OF_CAPTURE to on, (and make sure VIDEO_BACKEND is openframeworks ) , depending on the capture state before this you might also need a soft reset (RESTART_PROGRAM in OTHER ) , now when you start capture preview it should be running through openframeworks ! any processing  shaders run now will effect this input !
 
+- if you are using piCaptureSd1 this will probably only work on composite output, and even there it may have some weird artifacts (like a glitchy line down the right side of screen) , i am working on getting some of those optimized settings into the openframeworks addon which should improve this.
+
 - note : the sample-playback seems to be heavily impacted by of having created the capture object. this means currently if you go back to samples after starting of_capture it will likely be laggy. this is a big issue and i hope to fix it asap (releasing the capture resources when its not being used). for now a quick switch of VIDEO_BACKEND or hitting the soft RESTART_PROGRAM will fix it...
 
 
-
+[schematic]: incur_board.pdf
 [signal_culture_and_future_plans]: signal_culture_and_future_plans.md
 [analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
-[this page]: https://github.com/langolierz/c_o_n_j_u_r/notes_on_shader_formats.md
+[this page]: https://github.com/langolierz/c_o_n_j_u_r/blob/master/notes_on_shader_formats.md

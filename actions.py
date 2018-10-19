@@ -114,7 +114,7 @@ class Actions(object):
 
     def increase_seek_time(self):
         for index, i in enumerate(self.data.settings['sampler']['SEEK_TIME']['options']):
-            if (i == self.data.settings['sampler']['SEEK_TIME']['value']) and ((index + 1) % (len(self.data.settings['sampler']['SEEK_TIME']['options']) + 1) != len(self.data.settings['sampler']['SEEK_TIME']['options'])):
+            if (i == self.data.settings['sampler']['SEEK_TIME']['value']) and ((index + 1) != len(self.data.settings['sampler']['SEEK_TIME']['options'])):
                 self.data.settings['sampler']['SEEK_TIME']['value'] = self.data.settings['sampler']['SEEK_TIME']['options'][(index + 1)]            
                 break
             if (index >= (len(self.data.settings['sampler']['SEEK_TIME']['options']) - 1)):

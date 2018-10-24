@@ -8,7 +8,7 @@ this doc will explain how to try out and use the new features, and also keep tra
 
 ## flashing the new img.
 
-when i have created and uploaded the new img you can download it from here and flash to your sd card in the same way as before (note in case anyone was using a 4gg sd card before, you will need more than that now im pretty sure)
+i have created and uploaded the new [image] you can download it from here and flash to your sd card in the same way as before (note in case anyone was using a 4gg sd card before, you will need more than that now im pretty sure)
 
 ## receiving updates
 
@@ -98,3 +98,4 @@ to process the captur input with a glsl-shader it needs to be read from openfram
 [signal_culture_and_future_plans]: signal_culture_and_future_plans.md
 [analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
 [this page]: https://github.com/langolierz/c_o_n_j_u_r/blob/master/notes_on_shader_formats.md
+[image]: https://drive.google.com/file/d/1CQyHiFz8VDPOu3Oui2BV7_USPIF6glxx/view?usp=sharing

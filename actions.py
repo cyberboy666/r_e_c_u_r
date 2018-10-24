@@ -113,24 +113,16 @@ class Actions(object):
             self.video_driver.next_player.toggle_show()
 
     def increase_seek_time(self):
-        for index, i in enumerate(self.data.settings['sampler']['SEEK_TIME']['options']):
-            if (i == self.data.settings['sampler']['SEEK_TIME']['value']) and ((index + 1) != len(self.data.settings['sampler']['SEEK_TIME']['options'])):
-                self.data.settings['sampler']['SEEK_TIME']['value'] = self.data.settings['sampler']['SEEK_TIME']['options'][(index + 1)]            
-                break
-            if (index >= (len(self.data.settings['sampler']['SEEK_TIME']['options']) - 1)):
-                index = 0
-                self.data.settings['sampler']['SEEK_TIME']['value'] = self.data.settings['sampler']['SEEK_TIME']['options'][index] 
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options + 1 % len(options)
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
 
 
     def decrease_seek_time(self):
-        for index, i in enumerate(self.data.settings['sampler']['SEEK_TIME']['options']):
-            if (i == self.data.settings['sampler']['SEEK_TIME']['value']) and (index != 0):
-                self.data.settings['sampler']['SEEK_TIME']['value'] = self.data.settings['sampler']['SEEK_TIME']['options'][(index - 1)]
-                break
-            if self.data.settings['sampler']['SEEK_TIME']['value'] == self.data.settings['sampler']['SEEK_TIME']['options'][0]:
-                index = len(self.data.settings['sampler']['SEEK_TIME']['options']) - 1
-                self.data.settings['sampler']['SEEK_TIME']['value'] = self.data.settings['sampler']['SEEK_TIME']['options'][index]
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options - 1 % len(options)
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
         
 

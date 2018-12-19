@@ -14,7 +14,7 @@ these are the parts you need to get. to reduce shipping costs to nz i sourced th
 
 - [raspberry pi screen] *12 USD*
 
-- [usb keypad] *9 USD*
+- [usb keypad (AliExpress)] or [usb keypad (Amazon)]  *9 USD*
 
 ![main parts][main parts]
 

@@ -1,4 +1,5 @@
 import json
+import xml.etree.ElementTree as ET
 import os
 from random import randint
 import inspect
@@ -20,6 +21,7 @@ class Data(object):
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
     PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
+    PATH_TO_CONJUR_DATA = '/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/data/settings.xml'
 
     def __init__(self, message_handler):
         self.message_handler = message_handler
@@ -55,6 +57,7 @@ class Data(object):
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
+
         
     @staticmethod
     def create_empty_bank():
@@ -69,6 +72,13 @@ class Data(object):
     def _update_json(self, file_name, data):
         with open('{}{}'.format(self.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
             json.dump(data, data_file, indent=4, sort_keys=True)
+
+    def update_conjur_dev_mode(self, value):
+        print(value)
+        tree = ET.parse(self.PATH_TO_CONJUR_DATA)
+        tag = tree.find("isDevMode")
+        tag.text = str(int(value == 'dev'))
+        tree.write(self.PATH_TO_CONJUR_DATA)
     
     def get_setting_and_folder_from_name(self, setting_name):
         for folder_key , folder_item in self.settings.items():

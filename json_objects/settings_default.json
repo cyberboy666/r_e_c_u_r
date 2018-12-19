@@ -163,6 +163,11 @@
             "options": [],
             "value": null
         },
+        "RESTART_OPENFRAMEWORKS": {
+            "action": "restart_openframeworks",
+            "options": [],
+            "value": null
+        },
         "QUIT": {
             "action": "quit_the_program",
             "options": [],

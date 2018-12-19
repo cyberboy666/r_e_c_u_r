@@ -128,7 +128,7 @@ class AltVideoPlayer:
         if self.rate is None:
             self.rate = 1
 
-        new_rate = amount #self.rate + amount
+        new_rate = self.rate + amount
         print('new rate is being set to {}'.format(new_rate))
         if new_rate >=  -3 and new_rate <= 3:
             self.client.send_message("/player/{}/speed".format(self.name[0]), new_rate)

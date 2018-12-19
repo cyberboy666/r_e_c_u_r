@@ -2,6 +2,7 @@ import subprocess
 import tracemalloc
 import data_centre.length_setter as length_setter
 import sys
+import shlex
 import os
 from pythonosc import osc_message_builder
 from pythonosc import dispatcher
@@ -26,6 +27,7 @@ class Actions(object):
         self.python_capture = self.capture = Capture(self.tk, self.message_handler, self.data)
         self.capture = None
         self.serial_port_process = None
+        self.openframeworks_process = None
         self.set_capture_object('value')
         self.server = self.setup_osc_server()
         
@@ -347,16 +349,14 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            subprocess.Popen(["make run --directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r" ], shell=True)
-
+            self.openframeworks_process = subprocess.Popen(['/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
+            print('conjur pid is {}'.format(self.openframeworks_process.pid))
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
 
     def toggle_of_screen_size(self, value):
-        if value == 'dev':
-            self.video_driver.osc_client.send_message("/dev_mode", True)
-        else:
-            self.video_driver.osc_client.send_message("/dev_mode", False)
+        self.data.update_conjur_dev_mode(value)
+        self.video_driver.osc_client.send_message("/dev_mode", True)
 
     def switch_video_backend(self, state):
         if state == 'openframeworks':
@@ -450,6 +450,7 @@ class Actions(object):
         self.exit_openframeworks()
         self.exit_osc_server('','')
         self.stop_serial_port_process()
+        self.stop_openframeworks_process()
         self.toggle_x_autorepeat()
         self.tk.destroy()
 
@@ -527,6 +528,17 @@ class Actions(object):
         if self.serial_port_process is not None:
             self.serial_port_process.kill()
             self.serial_port_process = None
+
+    def restart_openframeworks(self):
+        self.exit_openframeworks()
+        self.stop_openframeworks_process()
+        self.check_if_should_start_openframeworks()
+
+    def stop_openframeworks_process(self):
+        if self.openframeworks_process is not None:
+            print('killing process')
+            self.openframeworks_process.kill()
+            self.openframeworks_process = None
 
     def try_pull_code_and_reset(self):
         #self.message_handler.set_message('INFO', 'checkin fo updates pls wait')

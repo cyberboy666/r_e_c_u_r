@@ -115,14 +115,14 @@ class Actions(object):
     def increase_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.settings['sampler']['SEEK_TIME']['value'] = options + 1 % len(options)
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index + 1) % len(options) ]
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
 
 
     def decrease_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.settings['sampler']['SEEK_TIME']['value'] = options - 1 % len(options)
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index - 1)  % len(options) ]
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
         
 

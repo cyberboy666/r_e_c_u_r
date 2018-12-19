@@ -261,7 +261,21 @@
                 "off"
             ],
             "value": "off"
-        }
+        },
+        "SEEK_TIME": {
+            "action": null,
+            "options": [
+                0.5,
+                1,
+                5,
+                10,
+                15,
+                30,
+                60,
+                120
+            ],
+            "value": 5
+        }    
     },
     "video": {
         "BACKGROUND_COLOUR": {

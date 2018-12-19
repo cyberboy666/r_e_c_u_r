@@ -150,11 +150,25 @@ class Actions(object):
         elif self.data.player_mode == 'next':
             self.video_driver.next_player.toggle_show()
 
+    def increase_seek_time(self):
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index + 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
+
+
+    def decrease_seek_time(self):
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index - 1)  % len(options) ]
+        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
+        
+
     def seek_forward_on_player(self):    
-        self.video_driver.current_player.seek(30)
+        self.video_driver.current_player.seek(self.data.settings['sampler']['SEEK_TIME']['value'])
 
     def seek_back_on_player(self):
-        self.video_driver.current_player.seek(-30)
+        self.video_driver.current_player.seek(-(self.data.settings['sampler']['SEEK_TIME']['value']))
 
     def toggle_function(self):
         self.data.function_on = not self.data.function_on

@@ -1,13 +1,13 @@
 {
 	"a": {
 		"NAV_BROWSER": ["move_browser_selection_up"],
-		"PLAYER": ["seek_back_on_player"],
+		"PLAYER": ["seek_back_on_player", "decrease_seek_time"],
 		"NAV_SETTINGS": ["move_settings_selection_up"],
         "LENGTH_SET": ["return_to_default_control_mode"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
-		"PLAYER": ["seek_forward_on_player"],
+		"PLAYER": ["seek_forward_on_player", "increase_seek_time"],
 		"NAV_SETTINGS": ["move_settings_selection_down"],
         "LENGTH_SET": ["return_to_default_control_mode"]
 	},

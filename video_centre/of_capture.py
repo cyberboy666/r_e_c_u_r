@@ -29,12 +29,9 @@ class OfCapture(object):
             
             print('sending setup message !')
             self.osc_client.send_message("/capture/setup", self.capture_type)
-    #        try:
-    #            self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
-    #        except picamera.exc.PiCameraError as e:
-    #            self.use_capture = False
-    #            print('camera exception is {}'.format(e))
-    #            self.message_handler.set_message('INFO', 'no capture device attached') 
+            self.has_capture = True
+            return True
+
 
     def piCapture_with_no_source(self):
         is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
@@ -219,15 +216,5 @@ class OfCapture(object):
         else:
             return int(fractions.Fraction(setting_value) * 1000000)
 
-    def receive_state(self, unused_addr, args):
-        if args == 1.0:
-            self.has_capture = True
-            self.message_handler.set_message('INFO', 'capture device attached') 
-        else:
-            self.has_capture = False
-            self.message_handler.set_message('INFO', 'no capture device attached')
-        print('the has capture is set to {}'.format(self.has_capture))
 
-    def close_capture(self):
-        pass
 

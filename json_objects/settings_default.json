@@ -1,5 +1,5 @@
 {
-    "capture": {
+    "captur": {
         "TYPE": {
             "action": "update_capture_settings",
             "options": [
@@ -69,8 +69,8 @@
             "value": "auto"
         }
     },
-    "midi": {
-        "CHANNEL": {
+    "incur": {
+        "MIDI CHANNEL": {
             "action": null,
             "options": [
                 1,
@@ -92,7 +92,7 @@
             ],
             "value": 1
         },
-        "INPUT": {
+        "MIDI INPUT": {
             "action": null,
             "options": [
                 "usb",
@@ -101,18 +101,11 @@
             ],
             "value": "disabled"
         },
-        "STATUS": {
+        "MIDI STATUS": {
             "action": "get_midi_status",
             "options": [],
             "value": null
         },
-        "CYCLE_PORT": {
-            "action": "cycle_midi_port_index",
-            "options": [],
-            "value": null
-        }
-    },
-    "other": {
         "ANALOG_INPUT": {
             "action": null,
             "options": [
@@ -121,20 +114,14 @@
             ],
             "value": "disabled"
         },
-        "UPDATE_CODE": {
-            "action": "try_pull_code_and_reset",
+        "MIDI CYCLE_PORT": {
+            "action": "cycle_midi_port_index",
             "options": [],
             "value": null
-        },
-        "DEV_MODE_RESET": {
-            "action": "switch_dev_mode",
-            "options": [
-                "on",
-                "off"
-            ],
-            "value": "off"
-        },
-        "OF_SCREEN_SIZE": {
+        }
+    },
+    "conjur":{
+                "OF_SCREEN_SIZE": {
             "action": "toggle_of_screen_size",
             "options": [
                 "full",
@@ -142,7 +129,7 @@
             ],
             "value": "dev"
         },
-        "USE_OF_CAPTURE": {
+        "USE_WITH_CAPTUR": {
             "action": "set_capture_object",
             "options": [
                 "yes",
@@ -158,13 +145,28 @@
             ],
             "value": "omxplayer"
         },
-        "RESTART_PROGRAM": {
-            "action": "restart_the_program",
+        "RESTART_OPENFRAMEWORKS": {
+            "action": "restart_openframeworks",
+            "options": [],
+            "value": null
+        }
+},
+    "other": {
+        "UPDATE_CODE": {
+            "action": "try_pull_code_and_reset",
             "options": [],
             "value": null
         },
-        "RESTART_OPENFRAMEWORKS": {
-            "action": "restart_openframeworks",
+        "DEV_MODE_RESET": {
+            "action": "switch_dev_mode",
+            "options": [
+                "on",
+                "off"
+            ],
+            "value": "off"
+        },
+        "RESTART_PROGRAM": {
+            "action": "restart_the_program",
             "options": [],
             "value": null
         },

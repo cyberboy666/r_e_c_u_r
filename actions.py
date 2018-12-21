@@ -408,10 +408,12 @@ class Actions(object):
 
     def switch_dev_mode(self, state):
         if state == 'on':
+            self.toggle_of_screen_size('dev')
             self.video_driver.osc_client.send_message("/dev_mode", True)
             self.switch_display_to_hdmi()
         elif state == 'off':
-            self.video_driver.osc_client.send_message("/dev_mode", False)
+            self.toggle_of_screen_size('full')
+            self.video_driver.osc_client.send_message("/dev_mode", True)
             self.switch_display_to_lcd()
 
     def switch_display_to_hdmi(self):
@@ -507,7 +509,6 @@ class Actions(object):
         this_dispatcher.map("/player/a/status", self.video_driver.receive_status, "a.a")
         this_dispatcher.map("/player/b/status", self.video_driver.receive_status, "b.b")
         this_dispatcher.map("/player/c/status", self.video_driver.receive_status, "c.c")
-        this_dispatcher.map("/capture/is_setup", self.capture.receive_state)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 

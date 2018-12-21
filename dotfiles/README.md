@@ -58,6 +58,10 @@ these are suppose to stop screensaver / hide cursor / remove on screen power war
 
 - set a custom splash screen by replacing splash.png an image at `/usr/share/plymouth/themes/pix/splash.png`with my original. i made a copy of the original, and then copied ~~my own from a flash stick...~~ from `~/r_e_c_u_r/documentation/splash.png`
 
+## for piCaptureSd1
+
+need to install : `sudo apt-get install python3-smbus` and `sudo pip3 install pivideo`
+
 ## lcd display drivers
 
 these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).~~

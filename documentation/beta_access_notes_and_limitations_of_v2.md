@@ -61,13 +61,13 @@ the existing stable OMXPLAYER backend option is still available and is the defau
 
 once in this mode, you can try loading and switching a sample just as before (ie press `0` , watch for `NEXT LOADED` then hit `->`), 
 
-if the video is a box in bottom left corner OF thinks its in dev mode , selecting the OF_SCREEN_SIZE option in OTHER subsetting a few times should fix this (i just need python to  tell of when dev mode is changing - should fix soon)
+~~if the video is a box in bottom left corner OF thinks its in dev mode , selecting the OF_SCREEN_SIZE option in OTHER subsetting a few times should fix this (i just need python to  tell of when dev mode is changing - should fix soon)~~ <- this should be fixed now
 
 most of the usual sampling functions should work same as before. loading , switching , pausing , sublooping, rand-start etc. at this point some of the VIDEO settings such as BACKGROUND_COLOUR and SCREEN_MODE do not work here. (it is possible to implement these but low prioty for me rn...)  
 
-it seems like sampling video through openframeworks is more demanding on cpu than omxplayer. from running some tests, my SD videos through composite out run fine but even 720 etc starts to lag (unlike omxplayer which either plays full fps or nothing , of can slow right down when its struggling ). __i would recommend using this for SD video only__
+it seems like sampling video through openframeworks is more demanding on cpu than omxplayer. from running some tests, my SD videos through composite out run fine but even 720 starts to lag (unlike omxplayer which either plays full fps or nothing , of can slow right down when its struggling ). __i would recommend using this for SD video only__
 
-also, i have noticed occasionally the openframeworks app will crash (usually with a specific video file/action on this file it cant handle.) when this happens the output will freeze.. this is a critical error i want to priotize reducing / handling more gracefully. if you can reproduce this let me know how, for now a soft reset will restart another working version of OF-app , however the crashed one will still be in memory which is not ideal. the only way to stop it i know now is killing the process in task manager , or a hard reset. im sure theres other ways so will be working on improving this ! 
+also, i have noticed occasionally the openframeworks app will crash (usually with a specific video file/action on this file it cant handle.) when this happens the output will freeze.. ~~this is a critical error i want to priotize reducing / handling more gracefully. if you can reproduce this let me know how, for now a soft reset will restart another working version of OF-app , however the crashed one will still be in memory which is not ideal. the only way to stop it i know now is killing the process in task manager , or a hard reset. im sure theres other ways so will be working on improving this !~~ this shouldnt happen so much now but if it does the `reset openframeworks` option should fix 
 
 ### shaders
 
@@ -85,17 +85,17 @@ see [this page] for more info on writing shaders for conjur. if a shader output 
 
 running live input through a processing shader is an exciting possibility once you have live input and processing shaders already. this also is responsible for aprox half my time/stress while at SC !
 
-to process the captur input with a glsl-shader it needs to be read from openframeworks using ofxRPiCameraGrabber addon rather than the piCapture python package. for all other sampling / previewing uses i recommend using the python (default) option , (even if you are in openframeworks-backend mode, you can still capture/sample as before, and process these samples etc)
+to process the captur input with a glsl-shader it needs to be read from openframeworks using ofxRPiCameraGrabber addon rather than the piCapture python package. for all other sampling / previewing uses ~~i recommend using the python (default) option ,~~ both options seem to work - not sure if one is better than other... (even if you are in openframeworks-backend mode, you can still capture/sample as before, and process these samples etc)
 
-- to truely process live input you need to switch the USE_OF_CAPTURE to on, (and make sure VIDEO_BACKEND is openframeworks ) , depending on the capture state before this you might also need a soft reset (RESTART_PROGRAM in OTHER ) , now when you start capture preview it should be running through openframeworks ! any processing  shaders run now will effect this input !
+- to truely process live input you need to switch the USE_OF_CAPTURE to on, (and make sure VIDEO_BACKEND is openframeworks ) , ~~depending on the capture state before this you might also need a soft reset (RESTART_PROGRAM in OTHER )~~ <-- this should be fixed. , now when you start capture preview it should be running through openframeworks ! any processing  shaders run now will effect this input !
 
-- if you are using piCaptureSd1 this will probably only work on composite output, and even there it may have some weird artifacts (like a glitchy line down the right side of screen) , i am working on getting some of those optimized settings into the openframeworks addon which should improve this.
+- ~~if you are using piCaptureSd1 this will probably only work on composite output, and even there it may have some weird artifacts (like a glitchy line down the right side of screen) , i am working on getting some of those optimized settings into the openframeworks addon which should improve this.~~ piCaptureSd1 + openframeworks is working smoothly together now !
 
-- note : the sample-playback seems to be heavily impacted by of having created the capture object. this means currently if you go back to samples after starting of_capture it will likely be laggy. this is a big issue and i hope to fix it asap (releasing the capture resources when its not being used). for now a quick switch of VIDEO_BACKEND or hitting the soft RESTART_PROGRAM will fix it...
+- note : ~~the sample-playback seems to be heavily impacted by of having created the capture object. this means currently if you go back to samples after starting of_capture it will likely be laggy. this is a big issue and i hope to fix it asap (releasing the capture resources when its not being used). for now a quick switch of VIDEO_BACKEND or hitting the soft RESTART_PROGRAM will fix it...~~ <-- this should also be fixed now
 
 
 [schematic]: incur_board.pdf
 [signal_culture_and_future_plans]: signal_culture_and_future_plans.md
 [analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
 [this page]: https://github.com/langolierz/c_o_n_j_u_r/blob/master/notes_on_shader_formats.md
-[image]: https://drive.google.com/file/d/1CQyHiFz8VDPOu3Oui2BV7_USPIF6glxx/view?usp=sharing
+[image]: https://drive.google.com/open?id=1ZSRrGhueEHaSwjORXyvcnXxPXloBpWoL

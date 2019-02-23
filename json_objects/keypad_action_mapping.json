@@ -5,7 +5,7 @@
 		"NAV_SETTINGS": ["move_settings_selection_up"],
 		"NAV_SHADERS": ["move_shaders_selection_up"],
         "LENGTH_SET": ["return_to_default_control_mode"],
-        "SHADER_PARAM": ["decrease_this_param"]
+        "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
@@ -13,7 +13,7 @@
 		"NAV_SETTINGS": ["move_settings_selection_down"],
 		"NAV_SHADERS": ["move_shaders_selection_down"],
         "LENGTH_SET": ["return_to_default_control_mode"],
-        "SHADER_PARAM": ["increase_this_param"]
+        "SHADER_PARAM": ["increase_this_param", "increase_shader_param"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],

@@ -3,7 +3,6 @@ import os
 
 class Shaders(object):
     MENU_HEIGHT = 10
-    PARAM_STEP = 0.2
     EMPTY_SHADER = dict(name='none',is_shader=True,shad_type='-',param_number=0,path='-',shad_index=0)
     def __init__(self, root, osc_client, message_handler, data):
         self.root = root
@@ -97,16 +96,16 @@ class Shaders(object):
         self.shaders_menu_list = self.generate_shaders_list()
         return is_file, is_selected_shader, self.selected_shader
 
-    def increase_this_param(self):
+    def increase_this_param(self, amount_change):
         param = self.focused_param
         current_amount = self.selected_param_values[param]
-        amount = self.get_new_param_amount(current_amount,self.PARAM_STEP)
+        amount = self.get_new_param_amount(current_amount,amount_change)
         self.set_param_to_amount(param, amount)
 
-    def decrease_this_param(self):
+    def decrease_this_param(self, amount_change):
         param = self.focused_param
         current_amount = self.selected_param_values[param]
-        amount = self.get_new_param_amount(current_amount,-self.PARAM_STEP)
+        amount = self.get_new_param_amount(current_amount,amount_change)
         self.set_param_to_amount(param, amount)
     
     @staticmethod

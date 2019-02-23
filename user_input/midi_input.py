@@ -54,7 +54,7 @@ class MidiInput(object):
             message_dict = message.dict()
             midi_channel = midi_setting = self.data.settings['midi']['CHANNEL']['value'] - 1
 
-            if not message_dict['channel'] == midi_channel:
+            if not message_dict.get('channel', default=None) == midi_channel:
                 pass
             ## turning off noisey clock messages for now - may want to use them at some point
             elif message_dict['type'] == 'clock':

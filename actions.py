@@ -319,7 +319,7 @@ class Actions(object):
     def change_hdmi_settings(self, setting_value):
         if self.data.settings['video']['OUTPUT']['value'] == 'hdmi':
             if self.data.settings['video']['HDMI_MODE']['value'] == 'preferred':
-                subprocess.call(['tvservice', '-p'], shell=True)
+                subprocess.call(['tvservice --preferred'], shell=True)
             elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
                 subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
             self._refresh_frame_buffer()
@@ -466,16 +466,29 @@ class Actions(object):
         self.shaders.focused_param = 0
 
     def increase_this_param(self):
-        self.shaders.increase_this_param()
+        self.shaders.increase_this_param(self.data.settings['other']['SHADER_PARAM']['value'])
 
     def decrease_this_param(self):
-        self.shaders.decrease_this_param()
+        self.shaders.decrease_this_param(self.data.settings['other']['SHADER_PARAM']['value'])
 
     def increase_param_focus(self):
         self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader['param_number']
 
     def decrease_param_focus(self):
         self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader['param_number']
+
+    def increase_shader_param(self):
+        options = self.data.settings['other']['SHADER_PARAM']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['other']['SHADER_PARAM']['value'] ][0]
+        self.data.settings['other']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['other']['SHADER_PARAM']['value']))
+
+    def decrease_shader_param(self):
+        options = self.data.settings['other']['SHADER_PARAM']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['other']['SHADER_PARAM']['value'] ][0]
+        self.data.settings['other']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['other']['SHADER_PARAM']['value']))
+
 
     def set_fixed_length(self, value):
         self.data.control_mode = 'LENGTH_SET'

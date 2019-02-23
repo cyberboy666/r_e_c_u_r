@@ -160,6 +160,20 @@
             ],
             "value": "omxplayer"
         },
+        "SHADER_PARAM": {
+            "action": null,
+            "options": [
+                0.01,
+                0.02,
+                0.05,
+                0.10,
+                0.15,
+                0.2,
+                0.3,
+                0.4
+            ],
+            "value": 0.10
+        },    
         "ANALOG_INPUT": {
             "action": null,
             "options": [

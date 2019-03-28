@@ -14,11 +14,20 @@ these are the parts you need to get. to reduce shipping costs to nz i sourced th
 
 - [raspberry pi screen] *12 USD*
 
-- [usb keypad] *9 USD*
+- [usb keypad (AliExpress)] or [usb keypad (Amazon)]  *9 USD*
 
 ![main parts][main parts]
 
-other bits and pieces:
+### optional c_a_p_t_u_r addons:
+
+- [raspberry pi camera] *7 USD*
+- or [piCaptureSd1] *149 USD*
+  
+![capture parts][capture parts]
+
+(note piCaptureSd1 is better supported in v2beta)
+
+### other bits and pieces:
 
 - 4x m2 and 6x m3 screws, 6mm is long enough - i ended up using 4 2-gauge and 6 4-gauge self tapping screws instead which were easier to get into the plastic case.
 
@@ -32,11 +41,15 @@ other bits and pieces:
 
 - i 3d printed my enclosure using these files for the [top] and [bottom]. if you dont have access to a printer you can upload these files to a popular printing service in you region (eg ...)
 
-- 2d print these [key stickers] if you want to use the default key mapping, or modify the svg file (in inkscape or something) to create your own. you could print them onto vinyl, label paper or just normal paper  and attach with with double sided tape...
+- _note on enclosure: you could also just buy a standard raspberry pi3 (+screen) case and use the numpad externally. i personally found the 3d printing took a bit too long so am working on a lasercut-able option too. watch this space_
+
+- 2d print these [key stickers] if you want to use the default key mapping, or modify the svg file (in inkscape or something) to create your own. you could print them onto vinyl, label paper or just normal paper and attach with with double sided tape...
 
 ## put it together
 
 - using [etcher] (or otherwise) flash the micro sd with my [modified image] of raspbian (or follow these [instructions to install] from scratch.)
+
+- _quick note about versions: i have uploaded a new modified image which you can read about and find [here]. this fixes some old bugs and adds some new features (and maybe some new bugs) this will replace the above image soon_
 
 - insert sd card into pi
 
@@ -54,10 +67,68 @@ you are done ! wasnt that easy ?
 
 ( [operate docs] )
 
+## my build gallery !
+
+![01](build_v1_photos/build01.jpg) 
+
+all the parts and tools i used in this build
+
+![02](build_v1_photos/build02.jpg) 
+
+the main playaz : raspi-lcd-screen , raspi3 , generic usb-keypad
+
+![03](build_v1_photos/build03.jpg) 
+
+tools even your mums house would have lying around...
+
+
+![04](build_v1_photos/build04.jpg) 
+
+3d printed baseplate and top panel
+
+![05](build_v1_photos/build05.jpg) 
+
+ctrl-c
+
+![06](build_v1_photos/build06.jpg) 
+
+ctrl-v
+
+![07](build_v1_photos/build07.jpg) 
+
+held in with double-sided tape on bottom
+
+![08](build_v1_photos/build08.jpg)
+
+
+![09](build_v1_photos/build09.jpg) 
+
+its easier to flash and insert the sd card before screwing it in !
+
+![10](build_v1_photos/build10.jpg) 
+
+![11](build_v1_photos/build11.jpg) 
+
+![12](build_v1_photos/build12.jpg) 
+
+![13](build_v1_photos/build13.jpg) 
+
+![14](build_v1_photos/build14.jpg) 
+
+![15](build_v1_photos/build15.jpg) 
+
+r_e_c_u_r looking happy among friends !
+
+
+
 [raspberry pi3]:https://www.aliexpress.com/item/RS-Version-2016-New-Raspberry-Pi-3-Model-B-Board-1GB-LPDDR2-BCM2837-Quad-Core-Ras/32789942633.html?spm=a2g0s.9042311.0.0.FkRWty
 [main parts]: build_all.jpg
+[capture parts]: capture_parts.jpg
 [raspberry pi screen]:https://www.aliexpress.com/item/3-5-Inch-TFT-LCD-Moudle-For-Raspberry-Pi-2-Model-B-RPI-B-raspberry-pi/32707058182.html?spm=a2g0s.13010208.99999999.262.bV4EPV
-[usb keypad]:https://www.aliexpress.com/item/2-4G-Wireless-Keyboard-USB-Numeric-Keypad-19-Keys-Mini-Digital-Keyboard-Ultra-Slim-Number-Pad/32818206308.html?spm=a2g0s.9042311.0.0.FkRWty
+[usb keypad (AliExpress)]:https://www.aliexpress.com/item/USB-Wireless-Numeric-Keypad-19-Keys-Numpad-Number-Pad-Wireless-2-4GHz-Mini-Receiver-for-Laptop/32821720854.html
+[usb keypad (Amazon)]:https://www.amazon.com/gp/product/B076GZDC14/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1&fbclid=IwAR3fNd1z0Cu137GE0ONYP2vmoTm0rJIvDA9plHlvCjNGZrSZFsV_naCHax0
+[raspberry pi camera]:https://www.aliexpress.com/item/RPI2-raspberry-pi-2-model-b-b-plus-camera-5-million-pixels-professional-ip-webcam-module/32403602769.html
+[piCaptureSd1]: https://lintestsystems.com/products/picapture-sd1
 [top]: ./topplate.stl
 [bottom]: ./baseplate.stl
 [key stickers]: ./keystickers.svg
@@ -67,3 +138,4 @@ you are done ! wasnt that easy ?
 [instructions to install]: ../dotfiles/README.md 
 [these rubber feet]: https://www.aliexpress.com/item/40-Self-Adhesive-Rubber-Bumper-Stopper-Non-slip-Feet-Door-Buffer-Pads-Furniture-DIY-Tool/32849514475.html?spm=a2g0s.9042311.0.0.6ee14c4dFXynVK
 [faq]: ./faq.md
+[here]: https://github.com/langolierz/r_e_c_u_r/blob/c_o_n_j_u_r/documentation/beta_access_notes_and_limitations_of_v2.md

@@ -105,7 +105,7 @@ class Shaders(object):
     def decrease_this_param(self, amount_change):
         param = self.focused_param
         current_amount = self.selected_param_values[param]
-        amount = self.get_new_param_amount(current_amount,amount_change)
+        amount = self.get_new_param_amount(current_amount,-amount_change)
         self.set_param_to_amount(param, amount)
     
     @staticmethod

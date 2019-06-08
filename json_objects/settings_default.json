@@ -163,7 +163,7 @@
                 "omxplayer",
                 "openframeworks"
             ],
-            "value": "omxplayer"
+            "value": "openframeworks"
         },
         "SHADER_PARAM": {
             "action": null,
@@ -209,7 +209,7 @@
                 "seamless",
                 "parallel"
             ],
-            "value": "parallel"
+            "value": "seamless"
         },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",

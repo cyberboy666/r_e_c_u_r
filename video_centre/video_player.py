@@ -18,6 +18,7 @@ class VideoPlayer:
         self.location = ''
         self.load_attempts = 0
         self.alpha = 0
+        self.show_toggle_on = False
 
 
     def try_load(self, layer, is_current=True):

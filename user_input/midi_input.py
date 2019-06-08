@@ -62,7 +62,7 @@ class MidiInput(object):
             ## trying to only let through step cc messages to increase response time
             elif message_dict['type'] == 'control_change':
                 control_number = message_dict['control']
-                #print('control number is {} , cc_dict.keys is {}'.format(control_number, cc_dict.keys() ))
+                print('control number is {} , cc_dict.keys is {}'.format(control_number, cc_dict.keys() ))
                 if not control_number in cc_dict.keys():
                     cc_dict[control_number] = message_dict['value']
                     self.on_midi_message(message_dict)
@@ -76,7 +76,8 @@ class MidiInput(object):
                         self.on_midi_message(message_dict)
                     #print(cc_dict)
 
-            else:       
+            else:
+                print(message_dict)       
                 self.on_midi_message(message_dict)
         if i > 0:
             pass

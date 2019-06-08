@@ -14,6 +14,7 @@ class VideoDriver(object):
         self.in_first_load_cycle = False
         self.in_current_playing_cycle = False
         self.in_next_load_cycle = False
+        self.in_parallel_cycle = False
         
         self.layer = self.MAX_LAYER
 
@@ -22,13 +23,19 @@ class VideoDriver(object):
         self.next_player = None
         self.reset_all_players()
         
-        self.root.after(self.delay, self.begin_playing)
-        self.print_status()
         self.update_video_settings()
+        if self.loop_parallel:
+            self.in_parallel_cycle = True
+            self.root.after(self.delay, self.begin_playing_parallel)
+        else:
+            self.root.after(self.delay, self.begin_playing)
+        self.print_status()
+        
 
 
     def update_video_settings(self):
         self.switch_on_finish = self.data.settings['sampler']['ON_FINISH']['value'] == 'switch'
+        self.loop_parallel = self.data.settings['sampler']['LOOP_TYPE']['value'] == 'parallel'
         
     def get_next_layer_value(self):
         if self.layer > 0:
@@ -39,6 +46,7 @@ class VideoDriver(object):
         return self.layer
 
     def print_status(self):
+        print('self.loop_parallel: ', self.loop_parallel, 'self.in_parallel_cycle :', self.in_parallel_cycle)
         print('l({}):{}, c({}):{}, n({}):{}'.format(self.last_player.name, self.last_player.status, self.current_player.name, \
         self.current_player.status, self.next_player.name, self.next_player.status,))
         self.root.after(1000,self.print_status)
@@ -59,11 +67,11 @@ class VideoDriver(object):
                 self.root.after(self.delay, self.wait_for_first_load)
 
     def switch_players_and_start_video(self):
-        self.in_first_load_cycle = False
-        self.in_current_playing_cycle = False
-        self.in_next_load_cycle = True
+            self.in_first_load_cycle = False
+            self.in_current_playing_cycle = False
+            self.in_next_load_cycle = True
 
-        self.switch_players()
+            self.switch_players()
 
     def switch_players(self):
         temp_player = self.last_player
@@ -88,7 +96,12 @@ class VideoDriver(object):
                 if self.switch_on_finish:
                     self.switch_if_next_is_loaded()
             else:
-                self.root.after(self.delay, self.wait_for_next_cycle)
+                if self.loop_parallel:
+                    self.in_current_playing_cycle = False
+                    self.in_parallel_cycle = True
+                    self.root.after(self.delay, self.begin_playing_parallel)
+                else:
+                    self.root.after(self.delay, self.wait_for_next_cycle)
 
     def switch_if_next_is_loaded(self):
         if self.in_next_load_cycle:
@@ -135,6 +148,9 @@ class VideoDriver(object):
     def reload_next_player(self):
         self.next_player.reload(self.get_next_layer_value())
 
+    def reload_current_player(self):
+        self.current_player.reload(self.get_next_layer_value(), is_current=True)
+
     def receive_position(self, unused_addr, player_name, args):
         #print("the position of  player {} is set to {}".format(player_name,args))
         for player in [self.next_player, self.current_player, self.last_player]:
@@ -149,4 +165,20 @@ class VideoDriver(object):
                 player.status = args
                 break
 
+    ### logic for looping players in parallel
 
+    def begin_playing_parallel(self):
+        if self.in_parallel_cycle:
+            if self.current_player.is_finished():
+                self.current_player.try_load(self.get_next_layer_value(), is_current=True)
+            if self.next_player.is_finished():
+                self.next_player.try_load(self.get_next_layer_value())
+            if self.current_player.is_loaded():
+                self.current_player.start_video()
+            if self.next_player.is_loaded():
+                self.next_player.start_video()
+            if self.loop_parallel:
+                self.root.after(self.delay, self.begin_playing_parallel)
+            else:
+                self.in_parallel_cycle = False
+                self.root.after(self.delay, self.begin_playing)

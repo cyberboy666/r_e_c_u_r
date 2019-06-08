@@ -84,8 +84,19 @@ class Actions(object):
         self.display.browser_menu.generate_browser_list()
 
     def _load_this_slot_into_next_player(self, slot):
-        if self.data.update_next_slot_number(slot):
-            self.video_driver.reload_next_player()
+ ### load next player for seamless type otherwise respect player mode
+        if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
+            if self.data.update_next_slot_number(slot):
+                self.video_driver.reload_next_player()
+        else:
+            if self.data.player_mode == 'next':
+                if self.data.update_next_slot_number(slot):
+                    self.video_driver.reload_next_player()
+            else:
+                if self.data.update_next_slot_number(slot, is_current=True):
+                    self.video_driver.reload_current_player()
+           
+
 
     def load_slot_0_into_next_player(self):
         self._load_this_slot_into_next_player(0)
@@ -118,7 +129,13 @@ class Actions(object):
         self._load_this_slot_into_next_player(9)
 
     def switch_to_next_player(self):
-        self.video_driver.switch_players_and_start_video()
+        if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
+            self.video_driver.switch_players_and_start_video()
+        else:
+            self.video_driver.current_player.toggle_show()
+            if self.video_driver.current_player.show_toggle_on == self.video_driver.next_player.show_toggle_on:
+                self.video_driver.next_player.toggle_show()
+
 
     def cycle_display_mode(self):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
@@ -315,6 +332,7 @@ class Actions(object):
             self.change_hdmi_settings(setting_value)
         elif setting_value == 'composite':
             self.change_composite_setting(setting_value)
+        self.restart_openframeworks()
 
     def change_hdmi_settings(self, setting_value):
         if self.data.settings['video']['OUTPUT']['value'] == 'hdmi':
@@ -351,6 +369,7 @@ class Actions(object):
         if self.data.settings['other']['VIDEO_BACKEND']['value'] == 'openframeworks':
             self.openframeworks_process = subprocess.Popen(['/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
             print('conjur pid is {}'.format(self.openframeworks_process.pid))
+
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
 
@@ -367,15 +386,15 @@ class Actions(object):
         
 
     def change_composite_setting(self, setting_value):
+        mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
+        aspect = self.data.settings['video']['COMPOSITE_RATIO']['value']
+        progressive = ''
+        if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'on':
+            progressive = 'p'
         if setting_value == 'composite':
-            mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
-            aspect = self.data.settings['video']['COMPOSITE_RATIO']['value']
-            progressive = ''
-            if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'on':
-                progressive = 'p'
             subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)],shell=True)
             self._refresh_frame_buffer()
-            self.persist_composite_setting(mode, progressive, aspect)
+        self.persist_composite_setting(mode, progressive, aspect)
 
     @staticmethod
     def _refresh_frame_buffer():
@@ -591,6 +610,9 @@ class Actions(object):
         subprocess.call(['make', '--directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r' ])
         self.message_handler.set_message('INFO', 'finished compiling!')
         self.restart_the_program()
+
+    def shutdown_pi(self):
+        subprocess.call(['sudo', 'shutdown', '-h', 'now'])
 
 
 

@@ -37,9 +37,11 @@ class AnalogInput(object):
 
     def poll_analog_inputs(self):
         if self.data.settings['other']['ANALOG_INPUT']['value'] == 'enabled':
+
             for i in range(0,8):        
                 if str(i) in self.analog_mappings:
                     this_reading = self.analog_input.read_adc(i)
+                    #print(str(this_reading))
                     if abs(this_reading - self.last_readings[i]) > 10:
                         #print('the diff is {}'.format(this_reading - self.last_readings[i]))
                         self.run_action_for_mapped_channel(i, this_reading)

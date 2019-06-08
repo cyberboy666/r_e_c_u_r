@@ -20,11 +20,11 @@ class VideoPlayer:
         self.alpha = 0
 
 
-    def try_load(self, layer):
+    def try_load(self, layer, is_current=True):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
-            if self.load(layer):
+            if self.load(layer, is_current):
                 print('load success')
                 return True
             else:
@@ -34,9 +34,9 @@ class VideoPlayer:
         return False
             
 
-    def load(self, layer):
+    def load(self, layer, is_current=False):
         #try:
-        self.get_context_for_player()
+        self.get_context_for_player(is_current)
         is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
         arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
         if not is_dev_mode:
@@ -101,10 +101,10 @@ class VideoPlayer:
         elif(self.omx_running):
             self.root.after(5, self.pause_at_end)
 
-    def reload(self, layer):
+    def reload(self, layer, is_current=True):
         self.exit()
         self.omx_running = False
-        self.try_load(layer)
+        self.try_load(layer, is_current)
 
     def is_loaded(self):
         return self.status is 'LOADED'
@@ -119,8 +119,8 @@ class VideoPlayer:
             print('{}: error get_position'.format(self.name))
             return -1
 
-    def get_context_for_player(self):
-        next_context = self.data.get_next_context()
+    def get_context_for_player(self, is_current=False):
+        next_context = self.data.get_next_context(is_current)
         self.location = next_context['location']
         #self.total_length = next_context['length']
         self.start = next_context['start']

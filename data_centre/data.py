@@ -13,6 +13,7 @@ class Data(object):
 
     BANK_DATA_JSON = 'display_data.json'
     NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
+    CURRENT_BANKSLOT_JSON = 'current_bankslot_number.json'
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
@@ -49,6 +50,9 @@ class Data(object):
         self.next_bankslot = '0-0'
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.NEXT_BANKSLOT_JSON):
             self.next_bankslot = self._read_json(self.NEXT_BANKSLOT_JSON)
+        self.current_bankslot = '0-0'
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.CURRENT_BANKSLOT_JSON):
+            self.next_bankslot = self._read_json(self.CURRENT_BANKSLOT_JSON)
 
         self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
@@ -117,13 +121,17 @@ class Data(object):
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
         self.bank_number = (self.bank_number+amount)%(len(self.bank_data))
         
-    def update_next_slot_number(self,  new_value):
+    def update_next_slot_number(self,  new_value, is_current=False):
         if self.bank_data[self.bank_number][new_value]['location'] == '':
             self.message_handler.set_message('INFO', 'the slot you pressed is empty')
             return False
         elif self.is_this_path_broken(self.bank_data[self.bank_number][new_value]['location']):
             self.message_handler.set_message('INFO', 'no device found for this slot')
             return False
+        elif is_current:
+            self.current_bankslot =  '{}-{}'.format(self.bank_number,new_value)
+            self._update_json(self.CURRENT_BANKSLOT_JSON,self.current_bankslot)
+            return True
         else:
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
             self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
@@ -148,9 +156,13 @@ class Data(object):
         except ValueError:
             return False , '*'
 
-    def get_next_context(self):
+    def get_next_context(self, is_current=False):
         ######## loads the slot details, uses settings to modify them and then set next slot number ########
-        bank_num , slot_num = self.split_bankslot_number(self.next_bankslot)
+        if is_current:
+            bankslot_number = self.current_bankslot
+        else:
+            bankslot_number = self.next_bankslot
+        bank_num , slot_num = self.split_bankslot_number(bankslot_number)
         next_slot_details = self.bank_data[bank_num][slot_num]
         start_value = next_slot_details['start']
         end_value = next_slot_details['end']
@@ -160,9 +172,9 @@ class Data(object):
 
         context = dict(location=next_slot_details['location'], name=next_slot_details['name'],
                        length=next_slot_details['length'], rate=next_slot_details['rate'], start=start_value, end=end_value,
-                       bankslot_number=self.next_bankslot)
+                       bankslot_number=bankslot_number)
 
-        self._update_next_bankslot_value(slot_num)
+        self._update_next_bankslot_value(slot_num, is_current)
         return context
 
     def _overwrite_values_with_sampler_settings(self, start, end, length):
@@ -192,7 +204,7 @@ class Data(object):
 
         return new_start, new_end
 
-    def _update_next_bankslot_value(self, slot_num):
+    def _update_next_bankslot_value(self, slot_num, is_current=False):
         next_setting = self.settings['sampler']['LOAD_NEXT']['value']
         loaded_slots = self._get_list_of_loaded_slots_in_current_bank()
         if loaded_slots:
@@ -203,8 +215,12 @@ class Data(object):
             else:
                 next_slot = slot_num
 
-            self.next_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
-            self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
+            if is_current:
+                self.current_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
+                self._update_json(self.CURRENT_BANKSLOT_JSON,self.current_bankslot)
+            else:
+                self.next_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
+                self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
 
     def _get_list_of_loaded_slots_in_current_bank(self):
         list_of_loaded_slots = []

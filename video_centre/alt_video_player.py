@@ -17,17 +17,18 @@ class AltVideoPlayer:
         self.location = ''
         self.load_attempts = 0
         self.alpha = 0
+        self.show_toggle_on = True
 ### new stuff
         self.client = osc_client
 
         self.position = -1
 
 
-    def try_load(self, layer):
+    def try_load(self, layer, is_current=False):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
-            if self.load(layer):
+            if self.load(layer, is_current):
                 print('load success')
                 return True
             else:
@@ -37,8 +38,8 @@ class AltVideoPlayer:
         return False
             
 
-    def load(self, layer):
-        self.get_context_for_player()
+    def load(self, layer, is_current=False):
+        self.get_context_for_player(is_current)
         print('the location is {}'.format(self.location))
         if self.location == '':
             self.status = 'EMPTY'
@@ -75,10 +76,10 @@ class AltVideoPlayer:
 
 
 
-    def reload(self, layer):
+    def reload(self, layer, is_current=False):
         self.exit()
         self.player_running = False
-        self.try_load(layer)
+        self.try_load(layer, is_current)
 
     def is_loaded(self):
         return self.status == 'LOADED'
@@ -86,8 +87,8 @@ class AltVideoPlayer:
     def is_finished(self):
         return self.status == 'FINISHED'
 
-    def get_context_for_player(self):
-        next_context = self.data.get_next_context()
+    def get_context_for_player(self, is_current=False):
+        next_context = self.data.get_next_context(is_current)
         print('the context is {}'.format(next_context))
         self.location = next_context['location']
         self.total_length = next_context['length']

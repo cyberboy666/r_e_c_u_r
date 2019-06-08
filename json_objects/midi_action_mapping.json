@@ -102,5 +102,71 @@
 	},
 	"note_on 90": {
 		"DEFAULT": ["load_slot_9_into_next_player","quit_the_program"]
+	},
+	"note_on 0": {
+		"NAV_BROWSER": ["move_browser_selection_up"],
+		"PLAYER": ["seek_back_on_player"],
+		"NAV_SETTINGS": ["move_settings_selection_up"],
+        "LENGTH_SET": ["return_to_default_control_mode"]
+	},
+	"note_on 36": {
+		"NAV_BROWSER": ["move_browser_selection_down"],
+		"PLAYER": ["seek_forward_on_player"],
+		"NAV_SETTINGS": ["move_settings_selection_down"],
+        "LENGTH_SET": ["return_to_default_control_mode"]
+	},
+	"note_on 37": {
+		"NAV_BROWSER": ["enter_on_browser_selection"],
+		"PLAYER": ["toggle_action_on_player","toggle_show_on_player"],
+		"NAV_SETTINGS": ["enter_on_settings_selection"],
+        "LENGTH_SET": ["record_fixed_length"]
+	},
+	"note_on 38": {
+		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"]
+	},
+	"note_on 39": {
+		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"]
+	},
+	"note_on 40": {
+		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"]
+	},
+	"note_on 41": {
+        "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},
+	"note_on 42": {
+		"DEFAULT": ["cycle_display_mode"]
+	},
+	"note_on 43": {
+		"DEFAULT": ["toggle_function"]
+	},
+	"note_on 44": {
+		"DEFAULT": ["load_slot_0_into_next_player","previous_bank"]
+	},
+	"note_on 45": {
+		"DEFAULT": ["load_slot_1_into_next_player","next_bank"]
+	},
+	"note_on 46": {
+		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"]
+	},
+	"note_on 47": {
+		"DEFAULT": ["load_slot_3_into_next_player"]
+	},
+	"note_on 48": {
+		"DEFAULT": ["load_slot_4_into_next_player"]
+	},
+	"note_on 49": {
+		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"]
+	},
+	"note_on 50": {
+		"DEFAULT": ["load_slot_6_into_next_player"]
+	},
+	"note_on 51": {
+		"DEFAULT": ["load_slot_7_into_next_player"]
+	},
+	"note_on 52": {
+		"DEFAULT": ["load_slot_8_into_next_player"]
+	},
+	"note_on 53": {
+		"DEFAULT": ["load_slot_9_into_next_player","quit_the_program"]
 	}
 }
+

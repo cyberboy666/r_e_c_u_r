@@ -136,6 +136,11 @@
             "options": [],
             "value": null
         },
+        "SHUTDOWN_PI": {
+            "action": "shutdown_pi",
+            "options": [],
+            "value": null
+        },
         "OF_SCREEN_SIZE": {
             "action": "toggle_of_screen_size",
             "options": [
@@ -197,6 +202,14 @@
                 "off"
             ],
             "value": "off"
+        },
+        "LOOP_TYPE": {
+            "action": "update_video_settings",
+            "options": [
+                "seamless",
+                "parallel"
+            ],
+            "value": "parallel"
         },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",

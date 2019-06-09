@@ -1,5 +1,5 @@
 {
-    "capture": {
+    "captur": {
         "TYPE": {
             "action": "update_capture_settings",
             "options": [
@@ -67,10 +67,18 @@
                 "max"
             ],
             "value": "auto"
-        }
+        },
+        "USE_OF_CAPTURE": {
+            "action": "set_capture_object",
+            "options": [
+                "yes",
+                "no"
+            ],
+            "value": "no"
+        },
     },
-    "midi": {
-        "CHANNEL": {
+    "incur": {
+        "MIDI_CHANNEL": {
             "action": null,
             "options": [
                 1,
@@ -92,7 +100,7 @@
             ],
             "value": 1
         },
-        "INPUT": {
+        "MIDI_INPUT": {
             "action": null,
             "options": [
                 "usb",
@@ -101,16 +109,24 @@
             ],
             "value": "disabled"
         },
-        "STATUS": {
+        "MIDI_STATUS": {
             "action": "get_midi_status",
             "options": [],
             "value": null
         },
-        "CYCLE_PORT": {
+        "CYCLE_MIDI_PORT": {
             "action": "cycle_midi_port_index",
             "options": [],
             "value": null
-        }
+        },
+        "ANALOG_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
     },
     "other": {
         "UPDATE_CODE": {
@@ -140,23 +156,14 @@
             "action": "shutdown_pi",
             "options": [],
             "value": null
-        },
-        "OF_SCREEN_SIZE": {
-            "action": "toggle_of_screen_size",
-            "options": [
-                "full",
-                "dev"
-            ],
-            "value": "dev"
-        },
-        "USE_OF_CAPTURE": {
-            "action": "set_capture_object",
-            "options": [
-                "yes",
-                "no"
-            ],
-            "value": "no"
-        },
+        },   
+        "RESTART_OPENFRAMEWORKS": {
+            "action": "restart_openframeworks",
+            "options": [],
+            "value": null
+        }
+    },
+    "conjur": {
         "VIDEO_BACKEND": {
             "action": "switch_video_backend",
             "options": [
@@ -179,22 +186,23 @@
             ],
             "value": 0.10
         },    
-        "ANALOG_INPUT": {
-            "action": null,
-            "options": [
-                "enabled",
-                "disabled"
-            ],
-            "value": "disabled"
-        },
-
         "RESTART_OPENFRAMEWORKS": {
             "action": "restart_openframeworks",
             "options": [],
             "value": null
         }
     },
-    "sampler": {
+    "detour": {
+        "TRY_DEMO": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        }
+    },
+    "recur": {
         "ACTION_GATED": {
             "action": null,
             "options": [

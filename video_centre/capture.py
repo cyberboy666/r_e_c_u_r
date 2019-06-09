@@ -33,7 +33,7 @@ class Capture(object):
                 return True
             except picamera.exc.PiCameraError as e:
                 self.use_capture = False
-                self.data.settings['capture']['DEVICE']['value'] = 'disabled'
+                self.data.settings['captur']['DEVICE']['value'] = 'disabled'
                 print('camera exception is {}'.format(e))
                 self.message_handler.set_message('INFO', 'no capture device attached')
                 return False
@@ -41,7 +41,7 @@ class Capture(object):
     def piCapture_with_no_source(self):
         is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
         if 'Video Processor was not found' not in str(is_piCapture):
-            self.data.settings['capture']['TYPE']['value'] = "piCaptureSd1"
+            self.data.settings['captur']['TYPE']['value'] = "piCaptureSd1"
             is_source = subprocess.check_output(['pivideo', '--query', 'lock'])
             if 'No active video detected' in str(is_source):
                 self.message_handler.set_message('INFO', 'piCapture detected w no input source')
@@ -50,18 +50,18 @@ class Capture(object):
 
     def update_capture_settings(self):
         ##setting class variables
-        self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
-        self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
-        self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
-        self.capture_type = self.data.settings['capture']['TYPE']['value']
+        self.use_capture = self.data.settings['captur']['DEVICE']['value'] == 'enabled'
+        self.resolution = self.convert_resolution_value(self.data.settings['captur']['RESOLUTION']['value'])
+        self.framerate = self.convert_framerate_value(self.data.settings['captur']['FRAMERATE']['value'])
+        self.capture_type = self.data.settings['captur']['TYPE']['value']
         if self.capture_type == "piCaptureSd1":
             self.sensor_mode = 6
         else:
             self.sensor_mode = 0 
         ##update current instance (device) if in use
         if self.device and not self.device.closed:
-            self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
-            self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
+            self.device.image_effect = self.data.settings['captur']['IMAGE_EFFECT']['value']
+            self.device.shutter_speed = self.convert_shutter_value(self.data.settings['captur']['SHUTTER']['value'])
         ## can only update resolution and framerate if not recording
             if not self.is_recording:
                 self.device.framerate = self.framerate

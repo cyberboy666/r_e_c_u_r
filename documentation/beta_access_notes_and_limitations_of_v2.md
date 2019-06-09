@@ -51,7 +51,7 @@ reading from the a2d can be enabled with the ANALOG_INPUT option in the OTHER su
 
 din-midi input over serial is now also an option. in the MIDI subsetting the INPUT option now cycles through usb , serial and disabled. again i would only have these listening if midi was being used. 
 
-another new MIDI option is called CYCLE_PORT - this is kind of vague, but i noticed when attaching a midi controller over usb (a broken Edirol PCR50 for what its worth..) that three midi ports were created but only one was receiving the data from controller , and it wasnt the port recur listened to by default. if you are  trying to use a usb-midi device thats connecting but not working , it is worth trying CYCLE_PORT and see if that helps ....
+another new MIDI option is called CYCLE_MIDI_PORT - this is kind of vague, but i noticed when attaching a midi controller over usb (a broken Edirol PCR50 for what its worth..) that three midi ports were created but only one was receiving the data from controller , and it wasnt the port recur listened to by default. if you are  trying to use a usb-midi device thats connecting but not working , it is worth trying CYCLE_MIDI_PORT and see if that helps ....
 
 ## c_o_n_j_u_r
 

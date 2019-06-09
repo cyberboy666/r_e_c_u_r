@@ -178,10 +178,10 @@ class Data(object):
         return context
 
     def _overwrite_values_with_sampler_settings(self, start, end, length):
-        use_rand_start = self.settings['sampler']['RAND_START_MODE']['value'] == 'on'
-        use_fixed_length = self.settings['sampler']['FIXED_LENGTH_MODE']['value'] == 'on'
-        fixed_length_value = self.settings['sampler']['FIXED_LENGTH']['value']
-        fixed_length_multiply = self.settings['sampler']['FIXED_LENGTH_MULTIPLY']['value']
+        use_rand_start = self.settings['recur']['RAND_START_MODE']['value'] == 'on'
+        use_fixed_length = self.settings['recur']['FIXED_LENGTH_MODE']['value'] == 'on'
+        fixed_length_value = self.settings['recur']['FIXED_LENGTH']['value']
+        fixed_length_multiply = self.settings['recur']['FIXED_LENGTH_MULTIPLY']['value']
         total_fixed_length = fixed_length_value * fixed_length_multiply
         if start == -1:
             start = 0        
@@ -205,7 +205,7 @@ class Data(object):
         return new_start, new_end
 
     def _update_next_bankslot_value(self, slot_num, is_current=False):
-        next_setting = self.settings['sampler']['LOAD_NEXT']['value']
+        next_setting = self.settings['recur']['LOAD_NEXT']['value']
         loaded_slots = self._get_list_of_loaded_slots_in_current_bank()
         if loaded_slots:
             if next_setting == 'random':

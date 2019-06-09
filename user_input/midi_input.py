@@ -19,7 +19,7 @@ class MidiInput(object):
 
     def try_open_port(self):
         #self.data.midi_status = 'disconnected'
-        self.midi_setting = self.data.settings['midi']['INPUT']['value']
+        self.midi_setting = self.data.settings['incur']['MIDI_INPUT']['value']
         self.port_index = self.data.midi_port_index
         #print('try open port : midi setting is {}'.format(midi_setting))
         if self.midi_setting == 'usb':
@@ -52,7 +52,7 @@ class MidiInput(object):
         for message in self.midi_device.iter_pending():
             i = i + 1
             message_dict = message.dict()
-            midi_channel = midi_setting = self.data.settings['midi']['CHANNEL']['value'] - 1
+            midi_channel = midi_setting = self.data.settings['incur']['MIDI_CHANNEL']['value'] - 1
 
             if not message_dict.get('channel', None) == midi_channel:
                 pass
@@ -82,7 +82,7 @@ class MidiInput(object):
         if i > 0:
             pass
             #print('the number processed {}'.format(i))
-        if self.data.settings['midi']['INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+        if self.data.settings['incur']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
             self.root.after(self.midi_delay, self.poll_midi_input)
         else:
             self.data.midi_status = 'disconnected'

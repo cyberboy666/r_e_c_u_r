@@ -115,7 +115,7 @@ class BrowserMenu(Menu):
 
 class SettingsMenu(Menu):
 
-    FOLDER_ORDER = ['sampler', 'video', 'midi', 'capture', 'other' ]
+    FOLDER_ORDER = ['recur', 'video', 'incur', 'captur', 'conjur', 'detour', 'other' ]
     SAMPLER_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
     VIDEO_ORDER = ['OUTPUT', 'SCREEN_MODE']
     MIDI_ORDER = ['INPUT', 'STATUS']

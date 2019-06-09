@@ -75,7 +75,7 @@
                 "no"
             ],
             "value": "no"
-        },
+        }
     },
     "incur": {
         "MIDI_CHANNEL": {
@@ -126,7 +126,7 @@
                 "disabled"
             ],
             "value": "disabled"
-        },
+        }
     },
     "other": {
         "UPDATE_CODE": {
@@ -210,6 +210,11 @@
                 "off"
             ],
             "value": "off"
+        },
+        "RESET_PLAYERS": {
+            "action": "reset_players",
+            "options": [],
+            "value": null
         },
         "LOOP_TYPE": {
             "action": "update_video_settings",

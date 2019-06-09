@@ -382,8 +382,10 @@ class Actions(object):
             self.check_if_should_start_openframeworks()
         elif state == 'omxplayer':
             self.exit_openframeworks()
-        self.video_driver.reset_all_players()
+        self.reset_players()
         
+    def reset_players(self):
+        self.video_driver.reset_all_players()
 
     def change_composite_setting(self, setting_value):
         mode = self.data.settings['video']['COMPOSITE_TYPE']['value']

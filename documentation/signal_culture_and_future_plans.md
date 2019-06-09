@@ -49,9 +49,9 @@ having defined these different areas of the __r_e_c_u_r__ video instrument, we a
 
 - _i_n_c_u_r_ + _c_o_n_j_u_r_ : shaders can be written to respond in real time based on user input. usually this is in the form of the mouse-x&y position. for recur i have defined normalized parameter inputs that can be used to manipulate any portion of the glsl code. having knobs or cv control over these parameters greatly increases the playablity of the shaders.
 
-- _r_e_c_u_r_ + _c_o_n_j_u_r_ : at first i was thinking of video-files and glsl-shaders as separate sources for creating video. however then i discovered how you can also _use_ a glsl-shader to process a video-file (shaders can take textures as input, one of which can be a video), leading me to make the distinction in recur between _generating shaders_ and _processing shaders_ .
+- _r_e_c_u_r_ + _c_o_n_j_u_r_ : at first i was thinking of video-files and glsl-shaders as separate sources for creating video. however then i discovered how you can also _use_ a glsl-shader to process a video-file (shaders can take textures as input, one of which can be a video), leading me to make the distinction in recur between _0-input shaders_ and _1-input shaders_ .
 
-- c_a_p_t_u_r_ + _c_o_n_j_u_r_ : not only can _processing shaders_ accept video as a texture-input, they can also take texture from a live input (a camera or capture card for example). this means recur can also be used to process live video input in (almost) real time.
+- c_a_p_t_u_r_ + _c_o_n_j_u_r_ : not only can _1-input shaders_ accept video as a texture-input, they can also take texture from a live input (a camera or capture card for example). this means recur can also be used to process live video input in (almost) real time.
 
 ## direction
 

@@ -1,5 +1,5 @@
 // copied from http://glslsandbox.com/e#47821.0
-//gen-shader
+//0-input
 #ifdef GL_ES
 precision mediump float;
 #endif

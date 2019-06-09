@@ -1,4 +1,4 @@
-//pro-shader
+//1-input
 
 #ifdef GL_ES
 precision mediump float;

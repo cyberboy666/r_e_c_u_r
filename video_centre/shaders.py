@@ -28,7 +28,7 @@ class Shaders(object):
             if line['is_shader']:
                 stripped_name = line['name'].lstrip()
                 has_path, path = self.get_path_for_shader(stripped_name)
-                shad_type = self.determine_if_shader_file_is_processing(path)
+                shad_type = self.determine_shader_type(path)
                 parameter_number = self.determine_shader_parameter_number(path)
                 #print('shader index is {}'.format(shad_i))
                 shaders_menu_list.append(dict(name=line['name'],is_shader=True,shad_type=shad_type,param_number=parameter_number,path=path,shad_index=shad_i))
@@ -46,13 +46,15 @@ class Shaders(object):
                     return True, '{}/{}'.format(root, file_name)
         return False, ''
 
-    def determine_if_shader_file_is_processing(self, path):
+    def determine_shader_type(self, path):
         with open(path, 'r') as selected_shader:
                 shader_text = selected_shader.read()
-                if '//pro-shader' in shader_text:
-                    return 'pro'
-                elif '//gen-shader' in shader_text:
-                    return 'gen'
+                if '//0-input' in shader_text:
+                    return '0in'
+                elif '//1-input' in shader_text:
+                    return '1in'
+                elif '//2-input' in shader_text:
+                    return '2in'
 
                 else:
                     return '-'
@@ -68,8 +70,7 @@ class Shaders(object):
 
     def load_selected_shader(self):
         self.selected_param_values = [0.0,0.0,0.0,0.0]
-        is_pro = self.selected_shader['shad_type'] == 'pro'
-        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],is_pro,self.selected_shader['param_number']])
+        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],True,self.selected_shader['param_number']])
         if not self.selected_status == '▶':
             self.selected_status = '■'
 

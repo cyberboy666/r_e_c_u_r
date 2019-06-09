@@ -1,4 +1,4 @@
-//gen-shader
+//0-input
 //written by Ben Caldwell
 #ifdef GL_ES
 precision mediump float;

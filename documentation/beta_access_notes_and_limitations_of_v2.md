@@ -73,7 +73,7 @@ also, i have noticed occasionally the openframeworks app will crash (usually wit
 
 cycling `DSPY` now also has a `SHADERS` mode. this gives a similar folder_nav view as BROWSER but is used for selecting glsl-fragment-shader files (usaully .frag). entering (`square`) on a shader file loads it (first line of  DSPLY). the loaded shader can now be toggled on and off by pressing `FN + 6` 
 
-if a shader is marked 'gen' it will replace currently playing sample (similar to captur's preview), if it is marked 'pro' the sample will become processed through the shader.
+if a shader is marked '0in' it will replace currently playing sample (similar to captur's preview), if it is marked 'pro' the sample will become processed through the shader.
 
 if a shader has parameters that can be set by recur these will be displayed next to the loaded shaders name and type in SHADER display mode. (eg `x0:00 x1:78`). params are best controlled with continuos inputs (cv/pots/midi-cc) but can also be set on numpad:
 
@@ -83,11 +83,11 @@ see [this page] for more info on writing shaders for conjur. if a shader output 
 
 ## c_o_n_j_u_r + c_a_p_t_u_r
 
-running live input through a processing shader is an exciting possibility once you have live input and processing shaders already. this also is responsible for aprox half my time/stress while at SC !
+running live input through a 1-input shader is an exciting possibility once you have live input and 1-input shaders already. this also is responsible for aprox half my time/stress while at SC !
 
 to process the captur input with a glsl-shader it needs to be read from openframeworks using ofxRPiCameraGrabber addon rather than the piCapture python package. for all other sampling / previewing uses ~~i recommend using the python (default) option ,~~ both options seem to work - not sure if one is better than other... (even if you are in openframeworks-backend mode, you can still capture/sample as before, and process these samples etc)
 
-- to truely process live input you need to switch the USE_OF_CAPTURE to on, (and make sure VIDEO_BACKEND is openframeworks ) , ~~depending on the capture state before this you might also need a soft reset (RESTART_PROGRAM in OTHER )~~ <-- this should be fixed. , now when you start capture preview it should be running through openframeworks ! any processing  shaders run now will effect this input !
+- to truely process live input you need to switch the USE_OF_CAPTURE to on, (and make sure VIDEO_BACKEND is openframeworks ) , ~~depending on the capture state before this you might also need a soft reset (RESTART_PROGRAM in OTHER )~~ <-- this should be fixed. , now when you start capture preview it should be running through openframeworks ! any 1-input  shaders run now will effect this input !
 
 - ~~if you are using piCaptureSd1 this will probably only work on composite output, and even there it may have some weird artifacts (like a glitchy line down the right side of screen) , i am working on getting some of those optimized settings into the openframeworks addon which should improve this.~~ piCaptureSd1 + openframeworks is working smoothly together now !
 

@@ -76,7 +76,7 @@ class Actions(object):
         print('is selected shader: {}'.format(is_selected_shader))
         if is_selected_shader and selected_shader['param_number'] > 0:
             self.set_shader_param_mode()
-        elif is_shader and selected_shader['shad_type'] == 'gen' and self.shaders.selected_status == '▶':
+        elif is_shader and selected_shader['shad_type'] == '0in' and self.shaders.selected_status == '▶':
             self.video_driver.current_player.toggle_pause()
 
     def clear_all_slots(self):
@@ -269,11 +269,11 @@ class Actions(object):
     def toggle_shaders(self):
         if self.shaders.selected_status == '▶':
             self.shaders.stop_selected_shader()
-            if self.shaders.selected_shader['shad_type'] == 'gen':
+            if self.shaders.selected_shader['shad_type'] == '0in':
                 self.video_driver.current_player.toggle_pause()
         elif self.shaders.selected_status == '■':
             self.shaders.start_selected_shader()
-            if self.shaders.selected_shader['shad_type'] == 'gen':
+            if self.shaders.selected_shader['shad_type'] == '0in':
                 self.video_driver.current_player.toggle_pause()
         else:
             self.message_handler.set_message('INFO', 'no shader loaded')

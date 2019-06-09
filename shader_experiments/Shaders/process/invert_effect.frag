@@ -1,4 +1,4 @@
-//pro-shader
+//1-input
 //written by Tim Caldwell
 // this is a simple example of how to change incoming textures colour
 varying vec2 v_texcoord;

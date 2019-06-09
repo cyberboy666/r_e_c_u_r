@@ -1,4 +1,4 @@
-//pro-shader
+//1-input
 //written by Tim Caldwell
 //this is a basic example of how to effect input textures position
 #ifdef GL_ES

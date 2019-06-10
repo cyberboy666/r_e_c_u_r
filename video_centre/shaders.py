@@ -70,7 +70,7 @@ class Shaders(object):
 
     def load_selected_shader(self):
         self.selected_param_values = [0.0,0.0,0.0,0.0]
-        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],True,self.selected_shader['param_number']])
+        self.osc_client.send_message("/shader/load", [self.selected_shader['path'],self.selected_shader['shad_type'] == '2in',self.selected_shader['param_number']])
         if not self.selected_status == '▶':
             self.selected_status = '■'
 

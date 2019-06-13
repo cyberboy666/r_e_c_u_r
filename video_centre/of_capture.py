@@ -19,18 +19,18 @@ class OfCapture(object):
         #self.create_capture_device()
 
     def create_capture_device(self):
-        if self.use_capture:
+        if self.use_capture and self.capture_type != 'usb':
             if self.piCapture_with_no_source():
                 print('its picapture with no source !')
                 return False
             self.update_capture_settings()
             if not self.check_if_attached_with_picamera():
                 return
-            
-            print('sending setup message !')
-            self.osc_client.send_message("/capture/setup", self.capture_type)
-            self.has_capture = True
-            return True
+        
+        print('sending setup message !')
+        self.osc_client.send_message("/capture/setup", self.capture_type)
+        self.has_capture = True
+        return True
 
 
     def piCapture_with_no_source(self):
@@ -53,12 +53,6 @@ class OfCapture(object):
             self.sensor_mode = 6
         else:
             self.sensor_mode = 0 
-
-        #self.device.image_effect = self.data.settings['captur']['IMAGE_EFFECT']['value']
-        #self.device.shutter_speed = self.convert_shutter_value(self.data.settings['captur']['SHUTTER']['value'])
-        
-        #self.device.framerate = self.framerate
-        #self.device.resolution = self.resolution
             
     def check_if_attached_with_picamera(self):
         print('about to try open pcamera to check..')
@@ -84,20 +78,9 @@ class OfCapture(object):
                     return False
 
         self.is_previewing = True
-        self.set_capture_settings()
+        self.update_capture_settings()
         self.osc_client.send_message("/capture/preview/start", True)
         return True
-
-    def set_capture_settings(self):
-        if self.capture_type == "piCaptureSd1":
-            pass
-            #self.device.sensor_mode = 6
-            #self.device.awb_mode = "off"
-            #self.device.awb_gains = 1.0
-            #self.device.exposure_mode = "off"
-        else:
-            pass
-            #self.sensor_mode = 0
             
     def stop_preview(self):
         self.osc_client.send_message("/capture/preview/stop", True)

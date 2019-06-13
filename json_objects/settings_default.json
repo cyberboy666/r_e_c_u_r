@@ -4,6 +4,7 @@
             "action": "update_capture_settings",
             "options": [
                 "piCamera",
+                "usb",
                 "piCaptureSd1"
             ],
             "value": "piCaptureSd1"

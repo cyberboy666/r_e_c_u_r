@@ -64,10 +64,10 @@
 		"DEFAULT": ["load_slot_6_into_next_player","toggle_shaders"]
 	},
 	"q": {
-		"DEFAULT": ["load_slot_7_into_next_player", "increase_speed"]
+		"DEFAULT": ["load_slot_7_into_next_player", "toggle_detour_mode"]
 	},
 	"r": {
-		"DEFAULT": ["load_slot_8_into_next_player", "decrease_speed"]
+		"DEFAULT": ["load_slot_8_into_next_player"]
 	},
 	"s": {
 		"DEFAULT": ["load_slot_9_into_next_player","quit_the_program"]

@@ -41,6 +41,7 @@ class Data(object):
         self.midi_port_index = 0
         self.update_screen = True
         self.player_mode = 'now'
+        self.detour_active = False
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]

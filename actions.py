@@ -278,6 +278,15 @@ class Actions(object):
         elif self.data.player_mode == 'next':
             self.data.player_mode = 'now'
 
+    def toggle_detour_mode(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            if self.data.detour_active:
+                self.data.detour_active = False
+                self.video_driver.osc_client.send_message("/detour/end", True)
+            else:
+                self.data.detour_active = True
+                self.video_driver.osc_client.send_message("/detour/start", True) 
+
     def set_the_camera_colour_u_continuous(self, amount):
         self.capture.set_colour(amount*255, None)
 

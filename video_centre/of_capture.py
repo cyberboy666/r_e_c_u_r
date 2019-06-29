@@ -3,6 +3,7 @@ import subprocess
 import datetime
 import fractions
 import picamera
+import time
 
 class OfCapture(object):
     def __init__(self, root, osc_client, message_handler, data):
@@ -27,7 +28,7 @@ class OfCapture(object):
             if not self.check_if_attached_with_picamera():
                 return
         
-        print('sending setup message !')
+        print('sending setup message !', self.capture_type)
         self.osc_client.send_message("/capture/setup", self.capture_type)
         self.has_capture = True
         return True
@@ -124,39 +125,55 @@ class OfCapture(object):
     def stop_recording(self):
         #self.device.stop_recording()
         self.osc_client.send_message("/capture/record/stop", True)
+        self.is_recording = 'saving' 
+        self.wait_for_raw_file()
         #set status to saving
-        mp4box_process, recording_name = self.convert_raw_recording()
-        self.is_recording = 'saving'        
-        self.root.after(0, self.wait_for_recording_to_save, mp4box_process, recording_name)
 
-        self.update_capture_settings()
-        # return path to the video
+
+    def wait_for_raw_file(self):
+        if os.path.exists(self.video_dir + 'raw.h264'):
+            mp4box_process, recording_name = self.convert_raw_recording()
+                   
+            self.root.after(0, self.wait_for_recording_to_save, mp4box_process, recording_name)
+            self.update_capture_settings()
+        elif os.path.exists(self.video_dir + 'raw.mp4'):
+            recording_path , recording_name = self.generate_recording_path()
+            os.rename(self.video_dir + 'raw.mp4', recording_path )
+            self.is_recording = False
+            print('usb name is ',  recording_name)
+            self.root.after(10000, self.data.create_new_slot_mapping_in_first_open, recording_name)
+            
+            self.update_capture_settings()
+        else:
+            self.root.after(1000, self.wait_for_raw_file)
 
     def convert_raw_recording(self):
-        recording_path , recording_name = self.generate_recording_path()
-        try:
-            mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
-            return mp4box_process , recording_name
-        except Exception as e:
-            print(e)
-            if hasattr(e, 'message'):
-                error_info = e.message
-            else:
-                error_info = e
+        ### wait for omx to finish creating video ...
+        if os.path.exists(self.video_dir + 'raw.h264'):
+            recording_path , recording_name = self.generate_recording_path()
+            try:
+                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + 'raw.h264', recording_path])
+                return mp4box_process , recording_name
+            except Exception as e:
+                print(e)
+                if hasattr(e, 'message'):
+                    error_info = e.message
+                else:
+                    error_info = e
             self.message_handler.set_message('ERROR',error_info)
-        
+
     
     def wait_for_recording_to_save(self, process, name):
         print('the poll is {}'.format(process.poll()))
         if process.poll() is not None:
             self.is_recording = False
-            os.remove(self.video_dir + '/raw.h264')
+            os.remove(self.video_dir + 'raw.h264')
             self.data.create_new_slot_mapping_in_first_open(name)
         else:
             self.root.after(300, self.wait_for_recording_to_save, process, name)
 
     def generate_recording_path(self):
-        rec_dir = self.video_dir + '/recordings'
+        rec_dir = self.video_dir + 'recordings'
         if not os.path.exists(rec_dir):
             os.makedirs(rec_dir)
         date = datetime.datetime.now().strftime("%Y-%m-%d")

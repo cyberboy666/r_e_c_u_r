@@ -81,6 +81,8 @@ class Display(object):
             self._load_sampler()
         elif self.data.display_mode == 'SHADERS':
             self._load_shaders()
+        elif self.data.display_mode == 'DETOUR':
+            self._load_detour()
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         
 
@@ -175,6 +177,21 @@ class Display(object):
         if self.data.control_mode == "SHADER_PARAM":
             self._highlight_this_param(self.shaders.focused_param)
 
+
+    def _load_detour(self):
+        line_count = 0
+        self.display_text.insert(END, '------------------ <DETOUR> ------------------- \n')
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
+                
+## showing current detour info:
+        self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
+        
+        for index, (key, value) in enumerate(self.data.detour_settings.items()):
+            if index < 9:
+                self.display_text.insert(END, '{:>23} {:<22} \n'.format(key, value))
+        detour_banner = self.create_detour_display_banner(self.data.detour_settings['detour_size'], self.data.detour_settings['detour_position'], self.data.detour_settings['detour_start'], self.data.detour_settings['detour_end'])
+        self.display_text.insert(END, '{} \n'.format(detour_banner))
+        self.display_text.tag_add("NOW_PLAYER_INFO", 15.0, 15.0 + self.SELECTOR_WIDTH)
 
     def _load_message(self):
         if self.message_handler.current_message[1]:
@@ -279,6 +296,32 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
             banner_list[marker] = '*'
 
         return ''.join(banner_list)
+
+    @staticmethod
+    def create_detour_display_banner(size, position, start, end):
+        banner_list = ['|', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-',
+                       '|']
+        max = len(banner_list) - 1
+        if size == 0:
+            size = max
+        #print('start value is {}, end value is {}, position is {}'.format(start, end, position))
+        if start > 0:
+            start = int(math.floor(float(start) /
+                                float(size) * (max - 1)) + 1)
+            banner_list[start] = '['
+        if end > 0:
+            end = int(math.floor(float(end) /
+                                float(size) * (max - 1)) + 1)
+            banner_list[end] = ']'
+        position = int(math.floor(float(position) /
+                                float(size) * (max - 1)) + 1)
+        banner_list[position] = '*'
+
+        return ''.join(banner_list)
+
 
     def _set_colour_from_alpha(self, now_alpha, preview_alpha, next_alpha):
         upper_bound = 150

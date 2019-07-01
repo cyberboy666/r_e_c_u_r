@@ -1,6 +1,7 @@
 import json
 import xml.etree.ElementTree as ET
 import os
+import collections
 from random import randint
 import inspect
 from itertools import cycle
@@ -42,6 +43,7 @@ class Data(object):
         self.update_screen = True
         self.player_mode = 'now'
         self.detour_active = False
+        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_position', False), ('is_delay', False), ('detour_position', 0), ('detour_start', 0), ('detour_end', 0), ])
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]

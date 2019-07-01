@@ -136,10 +136,11 @@ class Actions(object):
 
 
     def cycle_display_mode(self):
+        display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
         if self.data.settings['conjur']['VIDEO_BACKEND']['value'] == 'openframeworks':
-            display_modes = [["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER'],["BROWSER",'NAV_BROWSER'],["SHADERS",'NAV_SHADERS']]
-        else:
-            display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
+            display_modes.append(["SHADERS",'NAV_SHADERS'])
+            if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+                display_modes.append(["DETOUR",'NAV_DETOUR'])
 
         current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
         next_mode_index = (current_mode_index + 1) % len(display_modes) 
@@ -286,6 +287,76 @@ class Actions(object):
             else:
                 self.data.detour_active = True
                 self.video_driver.osc_client.send_message("/detour/start", True) 
+
+    def toggle_detour_play(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            is_playing =  not self.data.detour_settings['is_playing']
+            self.data.detour_settings['is_playing'] = is_playing 
+            self.video_driver.osc_client.send_message("/detour/is_playing", is_playing)
+
+    def toggle_detour_record(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            is_recording =  not self.data.detour_settings['is_recording']
+            self.data.detour_settings['is_recording'] = is_recording 
+            self.video_driver.osc_client.send_message("/detour/is_recording", is_recording)
+
+    def toggle_detour_record_loop(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            record_loop = not self.data.detour_settings['record_loop']
+            self.data.detour_settings['record_loop'] = record_loop 
+            self.video_driver.osc_client.send_message("/detour/record_loop", record_loop)
+
+    def clear_this_detour(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            self.video_driver.osc_client.send_message("/detour/clear_this_detour", True)
+
+    def switch_to_detour_0(self):
+        self.switch_to_this_detour(0)
+
+    def switch_to_detour_1(self):
+        self.switch_to_this_detour(1)
+
+    def switch_to_detour_2(self):
+        self.switch_to_this_detour(2)
+
+    def switch_to_detour_3(self):
+        self.switch_to_this_detour(3)
+
+    def switch_to_this_detour(self, number):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            self.data.detour_settings['current_detour'] = number 
+            self.video_driver.osc_client.send_message("/detour/switch_to_detour_number", number)
+
+
+    def set_detour_speed_position_continuous(self, amount):
+        self.video_driver.osc_client.send_message("/detour/set_speed_position", amount)
+
+    def set_detour_start_continuous(self, amount):
+        self.video_driver.osc_client.send_message("/detour/set_start", amount)
+
+    def set_detour_end_continuous(self, amount):
+        self.video_driver.osc_client.send_message("/detour/set_end", amount)
+
+    def set_detour_mix_continuous(self, amount):
+        self.video_driver.osc_client.send_message("/detour/set_mix", amount)
+
+    def receive_detour_info(self, unused_addr, position, start, end, size, speed, mix, memory_full):
+        self.data.detour_settings['detour_position'] = position
+        self.data.detour_settings['detour_start'] = start
+        self.data.detour_settings['detour_end'] = end
+        self.data.detour_settings['detour_size'] = size
+        self.data.detour_settings['detour_speed'] = speed
+        self.data.detour_settings['position_position'] = mix
+        self.data.detour_settings['memory_full'] = memory_full
+
+
+        print(position, start, end, size, speed, mix, memory_full)
+
+    def set_the_detour_mix_0(self):
+        self.set_detour_mix_continuous(0)
+
+    def set_the_detour_mix_1(self):
+        self.set_detour_mix_continuous(1)
 
     def set_the_camera_colour_u_continuous(self, amount):
         self.capture.set_colour(amount*255, None)
@@ -546,6 +617,7 @@ class Actions(object):
         this_dispatcher.map("/player/a/status", self.video_driver.receive_status, "a.a")
         this_dispatcher.map("/player/b/status", self.video_driver.receive_status, "b.b")
         this_dispatcher.map("/player/c/status", self.video_driver.receive_status, "c.c")
+        this_dispatcher.map("/detour/detour_info", self.receive_detour_info)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 

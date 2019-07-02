@@ -28,7 +28,7 @@ vec4 rotate(sampler2D tex, vec2 pos){
 
     pos.x = r * cos(a + 2.0 * 3.141592 * u_x0) + 0.5;
     pos.y = r * sin(a + 2.0 * 3.141592 * u_x0) + 0.5;
-    
+    pos.x = 1.0 - pos.x;
     if((pos.x < 0.0)||(pos.y < 0.0)||(pos.x > 1.0)||(pos.y > 1.0)){
         texColourRotate = vec4(0.0);
     }

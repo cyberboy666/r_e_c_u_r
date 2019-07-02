@@ -16,7 +16,9 @@ class OfCapture(object):
         self.is_recording = False
         self.is_previewing = False
         self.video_dir = '/home/pi/Videos/'
+        self.recording_start_time = 0
         self.update_capture_settings()
+        self.of_recording_finished = True
         #self.create_capture_device()
 
     def create_capture_device(self):
@@ -103,6 +105,8 @@ class OfCapture(object):
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
         self.is_recording = True
+        self.of_recording_finished = False
+        self.recording_start_time = time.time()
         #self.device.start_recording(self.video_dir + '/raw.h264')
         self.osc_client.send_message("/capture/record/start", True)
         self.monitor_disk_space()
@@ -136,13 +140,11 @@ class OfCapture(object):
                    
             self.root.after(0, self.wait_for_recording_to_save, mp4box_process, recording_name)
             self.update_capture_settings()
-        elif os.path.exists(self.video_dir + 'raw.mp4'):
+        elif os.path.exists(self.video_dir + 'raw.mp4') and self.of_recording_finished:
             recording_path , recording_name = self.generate_recording_path()
             os.rename(self.video_dir + 'raw.mp4', recording_path )
             self.is_recording = False
-            print('usb name is ',  recording_name)
-            self.root.after(10000, self.data.create_new_slot_mapping_in_first_open, recording_name)
-            
+            self.data.create_new_slot_mapping_in_first_open(recording_name)
             self.update_capture_settings()
         else:
             self.root.after(1000, self.wait_for_raw_file)
@@ -183,8 +185,12 @@ class OfCapture(object):
         name = 'rec-{}-{}.mp4'.format(date, i)
         return '{}/{}'.format(rec_dir,name), name 
 
+    def receive_recording_finished(self, unused_addr, position):
+        print('recieved recording finshed message !!!!')
+        self.of_recording_finished = True
+
     def get_recording_time(self):
-        return -1
+        return time.time() - self.recording_start_time
         #if not self.device or not self.device.recording or self.device.frame.timestamp == None:
         #   return -1
         #else:

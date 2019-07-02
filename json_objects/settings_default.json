@@ -75,7 +75,7 @@
                 "yes",
                 "no"
             ],
-            "value": "no"
+            "value": "yes"
         }
     },
     "incur": {
@@ -132,6 +132,11 @@
     "other": {
         "UPDATE_CODE": {
             "action": "try_pull_code_and_reset",
+            "options": [],
+            "value": null
+        },
+        "CLEAR_MESSAGE_BAR": {
+            "action": "clear_message",
             "options": [],
             "value": null
         },
@@ -201,6 +206,14 @@
                 "disabled"
             ],
             "value": "disabled"
+        },
+        "SHADER_POSITION": {
+            "action": null,
+            "options": [
+                "input",
+                "output"
+            ],
+            "value": "output"
         }
     },
     "recur": {

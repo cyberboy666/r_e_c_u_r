@@ -250,5 +250,6 @@ class Capture(object):
             print('closing the old camera...')
             self.device.close() 
 
-
+    def receive_recording_finished(self, path, value):
+        pass
 

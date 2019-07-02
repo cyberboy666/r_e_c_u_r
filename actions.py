@@ -286,7 +286,9 @@ class Actions(object):
                 self.video_driver.osc_client.send_message("/detour/end", True)
             else:
                 self.data.detour_active = True
-                self.video_driver.osc_client.send_message("/detour/start", True) 
+                shader_input = self.data.settings['detour']['SHADER_POSITION']['value'] == 'input'
+                self.video_driver.osc_client.send_message("/detour/start", shader_input)
+                self.load_this_detour_shader() 
 
     def toggle_detour_play(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
@@ -309,6 +311,23 @@ class Actions(object):
     def clear_this_detour(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
             self.video_driver.osc_client.send_message("/detour/clear_this_detour", True)
+
+    def increase_mix_shader(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            l = self.data.detour_mix_shaders
+            self.data.detour_mix_shaders = l[1:] + l[:1]
+            self.data.detour_settings['mix_shader'] = l[0]
+            self.load_this_detour_shader()
+
+    def decrease_mix_shader(self):
+        if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+            l = self.data.detour_mix_shaders
+            self.data.detour_mix_shaders = l[-1:] + l[:-1]
+            self.data.detour_settings['mix_shader'] = l[0]
+            self.load_this_detour_shader()
+
+    def load_this_detour_shader(self):
+        self.video_driver.osc_client.send_message("/detour/load_mix", "/home/pi/Shaders/2-input/" + self.data.detour_settings['mix_shader'])
 
     def switch_to_detour_0(self):
         self.switch_to_this_detour(0)
@@ -345,12 +364,9 @@ class Actions(object):
         self.data.detour_settings['detour_start'] = start
         self.data.detour_settings['detour_end'] = end
         self.data.detour_settings['detour_size'] = size
-        self.data.detour_settings['detour_speed'] = speed
-        self.data.detour_settings['position_position'] = mix
+        self.data.detour_settings['detour_speed'] = round(speed, 2)
+        self.data.detour_settings['detour_position'] = round(mix)
         self.data.detour_settings['memory_full'] = memory_full
-
-
-        print(position, start, end, size, speed, mix, memory_full)
 
     def set_the_detour_mix_0(self):
         self.set_detour_mix_continuous(0)
@@ -618,6 +634,7 @@ class Actions(object):
         this_dispatcher.map("/player/b/status", self.video_driver.receive_status, "b.b")
         this_dispatcher.map("/player/c/status", self.video_driver.receive_status, "c.c")
         this_dispatcher.map("/detour/detour_info", self.receive_detour_info)
+        this_dispatcher.map("/capture/recording_finished", self.capture.receive_recording_finished)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 
@@ -691,7 +708,8 @@ class Actions(object):
     def shutdown_pi(self):
         subprocess.call(['sudo', 'shutdown', '-h', 'now'])
 
-
+    def clear_message(self):
+        self.message_handler.clear_all_messages()
 
 
         

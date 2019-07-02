@@ -185,9 +185,9 @@ class Display(object):
                 
 ## showing current detour info:
         self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
-        
+        self.display_text.insert(END, '{:>23} {:<22} \n'.format("DETOUR_ACTIVE", self.data.detour_active))
         for index, (key, value) in enumerate(self.data.detour_settings.items()):
-            if index < 9:
+            if index < 8:
                 self.display_text.insert(END, '{:>23} {:<22} \n'.format(key, value))
         detour_banner = self.create_detour_display_banner(self.data.detour_settings['detour_size'], self.data.detour_settings['detour_position'], self.data.detour_settings['detour_start'], self.data.detour_settings['detour_end'])
         self.display_text.insert(END, '{} \n'.format(detour_banner))
@@ -302,7 +302,8 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
         banner_list = ['|', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        '-', '-', '-', '-', '-', '-', '-', '-', '-',
-                       '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
+                       '-', '-', '-', '-', '-', '-', '-', '-', '-',
                        '|']
         max = len(banner_list) - 1
         if size == 0:

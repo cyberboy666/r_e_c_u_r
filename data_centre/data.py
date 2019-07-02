@@ -43,7 +43,8 @@ class Data(object):
         self.update_screen = True
         self.player_mode = 'now'
         self.detour_active = False
-        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_position', False), ('is_delay', False), ('detour_position', 0), ('detour_start', 0), ('detour_end', 0), ])
+        self.detour_mix_shaders = self.get_list_of_two_input_shaders()
+        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 0), ('detour_start', 0), ('detour_end', 0), ('is_delay', False)])
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]
@@ -318,4 +319,14 @@ class Data(object):
         else:
             return input
 
-
+    @staticmethod
+    def get_list_of_two_input_shaders():
+        if os.path.exists('/home/pi/Shaders/2-input'):
+            (_, _, filenames) = next(os.walk('/home/pi/Shaders/2-input'))
+            return filenames
+        #elif os.path.exists('/home/pi/r_e_c_u_r/Shaders/2-input'):
+            #(_, _, filenames) = next(os.walk('/home/pi/r_e_c_u_r/Shaders/2-input'))
+            #return filenames
+        else:
+            return []        
+    

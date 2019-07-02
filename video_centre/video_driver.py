@@ -29,7 +29,7 @@ class VideoDriver(object):
             self.root.after(self.delay, self.begin_playing_parallel)
         else:
             self.root.after(self.delay, self.begin_playing)
-        self.print_status()
+        #self.print_status()
         
 
 
@@ -152,14 +152,12 @@ class VideoDriver(object):
         self.current_player.reload(self.get_next_layer_value(), is_current=True)
 
     def receive_position(self, unused_addr, player_name, args):
-        #print("the position of  player {} is set to {}".format(player_name,args))
         for player in [self.next_player, self.current_player, self.last_player]:
             if player_name[0] in player.name :
                 player.position = args * player.total_length
                 break
 
     def receive_status(self, unused_addr, player_name, args):
-        print("the status of  player {} is set to {}".format(player_name,args))
         for player in [self.next_player, self.current_player, self.last_player]:
             if player_name[0] in player.name:
                 player.status = args

@@ -463,6 +463,10 @@ class Actions(object):
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
 
+    def switch_conjur_player_type(self, value):
+        self.data.update_conjur_player_type(value)
+        self.restart_openframeworks()
+
     def toggle_of_screen_size(self, value):
         self.data.update_conjur_dev_mode(value)
         self.video_driver.osc_client.send_message("/dev_mode", True)

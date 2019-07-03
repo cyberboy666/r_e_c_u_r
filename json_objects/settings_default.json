@@ -391,6 +391,14 @@
             ],
             "value": "hdmi"
         },
+        "VIDEOPLAYER_BACKEND": {
+            "action": "switch_conjur_player_type",
+            "options": [
+                "omxPlayer",
+                "ofPlayer"
+            ],
+            "value": "ofPlayer"
+        },
         "SCREEN_MODE": {
             "action": null,
             "options": [

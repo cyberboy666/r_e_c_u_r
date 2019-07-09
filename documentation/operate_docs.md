@@ -105,7 +105,7 @@ NOTE: for users of _piCaptureSd1_: please ensure you have the composite video so
 </details>
 
 <details>
-<summary>capture</summary>
+<summary>user-inputs</summary>
   
 ## user-inputs
 

@@ -87,7 +87,7 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 the feature set of this project has grown beyond the simple 'seamless' video player it started out as. with more options inevitability comes more complexity and confusion. feel free to try whatever extensions interest you and ignore the rest.
 
 <details>
-<summary>capture.</summary>  
+<summary>capture</summary>  
 
 ## capture
 
@@ -104,6 +104,9 @@ after a `recording` is stopped the displayed state will be `saving..` while the 
 NOTE: for users of _piCaptureSd1_: please ensure you have the composite video source active and plugged in to the HAT __before__ powering on recur. there seems to occationally be issues with recongising the hardware otherwise and a reboot is required.
 </details>
 
+<details>
+<summary>capture</summary>
+  
 ## user-inputs
 
 the _usb-numpad_ is a convenient way to manually trigger __discrete actions__ within recur (any usb-keyboards can also be used). this is fine for basic sample loading and switching however more advance features benifit from __continuous control__ of parameters.
@@ -117,7 +120,11 @@ this is by far the easiest way to control recur externally / with continuous con
 ### i_n_c_u_r pcb
 
 for anyone interested in a diy 'standalone' solution i designed a pcb that allows continous control via `analog input` (four knobs and four 0-5v cv inputs) + `serial-midi`. the build guide for this can be found here. they can also be enabled in the `SETTINGS` 
+</details>
 
+<details>
+<summary>shaders</summary>
+  
 ## shaders
 
 (fragment) shaders are small text-files of glsl-code that tell your graphics card what to draw. these can be used to create your own colours, shapes and patterns on the screen. this is a good resource for getting started writing shaders. recur can `load` a shader in a similar way to loading a sample, and allows you to update its `parameters` in real time.
@@ -133,7 +140,11 @@ the shader `parameters` are best controlled by _continuous inputs_ ( see user-in
 - pressing `■` on a shader will `load` it; pressing `■` on the _loaded_ shader enters `SHADER_PARAM` control mode (written in red at bottom)
 - from here you can cycle through the params `[` and `]`, and change the current amount with `<`, `>`. (`FN + <` and `FN + >` change the delta)
 - pressing `■` will exit `SHADER_PARAM` control mode back to `NAV_SHADER`
+</details>
 
+<details>
+<summary>loop vs parallel playing mode</summary>
+  
 ## loop vs parallel playing mode
 
 recur was created to try loop videos seamlessly. it does this by using two video-players and preloading the `NEXT` player while the `NOW` is playing. this is most useful for short samples where a few frames every loop is very noticable. however there are some situations where this is not so important: for example when working with long samples, or when a 1080p video loaded twice maxes out the pi's memory. if you do not require the seamless _switch_ there is now an option `LOOP_TYPE` to choose between _loop_  and _parallel_ .
@@ -144,7 +155,11 @@ recur was created to try loop videos seamlessly. it does this by using two video
 introducing __parallel__ mode also allows the possiblity of having two differnet samples playing at the same time (using roughly the same amount of memory as one in _loop_ mode). to access the second (`NEXT`) player press `FN + ->` (player switch). you can tell which player is selected by the colour of the player bar - yellow for now, cyan for next. with _next_ player selected you can load, seek, toggle_pause the same as normal. pressing the `->` key now will 'switch' which player is displaying. (`FN + ■` can manually toggle_show for the current player)
 
 other forms of _mixing_ between the two players can be done using the `2-input` shaders mentioned above.
+</details>
 
+<details>
+<summary>detour demo (frame-sampling) </summary>
+  
 ## detour demo
 
 d_e_t_o_u_r is a frame-sampler created to address some limitations of sampling with video-files (eg very short loops, instant switching, varying speed and direction). although conceived as a standalone instrument i also wanted (brave) recur users to be able to test it. this is a rough integration with basic (and confusing) ui and crashes (a `RESET_OPENFRAMEWORKS` should recover these) use at your own risk !
@@ -166,6 +181,7 @@ from the __FRAME_SAMPLER__ display:
 - `a4` will set the _end_ frame of current detour
 
 this program uses the _mix_shader_ to select the input. there is also the option to use a `1-input` shader in this chain  - either `before` the mix (only on _sampler-input_) or `after` (nice for feedbacky effects). this shader can be selected and toggled in the usual `SHADER` display.
+</details>
 
 [3.5mm trrs]: https://www.adafruit.com/product/2881
 [display_image]: display_parts.jpg

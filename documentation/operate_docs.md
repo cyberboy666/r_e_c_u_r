@@ -87,7 +87,7 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 the feature set of this project has grown beyond the simple 'seamless' video player it started out as. with more options inevitability comes more complexity and confusion. feel free to try whatever extensions interest you and ignore the rest.
 
 ## capture
-
+<details>
 live video-input is possible for _previewing_ and _recording_. this can be enabled in the `SETTINGS` display mode. you need to ensure the capture type is set correctly : choose from `piCamera`, `piCaptureSd1` or `usb`. 
 
 - `piCamera` , which reads from raspberry pi's CSI is a performant, realiable and cheap (see build docs) way to get video input into recur - note: limited to camera / rescanning
@@ -99,7 +99,7 @@ pressing `FN + ⦿` will toggle sample recording. this can be enabled with or wi
 after a `recording` is stopped the displayed state will be `saving..` while the raw video-footage is converted. after this the sample can be loaded from `video/internal_recordings/<date>-<count>.mp4` in _browser_. recur will automatically map new recordings to your current bank if there is space
 
 NOTE: for users of _piCaptureSd1_: please ensure you have the composite video source active and plugged in to the HAT __before__ powering on recur. there seems to occationally be issues with recongising the hardware otherwise and a reboot is required.
-
+</details>
 ## user-inputs
 
 the _usb-numpad_ is a convenient way to manually trigger __discrete actions__ within recur (any usb-keyboards can also be used). this is fine for basic sample loading and switching however more advance features benifit from __continuous control__ of parameters.
@@ -130,7 +130,7 @@ the shader `parameters` are best controlled by _continuous inputs_ ( see user-in
 - from here you can cycle through the params `[` and `]`, and change the current amount with `<`, `>`. (`FN + <` and `FN + >` change the delta)
 - pressing `■` will exit `SHADER_PARAM` control mode back to `NAV_SHADER`
 
-### loop vs parallel playing mode
+## loop vs parallel playing mode
 
 recur was created to try loop videos seamlessly. it does this by using two video-players and preloading the `NEXT` player while the `NOW` is playing. this is most useful for short samples where a few frames every loop is very noticable. however there are some situations where this is not so important: for example when working with long samples, or when a 1080p video loaded twice maxes out the pi's memory. if you do not require the seamless _switch_ there is now an option `LOOP_TYPE` to choose between _loop_  and _parallel_ .
 
@@ -141,7 +141,7 @@ introducing __parallel__ mode also allows the possiblity of having two differnet
 
 other forms of _mixing_ between the two players can be done using the `2-input` shaders mentioned above.
 
-### detour demo
+## detour demo
 
 d_e_t_o_u_r is a frame-sampler created to address some limitations of sampling with video-files (eg very short loops, instant switching, varying speed and direction). although conceived as a standalone instrument i also wanted (brave) recur users to be able to test it. this is a rough integration with basic (and confusing) ui and crashes (a `RESET_OPENFRAMEWORKS` should recover these) use at your own risk !
 

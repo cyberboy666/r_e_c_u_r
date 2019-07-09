@@ -58,7 +58,7 @@ class VideoPlayer:
         print('{}: the duration is {}'.format(self.name, self.total_length))
         if self.start > 0.9:
             self.set_position(self.start - 0.9)
-        if 'show' in self.data.settings['recur']['ON_LOAD']['value']:
+        if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
             self.set_alpha_value(255)
         else:
             self.set_alpha_value(0)
@@ -80,11 +80,11 @@ class VideoPlayer:
             self.root.after(5, self.pause_at_start)
 
     def start_video(self):
-        if 'show' in self.data.settings['recur']['ON_START']['value']:
+        if 'show' in self.data.settings['sampler']['ON_START']['value']:
             self.set_alpha_value(255)
         else:
             self.set_alpha_value(0)
-        if 'play' in self.data.settings['recur']['ON_START']['value']:
+        if 'play' in self.data.settings['sampler']['ON_START']['value']:
             self.status = 'PLAYING'
             self.omx_player.play()
         else:
@@ -180,7 +180,7 @@ class VideoPlayer:
 
     def set_screen_size_for_dev_mode(self):
         ## only dev mode is needed now that auto handles all modes... can be removed probably ...
-        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
+        if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'on':
             return True, '--win', '50,350,550,750'
         else:
             aspect_mode = self.data.settings['video']['SCREEN_MODE']['value']

@@ -34,8 +34,8 @@ class VideoDriver(object):
 
 
     def update_video_settings(self):
-        self.switch_on_finish = self.data.settings['recur']['ON_FINISH']['value'] == 'switch'
-        self.loop_parallel = self.data.settings['recur']['LOOP_TYPE']['value'] == 'parallel'
+        self.switch_on_finish = self.data.settings['sampler']['ON_FINISH']['value'] == 'switch'
+        self.loop_parallel = self.data.settings['sampler']['LOOP_TYPE']['value'] == 'parallel'
         
     def get_next_layer_value(self):
         if self.layer > 0:
@@ -135,8 +135,8 @@ class VideoDriver(object):
 
     def reset_all_players(self):
         self.exit_all_players()
-
-        if(self.data.settings['conjur']['VIDEO_BACKEND']['value'] == 'openframeworks'):
+        state = self.data.settings['video']['VIDEO_BACKEND']['value']
+        if(state == 'ofvideoplayer' or state == 'ofxomxplayer'):
             self.last_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'a.a')
             self.current_player = AltVideoPlayer(self.root,self.message_handler, self.data, self.osc_client, 'b.b')
             self.next_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'c.c')

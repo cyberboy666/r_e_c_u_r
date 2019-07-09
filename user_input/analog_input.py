@@ -16,7 +16,7 @@ class AnalogInput(object):
         
 
     def check_if_listening_enabled(self):
-        if self.data.settings['incur']['ANALOG_INPUT']['value'] == 'enabled':
+        if self.data.settings['user_input']['ANALOG_INPUT']['value'] == 'enabled':
             if not self.analog_input:
                 try:
                     ## note - using software spi for now although on the same pins as the hardware spi described below because hardware spi wasnt working with lcd display
@@ -36,7 +36,7 @@ class AnalogInput(object):
             self.root.after(1000, self.check_if_listening_enabled)
 
     def poll_analog_inputs(self):
-        if self.data.settings['incur']['ANALOG_INPUT']['value'] == 'enabled':
+        if self.data.settings['user_input']['ANALOG_INPUT']['value'] == 'enabled':
 
             for i in range(0,8):        
                 if str(i) in self.analog_mappings:

@@ -146,6 +146,7 @@ class Display(object):
         self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
 
     def _load_shaders(self):
+        self.TITLE = '================== c_o_n_j_u_r ================'
         line_count = 0
         self.display_text.insert(END, '------------------ <SHADERS> ------------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
@@ -179,8 +180,9 @@ class Display(object):
 
 
     def _load_detour(self):
+        self.TITLE = '================== d_e_t_o_u_r ================'
         line_count = 0
-        self.display_text.insert(END, '------------------ <DETOUR> ------------------- \n')
+        self.display_text.insert(END, '------------------ <FRAME-SAMPLER> ------------ \n')
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
                 
 ## showing current detour info:

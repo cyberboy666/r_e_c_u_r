@@ -51,7 +51,7 @@ class AltVideoPlayer:
             self.start = 0
         self.client.send_message("/player/{}/load".format(self.name[0]), [self.location, self.start / self.total_length, self.end / self.total_length, self.rate])
         self.crop_length = self.end - self.start
-        if 'show' in self.data.settings['recur']['ON_LOAD']['value']:
+        if 'show' in self.data.settings['sampler']['ON_LOAD']['value']:
             self.set_alpha_value(255)
         else:
             pass
@@ -63,12 +63,12 @@ class AltVideoPlayer:
             #return False
 
     def start_video(self):
-        if 'play' in self.data.settings['recur']['ON_START']['value']:
+        if 'play' in self.data.settings['sampler']['ON_START']['value']:
             self.status = 'PLAYING'
             self.client.send_message("/player/{}/play".format(self.name[0]), True)
         else:
             self.status = 'START'
-        if 'show' in self.data.settings['recur']['ON_START']['value']:
+        if 'show' in self.data.settings['sampler']['ON_START']['value']:
             self.set_alpha_value(255)
         else:
             self.set_alpha_value(0)
@@ -159,7 +159,7 @@ class AltVideoPlayer:
 
     ## not sure if i am going to implement this atm 
     def set_screen_size_for_dev_mode(self):
-        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
+        if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'on':
             ##self.client.send_message("/player/{}/alpha".format(self.name[0]), amount)
             return True, '--win', '50,350,550,750'
         else:

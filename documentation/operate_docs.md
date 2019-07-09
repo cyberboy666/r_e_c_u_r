@@ -86,8 +86,11 @@ the bottom line shows the `control_mode` by default, but is also for messages:
 
 the feature set of this project has grown beyond the simple 'seamless' video player it started out as. with more options inevitability comes more complexity and confusion. feel free to try whatever extensions interest you and ignore the rest.
 
-## capture
 <details>
+<summary>capture.</summary>  
+
+## capture
+
 live video-input is possible for _previewing_ and _recording_. this can be enabled in the `SETTINGS` display mode. you need to ensure the capture type is set correctly : choose from `piCamera`, `piCaptureSd1` or `usb`. 
 
 - `piCamera` , which reads from raspberry pi's CSI is a performant, realiable and cheap (see build docs) way to get video input into recur - note: limited to camera / rescanning
@@ -100,6 +103,7 @@ after a `recording` is stopped the displayed state will be `saving..` while the 
 
 NOTE: for users of _piCaptureSd1_: please ensure you have the composite video source active and plugged in to the HAT __before__ powering on recur. there seems to occationally be issues with recongising the hardware otherwise and a reboot is required.
 </details>
+
 ## user-inputs
 
 the _usb-numpad_ is a convenient way to manually trigger __discrete actions__ within recur (any usb-keyboards can also be used). this is fine for basic sample loading and switching however more advance features benifit from __continuous control__ of parameters.

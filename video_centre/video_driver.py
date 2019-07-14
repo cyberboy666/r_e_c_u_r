@@ -135,7 +135,7 @@ class VideoDriver(object):
 
     def reset_all_players(self):
         self.exit_all_players()
-        state = self.data.settings['video']['VIDEO_BACKEND']['value']
+        state = self.data.settings['video']['VIDEOPLAYER_BACKEND']['value']
         if(state == 'ofvideoplayer' or state == 'ofxomxplayer'):
             self.last_player = AltVideoPlayer(self.root, self.message_handler, self.data, self.osc_client, 'a.a')
             self.current_player = AltVideoPlayer(self.root,self.message_handler, self.data, self.osc_client, 'b.b')

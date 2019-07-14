@@ -32,7 +32,7 @@ class Actions(object):
         self.server = self.setup_osc_server()
         
     def set_capture_object(self, value):
-        if self.data.settings['video']['VIDEO_BACKEND']['value'] != 'omxplayer':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.python_capture.close_capture()
             self.capture = self.of_capture
         else:
@@ -137,7 +137,7 @@ class Actions(object):
 
     def cycle_display_mode(self):
         display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
-        if self.data.settings['video']['VIDEO_BACKEND']['value'] == 'openframeworks':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["DETOUR",'NAV_DETOUR'])
@@ -451,12 +451,12 @@ class Actions(object):
         #### check if in dev mode:(ie not using the lcd screen)
         with open('/boot/config.txt', 'r') as config:
                 if '##no_waveshare_overlay' in config.read():
-                    self.data.update_setting_value('other','DEV_MODE_RESET', 'on')
+                    self.data.update_setting_value('system','DEV_MODE_RESET', 'on')
                 else:
-                    self.data.update_setting_value('other','DEV_MODE_RESET', 'off')
+                    self.data.update_setting_value('system','DEV_MODE_RESET', 'off')
 
     def check_if_should_start_openframeworks(self):
-        if self.data.settings['video']['VIDEO_BACKEND']['value'] != 'omxplayer':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.openframeworks_process = subprocess.Popen(['/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
             print('conjur pid is {}'.format(self.openframeworks_process.pid))
 

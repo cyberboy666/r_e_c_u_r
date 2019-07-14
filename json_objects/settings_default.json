@@ -70,7 +70,7 @@
             "value": "auto"
         }
     },
-    "user_inputs": {
+    "user_input": {
         "MIDI_CHANNEL": {
             "action": null,
             "options": [
@@ -337,7 +337,7 @@
             ],
             "value": "black"
         },
-        "VIDEO_BACKEND": {
+        "VIDEOPLAYER_BACKEND": {
             "action": "switch_video_backend",
             "options": [
                 "omxplayer",
@@ -386,14 +386,6 @@
                 "composite"
             ],
             "value": "hdmi"
-        },
-        "VIDEOPLAYER_BACKEND": {
-            "action": "switch_conjur_player_type",
-            "options": [
-                "omxPlayer",
-                "ofPlayer"
-            ],
-            "value": "ofPlayer"
         },
         "SCREEN_MODE": {
             "action": null,

@@ -44,7 +44,7 @@ class NumpadInput(object):
         if self.data.function_on and len(this_mapping[mode]) > 1:
             print('the action being called is {}'.format(this_mapping[mode][1]))
             getattr(self.actions, this_mapping[mode][1])()
-            if self.data.settings['recur']['FUNC_GATED']['value'] == 'off':
+            if self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
                 self.data.function_on = False
         else:
             print('the action being called is {}'.format(this_mapping[mode][0]))
@@ -57,12 +57,12 @@ class NumpadInput(object):
     def check_key_release_settings(self, key):
         
         this_mapping = self.key_mappings[key]
-        if self.data.settings['recur']['ACTION_GATED']['value'] == 'on':
+        if self.data.settings['sampler']['ACTION_GATED']['value'] == 'on':
             if self.data.control_mode == 'PLAYER' and 'PLAYER' in this_mapping:
                 if this_mapping['PLAYER'][0] == 'toggle_action_on_player' and not self.data.function_on:
                     print('released action key')
                     self.run_action_for_mapped_key(key)
-        if self.data.settings['recur']['FUNC_GATED']['value'] == 'on':
+        if self.data.settings['sampler']['FUNC_GATED']['value'] == 'on':
             if 'DEFAULT' in this_mapping:
                 if this_mapping['DEFAULT'][0] == 'toggle_function':
                     self.run_action_for_mapped_key(key)

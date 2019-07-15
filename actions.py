@@ -32,7 +32,7 @@ class Actions(object):
         self.server = self.setup_osc_server()
         
     def set_capture_object(self, value):
-        if self.data.settings['captur']['USE_OF_CAPTURE']['value'] == 'yes':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.python_capture.close_capture()
             self.capture = self.of_capture
         else:
@@ -83,7 +83,7 @@ class Actions(object):
 
     def _load_this_slot_into_next_player(self, slot):
  ### load next player for seamless type otherwise respect player mode
-        if self.data.settings['recur']['LOOP_TYPE']['value'] == 'seamless':
+        if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
             if self.data.update_next_slot_number(slot):
                 self.video_driver.reload_next_player()
         else:
@@ -127,7 +127,7 @@ class Actions(object):
         self._load_this_slot_into_next_player(9)
 
     def switch_to_next_player(self):
-        if self.data.settings['recur']['LOOP_TYPE']['value'] == 'seamless':
+        if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
             self.video_driver.switch_players_and_start_video()
         else:
             self.video_driver.current_player.toggle_show()
@@ -137,7 +137,7 @@ class Actions(object):
 
     def cycle_display_mode(self):
         display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
-        if self.data.settings['conjur']['VIDEO_BACKEND']['value'] == 'openframeworks':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["DETOUR",'NAV_DETOUR'])
@@ -149,8 +149,8 @@ class Actions(object):
 
 
     def toggle_action_on_player(self):
-        play = 'play' in self.data.settings['recur']['ON_ACTION']['value']
-        show = 'show' in self.data.settings['recur']['ON_ACTION']['value']
+        play = 'play' in self.data.settings['sampler']['ON_ACTION']['value']
+        show = 'show' in self.data.settings['sampler']['ON_ACTION']['value']
         if play:
             self.toggle_play_on_player()
         if show:
@@ -169,24 +169,24 @@ class Actions(object):
             self.video_driver.next_player.toggle_show()
 
     def increase_seek_time(self):
-        options = self.data.settings['recur']['SEEK_TIME']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['recur']['SEEK_TIME']['value'] ][0]
-        self.data.settings['recur']['SEEK_TIME']['value'] = options[(current_index + 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['recur']['SEEK_TIME']['value']) + 's')
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index + 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
 
 
     def decrease_seek_time(self):
-        options = self.data.settings['recur']['SEEK_TIME']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['recur']['SEEK_TIME']['value'] ][0]
-        self.data.settings['recur']['SEEK_TIME']['value'] = options[(current_index - 1)  % len(options) ]
-        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['recur']['SEEK_TIME']['value']) + 's')
+        options = self.data.settings['sampler']['SEEK_TIME']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
+        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index - 1)  % len(options) ]
+        self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
         
 
     def seek_forward_on_player(self):    
-        self.video_driver.current_player.seek(self.data.settings['recur']['SEEK_TIME']['value'])
+        self.video_driver.current_player.seek(self.data.settings['sampler']['SEEK_TIME']['value'])
 
     def seek_back_on_player(self):
-        self.video_driver.current_player.seek(-(self.data.settings['recur']['SEEK_TIME']['value']))
+        self.video_driver.current_player.seek(-(self.data.settings['sampler']['SEEK_TIME']['value']))
 
     def toggle_function(self):
         self.data.function_on = not self.data.function_on
@@ -255,7 +255,7 @@ class Actions(object):
             self.capture.start_recording()
 
     def toggle_screen_mirror(self):
-        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'off':
+        if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'off':
             if self.data.update_screen:
                 self.data.update_screen = False
                 subprocess.call(['sudo', 'systemctl', 'start', 'raspi2fb@1'])
@@ -414,7 +414,7 @@ class Actions(object):
         self.capture.update_capture_settings()
 
     def change_piCapture_input(self, setting_value):
-        if self.data.settings['captur']['TYPE']['value'] == 'piCaptureSd1':
+        if self.data.settings['capture']['TYPE']['value'] == 'piCaptureSd1':
             subprocess.call(['pivideo', '-s', setting_value])
 
     def change_output_mode(self, setting_value):
@@ -451,12 +451,12 @@ class Actions(object):
         #### check if in dev mode:(ie not using the lcd screen)
         with open('/boot/config.txt', 'r') as config:
                 if '##no_waveshare_overlay' in config.read():
-                    self.data.update_setting_value('other','DEV_MODE_RESET', 'on')
+                    self.data.update_setting_value('system','DEV_MODE_RESET', 'on')
                 else:
-                    self.data.update_setting_value('other','DEV_MODE_RESET', 'off')
+                    self.data.update_setting_value('system','DEV_MODE_RESET', 'off')
 
     def check_if_should_start_openframeworks(self):
-        if self.data.settings['conjur']['VIDEO_BACKEND']['value'] == 'openframeworks':
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.openframeworks_process = subprocess.Popen(['/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
             print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
@@ -472,10 +472,11 @@ class Actions(object):
         self.video_driver.osc_client.send_message("/dev_mode", True)
 
     def switch_video_backend(self, state):
-        if state == 'openframeworks':
-            self.check_if_should_start_openframeworks()
+        if state == 'ofvideoplayer' or state == 'ofxomxplayer':
+            self.switch_conjur_player_type(state)
         elif state == 'omxplayer':
             self.exit_openframeworks()
+        self.set_capture_object('nothing')
         self.reset_players()
         
     def reset_players(self):
@@ -581,10 +582,10 @@ class Actions(object):
         self.shaders.focused_param = 0
 
     def increase_this_param(self):
-        self.shaders.increase_this_param(self.data.settings['conjur']['SHADER_PARAM']['value'])
+        self.shaders.increase_this_param(self.data.settings['shader']['SHADER_PARAM']['value'])
 
     def decrease_this_param(self):
-        self.shaders.decrease_this_param(self.data.settings['conjur']['SHADER_PARAM']['value'])
+        self.shaders.decrease_this_param(self.data.settings['shader']['SHADER_PARAM']['value'])
 
     def increase_param_focus(self):
         self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader['param_number']
@@ -593,16 +594,16 @@ class Actions(object):
         self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader['param_number']
 
     def increase_shader_param(self):
-        options = self.data.settings['conjur']['SHADER_PARAM']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['conjur']['SHADER_PARAM']['value'] ][0]
-        self.data.settings['conjur']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['conjur']['SHADER_PARAM']['value']))
+        options = self.data.settings['shader']['SHADER_PARAM']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
+        self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
-        options = self.data.settings['conjur']['SHADER_PARAM']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['conjur']['SHADER_PARAM']['value'] ][0]
-        self.data.settings['conjur']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['conjur']['SHADER_PARAM']['value']))
+        options = self.data.settings['shader']['SHADER_PARAM']['options']
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
+        self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
+        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
 
     def set_fixed_length(self, value):

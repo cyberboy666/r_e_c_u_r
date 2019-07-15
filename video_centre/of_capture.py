@@ -39,7 +39,7 @@ class OfCapture(object):
     def piCapture_with_no_source(self):
         is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
         if 'Video Processor was not found' not in str(is_piCapture):
-            self.data.settings['captur']['TYPE']['value'] = "piCaptureSd1"
+            self.data.settings['capture']['TYPE']['value'] = "piCaptureSd1"
             is_source = subprocess.check_output(['pivideo', '--query', 'lock'])
             if 'No active video detected' in str(is_source):
                 self.message_handler.set_message('INFO', 'piCapture detected w no input source')
@@ -48,10 +48,10 @@ class OfCapture(object):
 
     def update_capture_settings(self):
         ##setting class variables
-        self.use_capture = self.data.settings['captur']['DEVICE']['value'] == 'enabled'
-        self.resolution = self.convert_resolution_value(self.data.settings['captur']['RESOLUTION']['value'])
-        self.framerate = self.convert_framerate_value(self.data.settings['captur']['FRAMERATE']['value'])
-        self.capture_type = self.data.settings['captur']['TYPE']['value']
+        self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
+        self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
+        self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
+        self.capture_type = self.data.settings['capture']['TYPE']['value']
         if self.capture_type == "piCaptureSd1":
             self.sensor_mode = 6
         else:
@@ -65,7 +65,7 @@ class OfCapture(object):
             return True
         except picamera.exc.PiCameraError as e:
             self.use_capture = False
-            self.data.settings['captur']['DEVICE']['value'] = 'disabled'
+            self.data.settings['capture']['DEVICE']['value'] = 'disabled'
             print('camera exception is {}'.format(e))
             self.message_handler.set_message('INFO', 'no capture device attached')
             return False

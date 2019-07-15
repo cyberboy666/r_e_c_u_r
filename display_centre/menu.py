@@ -115,14 +115,14 @@ class BrowserMenu(Menu):
 
 class SettingsMenu(Menu):
 
-    FOLDER_ORDER = ['video', 'recur', 'incur', 'captur', 'conjur', 'detour', 'other' ]
-    RECUR_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
+    FOLDER_ORDER = ['video', 'sampler', 'user_input', 'capture', 'shader', 'detour', 'system' ]
+    SAMPLER_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
     VIDEO_ORDER = ['OUTPUT', 'SCREEN_MODE']
-    INCUR_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT']
-    CAPTUR_ORDER = ['DEVICE']
-    CONJUR_ORDER = ['VIDEO_BACKEND']
+    USER_INPUT_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT']
+    CAPTURE_ORDER = ['DEVICE']
+    SHADER_ORDER = []
     DETOUR_ORDER = []
-    OTHER_ORDER = []
+    SYSTEM_ORDER = []
 
     def __init__(self, data, message_handler, menu_height):
 

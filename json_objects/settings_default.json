@@ -1,5 +1,5 @@
 {
-    "captur": {
+    "capture": {
         "TYPE": {
             "action": "update_capture_settings",
             "options": [
@@ -68,17 +68,9 @@
                 "max"
             ],
             "value": "auto"
-        },
-        "USE_OF_CAPTURE": {
-            "action": "set_capture_object",
-            "options": [
-                "yes",
-                "no"
-            ],
-            "value": "yes"
         }
     },
-    "incur": {
+    "user_input": {
         "MIDI_CHANNEL": {
             "action": null,
             "options": [
@@ -129,7 +121,7 @@
             "value": "disabled"
         }
     },
-    "other": {
+    "system": {
         "UPDATE_CODE": {
             "action": "try_pull_code_and_reset",
             "options": [],
@@ -169,14 +161,14 @@
             "value": null
         }
     },
-    "conjur": {
-        "VIDEO_BACKEND": {
-            "action": "switch_video_backend",
+    "shader": {
+        "USE_SHADER": {
+            "action": "update_capture_settings",
             "options": [
-                "omxplayer",
-                "openframeworks"
+                "enabled",
+                "disabled"
             ],
-            "value": "openframeworks"
+            "value": "enabled"
         },
         "SHADER_PARAM": {
             "action": null,
@@ -191,11 +183,6 @@
                 0.4
             ],
             "value": 0.10
-        },    
-        "RESTART_OPENFRAMEWORKS": {
-            "action": "restart_openframeworks",
-            "options": [],
-            "value": null
         }
     },
     "detour": {
@@ -216,7 +203,7 @@
             "value": "output"
         }
     },
-    "recur": {
+    "sampler": {
         "ACTION_GATED": {
             "action": null,
             "options": [
@@ -350,6 +337,15 @@
             ],
             "value": "black"
         },
+        "VIDEOPLAYER_BACKEND": {
+            "action": "switch_video_backend",
+            "options": [
+                "omxplayer",
+                "ofvideoplayer",
+                "ofxomxplayer"
+            ],
+            "value": "ofvideoplayer"
+        },
         "HDMI_MODE": {
             "action": "change_hdmi_settings",
             "options": [
@@ -390,14 +386,6 @@
                 "composite"
             ],
             "value": "hdmi"
-        },
-        "VIDEOPLAYER_BACKEND": {
-            "action": "switch_conjur_player_type",
-            "options": [
-                "omxPlayer",
-                "ofPlayer"
-            ],
-            "value": "ofPlayer"
         },
         "SCREEN_MODE": {
             "action": null,

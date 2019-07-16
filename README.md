@@ -40,8 +40,6 @@ i started a [board] of some features i would like to explore
 
 The nature of this project is to be open-ended and community driven. my r_e_c_u_r already solves the problems i initially built it for. what happens next depends on how it is used and received by you. if you like the idea please let me know / get involved !
 
-- the only _hardware_ option currently available is the `diy enclosure`; this is designed be low cost, hackable and accessible. you can modify and 3d print/laser cut your own case, the recommended keypad and lcd parts are the cheapest i could find (with some compromises), basically aiming to get these in the hands of as many other diy-er as interested. if there is any interest i have plans to offer a limited `boutique enclosure` option at some point - professional custom cut aluminum cover , hand wired mechanical keys , real vinyl printed stickers, no compromises! (another future idea : a eurorack version based on raspi3 compute)
-
 ## contact, donation and thanks
 
 langolierz@gmail.com

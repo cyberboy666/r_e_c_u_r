@@ -56,8 +56,9 @@ these are suppose to stop screensaver / hide cursor / remove on screen power war
 
 - created internal storage folder in ~/Videos 
 
-- set a custom splash screen by replacing splash.png an image at `/usr/share/plymouth/themes/pix/splash.png`with my original. i made a copy of the original, and then copied ~~my own from a flash stick...~~ from `~/r_e_c_u_r/documentation/splash.png`
-
+- set a custom splash screen by replacing splash.png an image at:
+`sudo cp ~/r_e_c_u_r/documentation/splash.png /usr/share/plymouth/themes/pix/splash.png`
+ 
 ## for piCaptureSd1
 
 need to install : `sudo apt-get install python3-smbus` and `sudo pip3 install pivideo`
@@ -127,8 +128,8 @@ sdtv_aspect=1
 - and also `sudo apt-get upgrade -y; sudo apt-get update` (these took ageeees ! didnt even finish.. will come back to this)
 - `make Release -C ~/openFrameworks/libs/openFrameworksCompiled/project`
 - `cd ~/openFrameworks/apps/myApps/` and `git clone https://github.com/langolierz/c_o_n_j_u_r.git`
-- `cd ~/openFrameworks/addons/` and `git clone https://github.com/langolierz/ofxOMXCamera` (will swap this out for main once/if my edits work and get in)
-- NOTE also gotta checkout the stretch branch : `git checkout stretch`
+- `cd ~/openFrameworks/addons/` and `git clone https://github.com/langolierz/ofxOMXCamera.git` (will swap this out for main once/if my edits work and get in)
+- `git clone https://github.com/langolierz/ofxVideoArtTools.git`
 - `git clone https://github.com/timscaffidi/ofxVideoRecorder.git` and its depend : `sudo apt-get install ffmeg` 
 - `git clone https://github.com/jvcleave/ofxOMXPlayer.git` and install depends : `cd ofxOMXPlayer; ./install_depends.sh`
 - `git clone https://github.com/danomatika/ofxMidi.git`
@@ -151,7 +152,7 @@ sdtv_aspect=1
 
 ## setup:
 
-need to delete the old settings : `rm json_objects/settings.json` and create a `Shaders` folder, also need to put default.vert shader in there for any shaders to work !
+need to delete the old settings : `rm json_objects/settings.json` ~~and create a `Shaders` folder, also need to put default.vert shader in there for any shaders to work !~~
 
 i think will need to turn on the i2c and serial interfacing... (and maybe that serial switvhing thing .. oh and the clocking for midi serial ...  )
 

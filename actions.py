@@ -331,7 +331,7 @@ class Actions(object):
             self.load_this_detour_shader()
 
     def load_this_detour_shader(self):
-        self.video_driver.osc_client.send_message("/detour/load_mix", "/home/pi/Shaders/2-input/" + self.data.detour_settings['mix_shader'])
+        self.video_driver.osc_client.send_message("/detour/load_mix", "/home/pi/r_e_c_u_r/Shaders/2-input/" + self.data.detour_settings['mix_shader'])
 
     def switch_to_detour_0(self):
         self.switch_to_this_detour(0)
@@ -369,7 +369,7 @@ class Actions(object):
         self.data.detour_settings['detour_end'] = end
         self.data.detour_settings['detour_size'] = size
         self.data.detour_settings['detour_speed'] = round(speed, 2)
-        self.data.detour_settings['detour_position'] = round(mix)
+        #self.data.detour_settings['mix?'] = round(mix)
         self.data.detour_settings['memory_full'] = memory_full
 
     def set_the_detour_mix_0(self):
@@ -461,7 +461,7 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            self.openframeworks_process = subprocess.Popen(['/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
+            self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
             print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
     def exit_openframeworks(self):

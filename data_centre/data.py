@@ -23,7 +23,8 @@ class Data(object):
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
     PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
-    PATH_TO_CONJUR_DATA = '/home/pi/openFrameworks/apps/myApps/c_o_n_j_u_r/bin/data/settings.xml'
+    PATH_TO_OPENFRAMEWORKS = '/home/pi/openframeworks10.1/'
+    PATH_TO_CONJUR_DATA = PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/data/settings.xml'
 
     def __init__(self, message_handler):
         self.message_handler = message_handler
@@ -44,7 +45,7 @@ class Data(object):
         self.player_mode = 'now'
         self.detour_active = False
         self.detour_mix_shaders = self.get_list_of_two_input_shaders()
-        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 0), ('detour_start', 0), ('detour_end', 0), ('is_delay', False)])
+        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 5), ('detour_start', 0), ('detour_end', 0), ('is_delay', False)])
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]

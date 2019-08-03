@@ -344,7 +344,7 @@
                 "ofvideoplayer",
                 "ofxomxplayer"
             ],
-            "value": "ofvideoplayer"
+            "value": "ofxomxplayer"
         },
         "HDMI_MODE": {
             "action": "change_hdmi_settings",

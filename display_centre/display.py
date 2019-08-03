@@ -7,7 +7,7 @@ class Display(object):
     MENU_HEIGHT = 10
     SELECTOR_WIDTH = 0.47
     ROW_OFFSET = 6.0
-    TITLE = '================== r_e_c_u_r =================='
+    TITLES = ['{0} r_e_c_u_r {0}'.format('='*18), '{0} c_o_n_j_u_r {1}'.format('='*18, '='*16), '{0} d_e_t_o_u_r {1}'.format('='*18, '='*16)]
 
     def __init__(self, tk, video_driver, shaders, message_handler, data):
         self.tk = tk
@@ -51,7 +51,15 @@ class Display(object):
         self.display_text.pack()
 
     def _load_title(self):
-        self.display_text.insert(END, self.TITLE + ' \n')
+        if self.data.display_mode == 'SHADERS':
+            self.display_text.insert(END, self.TITLES[1] + ' \n')
+            self.display_text.tag_add("TITLE", 1.19, 1.31)
+        elif self.data.display_mode == 'DETOUR':
+            self.display_text.insert(END, self.TITLES[2] + ' \n')
+            self.display_text.tag_add("TITLE", 1.19, 1.31)
+        else:
+            self.display_text.insert(END, self.TITLES[0] + ' \n')
+            self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def _load_player(self):
         if self.data.player_mode == 'now':
@@ -85,8 +93,6 @@ class Display(object):
         
 
     def _load_sampler(self):
-        self.TITLE = '================== r_e_c_u_r =================='
-        self.display_text.tag_add("TITLE", 1.19, 1.28)
         bank_data = self.data.bank_data[self.data.bank_number]
         
         self.display_text.insert(END, '{} \n'.format(self.body_title))
@@ -106,8 +112,6 @@ class Display(object):
             self._highlight_this_row(current_slot)
 
     def _load_browser(self):
-        self.TITLE = '================== r_e_c_u_r =================='
-        self.display_text.tag_add("TITLE", 1.19, 1.28)
         browser_list = self.browser_menu.menu_list
         number_of_lines_displayed = 0
         self.display_text.insert(END, '{} \n'.format(self.body_title))
@@ -129,8 +133,6 @@ class Display(object):
         self._highlight_this_row(self.browser_menu.selected_list_index - self.browser_menu.top_menu_index)
 
     def _load_settings(self):
-        self.TITLE = '================== r_e_c_u_r =================='
-        self.display_text.tag_add("TITLE", 1.19, 1.28)
         line_count = 0
         settings_list = self.settings_menu.menu_list
         self.display_text.insert(END, '{} \n'.format(self.body_title))
@@ -151,11 +153,9 @@ class Display(object):
         self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
 
     def _load_shaders(self):
-        self.TITLE = '================== c_o_n_j_u_r ================'
-        self.display_text.tag_add("TITLE", 1.19, 1.31)
         line_count = 0
         self.display_text.insert(END, '{} \n'.format(self.body_title))
-
+        
         ## showing current shader info:
         shader = self.shaders.selected_shader
         self.display_text.insert(END, '{:<1}:{:<1}{:<2} {:<17} '.format \
@@ -186,11 +186,9 @@ class Display(object):
 
 
     def _load_detour(self):
-        self.TITLE = '================== d_e_t_o_u_r ================'
-        self.display_text.tag_add("TITLE", 1.19, 1.31)
         line_count = 0
         self.display_text.insert(END, '{} \n'.format(self.body_title))
-                
+        
 ## showing current detour info:
         self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
         self.display_text.insert(END, '{:>23} {:<22} \n'.format("DETOUR_ACTIVE", self.data.detour_active))
@@ -355,7 +353,7 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
     def _generate_body_title(self):
         display_modes = self.data.get_display_modes_list()
         current_mode = self.data.display_mode
-        selected_list = ['[{}]'.format(v) if v == current_mode else '<{}>'.format(v[:3].lower()) for v in display_modes  ]
+        selected_list = ['[{}]'.format(v) if v == current_mode else '<{}>'.format(v[:2].lower()) for v in display_modes  ]
         selected_string = '--'.join(selected_list)
         pad = 47 - len(selected_string)
         output = ('-' * (pad // 2)) + selected_string + ('-' * (pad // 2)) + ('-' * (pad % 2))

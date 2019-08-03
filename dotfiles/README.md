@@ -3,7 +3,7 @@
 
 ## initial set up ; flashing fresh sd, keyboard , wifi , updates etcs
 
-- downloaded the latest (~~2017-11-29~~ 2018-04-18) raspbian-raspbian-lite image from offical site.
+- downloaded the latest (~~2017-11-29~~ ~~2018-04-18~~ [2019-07-10]) raspbian-raspbian-lite image from offical site.
 
 - flashed it to my sd using etcher
 
@@ -39,7 +39,7 @@ then `sudo apt update` and `sudo apt upgrade` , sudo reboot
 
 ## quiet x and run my launcher script on boot:
 
-- used `sudo nano ~/.config/lxsession/LXDE-pi/autostart` to add these lines : 
+- used ~~sudo nano ~/.config/lxsession/LXDE-pi/autostart~~ `sudo nano/etc/xdg/lxsession/LXDE-pi/autostart` to add these lines : 
 ```
 @unclutter -display :0 -idle 0 -root -noevents
 @xset s off
@@ -65,6 +65,8 @@ need to install : `sudo apt-get install python3-smbus` and `sudo pip3 install pi
 ## lcd display drivers
 
 these are the drivers for the waveshare displays that work on the cheep lcd i ordered online ( [LCD-show-170703] ).~~
+
+`git clone https://github.com/waveshare/LCD-show`
 
 my screen only needs the LCD35-show-180 and LCD-hdmi scripts. after running both of these scripts the drivers can be deleted since the recur code then handles the switching. (or keep em if you wanna flip the screen or try calibrating the touch screen)
 
@@ -115,6 +117,61 @@ sdtv_aspect=1
 
 `quiet splash logo.nologo plymouth.ignore-serial-consoles` for quiet boot with splash screen 
 
+
+## installing openframeworks and setting up conjur app
+
+`wget "https://openframeworks.cc/versions/v0.10.1/of_v0.10.1_linuxarmv6l_release.tar.gz"`
+
+- `mkdir openFrameworks` and `tar vxfz of_v0.10.1_linuxarmv6l_release.tar.gz -C openFrameworks --strip-components 1`
+- `cd openFrameworks/scripts/linux/debian/` &  `sudo ./install_dependencies.sh`
+- and also `sudo apt-get upgrade -y; sudo apt-get update` (these took ageeees ! didnt even finish.. will come back to this)
+- `make Release -C ~/openFrameworks/libs/openFrameworksCompiled/project`
+- `cd ~/openFrameworks/apps/myApps/` and `git clone https://github.com/langolierz/c_o_n_j_u_r.git`
+- `cd ~/openFrameworks/addons/` and `git clone https://github.com/langolierz/ofxOMXCamera` (will swap this out for main once/if my edits work and get in)
+- NOTE also gotta checkout the stretch branch : `git checkout stretch`
+- `git clone https://github.com/timscaffidi/ofxVideoRecorder.git` and its depend : `sudo apt-get install ffmeg` 
+- `git clone https://github.com/jvcleave/ofxOMXPlayer.git` and install depends : `cd ofxOMXPlayer; ./install_depends.sh`
+- `git clone https://github.com/danomatika/ofxMidi.git`
+- `git clone https://github.com/jeffcrouse/ofxJSON.git`
+- (install dependances for of ??)
+- `make ~/openFrameworks/apps/myApps/c_o_n_j_u_r`
+
+
+## installing packages and apps
+
+- `sudo pip3 install Adafruit_GPIO Adafruit_MCP3008 RPi.GPIO pivideo python-osc` (tried to install threading but didnt work...)
+ - (note atleast pivideo needs to be installed with sudo.), also needs `sudo pip3 install serial``
+- pip3 install gitpython
+- `sudo apt-get install glslviewer`
+
+### installing ttymidi :
+- `wget http://www.varal.org/ttymidi/ttymidi.tar.gz` and `tar -zxvf ttymidi.tar.gz`
+- `cd ttymidi` and `sudo nano Makefile` then add `-pthread` after -lasound ... 
+- then `sudo make` then `sudo make install`
+
+## setup:
+
+need to delete the old settings : `rm json_objects/settings.json` and create a `Shaders` folder, also need to put default.vert shader in there for any shaders to work !
+
+i think will need to turn on the i2c and serial interfacing... (and maybe that serial switvhing thing .. oh and the clocking for midi serial ...  )
+
+NOTE: need to disable console logging and enable seial through the raspi-config !
+
+these amount to the following in the config:
+```
+dtparam=i2c_arm=on
+dtparam=spi=on
+enable_uart=1
+```
+plus this for serial midi : 
+```
+#setup midi over serial
+dtoverlay=pi3-miniuart-bt
+dtoverlay=midi-uart0
+``
+
+
+
 # wjhat follows is info, not instructions for setup:
 
 ## key mapping and the launcher script:
@@ -145,6 +202,7 @@ i had some success using [pishrink], following the instructions on readme exactl
 
 - then gzip to zip this : `sudo gzip recur.img`
 
+[2019-07-10]: https://www.raspberrypi.org/downloads/
 [pishrink]: https://github.com/Drewsif/PiShrink
 [LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz
 [raspi2fb]: https://github.com/AndrewFromMelbourne/raspi2fb

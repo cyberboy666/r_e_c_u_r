@@ -20,9 +20,7 @@ class Display(object):
         self.settings_menu = menu.SettingsMenu(self.data, self.message_handler, self.MENU_HEIGHT)
         self.shaders_menu = self.shaders.shaders_menu
 
-        #self.top_menu_index = 0
-        #self.selected_list_index = self.top_menu_index
-        
+        self.body_title = ''
         self.display_text = self._create_display_text(self.tk)
         self._add_tags()
         self._update_screen_every_second()
@@ -54,7 +52,6 @@ class Display(object):
 
     def _load_title(self):
         self.display_text.insert(END, self.TITLE + ' \n')
-        self.display_text.tag_add("TITLE", 1.19, 1.28)
 
     def _load_player(self):
         if self.data.player_mode == 'now':
@@ -73,6 +70,7 @@ class Display(object):
         self.display_text.tag_add("NEXT_ALPHA", 3.29, 3.47)      
 
     def _load_display_body(self):
+        self.body_title = self._generate_body_title()
         if self.data.display_mode == 'BROWSER':
             self._load_browser()
         elif self.data.display_mode == 'SETTINGS':
@@ -87,9 +85,12 @@ class Display(object):
         
 
     def _load_sampler(self):
+        self.TITLE = '================== r_e_c_u_r =================='
+        self.display_text.tag_add("TITLE", 1.19, 1.28)
         bank_data = self.data.bank_data[self.data.bank_number]
-        self.display_text.insert(END, '------------------ <SAMPLER> ------------------ \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+        
         self.display_text.insert(END, '{:>6} {:<17} {:>5} {:<5} {:<5} \n'.format(
             '{}-slot'.format(self.data.bank_number), 'name', 'length', 'start', 'end'))
         for index, slot in enumerate(bank_data):
@@ -105,10 +106,12 @@ class Display(object):
             self._highlight_this_row(current_slot)
 
     def _load_browser(self):
+        self.TITLE = '================== r_e_c_u_r =================='
+        self.display_text.tag_add("TITLE", 1.19, 1.28)
         browser_list = self.browser_menu.menu_list
         number_of_lines_displayed = 0
-        self.display_text.insert(END, '------------------ <BROWSER> ------------------ \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+        
         self.display_text.insert(END, '{:40} {:5} \n'.format('path', 'slot'))
 
         number_of_browser_items = len(browser_list)
@@ -126,10 +129,12 @@ class Display(object):
         self._highlight_this_row(self.browser_menu.selected_list_index - self.browser_menu.top_menu_index)
 
     def _load_settings(self):
+        self.TITLE = '================== r_e_c_u_r =================='
+        self.display_text.tag_add("TITLE", 1.19, 1.28)
         line_count = 0
         settings_list = self.settings_menu.menu_list
-        self.display_text.insert(END, '------------------ <SETTINGS> ----------------- \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+        
         self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
         number_of_settings_items = len(settings_list)
         for index in range(number_of_settings_items):
@@ -147,9 +152,10 @@ class Display(object):
 
     def _load_shaders(self):
         self.TITLE = '================== c_o_n_j_u_r ================'
+        self.display_text.tag_add("TITLE", 1.19, 1.31)
         line_count = 0
-        self.display_text.insert(END, '------------------ <SHADERS> ------------------ \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+
         ## showing current shader info:
         shader = self.shaders.selected_shader
         self.display_text.insert(END, '{:<1}:{:<1}{:<2} {:<17} '.format \
@@ -181,9 +187,9 @@ class Display(object):
 
     def _load_detour(self):
         self.TITLE = '================== d_e_t_o_u_r ================'
+        self.display_text.tag_add("TITLE", 1.19, 1.31)
         line_count = 0
-        self.display_text.insert(END, '------------------ <FRAME-SAMPLER> ------------ \n')
-        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.28)
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
                 
 ## showing current detour info:
         self.display_text.insert(END, '{:^23} {:^22} \n'.format('SETTING', 'VALUE'))
@@ -345,6 +351,16 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
         self.display_text.tag_configure("NOW_ALPHA", background="black", foreground=now_colour)
         self.display_text.tag_configure("CAPTURE_ALPHA", background="black", foreground=capture_colour)
         self.display_text.tag_configure("NEXT_ALPHA", background="black", foreground=next_colour) 
+
+    def _generate_body_title(self):
+        display_modes = self.data.get_display_modes_list()
+        current_mode = self.data.display_mode
+        selected_list = ['[{}]'.format(v) if v == current_mode else '<{}>'.format(v[:3].lower()) for v in display_modes  ]
+        selected_string = '--'.join(selected_list)
+        pad = 47 - len(selected_string)
+        output = ('-' * (pad // 2)) + selected_string + ('-' * (pad // 2)) + ('-' * (pad % 2))
+        
+        return output
 
     @staticmethod
     def hex_from_rgb(r, g, b):

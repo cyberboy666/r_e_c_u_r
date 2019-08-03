@@ -30,7 +30,7 @@ class Data(object):
         
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
-        self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Shaders' ]
+        self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
 
         ### state data
         self.auto_repeat_on = True
@@ -65,6 +65,8 @@ class Data(object):
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
+
+
 
         
     @staticmethod
@@ -174,6 +176,7 @@ class Data(object):
         else:
             bankslot_number = self.next_bankslot
         bank_num , slot_num = self.split_bankslot_number(bankslot_number)
+        
         next_slot_details = self.bank_data[bank_num][slot_num]
         start_value = next_slot_details['start']
         end_value = next_slot_details['end']
@@ -306,8 +309,17 @@ class Data(object):
         elif colour_name == "none":
             colour_argb = (0,0,0,0)
         colour_hex = '%02x%02x%02x%02x' % colour_argb
-        print(colour_hex)
         return colour_hex
+
+    def get_display_modes_list(self, with_nav_mode=False):
+        display_modes = [[ "SAMPLER",'PLAYER'], ["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS']]
+        if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
+            display_modes.append(["SHADERS",'NAV_SHADERS'])
+            if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
+                display_modes.append(["DETOUR",'NAV_DETOUR'])
+        if not with_nav_mode:
+            return [mode[0] for mode in display_modes]
+        return display_modes
 
     @staticmethod
     def _get_mb_free_diskspace(path):
@@ -328,8 +340,8 @@ class Data(object):
 
     @staticmethod
     def get_list_of_two_input_shaders():
-        if os.path.exists('/home/pi/Shaders/2-input'):
-            (_, _, filenames) = next(os.walk('/home/pi/Shaders/2-input'))
+        if os.path.exists('/home/pi/r_e_c_u_r/Shaders/2-input'):
+            (_, _, filenames) = next(os.walk('/home/pi/r_e_c_u_r/Shaders/2-input'))
             return filenames
         #elif os.path.exists('/home/pi/r_e_c_u_r/Shaders/2-input'):
             #(_, _, filenames) = next(os.walk('/home/pi/r_e_c_u_r/Shaders/2-input'))

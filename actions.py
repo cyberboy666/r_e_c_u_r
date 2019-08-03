@@ -136,14 +136,18 @@ class Actions(object):
 
 
     def cycle_display_mode(self):
-        display_modes = [["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS'],[ "SAMPLER",'PLAYER']]
-        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            display_modes.append(["SHADERS",'NAV_SHADERS'])
-            if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
-                display_modes.append(["DETOUR",'NAV_DETOUR'])
+        display_modes = self.data.get_display_modes_list(with_nav_mode=True)
 
         current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
         next_mode_index = (current_mode_index + 1) % len(display_modes) 
+        self.data.display_mode = display_modes[next_mode_index][0]
+        self.data.control_mode = display_modes[next_mode_index][1]
+
+    def cycle_display_mode_back(self):
+        display_modes = self.data.get_display_modes_list(with_nav_mode=True)
+
+        current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
+        next_mode_index = (current_mode_index - 1) % len(display_modes) 
         self.data.display_mode = display_modes[next_mode_index][0]
         self.data.control_mode = display_modes[next_mode_index][1]
 

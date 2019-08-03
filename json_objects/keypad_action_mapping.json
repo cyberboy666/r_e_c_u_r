@@ -41,7 +41,7 @@
 	"g": {
         "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},
 	"h": {
-		"DEFAULT": ["cycle_display_mode"]
+		"DEFAULT": ["cycle_display_mode", "cycle_display_mode_back"]
 	},
 	"i": {
 		"DEFAULT": ["toggle_function"]

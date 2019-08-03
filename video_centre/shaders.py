@@ -61,6 +61,8 @@ class Shaders(object):
 
     def determine_shader_parameter_number(self, path):
         max_amount = 4
+        if True: # for now always assume 4 params
+            return max_amount
         with open(path, 'r') as selected_shader:
             shader_text = selected_shader.read()
             for i in range(max_amount):

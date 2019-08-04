@@ -702,12 +702,15 @@ class Actions(object):
     def try_pull_code_and_reset(self):
         #self.message_handler.set_message('INFO', 'checkin fo updates pls wait')
         recur_repo = git.Repo("~/r_e_c_u_r")
-        conjur_repo = git.Repo("~/openFrameworks/apps/myApps/c_o_n_j_u_r")
+        conjur_repo = git.Repo(self.data.PATH_TO_OPENFRAMEWORKS + "apps/myApps/c_o_n_j_u_r")
+        ofxVideoArtTools_repo = git.Repo(self.data.PATH_TO_OPENFRAMEWORKS +  "/addons/ofxVideoArtTools")
         current_recur_hash = recur_repo.head.object.hexsha
         current_conjur_hash = conjur_repo.head.object.hexsha
+        current_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
         try:
             recur_repo.remotes.origin.pull()
             conjur_repo.remotes.origin.pull()
+            ofxVideoArtTools_repo.remotes.origin.pull()
         except git.exc.GitCommandError as e: 
             if 'unable to access' in str(e):
                 self.message_handler.set_message('INFO', 'not connected to network')
@@ -721,10 +724,11 @@ class Actions(object):
     
         new_recur_hash = recur_repo.head.object.hexsha
         new_conjur_hash = conjur_repo.head.object.hexsha
-        if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash :
+        new_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
+        if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
             #something has changed!
             os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
-            if current_conjur_hash != new_conjur_hash :
+            if current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
                 self.message_handler.set_message('INFO', 'compiling OF pls wait')
                 self.tk.after(100,self.complie_openframeworks)
             else:
@@ -733,7 +737,7 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'up to date !')
 
     def complie_openframeworks(self):
-        subprocess.call(['make', '--directory=~/openFrameworks/apps/myApps/c_o_n_j_u_r' ])
+        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
         self.message_handler.set_message('INFO', 'finished compiling!')
         self.restart_the_program()
 

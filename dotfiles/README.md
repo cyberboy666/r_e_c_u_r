@@ -95,11 +95,22 @@ a line to Popen inside the python code toggles this on and off from here.
 
 ## lines added to config.txt
 
+the fastest way is to copy the config.txt i included in the repo:
+
+`sudo cp ~/r_e_c_u_r/dotfiles/config.txt /boot/config.txt`
+
+be careful though - messing with the config.txt is the easiest way to brick the image from my experience ... 
+
+or do these :
+
 - commenting out hdmi_force to allow composite output: `#hdmi_force_hotplug=1`
 
 - add these lines to the config:
 ```
 ## gives more memory to the gpu for playing 1080 videos (might need to adjust this when using older pis with less memory)
+gpu_mem_256=120
+gpu_mem_512=200
+gpu_mem_1024=448
 gpu_mem=600
 ## enables the raspi camera
 start_x=1

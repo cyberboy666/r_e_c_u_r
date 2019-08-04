@@ -5,6 +5,7 @@
 		"NAV_SETTINGS": ["move_settings_selection_up"],
 		"NAV_SHADERS": ["move_shaders_selection_up"],
         "LENGTH_SET": ["return_to_default_control_mode"],
+        "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"]
 	},
 	"b": {
@@ -13,6 +14,7 @@
 		"NAV_SETTINGS": ["move_settings_selection_down"],
 		"NAV_SHADERS": ["move_shaders_selection_down"],
         "LENGTH_SET": ["return_to_default_control_mode"],
+        "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"]
 	},
 	"c": {
@@ -22,6 +24,7 @@
 		"NAV_SHADERS": ["enter_on_shaders_selection"],
         "LENGTH_SET": ["record_fixed_length"],
         "SHADER_PARAM": ["return_to_default_control_mode"],
+        "CONFIRM": ["perform_confirm_action"],
         "NAV_DETOUR": ["toggle_detour_play"]
 	},
 	"d": {
@@ -78,6 +81,6 @@
 		"DEFAULT": ["load_slot_8_into_next_player"]
 	},
 	"s": {
-		"DEFAULT": ["load_slot_9_into_next_player","quit_the_program"]
+		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"]
 	}
 }

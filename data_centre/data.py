@@ -42,6 +42,7 @@ class Data(object):
         self.midi_status = 'disconnected'
         self.midi_port_index = 0
         self.update_screen = True
+        self.confirm_action = None
         self.player_mode = 'now'
         self.detour_active = False
         self.detour_mix_shaders = self.get_list_of_two_input_shaders()
@@ -314,10 +315,10 @@ class Data(object):
 
     def get_display_modes_list(self, with_nav_mode=False):
         display_modes = [[ "SAMPLER",'PLAYER'], ["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS']]
-        if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
+        if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer' and self.settings['shader']['USE_SHADER']['value'] == 'enabled':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
-                display_modes.append(["DETOUR",'NAV_DETOUR'])
+                display_modes.append(["FRAMES",'NAV_DETOUR'])
         if not with_nav_mode:
             return [mode[0] for mode in display_modes]
         return display_modes

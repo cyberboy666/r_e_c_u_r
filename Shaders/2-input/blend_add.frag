@@ -16,7 +16,7 @@ uniform float u_x3;
 vec4 mixBlend(vec4 texColour0, vec4 texColour1) {
     vec4 colour;    
     colour = texColour0;
-    colour.xyz = u_x0 * texColour0.xyz + (1.0 - u_x0) * texColour1.xyz;
+    colour.xyz = (1.0 - u_x0) * texColour0.xyz + u_x0 * texColour1.xyz;
 
     return colour;
 }

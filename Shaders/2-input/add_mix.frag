@@ -37,7 +37,7 @@ vec4 mixBlendAdd0(vec4 texColour0, vec4 texColour1) {
     vec3 hsvTexColour0 = rgb2hsv(texColour0.rgb);
     vec3 hsvTexColour1 = rgb2hsv(texColour1.rgb);
 
-    if(u_x0 * hsvTexColour0.z < (1.0 - u_x0) * hsvTexColour1.x){colour = texColour1;}
+    if((1.0 - u_x0) * hsvTexColour0.z < u_x0 * hsvTexColour1.x){colour = texColour1;}
     else {colour = texColour0;}
 
     return colour;
@@ -48,7 +48,7 @@ vec4 mixBlendAdd1(vec4 texColour0, vec4 texColour1) {
     vec3 hsvTexColour0 = rgb2hsv(texColour0.rgb);
     vec3 hsvTexColour1 = rgb2hsv(texColour1.rgb);
 
-    if(u_x0 * hsvTexColour0.z < (1.0 - u_x0) * hsvTexColour1.x){colour = texColour1;}
+    if((1.0 - u_x0) * hsvTexColour0.z < u_x0  * hsvTexColour1.x){colour = texColour1;}
     else {colour = texColour0;}
 
     return colour;

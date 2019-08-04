@@ -207,7 +207,8 @@ class Display(object):
                 self.display_text.insert(END, '{:>23} {:<22} \n'.format(key, value))
         detour_banner = self.create_detour_display_banner(self.data.detour_settings['detour_size'], self.data.detour_settings['detour_position'], self.data.detour_settings['detour_start'], self.data.detour_settings['detour_end'])
         self.display_text.insert(END, '{} \n'.format(detour_banner))
-        self.display_text.tag_add("NOW_PLAYER_INFO", 15.0, 15.0 + self.SELECTOR_WIDTH)
+        self._set_colour_from_mix(self.data.detour_settings['detour_mix'])
+        self.display_text.tag_add("DETOUR_BAR", 15.0, 15.0 + self.SELECTOR_WIDTH)
 
     def _load_message(self):
         if self.message_handler.current_message[1]:
@@ -341,6 +342,9 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
 
         return ''.join(banner_list)
 
+    def _set_colour_from_mix(self, mix):
+        hex_colour = self.hex_from_rgb(255, 255 - int(255 * mix), int(255 * mix))
+        self.display_text.tag_configure("DETOUR_BAR", background="black", foreground=hex_colour)
 
     def _set_colour_from_alpha(self, now_alpha, preview_alpha, next_alpha):
         upper_bound = 150

@@ -44,7 +44,7 @@ class Data(object):
         self.player_mode = 'now'
         self.detour_active = False
         self.detour_mix_shaders = self.get_list_of_two_input_shaders()
-        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 5), ('detour_start', 0), ('detour_end', 0), ('is_delay', False)])
+        self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 5), ('detour_start', 0), ('detour_end', 0), ('detour_mix', 0), ('is_delay', False)])
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]

@@ -369,7 +369,7 @@ class Actions(object):
         self.data.detour_settings['detour_end'] = end
         self.data.detour_settings['detour_size'] = size
         self.data.detour_settings['detour_speed'] = round(speed, 2)
-        #self.data.detour_settings['mix?'] = round(mix)
+        self.data.detour_settings['detour_mix'] = round(mix, 4)
         self.data.detour_settings['memory_full'] = memory_full
 
     def set_the_detour_mix_0(self):

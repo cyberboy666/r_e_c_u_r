@@ -36,7 +36,7 @@ vec4 mixLuma0(vec4 texColour0, vec4 texColour1) {
     vec4 colour;    
     vec3 hsvTexColour0 = rgb2hsv(texColour0.rgb);
 
-    if(hsvTexColour0.z > u_x0){colour = texColour0;}
+    if(hsvTexColour0.z < u_x0){colour = texColour0;}
     else {colour = texColour1;}
     return colour;
 }
@@ -45,7 +45,7 @@ vec4 mixLuma1(vec4 texColour0, vec4 texColour1) {
     vec4 colour;    
     vec3 hsvTexColour1 = rgb2hsv(texColour1.rgb);
 
-    if(hsvTexColour1.z > u_x0){colour = texColour1;}
+    if(hsvTexColour1.z < u_x0){colour = texColour1;}
     else {colour = texColour0;}
     return colour;
 }

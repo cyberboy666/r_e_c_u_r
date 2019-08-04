@@ -180,7 +180,7 @@ plus this for serial midi :
 #setup midi over serial
 dtoverlay=pi3-miniuart-bt
 dtoverlay=midi-uart0
-``
+```
 
 
 
@@ -204,13 +204,19 @@ In order to have the custom keymap work on startup we have added the line `xmodm
 
 first remove my wifi password ! (and git profile if present)
 
+`sudo nano /etc/wpa_supplicant/wpa_supplicant.conf`
+`git config --global user.email ""`
+`git config --global user.name ""`
+
 i exported the image using unix command `dd` from the raspberry pi i wanted an image of.
 
 i had some success using [pishrink], following the instructions on readme exactly , i managed to reduce a 3.8gb image down to 2.9gb and then zipped down to 1.15gb, (this would be more useful with larger cards though).
 
 - the flow is using dd to copy the image from the pi to an external drive `sudo dd bs=4M if=/dev/mmcblk0 of=/media/pi/FLASH DRIVE/recur.img`
 
-- then use pishrink to reduce this image `sudo pishrink.sh -s recur.img` it fails the first time but works straight after - not sure why !
+- then use pishrink to reduce this image `sudo pishrink.sh recur.img` it fails the first time but works straight after - not sure why !
+
+i had a `Unexpected Inconsistency` problem with my image which [this link] helped solve.
 
 - then gzip to zip this : `sudo gzip recur.img`
 
@@ -218,3 +224,4 @@ i had some success using [pishrink], following the instructions on readme exactl
 [pishrink]: https://github.com/Drewsif/PiShrink
 [LCD-show-170703]: www.waveshare.com/w/uplosd/0/00/LCD-show-170703.tar.gz
 [raspi2fb]: https://github.com/AndrewFromMelbourne/raspi2fb
+[this link]: https://chrisdown.name/2011/06/01/fsck-partitions-inside-an-image.html

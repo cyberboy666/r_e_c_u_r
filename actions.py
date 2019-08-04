@@ -617,10 +617,33 @@ class Actions(object):
 
 
     def return_to_default_control_mode(self):
-        if self.data.control_mode == 'LENGTH_SET':
-            self.data.control_mode = 'NAV_SETTINGS'
-        if self.data.control_mode == 'SHADER_PARAM':
-            self.data.control_mode = 'NAV_SHADERS'
+        display_list = self.data.get_display_modes_list(with_nav_mode=True)
+        for display, control in display_list:
+            if display == self.data.display_mode:
+                 self.data.control_mode = control
+
+    def perform_confirm_action(self):
+        action = self.data.confirm_action
+        if action:
+            getattr(self, action)()
+        self.data.confirm_action = None
+
+    def start_confirm_action(self, action_title, message=None):
+        if not message:
+            message = action_title
+        self.data.confirm_action = action_title
+        self.data.control_mode = 'CONFIRM'
+        self.message_handler.set_message('INFO', 'confirm: {} ■:y < >:no'.format(action_title[:22]))
+
+    def confirm_shutdown(self):
+        self.start_confirm_action('shutdown_pi' )
+
+    def confirm_quit(self):
+        self.start_confirm_action('quit_the_program', message='quit' )
+
+    def confirm_switch_dev_mode(self, state):
+        # i startd writing a confirm dev mod but it messed with the state if you say no ...
+        self.start_confirm_action('switch_dev_mode', args=[state])
 
     def record_fixed_length(self):
         if self.fixed_length_setter:

@@ -41,6 +41,7 @@ class Display(object):
         self.display_text.tag_configure("SHADER_PARAM", background="VioletRed1", foreground="black")
         self.display_text.tag_configure("FUNCTION", background="yellow", foreground="black")
         self.display_text.tag_configure("BROKEN_PATH", background="black", foreground="gray")
+        self.display_text.tag_configure("ZEBRA_STRIPE", background="black", foreground="khaki")
         
     def _load_display(self):
         self._load_title()
@@ -54,7 +55,7 @@ class Display(object):
         if self.data.display_mode == 'SHADERS':
             self.display_text.insert(END, self.TITLES[1] + ' \n')
             self.display_text.tag_add("TITLE", 1.19, 1.31)
-        elif self.data.display_mode == 'DETOUR':
+        elif self.data.display_mode == 'FRAMES':
             self.display_text.insert(END, self.TITLES[2] + ' \n')
             self.display_text.tag_add("TITLE", 1.19, 1.31)
         else:
@@ -87,8 +88,9 @@ class Display(object):
             self._load_sampler()
         elif self.data.display_mode == 'SHADERS':
             self._load_shaders()
-        elif self.data.display_mode == 'DETOUR':
+        elif self.data.display_mode == 'FRAMES':
             self._load_detour()
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         
 
@@ -104,6 +106,9 @@ class Display(object):
             self.display_text.insert(END, '{:^6} {:<17} {:^5} {:>5} {:<5} \n'.format(
                 index, name_without_extension[0:17], self.format_time_value(slot['length']),
                 self.format_time_value(slot['start']), self.format_time_value(slot['end'])))
+            if index % 2:
+                self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
             if self.data.is_this_path_broken(slot['location']):
                 self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
@@ -217,6 +222,8 @@ class Display(object):
             self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 
     def _highlight_this_row(self, row):
+        self.display_text.tag_remove("ZEBRA_STRIPE", self.ROW_OFFSET + row,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
         self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
@@ -353,10 +360,18 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
     def _generate_body_title(self):
         display_modes = self.data.get_display_modes_list()
         current_mode = self.data.display_mode
-        selected_list = ['[{}]'.format(v) if v == current_mode else '<{}>'.format(v[:2].lower()) for v in display_modes  ]
-        selected_string = '--'.join(selected_list)
-        pad = 47 - len(selected_string)
-        output = ('-' * (pad // 2)) + selected_string + ('-' * (pad // 2)) + ('-' * (pad % 2))
+        selected_list = []
+        for index, v in enumerate(display_modes):
+            if v == current_mode:   
+                while len(v) < 8:
+                    v = v + '_'
+                selected_list.append('[{}]'.format(v))
+                selected_list_index = index
+            else:
+                selected_list.append('<{}>'.format(v[:2].lower()))                
+        # 18 char to PURPLE : 18 - 29 ,18 after 
+        selected_string = ''.join(selected_list)
+        output = ('-' * (19 - (selected_list_index * 4))) + selected_string + ('-' * (18 - ((len(display_modes) - selected_list_index - 1) * 4)))
         
         return output
 

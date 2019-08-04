@@ -146,7 +146,7 @@
             "value": null
         },
         "QUIT": {
-            "action": "quit_the_program",
+            "action": "confirm_quit",
             "options": [],
             "value": null
         },

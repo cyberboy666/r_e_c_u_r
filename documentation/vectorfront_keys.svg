@@ -18,7 +18,7 @@
    version="1.1"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
    sodipodi:docname="vectorfront_keys.svg"
-   inkscape:export-filename="D:\Leo\gitrepos\r_e_c_u_r\documentation\vectorfront.png"
+   inkscape:export-filename="C:\r_e_c_u_r\documentation\vectorfront_keys.png"
    inkscape:export-xdpi="160"
    inkscape:export-ydpi="160">
   <defs
@@ -1008,9 +1008,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="442.03064"
-     inkscape:cy="305.64608"
+     inkscape:zoom="0.58"
+     inkscape:cx="257.25389"
+     inkscape:cy="201.44271"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -1120,7 +1120,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1695,39 +1695,39 @@
          id="g6752-1"
          style="stroke-width:1.01137185">
         <flowRoot
-           transform="translate(14.453125,-13.28125)"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="translate(14.453125,-9.4886057)"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot6734-69"
            xml:space="preserve"><flowRegion
              id="flowRegion6736-8"
-             style="fill:#000000;stroke:#000000;stroke-width:1.01137185px"><rect
-               style="text-align:center;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:1.01137185px"
+             style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.01137185px;stroke-opacity:1"><rect
+               style="text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.01137185px;stroke-opacity:1"
                y="578.89166"
                x="263.90564"
                height="22.551781"
                width="44.210621"
                id="rect6738-1" /></flowRegion><flowPara
-             style="font-size:20px;line-height:1.25;text-align:center;text-anchor:middle;fill:#000000;stroke:#000000;stroke-width:1.01137185px"
-             id="flowPara6740-33">a</flowPara></flowRoot>        <path
+             style="font-size:17.69900894px;line-height:1.25;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.01137185px;stroke-opacity:1"
+             id="flowPara6740-33">⦿</flowPara></flowRoot>        <path
            inkscape:connector-curvature="0"
            id="path6742-37"
            d="m 283.69141,593.61167 h 33.39844"
            style="fill:url(#linearGradient4761);fill-rule:evenodd;stroke:url(#linearGradient4761);stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <flowRoot
            transform="translate(169.59514,-8.679611)"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#5fffff;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="flowRoot6744-9"
            xml:space="preserve"><flowRegion
              id="flowRegion6746-86"
-             style="fill:#000000;stroke-width:1.01137185px"><rect
-               style="text-align:center;text-anchor:middle;fill:#000000;stroke-width:1.01137185px"
+             style="fill:#ffffff;fill-opacity:1;stroke:#5fffff;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"><rect
+               style="text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#5fffff;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
                y="601.71594"
                x="108.77582"
                height="15.195512"
                width="44.246517"
                id="rect6748-7" /></flowRegion><flowPara
-             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#000000;stroke:none;stroke-width:1.01137185px"
-             id="flowPara6750-0">cmd</flowPara></flowRoot>      </g>
+             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:#5fffff;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="flowPara6750-0">rec</flowPara></flowRoot>      </g>
       <g
          transform="translate(68.076575,62.410189)"
          id="g6752-84"
@@ -1883,7 +1883,9 @@
       <g
          transform="translate(0.19736362,194.84494)"
          id="g6752-2"
-         style="stroke-width:1.01137185">
+         style="stroke-width:1.01137185"
+         inkscape:export-xdpi="160"
+         inkscape:export-ydpi="160">
         <flowRoot
            transform="translate(14.453125,-13.28125)"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -1905,19 +1907,19 @@
            style="fill:url(#linearGradient4761);fill-rule:evenodd;stroke:url(#linearGradient4761);stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <flowRoot
            transform="translate(169.59514,-12.429611)"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot6744-22"
            xml:space="preserve"><flowRegion
              id="flowRegion6746-16"
-             style="fill:#000000;stroke-width:1.01137185px"><rect
-               style="text-align:center;text-anchor:middle;fill:#000000;stroke-width:1.01137185px"
+             style="fill:#ffffff;fill-opacity:1;stroke-width:1.01137185px"><rect
+               style="text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke-width:1.01137185px"
                y="601.71594"
                x="108.77582"
                height="15.195512"
                width="44.246517"
                id="rect6748-30" /></flowRegion><flowPara
-             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#000000;stroke:none;stroke-width:1.01137185px"
-             id="flowPara6750-21">cmd</flowPara></flowRoot>      </g>
+             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.01137185px"
+             id="flowPara6750-21">mirror</flowPara></flowRoot>      </g>
       <g
          transform="translate(68.076575,194.84494)"
          id="g6752-65"
@@ -1942,20 +1944,20 @@
            d="m 283.69141,589.86167 h 33.39844"
            style="fill:url(#linearGradient4761);fill-rule:evenodd;stroke:url(#linearGradient4761);stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <flowRoot
-           transform="translate(169.59514,-12.429611)"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           transform="translate(169.59514,-12.020921)"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.35836011;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            id="flowRoot6744-8"
            xml:space="preserve"><flowRegion
              id="flowRegion6746-95"
-             style="fill:#000000;stroke-width:1.01137185px"><rect
-               style="text-align:center;text-anchor:middle;fill:#000000;stroke-width:1.01137185px"
+             style="fill:#000000;stroke-width:0.35836011;stroke-miterlimit:4;stroke-dasharray:none"><rect
+               style="text-align:center;text-anchor:middle;fill:#000000;stroke-width:0.35836011;stroke-miterlimit:4;stroke-dasharray:none"
                y="601.71594"
                x="108.77582"
                height="15.195512"
                width="44.246517"
                id="rect6748-060" /></flowRegion><flowPara
-             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#000000;stroke:none;stroke-width:1.01137185px"
-             id="flowPara6750-83">cmd</flowPara></flowRoot>      </g>
+             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.35836011;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="flowPara6750-83">shader</flowPara></flowRoot>      </g>
       <g
          transform="translate(135.95576,194.84494)"
          id="g6752-82"
@@ -1980,7 +1982,7 @@
            d="m 283.69141,589.86167 h 33.39844"
            style="fill:url(#linearGradient4761);fill-rule:evenodd;stroke:url(#linearGradient4761);stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
         <flowRoot
-           transform="translate(169.59514,-12.429611)"
+           transform="translate(169.59514,-11.350669)"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro, Normal';text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.01137185px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            id="flowRoot6744-23"
            xml:space="preserve"><flowRegion
@@ -1992,8 +1994,8 @@
                height="15.195512"
                width="44.246517"
                id="rect6748-77" /></flowRegion><flowPara
-             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#000000;stroke:none;stroke-width:1.01137185px"
-             id="flowPara6750-76">cmd</flowPara></flowRoot>      </g>
+             style="font-size:10px;line-height:1.25;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.01137185px"
+             id="flowPara6750-76">frames</flowPara></flowRoot>      </g>
       <g
          transform="translate(203.83497,194.84494)"
          id="g6752-11"

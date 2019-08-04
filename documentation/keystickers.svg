@@ -27,10 +27,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.3232521"
-     inkscape:cx="189.94766"
+     inkscape:cx="91.328533"
      inkscape:cy="997.28181"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g4563-7-1"
      showgrid="false"
      inkscape:window-width="1366"
      inkscape:window-height="706"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -168,18 +168,18 @@
          transform="scale(0.93646137,1.0678497)"
          id="text5423"
          y="13.338742"
-         x="19.363272"
+         x="20.29318"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
          xml:space="preserve"><tspan
-           style="fill:#000000;stroke-width:0.2"
+           style="fill:#ffffff;fill-opacity:1;stroke-width:0.2"
            id="tspan5421"
            y="13.338742"
-           x="19.363272"
+           x="20.29318"
            sodipodi:role="line"><tspan
              id="tspan5419"
-             style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338742"
-             x="19.363272">CLR BNK</tspan></tspan></text>
+             x="20.29318">FRAMES</tspan></tspan></text>
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -650,7 +650,7 @@
              id="tspan5567"
              style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              y="13.338742"
-             x="19.363272">CLR BNK</tspan></tspan></text>
+             x="19.363272">CLR BK</tspan></tspan></text>
     </g>
     <g
        transform="translate(11.383333,22.37619)"
@@ -699,6 +699,37 @@
              y="13.414604"
              style="font-weight:normal;letter-spacing:0.10847916px;fill:#ffffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan1093">CLR ]</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="34.217781"
+         y="10.172296"
+         id="text1049-6"><tspan
+           sodipodi:role="line"
+           x="34.217781"
+           y="10.172296"
+           id="tspan1047-7"
+           style="font-size:4.93888903px;line-height:1;stroke-width:0.26458332"><tspan
+             x="34.217781"
+             y="10.172296"
+             style="font-weight:bold;font-size:4.93888903px;line-height:1;fill:#ffffff;stroke-width:0.26458332"
+             id="tspan1045-3">⦿</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+         x="37.195122"
+         y="13.395443"
+         id="text1097-2"
+         transform="scale(0.93646137,1.0678497)"><tspan
+           sodipodi:role="line"
+           x="37.195122"
+           y="13.395443"
+           id="tspan1095-3"
+           style="stroke-width:0.2"><tspan
+             x="37.195122"
+             y="13.395443"
+             style="font-weight:normal;letter-spacing:0.10847916px;fill:#ffffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+             id="tspan1093-7">REC</tspan></tspan></text>
     </g>
     <g
        id="g4563"
@@ -945,5 +976,22 @@
              style="font-weight:normal;letter-spacing:0.10847916px;fill:#000000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
              id="tspan5467">CLR BNK</tspan></tspan></text>
     </g>
+    <text
+       inkscape:label="text5373"
+       transform="scale(0.93646138,1.0678497)"
+       id="text5414-5"
+       y="52.974205"
+       x="32.768494"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.43036103px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0.10847916px;word-spacing:0px;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+       xml:space="preserve"><tspan
+         style="fill:#ffffff;stroke-width:0.2"
+         id="tspan5412-2"
+         y="52.974205"
+         x="32.768494"
+         sodipodi:role="line"><tspan
+           id="tspan5410-8"
+           style="font-weight:normal;letter-spacing:0.10847916px;fill:#ffffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+           y="52.974205"
+           x="32.768494">SHADER</tspan></tspan></text>
   </g>
 </svg>

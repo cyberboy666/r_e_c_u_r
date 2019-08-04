@@ -13,8 +13,6 @@ from omxplayer.player import OMXPlayer
 class Data(object):
 
     BANK_DATA_JSON = 'display_data.json'
-    NEXT_BANKSLOT_JSON = 'next_bankslot_number.json'
-    CURRENT_BANKSLOT_JSON = 'current_bankslot_number.json'
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
@@ -54,11 +52,7 @@ class Data(object):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
         self.next_bankslot = '0-0'
-        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.NEXT_BANKSLOT_JSON):
-            self.next_bankslot = self._read_json(self.NEXT_BANKSLOT_JSON)
         self.current_bankslot = '0-0'
-        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.CURRENT_BANKSLOT_JSON):
-            self.next_bankslot = self._read_json(self.CURRENT_BANKSLOT_JSON)
 
         self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
@@ -145,11 +139,9 @@ class Data(object):
             return False
         elif is_current:
             self.current_bankslot =  '{}-{}'.format(self.bank_number,new_value)
-            self._update_json(self.CURRENT_BANKSLOT_JSON,self.current_bankslot)
             return True
         else:
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
-            self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
             return True
 
     def update_setting_value(self, setting_folder, setting_name, setting_value):
@@ -233,11 +225,9 @@ class Data(object):
 
             if is_current:
                 self.current_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
-                self._update_json(self.CURRENT_BANKSLOT_JSON,self.current_bankslot)
             else:
                 self.next_bankslot =  '{}-{}'.format(self.bank_number,next_slot)
-                self._update_json(self.NEXT_BANKSLOT_JSON,self.next_bankslot)
-
+            
     def _get_list_of_loaded_slots_in_current_bank(self):
         list_of_loaded_slots = []
         for index, slot in enumerate(self.bank_data[self.bank_number]):

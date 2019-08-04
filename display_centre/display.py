@@ -112,7 +112,12 @@ class Display(object):
             if self.data.is_this_path_broken(slot['location']):
                 self.display_text.tag_add("BROKEN_PATH", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
-        current_bank , current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
+        # highlight the slot of the selected player
+        if self.data.player_mode == 'next':
+            bank_slot =  self.video_driver.next_player.bankslot_number
+        else:
+            bank_slot =  self.video_driver.current_player.bankslot_number
+        current_bank , current_slot = self.data.split_bankslot_number(bank_slot)
         if current_bank is self.data.bank_number:
             self._highlight_this_row(current_slot)
 

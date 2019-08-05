@@ -16,11 +16,16 @@ J1, J2, J3, J4 | 4 | 3.5MM_JACK | THONKICONN | from thonk or 50pc from modular a
 J5 | 1 | MIDI_DIN_IN | SD-50BV | mouser
 J6 | 1 | 1X1_PIN_HEADER | - | -
 J7 | 1 | RCA_JACK | RCJ-024 | mouser or ali
-J8 | 1 | 20X2_PIN_HEADER | long pins | this needs to be the long "hat" version
+J8 | 1 | 20X2_PIN_HEADER | long stacking header | from [adafruit] or look for similar on ebay etc
+- | 1 | 20X2_PIN_HEADER | normal female header | [these] are more common and can be found anywhere
 
 ### OPTIONAL :
+- some long enough screws and spacers note:measure these to hold it together.
 - if you want your ic's in sockets you should buy some DIP-8 /16 also now
-- if you only want the _analog_inputs_ and not interested in _serial_midi_, you already have usb midi etc, then you can obmit _R5_, _R6_, _R7_, _D9_, _U2_ from the BOM - see circuit schematic for details
+- if you __only__ want the _analog_inputs_ and not interested in _serial_midi_, you already have usb midi etc, then you can omit _R5_, _R6_, _R7_, _D9_, _U2_ from the BOM - see circuit schematic for details
+
+
+the reason you need the second 'normal female header' is because on its own the pi3s ethernet port is too high for the gpios to connect with the board. if you are using a `piCapture` card between the pi and board you will not need this spacing.
 
 ## BUILD
 
@@ -38,3 +43,5 @@ if you want RCA video out from the pi on this pcb a jumper needs to be run from 
 
 need to add some images and links to this guide !
 
+[adafruit]: https://www.adafruit.com/product/2223
+[these]: https://www.adafruit.com/product/2243

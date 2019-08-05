@@ -98,4 +98,4 @@ to process the captur input with a glsl-shader it needs to be read from openfram
 [signal_culture_and_future_plans]: signal_culture_and_future_plans.md
 [analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
 [this page]: https://github.com/langolierz/c_o_n_j_u_r/blob/master/notes_on_shader_formats.md
-[image]: https://drive.google.com/open?id=1ZSRrGhueEHaSwjORXyvcnXxPXloBpWoL
+[image]: https://drive.google.com/open?id=1bPoG3G7uXrqeqW1ym4PHIcQHQotLzwQk

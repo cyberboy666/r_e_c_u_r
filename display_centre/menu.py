@@ -116,13 +116,15 @@ class BrowserMenu(Menu):
 class SettingsMenu(Menu):
 
     FOLDER_ORDER = ['video', 'sampler', 'user_input', 'capture', 'shader', 'detour', 'system' ]
-    SAMPLER_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
-    VIDEO_ORDER = ['OUTPUT', 'SCREEN_MODE']
+    SAMPLER_ORDER = ['LOOP_TYPE', 'LOAD_NEXT', 'RAND_START_MODE', 'RESET_PLAYERS', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH', 'FIXED_LENGTH_MULTIPLY' ]
+    VIDEO_ORDER = ['VIDEOPLAYER_BACKEND']
     USER_INPUT_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT']
-    CAPTURE_ORDER = ['DEVICE']
-    SHADER_ORDER = []
-    DETOUR_ORDER = []
+    CAPTURE_ORDER = ['DEVICE', 'TYPE']
+    SHADER_ORDER = ['USER_SHADER']
+    DETOUR_ORDER = ['TRY_DEMO']
     SYSTEM_ORDER = []
+
+    SETTINGS_TO_HIDE = ['OUTPUT' ]
 
     def __init__(self, data, message_handler, menu_height):
 
@@ -130,6 +132,8 @@ class SettingsMenu(Menu):
         self.generate_settings_list()
 
     def generate_settings_list(self):
+        self.check_for_settings_to_hide()
+
         self.menu_list = []
         ordered_folders = self.order_keys_from_list(self.data.settings, self.FOLDER_ORDER)
         for (setting_folder_key, setting_folder_item) in ordered_folders:
@@ -137,8 +141,9 @@ class SettingsMenu(Menu):
                 self.menu_list.append(dict(name='{}/'.format(setting_folder_key), value=''))
                 order_list_name = '{}_ORDER'.format(setting_folder_key.upper())
                 ordered_value = self.order_keys_from_list(setting_folder_item, getattr(self,order_list_name))
-                for (setting_details_key, setting_details_item) in ordered_value: 
-                    self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
+                for (setting_details_key, setting_details_item) in ordered_value:
+                    if not setting_details_key in self.SETTINGS_TO_HIDE:
+                        self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
             else:   
                 self.menu_list.append(dict(name='{}|'.format(setting_folder_key), value=''))
 
@@ -157,7 +162,11 @@ class SettingsMenu(Menu):
             self.update_open_folders(name)
             self.generate_settings_list()
             return False, ''
-        
+
+    def check_for_settings_to_hide(self):
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
+            self.SETTINGS_TO_HIDE = self.SETTINGS_TO_HIDE + ['SCREEN_MODE', 'BACKGROUND_COLOUR', 'FRAMERATE', 'IMAGE_EFFECT', 'RESOLUTION', 'SHUTTER']
+
     @staticmethod
     def order_keys_from_list(dictionary, order_list):
         ordered_tuple_list = []

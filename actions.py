@@ -422,6 +422,7 @@ class Actions(object):
             subprocess.call(['pivideo', '-s', setting_value])
 
     def change_output_mode(self, setting_value):
+        ### this seems no longer supported in the firmware...
         if setting_value == 'hdmi':
             self.change_hdmi_settings(setting_value)
         elif setting_value == 'composite':
@@ -434,7 +435,7 @@ class Actions(object):
                 subprocess.call(['tvservice --preferred'], shell=True)
             elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
                 subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
-            self._refresh_frame_buffer()
+            self.refresh_frame_buffer_and_restart_openframeworks()
 
     def check_and_set_output_mode_on_boot(self):
         #### checking if pi display mode is composite
@@ -444,12 +445,13 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
-            self.data.update_setting_value('video', 'HDMI_MODE', 'preferred')
-            #### this is to work around a bug where 1080 videos on hdmi drop out ...
-            #subprocess.call(['tvservice --sdtvon="PAL 4:3"'],shell=True)
-            #self._refresh_frame_buffer()
-            #subprocess.call(['tvservice', '-p'])
-            #self._refresh_frame_buffer()
+            
+            if not self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
+                self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
+
+                self.change_hdmi_settings('CEA 4 HDMI')
+                
+
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -487,18 +489,21 @@ class Actions(object):
         self.video_driver.reset_all_players()
 
     def change_composite_setting(self, setting_value):
+        output = self.data.settings['video']['OUTPUT']['value']
         mode = self.data.settings['video']['COMPOSITE_TYPE']['value']
         aspect = self.data.settings['video']['COMPOSITE_RATIO']['value']
         progressive = ''
         if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'on':
             progressive = 'p'
-        if setting_value == 'composite':
+        
+        if output == 'composite':
             subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)],shell=True)
-            self._refresh_frame_buffer()
+            self.refresh_frame_buffer_and_restart_openframeworks()
         self.persist_composite_setting(mode, progressive, aspect)
 
-    @staticmethod
-    def _refresh_frame_buffer():
+    
+    def _refresh_frame_buffer(self):
+        self.data.open_omxplayer_for_reset()
         subprocess.run(["fbset -depth 16; fbset -depth 32; xrefresh -display :0" ], shell=True)
 
     def persist_composite_setting(self, mode, progressive, aspect):
@@ -689,9 +694,21 @@ class Actions(object):
             self.serial_port_process = None
 
     def restart_openframeworks(self):
+        self.reset_players()
         self.exit_openframeworks()
         self.stop_openframeworks_process()
-        self.check_if_should_start_openframeworks()
+        self.check_if_should_start_openframeworks()        
+
+    def refresh_frame_buffer_and_restart_openframeworks(self):
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
+            self.exit_openframeworks()
+            self.reset_players()
+            self.stop_openframeworks_process()
+            self._refresh_frame_buffer()
+            self.check_if_should_start_openframeworks()
+            #self.tk.after(1000, self.check_if_should_start_openframeworks)
+        else:
+            self._refresh_frame_buffer()
 
     def stop_openframeworks_process(self):
         if self.openframeworks_process is not None:

@@ -254,7 +254,10 @@ class Data(object):
         self.bank_data[self.bank_number][slot_number]['rate'] = rate
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
 
-    def _get_length_for_file(self, path):
+    def open_omxplayer_for_reset(self):
+        self._get_length_for_file('/ss',no_message=True )
+
+    def _get_length_for_file(self, path, no_message=False):
         try:
             temp_player = OMXPlayer(path, args=['--alpha', '0'], dbus_name='t.t')
             duration = temp_player.duration()
@@ -262,7 +265,8 @@ class Data(object):
             return duration
         except Exception as e:
             print (e)
-            self.message_handler.set_message('INFO', 'cannot load video')
+            if not no_message:
+                self.message_handler.set_message('INFO', 'cannot load video')
             return None
 
 

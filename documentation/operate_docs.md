@@ -84,7 +84,7 @@ the bottom line shows the `control_mode` by default (what mapping the keys are c
 the feature set of this project has grown beyond the simple 'seamless' video player it started out as. with more options inevitability comes more complexity and confusion. feel free to try whatever extensions interest you and ignore the rest.
 
 <details>
-<summary> ## capture </summary>  
+<summary> capture </summary>  
 
 ## capture
 
@@ -94,7 +94,8 @@ live video-input is possible for _previewing_ and _recording_. this can be enabl
 - `piCaptureSd1` is currently the best solution for a general composite-video input to raspi. it is low latency with reasonable quality, and also handles s-video / component inputs (watch this space for possible other options to be supported)
 - `usb` ; with this setting the recur attempts to read video from an attached usb source. integration, quality and performance is less predictable but i have tried it using these [cheap ezycap] dongles with some (lofi) success.
 
-![capture_example][capture_example]
+
+<img src="operating_examples/capture_example.jpg" width="700">
 
 with `capture` enabled in the settings you can toggle _preview_ by pressing the `⦿` key. the capture input will take priority over any video-samples playing.
 pressing `FN + ⦿` will toggle sample recording. this can be enabled with or without `preview` on. the state of capture is displayed on the `PLAYER` display between the NOW and NEXT.
@@ -112,7 +113,7 @@ the _usb-numpad_ is a convenient way to manually trigger __discrete actions__ wi
 this is where alternative user-input options are useful.
 (another use is to sequence recur using external gear)
 
-![midi_example][midi_example]
+<img src="operating_examples/midi_example.jpg" width="700">
 
 ### usb-midi
 
@@ -132,8 +133,12 @@ fragment shaders are small text-files of glsl-code that can tell your graphics c
 
  recur can `load` a shader in a similar way to loading a sample, allowing you to trigger them and update their `parameters` in real time.
 
+<img src="operating_examples/shader_example.jpg" width="700">
+
 ensure that `shaders` is enabled in the settings and then use `DSPLY` to cycle to the `SHADER` display mode.
 here you can navigate folders and files using `<` `>` and `■` same as `BROWSER/SETTINGS`. selecting a shader (`■`) will `load` it, and pressing `FN + 6` will toggle it on and off.
+
+the top line of SHADER_DISPLAY shows you the state (`stopped` and `running`), name and parameters (x_0, x_1 etc) of the current shader. beneath this is the file-menu you can use to select this current shader.
 
 - `0-input`: these shaders use no input, everything you see is _generated_ by the code and graphics card
 - `1-input`: shaders can also _process_ video. when active your current output will be passed through this shader (either from a `video sample` or `capture preview`) this is similar to the _effects_ section on a v4 mixer except now you can create, customize and share them too !
@@ -156,7 +161,7 @@ recur was created to try loop videos seamlessly. it does this by using two video
 - `seamless` is the default behavior described above
 - `parallel` : in this mode when the current player finishes it takes a moment to load the next sample itself. there is no `SWITCH` action and pressing a `SLOT` key will start loading the corresponding sample into this player immediately.
 
-![parallel_example][parallel_example]
+<img src="operating_examples/parallel_example.jpg" width="700">
 
 introducing __parallel__ mode also allows the possibility of having two different samples playing at the same time (using roughly the same amount of memory as one in _loop_ mode). to access the second (`NEXT`) player press `FN + ->` (player switch). you can tell which player is selected by the colour of the player bar - yellow for now, cyan for next. with _next_ player selected you can load, seek, toggle_pause the same as normal. pressing the `->` key now will 'switch' which player is displaying. (`FN + ■` can manually toggle_show for the current player)
 
@@ -189,9 +194,78 @@ from the __FRAME_SAMPLER__ display:
 - `a3` will set the _start_ frame of current detour
 - `a4` will set the _end_ frame of current detour
 
-![detour_example][detour_example]
+<img src="operating_examples/detour_example.jpg" width="700">
 
 this program uses the _mix_shader_ to select the input. there is also the option to use a `1-input` shader in this chain  - either `before` the mix (only on _sampler-input_) or `after` (nice for feedbacky effects). this shader can be selected and toggled in the usual `SHADER` display.
+</details>
+
+<details>
+<summary>glossary of every setting value </summary>
+
+## video
+
+ - __OUTPUT__ : sets the video output between `hdmi` and `composite` - it is best to siginal hdmi by booting with it plugged in, or composite with it not. this may be removed in future as it seems to cause crashes/ corruption somehow
+ - __SCREEN_MODE__ : __only works for VIDEOPLAYER_BACKEND=omxplayer__ : changes how the player fits video to screen - see omxplayer docs
+- __BACKGROUND_COLOUR__ : __only works for VIDEOPLAYER_BACKEND=omxplayer__ : the colour around a video in SCREEN_MODE=letterboxd for example
+- __VIDEOPLAYER_BACKEND__ : sets _how_ recur decides to play video files. v1 only used `omxplayer` and some settings only work in this mode. v2 uses openframeworks. `ofxomxplayer` is recommended over `ofvideoplayer`
+- __HDMI_MODE__ : this sets the raspberry pi hdmi out - see tvservice - on some 1080 hdmi displays the pi dropped out and setting down the resolution `CEA 4 HDMI` was a fix, but this may be removed in future as it seems to cause crashes/ corruption somehow
+- __COMPOSITE_PROGRESSIVE__ : sets progressive flag to tvservice / config.txt. this may be removed in future as it seems to cause crashes/ corruption somehow
+- __COMPOSITE_RATIO__ : sets composite ratio to tvservice / config.txt. this may be removed in future as it seems to cause crashes/ corruption somehow.
+- __COMPOSITE_TYPE__ : sets composite type `PAL` or `NTSC` to tvservice / config.txt. this may be removed in future as it seems to cause crashes/ corruption somehow. if you find it doesnt work try setting the config.txt yourself.
+
+## sampler
+
+- __LOAD_NEXT__ : when in `seamless` playback mode this decides what slot is loaded into the `next` player
+- __RAND_START_MODE__ : loads the player to a random starting point
+- __FIXED_LENGTH_MODE__ : loads the player with a end point a fixed lenth from the start
+- __ACTION_GATED__ : when on the `square` key will trigger on a _press_ and _release_ - use this to only play a video while holding down the key etc
+- __RESET_PLAYERS__ : stops and unloadsboth video players. useful for running only one player in `parallel` playback mode, or if you want to free some memory shaders / some live camera work
+- __LOOP_TYPE__ : see the entry in docs above - in short `seamless` will use two players to ensure there is no gap between samples. `parallel` has a small freeze at end of each sample but allows you to use both players in parallel
+- __FIXED_LENGTH__ : sets the length the sample will play for in `FIXED_LENGTH_MODE` by tempo tapping - i never found this as usual as i imagined, maybe it needs some work...
+- __FIXED_LENGTH_MULTIPLY__ : multiplies the __FIXED_LENGTH__ above by this value. i thought it would help sync video to music but i dunno now ...
+- __FUNC_GATED__ : when on the `FN` key will trigger on a _press_ and _release_ - this is the default. switch off if you prefer to press to turn fn on and press again to turn off
+- __ON_ACTION__ : what should happen when you press the `square` key ? default is play/pause, but maybe you would rather just show/hide the sample ? or both ?
+- __ON_FINISH__ : what should happen when the current sample finishes ? default is to `SWITCH` to the next player but maybe you want 'one-shots' where the next sample needs to be triggered manually ? 
+- __ON_LOAD__ : what should the opacity of a sample start as when loaded ? default is `shown` but maybe you want to trigger this manually ?
+- __ON_START__ : how should a sample be set when it starts ? default is `playing` and `shown` but ... you get the idea!
+
+## user_input
+
+- __MIDI_INPUT__ : `serial` is for din-midi via the rpi serial gpio pin. `usb` is for midi over usb.
+- __MIDI_STATUS__ : will give info on whether usb midi is connected. it will always be connected for serial as there is no way to tell here
+- __CYCLE_MIDI_PORT__ : in the rare case where the usb-midi device creates multiple ports but only receiving data on one of them. if you are trying to use a usb-midi device that is connecting but not working it is worth trying CYCLE_MIDI_PORT a few times and see if that helps ..
+    
+## capture
+
+
+- __DEVICE__ : enables capture and tries to connect with input
+- __TYPE__ : `PiCamera` and `piCaptureSd1` both use the raspi csi port but need different settings to be displayed correctly. `usb` tries to read input from usb -  i guess it depends on the device and drivers etc - i will find more info about this in future
+- __PICAPTURE_INPUT__ : if using `piCaptureSd1` you can switch between inputs in the software
+- __FRAMERATE__ __only works for VIDEOPLAYER_BACKEND=omxplayer__ VIDEOPLAYER_BACKEND=omxplayer uses _piCamera_ whereas v2 uses openframeworks - i havent got ported all features onto of yet. i thought setting the framerate would help with rescanning crt displays. havnt really tried it yet...
+- __IMAGE_EFFECT__ : __only works for VIDEOPLAYER_BACKEND=omxplayer__ - just some fun - i think it is possible to reimplement in openframeworks...
+- __RESOLUTION__ : __only works for VIDEOPLAYER_BACKEND=omxplayer__ 
+- __SHUTTER__ __only works for VIDEOPLAYER_BACKEND=omxplayer__  i thought setting the shutter would help with rescanning crt displays. havnt really tried it yet...
+
+## shader
+
+- __USE_SHADER__ : show SHADER tab display_mode. dunno why you might want t disable it ??
+- __SHADER_PARAM__ : sets the delta when changing shader param with numpad - `FN + <` `FN + >` are shortcuts for also setting these
+  
+## detour
+
+- __TRY_DEMO__ : shows the FRAMES tab in display_mode. if you are not using it you might want it off ?
+- __SHADER_POSITION__ : this determines _how_ the __effect_shader__ you can choose in SHADER tab interacts with the _detour_ program - `input` is how you might expect - processing the source _before_ it is passed to input of detour. `output` instead processes the result of __mix_shader__ inside the detour loop - this can create some wild feedback effects - see detour block diagram above
+
+## system
+
+- __UPDATE_CODE__ : tries to do a `git pull` on all the repos involved - if c++ code changes it will try to compile it. this probably isnt working so well - it wont work if any files are changed - it is quite hard to test !
+- __CLEAR_MESSAGE_BAR__ : sometimes messages get stuck - a bug i guess - this removes them
+- __DEV_MODE_RESET__ : this resets the pi with the display and a video window on the main hdmi output. useful for developing since the lcd is too small. also if you want to use the pi for other things ...
+- __RESTART_PROGRAM__ : closes recur and opens it again. useful if something broke and fast to try before a full power reset
+- __QUIT__ : stops the recur program and its dependencies
+- __SHUTDOWN_PI__ : for peace of mind - saving you from yanking the power cable. `FN + 9` is shortcut - will ask to confirm shutdown
+- __RESTART_OPENFRAMEWORKS__ : sometimes openframeworks just crashes - especially with detour - this will quickly start it again
+
 </details>
 
 [json file]: ../json_objects/keypad_action_mapping.json

@@ -23,20 +23,21 @@ class Capture(object):
 
 
     def create_capture_device(self):
-        if self.use_capture:
-            if self.piCapture_with_no_source():
-                return False
-            self.update_capture_settings()
-            
-            try:
-                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
-                return True
-            except picamera.exc.PiCameraError as e:
-                self.use_capture = False
-                self.data.settings['capture']['DEVICE']['value'] = 'disabled'
-                print('camera exception is {}'.format(e))
-                self.message_handler.set_message('INFO', 'no capture device attached')
-                return False
+        if self.data.settings['capture']['TYPE']['value'] != 'usb':
+            if self.use_capture:
+                if self.piCapture_with_no_source():
+                    return False
+                self.update_capture_settings()
+                
+                try:
+                    self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+                    return True
+                except picamera.exc.PiCameraError as e:
+                    self.use_capture = False
+                    self.data.settings['capture']['DEVICE']['value'] = 'disabled'
+                    print('camera exception is {}'.format(e))
+                    self.message_handler.set_message('INFO', 'no capture device attached')
+                    return False
 
     def piCapture_with_no_source(self):
         is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])

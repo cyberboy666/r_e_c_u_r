@@ -243,12 +243,12 @@ class Actions(object):
         is_previewing = self.capture.is_previewing
         if is_previewing:
             self.capture.stop_preview()
-            if self.video_driver.current_player.status == 'PAUSED':
-                self.video_driver.current_player.toggle_pause()
+            #if self.video_driver.current_player.status == 'PAUSED':
+                #self.video_driver.current_player.toggle_pause()
         else:
             is_successful = self.capture.start_preview()
-            if is_successful and self.video_driver.current_player.status != 'PAUSED':
-                self.video_driver.current_player.toggle_pause()
+            #if is_successful and self.video_driver.current_player.status != 'PAUSED':
+                #self.video_driver.current_player.toggle_pause()
 
 
     def toggle_capture_recording(self):
@@ -446,7 +446,8 @@ class Actions(object):
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
             
-            if not self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
+            if self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
+                
                 self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
 
                 self.change_hdmi_settings('CEA 4 HDMI')

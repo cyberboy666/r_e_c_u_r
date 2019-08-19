@@ -21,7 +21,7 @@ class VideoPlayer:
         self.show_toggle_on = False
 
 
-    def try_load(self, layer, is_current=True):
+    def try_load(self, layer, is_current=False):
         load_attempts = 0
         while(load_attempts < 2):
             load_attempts = load_attempts + 1
@@ -102,7 +102,7 @@ class VideoPlayer:
         elif(self.omx_running):
             self.root.after(5, self.pause_at_end)
 
-    def reload(self, layer, is_current=True):
+    def reload(self, layer, is_current=False):
         self.exit()
         self.omx_running = False
         self.try_load(layer, is_current)
@@ -172,11 +172,13 @@ class VideoPlayer:
 
     def exit(self):
         try:
-            self.omx_player.quit()
+            if self.omx_player:
+                print('trying to exit this player ', self.location) 
+                self.omx_player.quit()
             self.status = 'EMPTY'
             self.omx_running = False
-        except:
-            pass
+        except Exception as e:
+            print('failed to exit: ', e)
 
     def set_screen_size_for_dev_mode(self):
         ## only dev mode is needed now that auto handles all modes... can be removed probably ...

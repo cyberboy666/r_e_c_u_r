@@ -85,10 +85,11 @@ class Actions(object):
  ### load next player for seamless type otherwise respect player mode
         if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
             if self.data.update_next_slot_number(slot):
+                print('should reload next player !! ')
                 self.video_driver.reload_next_player()
         else:
             if self.data.player_mode == 'next':
-                if self.data.update_next_slot_number(slot):
+                if self.data.update_next_slot_number(slot, is_current=False):
                     self.video_driver.reload_next_player()
             else:
                 if self.data.update_next_slot_number(slot, is_current=True):
@@ -482,8 +483,10 @@ class Actions(object):
         if state == 'ofvideoplayer' or state == 'ofxomxplayer':
             self.switch_conjur_player_type(state)
         elif state == 'omxplayer':
+            self.data.update_setting_value('sampler', 'LOOP_TYPE', 'seamless')
             self.exit_openframeworks()
         self.set_capture_object('nothing')
+        self.display.settings_menu.generate_settings_list()
         self.reset_players()
         
     def reset_players(self):

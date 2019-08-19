@@ -164,8 +164,11 @@ class SettingsMenu(Menu):
             return False, ''
 
     def check_for_settings_to_hide(self):
+        self.SETTINGS_TO_HIDE = ['OUTPUT']
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.SETTINGS_TO_HIDE = self.SETTINGS_TO_HIDE + ['SCREEN_MODE', 'BACKGROUND_COLOUR', 'FRAMERATE', 'IMAGE_EFFECT', 'RESOLUTION', 'SHUTTER']
+        else:
+            self.SETTINGS_TO_HIDE = self.SETTINGS_TO_HIDE + ['LOOP_TYPE']
 
     @staticmethod
     def order_keys_from_list(dictionary, order_list):

@@ -146,7 +146,7 @@ class VideoDriver(object):
             self.next_player = VideoPlayer(self.root, self.message_handler, self.data, 'c.c')
 
     def reload_next_player(self):
-        self.next_player.reload(self.get_next_layer_value())
+        self.next_player.reload(self.get_next_layer_value(), is_current=False)
 
     def reload_current_player(self):
         self.current_player.reload(self.get_next_layer_value(), is_current=True)

@@ -121,6 +121,9 @@ class Shaders(object):
             return current + change
     
     def set_param_to_amount(self, param, amount):
-        self.osc_client.send_message("/shader/param", [param, amount] )
+        if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
+            self.osc_client.send_message("/shader/speed", [param, amount] )
+        else:
+            self.osc_client.send_message("/shader/param", [param, amount] )
         self.selected_param_values[param] = amount
         

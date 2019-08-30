@@ -87,10 +87,15 @@ class Data(object):
         tree.write(self.PATH_TO_CONJUR_DATA)
 
     def update_conjur_player_type(self, value):
-        print(value)
         tree = ET.parse(self.PATH_TO_CONJUR_DATA)
         tag = tree.find("playerType")
         tag.text = str(value)
+        tree.write(self.PATH_TO_CONJUR_DATA)
+
+    def update_conjur_delay_mode(self, value):
+        tree = ET.parse(self.PATH_TO_CONJUR_DATA)
+        tag = tree.find("delayMode")
+        tag.text = str(int(value))
         tree.write(self.PATH_TO_CONJUR_DATA)
     
     def get_setting_and_folder_from_name(self, setting_name):

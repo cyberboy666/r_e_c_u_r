@@ -352,6 +352,10 @@ class Actions(object):
             self.video_driver.osc_client.send_message("/detour/switch_to_detour_number", number)
 
 
+    def set_detour_delay_mode(self, state):
+        self.video_driver.osc_client.send_message("/detour/set_delay_mode", state == 'enabled')
+        self.data.update_conjur_delay_mode(state == 'enabled')
+
     def set_detour_speed_position_continuous(self, amount):
         self.video_driver.osc_client.send_message("/detour/set_speed_position", amount)
 
@@ -719,6 +723,7 @@ class Actions(object):
             print('killing process')
             self.openframeworks_process.kill()
             self.openframeworks_process = None
+            subprocess.call(['killall', 'c_o_n_j_u_r'])
 
     def try_pull_code_and_reset(self):
         #self.message_handler.set_message('INFO', 'checkin fo updates pls wait')

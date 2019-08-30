@@ -338,7 +338,8 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
             banner_list[end] = ']'
         position = int(math.floor(float(position) /
                                 float(size) * (max - 1)) + 1)
-        banner_list[position] = '*'
+        if 0 <= position and position < len(banner_list): 
+            banner_list[position] = '*'
 
         return ''.join(banner_list)
 

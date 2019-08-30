@@ -170,6 +170,14 @@
             ],
             "value": "enabled"
         },
+        "X3_AS_SPEED": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "SHADER_PARAM": {
             "action": null,
             "options": [
@@ -188,6 +196,14 @@
     "detour": {
         "TRY_DEMO": {
             "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "DELAY_MODE": {
+            "action": "set_detour_delay_mode",
             "options": [
                 "enabled",
                 "disabled"

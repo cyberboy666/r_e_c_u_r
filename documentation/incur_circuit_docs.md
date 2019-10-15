@@ -11,7 +11,7 @@ D1, D2, D3, D4, D5, D6, D7, D8 | 8 | BAT85 Diode | through-hole | -
 D9 | 1 | 1N4148 Diode | through-hole | -
 U1 | 1 | MCP3008 IC | DIP-16 | you can get these from mouser ,adafruit, even ali
 U2 | 1 | 6N138 IC | DIP-8 | -
-RV1, RV2, RV3, RV4 | 4 | 1K_LINEAR_POT | ALPHA | tayda ones work although shaft may be too short
+RV1, RV2, RV3, RV4 | 4 | 10K_LINEAR_POT | ALPHA | tayda ones work although shaft may be too short
 J1, J2, J3, J4 | 4 | 3.5MM_JACK | THONKICONN | from thonk or 50pc from modular addict
 J5 | 1 | MIDI_DIN_IN | SD-50BV | mouser
 J6 | 1 | 1X1_PIN_HEADER | - | -

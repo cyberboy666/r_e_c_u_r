@@ -127,6 +127,7 @@ sdtv_aspect=1
 
 ## changes to the cmdline.txt
 
+add to end of cmdline.txt `sudo nano /boot/cmdline.txt` : 
 `quiet splash logo.nologo plymouth.ignore-serial-consoles` for quiet boot with splash screen 
 
 
@@ -136,15 +137,15 @@ sdtv_aspect=1
 
 - `mkdir openFrameworks` and `tar vxfz of_v0.10.1_linuxarmv6l_release.tar.gz -C openFrameworks --strip-components 1`
 - `cd openFrameworks/scripts/linux/debian/` &  `sudo ./install_dependencies.sh`
-- and also `sudo apt-get upgrade -y; sudo apt-get update` (these took ageeees ! didnt even finish.. will come back to this)
 - `make Release -C ~/openFrameworks/libs/openFrameworksCompiled/project`
-- `cd ~/openFrameworks/apps/myApps/` and `git clone https://github.com/langolierz/c_o_n_j_u_r.git`
+- `cd ~/openFrameworks/apps/myApps/` and `git clone https://github.com/langolierz/c_o_n_j_u_r`
 - `cd ~/openFrameworks/addons/` and `git clone https://github.com/langolierz/ofxOMXCamera.git` (will swap this out for main once/if my edits work and get in)
-- `git clone https://github.com/langolierz/ofxVideoArtTools.git`
-- `git clone https://github.com/timscaffidi/ofxVideoRecorder.git` and its depend : `sudo apt-get install ffmeg` 
-- `git clone https://github.com/jvcleave/ofxOMXPlayer.git` and install depends : `cd ofxOMXPlayer; ./install_depends.sh`
-- `git clone https://github.com/danomatika/ofxMidi.git`
-- `git clone https://github.com/jeffcrouse/ofxJSON.git`
+- `git clone https://github.com/langolierz/ofxVideoArtTools`
+- `git clone https://github.com/timscaffidi/ofxVideoRecorder` and its depend : `sudo apt-get install ffmeg` 
+- `git clone https://github.com/jvcleave/ofxOMXPlayer` and install depends : `cd ofxOMXPlayer; ./install_depends.sh` and checkout last stable version `git checkout c826828`
+- `git clone https://github.com/kashimAstro/ofxGPIO`
+- `git clone https://github.com/danomatika/ofxMidi`
+- `git clone https://github.com/jeffcrouse/ofxJSON`
 - (install dependances for of ??)
 - `make ~/openFrameworks/apps/myApps/c_o_n_j_u_r`
 

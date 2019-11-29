@@ -22,7 +22,7 @@ piCaptureSd1 compatibility is now built in (this sets the sensor mode, autowhite
 
 FUTURE NOTE: if i or anyone ever wants to try with a piCaptureHd1 (or that other hdmi-to-pi board floating around) custom settings for these could be added here...
 
-also keen to try with usb-web-cam / cheep capture cards for lofi/locost options ...
+~~also keen to try with usb-web-cam / cheep capture cards for lofi/locost options~~ usb capture is now supported
 
 ## i_n_c_u_r
 
@@ -98,4 +98,4 @@ to process the captur input with a glsl-shader it needs to be read from openfram
 [signal_culture_and_future_plans]: signal_culture_and_future_plans.md
 [analog_action_mapping.json]: ../json_objects/analog_action_mapping.json
 [this page]: https://github.com/langolierz/c_o_n_j_u_r/blob/master/notes_on_shader_formats.md
-[image]: https://drive.google.com/open?id=1vRrStJneGCOrnlPBGChvkvL9ZY1Jemk9
+[image]: https://drive.google.com/open?id=1C8WavPTi6fw2u1GxnpOg9F8Znv4r9MJe

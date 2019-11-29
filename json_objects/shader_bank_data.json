@@ -1,0 +1,188 @@
+[
+    [
+        {
+            "name": "wipe.frag",
+            "param_number": 4,
+            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/wipe.frag",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        }
+    ],
+    [
+        {
+            "name": "add_mix.frag",
+            "param_number": 4,
+            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/add_mix.frag",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        }
+    ],
+    [
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
+        }
+    ]
+]

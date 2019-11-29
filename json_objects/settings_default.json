@@ -170,6 +170,14 @@
             ],
             "value": "enabled"
         },
+        "USE_SHADER_BANK": {
+            "action": "update_capture_settings",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "X3_AS_SPEED": {
             "action": null,
             "options": [

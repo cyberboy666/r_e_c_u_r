@@ -52,7 +52,7 @@ class Display(object):
         self.display_text.pack()
 
     def _load_title(self):
-        if self.data.display_mode == 'SHADERS':
+        if self.data.display_mode == 'SHADERS' or self.data.display_mode == 'SHADBANK':
             self.display_text.insert(END, self.TITLES[1] + ' \n')
             self.display_text.tag_add("TITLE", 1.19, 1.31)
         elif self.data.display_mode == 'FRAMES':
@@ -88,6 +88,8 @@ class Display(object):
             self._load_sampler()
         elif self.data.display_mode == 'SHADERS':
             self._load_shaders()
+        elif self.data.display_mode == 'SHADBANK':
+            self._load_shader_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
@@ -167,10 +169,10 @@ class Display(object):
         self.display_text.insert(END, '{} \n'.format(self.body_title))
         
         ## showing current shader info:
-        shader = self.shaders.selected_shader
-        self.display_text.insert(END, '{:<1}:{:<1}{:<2} {:<17} '.format \
+        shader = self.shaders.selected_shader_list[self.data.shader_layer]
+        self.display_text.insert(END, '{:<1}:{:<2} {:<17} '.format \
             (self.shaders.selected_status,shader['shad_type'][0], \
-            format(shader['shad_index'],'02d'), shader['name'].lstrip()[0:17] ))
+            shader['name'].lstrip()[0:17] ))
         for i in range(min(4,shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_values[i])
             if display_param == 100:
@@ -193,6 +195,34 @@ class Display(object):
         self._highlight_this_row(self.shaders.shaders_menu.selected_list_index - self.shaders.shaders_menu.top_menu_index)
         if self.data.control_mode == "SHADER_PARAM":
             self._highlight_this_param(self.shaders.focused_param)
+
+    def _load_shader_bank(self):
+        shader_bank_data = self.data.shader_bank_data[self.data.shader_layer]
+        
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+        
+        self.display_text.insert(END, '{:>6} {:<5} {:<5} '.format(
+            '{}-layer'.format(self.data.shader_layer), 'name', 'type'))
+        
+        shader = self.shaders.selected_shader_list[self.data.shader_layer]
+        
+        for i in range(min(4,shader['param_number'])):
+            display_param = self.format_param_value(self.shaders.selected_param_values[i])
+            if display_param == 100:
+                display_param == 99
+            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
+        self.display_text.insert(END, '\n')
+
+        for index, slot in enumerate(shader_bank_data):
+            name_without_extension =  slot['name'].rsplit('.',1)[0]
+            self.display_text.insert(END, '{:^6} {:<17} {:<5} \n'.format(index, name_without_extension[0:17], slot['shad_type']))
+            if index % 2:
+                self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
+        # highlight the slot of the selected player
+        current_slot = self.data.shader_slots[self.data.shader_layer]
+        if current_slot:
+            self._highlight_this_row(current_slot)
 
 
     def _load_detour(self):

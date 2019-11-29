@@ -73,9 +73,11 @@ class Actions(object):
     def enter_on_shaders_selection(self):
         ##want to select shader if its not selected, and want to enter 'param' mode if it already is
         is_shader, is_selected_shader, selected_shader = self.shaders.enter_on_shaders_selection()
-        print('is selected shader: {}'.format(is_selected_shader))
         if is_selected_shader and selected_shader['param_number'] > 0:
             self.set_shader_param_mode()
+
+    def map_on_shaders_selection(self):
+        self.shaders.map_on_shaders_selection()
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
@@ -300,6 +302,48 @@ class Actions(object):
             is_playing =  not self.data.detour_settings['is_playing']
             self.data.detour_settings['is_playing'] = is_playing 
             self.video_driver.osc_client.send_message("/detour/is_playing", is_playing)
+
+    def play_shader_0(self):
+        self.play_this_shader(0)
+
+    def play_shader_1(self):
+        self.play_this_shader(1)
+
+    def play_shader_2(self):
+        self.play_this_shader(2)
+
+    def play_shader_3(self):
+        self.play_this_shader(3)
+
+    def play_shader_4(self):
+        self.play_this_shader(4)
+
+    def play_shader_5(self):
+        self.play_this_shader(5)
+
+    def play_shader_6(self):
+        self.play_this_shader(6)
+
+    def play_shader_7(self):
+        self.play_this_shader(7)
+
+    def play_shader_8(self):
+        self.play_this_shader(8)
+
+    def play_shader_9(self):
+        self.play_this_shader(9)
+
+    def play_this_shader(self, number):
+        self.shaders.play_this_shader(number)
+
+    def previous_shader_layer(self):
+        self.data.update_shader_layer_by_amount(-1)
+
+    def next_shader_layer(self):
+        self.data.update_shader_layer_by_amount(1)
+
+    def clear_shader_bank(self):
+        self.data.clear_all_shader_slots()
 
     def toggle_detour_record(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
@@ -605,10 +649,10 @@ class Actions(object):
         self.shaders.decrease_this_param(self.data.settings['shader']['SHADER_PARAM']['value'])
 
     def increase_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def decrease_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def increase_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']

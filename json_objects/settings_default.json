@@ -366,7 +366,8 @@
             "action": "change_hdmi_settings",
             "options": [
                 "preferred",
-                "CEA 4 HDMI"
+                "CEA 4 HDMI",
+                "CEA 17 HDMI"
             ],
             "value": "CEA 4 HDMI"
         },

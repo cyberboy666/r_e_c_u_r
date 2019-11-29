@@ -1,6 +1,7 @@
 import display_centre.menu as menu
 import os
 
+
 class Shaders(object):
     MENU_HEIGHT = 10
     EMPTY_SHADER = dict(name='none',is_shader=True,shad_type='-',param_number=0,path='-',shad_index=0)
@@ -47,7 +48,8 @@ class Shaders(object):
         return False, ''
 
     def determine_shader_type(self, path):
-        with open(path, 'r') as selected_shader:
+        #try:
+        with open(path, 'r', errors='ignore') as selected_shader:
                 shader_text = selected_shader.read()
                 if '//0-input' in shader_text:
                     return '0in'
@@ -55,9 +57,11 @@ class Shaders(object):
                     return '1in'
                 elif '//2-input' in shader_text:
                     return '2in'
-
                 else:
                     return '-'
+        #except Exception as e:
+            #self.message_handler.set_message('INFO', 'cannot inspect shader text')
+            #return '-'
 
     def determine_shader_parameter_number(self, path):
         max_amount = 4

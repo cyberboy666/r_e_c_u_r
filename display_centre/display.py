@@ -171,7 +171,7 @@ class Display(object):
         ## showing current shader info:
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
         self.display_text.insert(END, '{:<1}lay{:<1}:{:<2} {:<16} '.format \
-            (self.data.shader_layer,self.shaders.selected_status,shader['shad_type'][0], \
+            (self.data.shader_layer,self.shaders.selected_status_list[self.data.shader_layer],shader['shad_type'][0], \
             shader['name'].lstrip()[0:16] ))
         for i in range(min(4,shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
@@ -221,7 +221,7 @@ class Display(object):
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
         # highlight the slot of the selected player
         current_slot = self.shaders.selected_shader_list[self.data.shader_layer].get('slot', None)
-        not_playing_tag = self.shaders.selected_status != '▶'
+        not_playing_tag = self.shaders.selected_status_list[self.data.shader_layer] != '▶'
         if current_slot is not None:
             self._highlight_this_row(current_slot, gray=not_playing_tag)
 

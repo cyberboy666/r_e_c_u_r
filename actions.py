@@ -273,9 +273,9 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
     def toggle_shaders(self):
-        if self.shaders.selected_status == '▶':
+        if self.shaders.selected_status_list[self.data.shader_layer] == '▶':
             self.shaders.stop_selected_shader()
-        elif self.shaders.selected_status == '■':
+        elif self.shaders.selected_status_list[self.data.shader_layer] == '■':
             self.shaders.start_selected_shader()
         else:
             self.message_handler.set_message('INFO', 'no shader loaded')

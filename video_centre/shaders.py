@@ -15,7 +15,7 @@ class Shaders(object):
         self.focused_param = 0
         self.shaders_menu_list = self.generate_shaders_list()
                  
-        self.selected_status = '-' ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_status_list = ['-','-','-'] ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
         #self.load_selected_shader()
@@ -71,19 +71,19 @@ class Shaders(object):
 
     def load_selected_shader(self):
         selected_shader = self.selected_shader_list[self.data.shader_layer]
-        self.selected_param_list[self.data.shader_layer] = [0.0,0.0,0.0,0.0]
+        #self.selected_param_list[self.data.shader_layer] = [0.0,0.0,0.0,0.0]
         print("select shader: ", selected_shader)
         self.osc_client.send_message("/shader/{}/load".format(str(self.data.shader_layer)), [selected_shader['path'],selected_shader['shad_type'] == '2in',selected_shader['param_number']])
-        if not self.selected_status == '▶':
-            self.selected_status = '■'
+        if not self.selected_status_list[self.data.shader_layer] == '▶':
+            self.selected_status_list[self.data.shader_layer] = '■'
 
     def start_selected_shader(self):
         self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), True)
-        self.selected_status = '▶'
+        self.selected_status_list[self.data.shader_layer] = '▶'
 
     def stop_selected_shader(self):
         self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), False)
-        self.selected_status = '■'
+        self.selected_status_list[self.data.shader_layer] = '■'
 
     def map_on_shaders_selection(self):
         index = self.shaders_menu.selected_list_index

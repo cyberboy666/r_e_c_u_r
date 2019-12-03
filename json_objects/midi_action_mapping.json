@@ -1,43 +1,43 @@
 {
     "control_change 0": {
-		"DEFAULT": ["set_the_shader_param_0_continuous"],
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
         "NAV_DETOUR": ["set_detour_mix_continuous"]
 	},
     "control_change 1": {
-		"DEFAULT": ["set_the_shader_param_1_continuous"],
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
         "NAV_DETOUR": ["set_detour_speed_position_continuous"]
 	},
     "control_change 2": {
-		"DEFAULT": ["set_the_shader_param_2_continuous"],
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous"],
         "NAV_DETOUR": ["set_detour_start_continuous"]
 	},
     "control_change 3": {
-		"DEFAULT": ["set_the_shader_param_3_continuous"],
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
         "NAV_DETOUR": ["set_detour_end_continuous"]
 	},
     "control_change 4": {
-		"DEFAULT": ["set_the_shader_param_0_continuous"]
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous"]
 	},
     "control_change 5": {
-		"DEFAULT": ["set_the_shader_param_1_continuous"]
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous"]
 	},
     "control_change 6": {
-		"DEFAULT": ["set_the_shader_param_2_continuous"]
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous"]
 	},
     "control_change 7": {
-		"DEFAULT": ["set_the_shader_param_3_continuous"]
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous"]
 	},
     "control_change 8": {
-		"DEFAULT": ["set_the_shader_param_0_continuous"]
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_2_continuous"]
 	},
     "control_change 9": {
-		"DEFAULT": ["set_the_shader_param_1_continuous"]
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_2_continuous"]
 	},
     "control_change 10": {
-		"DEFAULT": ["set_the_shader_param_2_continuous"]
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_2_continuous"]
 	},
     "control_change 11": {
-		"DEFAULT": ["set_the_shader_param_3_continuous"]
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_3_continuous"]
 	},
 	"note_on 72": {
 		"NAV_BROWSER": ["move_browser_selection_up"],

@@ -280,6 +280,9 @@ class Actions(object):
         else:
             self.message_handler.set_message('INFO', 'no shader loaded')
 
+    def toggle_shader_speed(self):
+        self.shaders.toggle_shader_speed()
+
     def toggle_player_mode(self):
         if self.data.player_mode == 'now':
             self.data.player_mode = 'next'
@@ -302,6 +305,11 @@ class Actions(object):
             is_playing =  not self.data.detour_settings['is_playing']
             self.data.detour_settings['is_playing'] = is_playing 
             self.video_driver.osc_client.send_message("/detour/is_playing", is_playing)
+
+    def toggle_feedback(self):
+        print('toggle here')
+        self.data.feedback_active = not self.data.feedback_active
+        self.video_driver.osc_client.send_message("/toggle_feedback", self.data.feedback_active)
 
     def play_shader_0(self):
         self.play_this_shader(0)
@@ -442,17 +450,42 @@ class Actions(object):
     def set_the_next_video_alpha_continuous(self, amount):
         self.video_driver.next_player.set_alpha_value(amount*255)
 
-    def set_the_shader_param_0_continuous(self, amount):
-        self.shaders.set_param_to_amount(0, amount)
+    def set_the_shader_param_0_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=0)
 
-    def set_the_shader_param_1_continuous(self, amount):
-        self.shaders.set_param_to_amount(1, amount)
+    def set_the_shader_param_1_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=0)
 
-    def set_the_shader_param_2_continuous(self, amount):
-        self.shaders.set_param_to_amount(2, amount)
+    def set_the_shader_param_2_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=0)
 
-    def set_the_shader_param_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(3, amount)
+    def set_the_shader_param_3_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=0)
+
+    def set_the_shader_param_0_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=1)
+
+    def set_the_shader_param_1_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=1)
+
+    def set_the_shader_param_2_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=1)
+
+    def set_the_shader_param_3_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=1)
+
+    def set_the_shader_param_0_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=2)
+
+    def set_the_shader_param_1_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=2)
+
+    def set_the_shader_param_2_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=2)
+
+    def set_the_shader_param_3_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=2)
+
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
@@ -484,6 +517,10 @@ class Actions(object):
                 subprocess.call(['tvservice --preferred'], shell=True)
             elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
                 subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
+            elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 17 HDMI':
+                subprocess.call(['tvservice -e=\"CEA 17 HDMI\"'], shell=True)
+            elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 1 HDMI':
+                subprocess.call(['tvservice -e=\"CEA 1 HDMI\"'], shell=True)
             self.refresh_frame_buffer_and_restart_openframeworks()
 
     def check_and_set_output_mode_on_boot(self):

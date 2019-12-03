@@ -52,7 +52,7 @@ class Display(object):
         self.display_text.pack()
 
     def _load_title(self):
-        if self.data.display_mode == 'SHADERS' or self.data.display_mode == 'SHADBANK':
+        if self.data.display_mode == 'SHADERS' or self.data.display_mode == 'SHDR_BNK':
             self.display_text.insert(END, self.TITLES[1] + ' \n')
             self.display_text.tag_add("TITLE", 1.19, 1.31)
         elif self.data.display_mode == 'FRAMES':
@@ -88,7 +88,7 @@ class Display(object):
             self._load_sampler()
         elif self.data.display_mode == 'SHADERS':
             self._load_shaders()
-        elif self.data.display_mode == 'SHADBANK':
+        elif self.data.display_mode == 'SHDR_BNK':
             self._load_shader_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
@@ -170,11 +170,11 @@ class Display(object):
         
         ## showing current shader info:
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
-        self.display_text.insert(END, '{:<1}:{:<2} {:<17} '.format \
-            (self.shaders.selected_status,shader['shad_type'][0], \
-            shader['name'].lstrip()[0:17] ))
+        self.display_text.insert(END, '{:<1}lay{:<1}:{:<2} {:<16} '.format \
+            (self.data.shader_layer,self.shaders.selected_status,shader['shad_type'][0], \
+            shader['name'].lstrip()[0:16] ))
         for i in range(min(4,shader['param_number'])):
-            display_param = self.format_param_value(self.shaders.selected_param_values[i])
+            display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
                 display_param == 99
             self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
@@ -200,14 +200,14 @@ class Display(object):
         shader_bank_data = self.data.shader_bank_data[self.data.shader_layer]
         
         self.display_text.insert(END, '{} \n'.format(self.body_title))
-        
-        self.display_text.insert(END, '{:>6} {:<5} {:<5} '.format(
+
+        self.display_text.insert(END, '{:>6} {:<11} {:<5} '.format(
             '{}-layer'.format(self.data.shader_layer), 'name', 'type'))
         
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
         
         for i in range(min(4,shader['param_number'])):
-            display_param = self.format_param_value(self.shaders.selected_param_values[i])
+            display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
                 display_param == 99
             self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
@@ -220,9 +220,12 @@ class Display(object):
                 self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
         # highlight the slot of the selected player
-        current_slot = self.data.shader_slots[self.data.shader_layer]
-        if current_slot:
-            self._highlight_this_row(current_slot)
+        current_slot = self.shaders.selected_shader_list[self.data.shader_layer].get('slot', None)
+        not_playing_tag = self.shaders.selected_status != '▶'
+        if current_slot is not None:
+            self._highlight_this_row(current_slot, gray=not_playing_tag)
+
+        self._highlight_this_param(self.shaders.focused_param)
 
 
     def _load_detour(self):
@@ -254,13 +257,19 @@ class Display(object):
             self.display_text.insert(END, '{:^47} \n'.format('< FUNCTION KEY ON >'))
             self.display_text.tag_add('FUNCTION', 16.0,16.0 + self.SELECTOR_WIDTH)
         else:
-            self.display_text.insert(END, '{:8} {:<10} \n'.format('CONTROL:', self.data.control_mode))
+            feedback = ''
+            if self.data.feedback_active:
+                feedback = 'FDBCK'
+            self.display_text.insert(END, '{:8} {:<28} {:>5} \n'.format('CONTROL:', self.data.control_mode, feedback))
             self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 
-    def _highlight_this_row(self, row):
+    def _highlight_this_row(self, row, gray=False):
+        highlight_tag = "SELECT"
+        if gray:
+            highlight_tag = "BROKEN_PATH" 
         self.display_text.tag_remove("ZEBRA_STRIPE", self.ROW_OFFSET + row,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
-        self.display_text.tag_add("SELECT", self.ROW_OFFSET + row,
+        self.display_text.tag_add(highlight_tag, self.ROW_OFFSET + row,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
     def _unhighlight_this_row(self, row):
@@ -269,7 +278,7 @@ class Display(object):
 
     def _highlight_this_param(self, param_num):
         param_row = self.ROW_OFFSET - 1
-        column_offset = 0.24
+        column_offset = 0.26
         param_length = 0.05
         self.display_text.tag_add("SHADER_PARAM", round(param_row + column_offset + param_num*param_length,2),
 round(param_row + column_offset + (param_num+1)*param_length, 2))

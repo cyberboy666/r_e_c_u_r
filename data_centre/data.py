@@ -44,6 +44,7 @@ class Data(object):
         self.confirm_action = None
         self.player_mode = 'now'
         
+        self.feedback_active = False
         self.detour_active = False
         self.detour_mix_shaders = self.get_list_of_two_input_shaders()
         self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 5), ('detour_start', 0), ('detour_end', 0), ('detour_mix', 0), ('is_delay', False)])
@@ -52,7 +53,6 @@ class Data(object):
         self.current_bankslot = '0-0'
         
         self.shader_layer = 0
-        self.shader_slots = [None, None, None]
         
         ### persisted data (use default if doesnt exits):
         self.bank_data = [self.create_empty_bank()]
@@ -360,7 +360,7 @@ class Data(object):
         if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer' and self.settings['shader']['USE_SHADER']['value'] == 'enabled':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
-                display_modes.append(["SHADBANK",'PLAY_SHADER'])
+                display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
         if not with_nav_mode:

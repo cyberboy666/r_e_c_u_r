@@ -12,13 +12,12 @@ class Shaders(object):
         self.data = data
         self.shaders_menu = menu.ShadersMenu(self.data, self.message_handler, self.MENU_HEIGHT )
         self.selected_shader_list = [self.EMPTY_SHADER for i in range(3)]
-        self.focused_param = None
+        self.focused_param = 0
         self.shaders_menu_list = self.generate_shaders_list()
-        if self.shaders_menu_list is not None:
-            pass
                  
         self.selected_status = '-' ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
-        self.selected_param_values = [0.0,0.0,0.0,0.0]
+        self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
+        self.selected_speed_list = [1.0, 1.0, 1.0]
         #self.load_selected_shader()
 
     def generate_shaders_list(self):
@@ -72,18 +71,18 @@ class Shaders(object):
 
     def load_selected_shader(self):
         selected_shader = self.selected_shader_list[self.data.shader_layer]
-        self.selected_param_values = [0.0,0.0,0.0,0.0]
+        self.selected_param_list[self.data.shader_layer] = [0.0,0.0,0.0,0.0]
         print("select shader: ", selected_shader)
-        self.osc_client.send_message("/shader/load".format(str(self.data.shader_layer)), [selected_shader['path'],selected_shader['shad_type'] == '2in',selected_shader['param_number']])
+        self.osc_client.send_message("/shader/{}/load".format(str(self.data.shader_layer)), [selected_shader['path'],selected_shader['shad_type'] == '2in',selected_shader['param_number']])
         if not self.selected_status == '▶':
             self.selected_status = '■'
 
     def start_selected_shader(self):
-        self.osc_client.send_message("/shader/start".format(str(self.data.shader_layer)), True)
+        self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), True)
         self.selected_status = '▶'
 
     def stop_selected_shader(self):
-        self.osc_client.send_message("/shader/stop".format(str(self.data.shader_layer)), True)
+        self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), False)
         self.selected_status = '■'
 
     def map_on_shaders_selection(self):
@@ -114,21 +113,32 @@ class Shaders(object):
         return is_file, is_selected_shader, selected_shader
 
     def play_this_shader(self, slot):
-        self.selected_shader_list[self.data.shader_layer] = self.data.shader_bank_data[self.data.shader_layer][slot]
-        self.load_selected_shader()
+        print(self.data.shader_bank_data[self.data.shader_layer])
+        if self.data.shader_bank_data[self.data.shader_layer][slot]['path']:
+            self.selected_shader_list[self.data.shader_layer] = self.data.shader_bank_data[self.data.shader_layer][slot]
+            self.selected_shader_list[self.data.shader_layer]['slot'] = slot
+            self.load_selected_shader()
+        else:
+            self.message_handler.set_message('INFO', 'this slot is empty')
 
     def increase_this_param(self, amount_change):
         param = self.focused_param
-        current_amount = self.selected_param_values[param]
+        current_amount = self.selected_param_list[self.data.shader_layer][param]
         amount = self.get_new_param_amount(current_amount,amount_change)
         self.set_param_to_amount(param, amount)
 
     def decrease_this_param(self, amount_change):
         param = self.focused_param
-        current_amount = self.selected_param_values[param]
+        current_amount = self.selected_param_list[self.data.shader_layer][param]
         amount = self.get_new_param_amount(current_amount,-amount_change)
         self.set_param_to_amount(param, amount)
     
+    def toggle_shader_speed(self):
+        if self.selected_speed_list[self.data.shader_layer] > 0.62:
+            self.set_speed_to_amount(0.5)
+        else:
+            self.set_speed_to_amount(0.75)
+
     @staticmethod
     def get_new_param_amount(current, change):
         if current + change > 1:
@@ -138,10 +148,20 @@ class Shaders(object):
         else: 
             return current + change
     
-    def set_param_to_amount(self, param, amount):
+    def set_param_to_amount(self, param, amount, layer_offset=0):
+        start_layer = self.data.shader_layer
+        if self.data.settings['shader']['FIX_PARAM_OFFSET_LAYER']['value'] == 'enabled':
+            start_layer = 0
+        layer = start_layer + layer_offset % 4
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
-            self.osc_client.send_message("/shader/{}/speed".format(str(self.data.shader_layer)), [param, amount] )
+            self.set_speed_to_amount(amount, layout_offset=layout_offset)
         else:
-            self.osc_client.send_message("/shader/{}/param".format(str(self.data.shader_layer)), [param, amount] )
-        self.selected_param_values[param] = amount
-        
+            self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
+        self.selected_param_list[layer][param] = amount
+
+    def set_speed_to_amount(self, amount, layer_offset=0):
+        layer = self.data.shader_layer + layer_offset % 4
+        self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
+        self.selected_speed_list[layer] = amount
+   
+

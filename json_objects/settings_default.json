@@ -163,7 +163,7 @@
     },
     "shader": {
         "USE_SHADER": {
-            "action": "update_capture_settings",
+            "action": null,
             "options": [
                 "enabled",
                 "disabled"
@@ -171,7 +171,15 @@
             "value": "enabled"
         },
         "USE_SHADER_BANK": {
-            "action": "update_capture_settings",
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "FIX_PARAM_OFFSET_LAYER": {
+            "action": null,
             "options": [
                 "enabled",
                 "disabled"
@@ -375,6 +383,7 @@
             "options": [
                 "preferred",
                 "CEA 4 HDMI",
+                "CEA 1 HDMI",
                 "CEA 17 HDMI"
             ],
             "value": "CEA 4 HDMI"

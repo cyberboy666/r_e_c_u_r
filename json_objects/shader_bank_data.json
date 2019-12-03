@@ -1,22 +1,25 @@
 [
     [
         {
-            "name": "wipe.frag",
+            "name": "add_mix.frag",
             "param_number": 4,
-            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/wipe.frag",
-            "shad_type": "-"
+            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/add_mix.frag",
+            "shad_type": "-",
+            "slot": 0
         },
         {
-            "name": "",
+            "name": "luma_key.frag",
             "param_number": 4,
-            "path": "",
-            "shad_type": "-"
+            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/luma_key.frag",
+            "shad_type": "-",
+            "slot": 1
         },
         {
-            "name": "",
+            "name": "blend_add.frag",
             "param_number": 4,
-            "path": "",
-            "shad_type": "-"
+            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/blend_add.frag",
+            "shad_type": "-",
+            "slot": 2
         },
         {
             "name": "",
@@ -66,13 +69,15 @@
             "name": "add_mix.frag",
             "param_number": 4,
             "path": "/home/pi/r_e_c_u_r/Shaders/2-input/add_mix.frag",
-            "shad_type": "-"
+            "shad_type": "-",
+            "slot": 0
         },
         {
-            "name": "",
+            "name": "hsv_control.frag",
             "param_number": 4,
-            "path": "",
-            "shad_type": "-"
+            "path": "/home/pi/r_e_c_u_r/Shaders/1-input/hsv_control.frag",
+            "shad_type": "-",
+            "slot": 1
         },
         {
             "name": "",
@@ -125,15 +130,16 @@
     ],
     [
         {
-            "name": "",
+            "name": "wobble.frag",
             "param_number": 4,
-            "path": "",
-            "shad_type": "-"
+            "path": "/home/pi/r_e_c_u_r/Shaders/1-input/wobble.frag",
+            "shad_type": "-",
+            "slot": 0
         },
         {
-            "name": "",
+            "name": "rotate.frag",
             "param_number": 4,
-            "path": "",
+            "path": "/home/pi/r_e_c_u_r/Shaders/1-input/rotate.frag",
             "shad_type": "-"
         },
         {

@@ -66,18 +66,16 @@
     ],
     [
         {
-            "name": "add_mix.frag",
-            "param_number": 4,
-            "path": "/home/pi/r_e_c_u_r/Shaders/2-input/add_mix.frag",
-            "shad_type": "-",
-            "slot": 0
-        },
-        {
             "name": "hsv_control.frag",
             "param_number": 4,
             "path": "/home/pi/r_e_c_u_r/Shaders/1-input/hsv_control.frag",
-            "shad_type": "-",
-            "slot": 1
+            "shad_type": "-"
+        },
+        {
+            "name": "",
+            "param_number": 4,
+            "path": "",
+            "shad_type": "-"
         },
         {
             "name": "",

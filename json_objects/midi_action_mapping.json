@@ -37,7 +37,10 @@
 		"DEFAULT": ["set_the_shader_param_2_layer_offset_2_continuous"]
 	},
     "control_change 11": {
-		"DEFAULT": ["set_the_shader_param_0_layer_offset_3_continuous"]
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_2_continuous"]
+	},
+    "control_change 12": {
+		"DEFAULT": ["set_strobe_amount_continuous"]
 	},
 	"note_on 72": {
 		"NAV_BROWSER": ["move_browser_selection_up"],

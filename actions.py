@@ -486,6 +486,24 @@ class Actions(object):
     def set_the_shader_param_3_layer_offset_2_continuous(self, amount):
         self.shaders.set_param_to_amount(3, amount, layer_offset=2)
 
+    def set_the_shader_param_0_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=2)
+
+    def set_the_shader_param_1_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=2)
+
+    def set_the_shader_param_2_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=2)
+
+    def set_the_shader_param_3_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=2)
+
+    def set_strobe_amount_continuous(self, amount):
+        scaled_amount = int(amount * 10)
+        if self.data.settings['shader']['STROBE_AMOUNT']['value'] != scaled_amount:
+            print(scaled_amount)
+            self.video_driver.osc_client.send_message("/set_strobe", scaled_amount)
+            self.data.settings['shader']['STROBE_AMOUNT']['value'] = scaled_amount
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
@@ -835,18 +853,14 @@ class Actions(object):
         if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
             #something has changed!
             os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
-            if current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
-                self.message_handler.set_message('INFO', 'compiling OF pls wait')
-                self.tk.after(100,self.complie_openframeworks)
-            else:
-                self.restart_the_program()
+            self.restart_the_program()
         else:
             self.message_handler.set_message('INFO', 'up to date !')
 
-    def complie_openframeworks(self):
-        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
-        self.message_handler.set_message('INFO', 'finished compiling!')
-        self.restart_the_program()
+#    def complie_openframeworks(self):
+#        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
+#        self.message_handler.set_message('INFO', 'finished compiling!')
+#        self.restart_the_program()
 
     def shutdown_pi(self):
         subprocess.call(['sudo', 'shutdown', '-h', 'now'])

@@ -148,10 +148,13 @@ class Shaders(object):
         else: 
             return current + change
     
-    def set_param_to_amount(self, param, amount, layer_offset=0):
+    def set_param_to_amount(self, param, amount, layer_offset=None):
         start_layer = self.data.shader_layer
         if self.data.settings['shader']['FIX_PARAM_OFFSET_LAYER']['value'] == 'enabled':
-            start_layer = 0
+            start_layer = 0 
+        if layer_offset is None:
+            start_layer = self.data.shader_layer
+            layer_offset = 0
         layer = start_layer + layer_offset % 4
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layout_offset=layout_offset)

@@ -186,6 +186,23 @@
             ],
             "value": "disabled"
         },
+        "STROBE_AMOUNT": {
+            "action": null,
+            "options": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "value": 0
+        },
         "X3_AS_SPEED": {
             "action": null,
             "options": [

@@ -45,7 +45,12 @@ these are the parts you need to get. to reduce shipping costs to nz i sourced th
 
 ## put it together
 
-- using [etcher] (or otherwise) flash the micro sd with my [modified image] of raspbian (or follow these [instructions to install] from scratch.)
+- to get a raspberry pi working you need a micro-sd card with the operating system flashed onto it.
+
+- the easist way to run recur is by using [etcher] to flash your micro sd with my [modified image] of raspbian.
+(i have tried to document my steps from a fresh image of rasbian to recur if you want to learn here [instructions to install] although this is more difficult and time consuming.)
+
+- _quick note about versions: i have uploaded a new modified image which you can read about and find [here]. this fixes some old bugs and adds some new features (and maybe some new bugs) this will replace the above image soon_
 
 - _quick note about versions: i have uploaded a new modified image which you can read about and find [here]. this fixes some old bugs and adds some new features (and maybe some new bugs) this will replace the above image soon_
 

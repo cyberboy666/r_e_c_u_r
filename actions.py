@@ -7,7 +7,6 @@ import os
 from pythonosc import osc_message_builder
 from pythonosc import dispatcher
 from pythonosc import osc_server
-from pythonosc import dispatcher
 import git
 import threading
 import argparse
@@ -557,7 +556,6 @@ class Actions(object):
                 self.change_hdmi_settings('CEA 4 HDMI')
                 
 
-
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
         with open('/boot/config.txt', 'r') as config:
@@ -832,6 +830,8 @@ class Actions(object):
         current_recur_hash = recur_repo.head.object.hexsha
         current_conjur_hash = conjur_repo.head.object.hexsha
         current_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
+        os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
+        os.remove(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON ) 
         try:
             recur_repo.remotes.origin.pull()
             conjur_repo.remotes.origin.pull()
@@ -851,8 +851,7 @@ class Actions(object):
         new_conjur_hash = conjur_repo.head.object.hexsha
         new_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
         if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
-            #something has changed!
-            os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
+            #something has changed!            
             self.restart_the_program()
         else:
             self.message_handler.set_message('INFO', 'up to date !')

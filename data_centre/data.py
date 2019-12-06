@@ -6,7 +6,7 @@ from random import randint
 import inspect
 from itertools import cycle
 from omxplayer.player import OMXPlayer
-
+from shutil import copyfile
 
 
 
@@ -24,6 +24,7 @@ class Data(object):
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
     PATH_TO_OPENFRAMEWORKS = '/home/pi/openframeworks10.1/'
     PATH_TO_CONJUR_DATA = PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/data/settings.xml'
+    PATH_TO_DEFAULT_CONJUR_DATA = PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/data/settings_default.xml'
 
     def __init__(self, message_handler):
         self.message_handler = message_handler
@@ -55,6 +56,10 @@ class Data(object):
         self.shader_layer = 0
         
         ### persisted data (use default if doesnt exits):
+        if not os.path.isfile(self.PATH_TO_CONJUR_DATA):
+            os.remove(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON ) # keep the, in sync
+            copyfile(self.PATH_TO_DEFAULT_CONJUR_DATA, self.PATH_TO_CONJUR_DATA)
+
         self.bank_data = [self.create_empty_bank()]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
@@ -62,8 +67,8 @@ class Data(object):
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
             self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
-
         self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)
 
@@ -71,7 +76,7 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
-
+        
 
         
     @staticmethod

@@ -6,13 +6,14 @@ from random import randint
 import inspect
 from itertools import cycle
 from omxplayer.player import OMXPlayer
-
+from shutil import copyfile
 
 
 
 class Data(object):
 
     BANK_DATA_JSON = 'display_data.json'
+    SHADER_BANK_DATA_JSON = 'shader_bank_data.json'
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
@@ -23,6 +24,7 @@ class Data(object):
     PATH_TO_EXTERNAL_DEVICES = '/media/pi'
     PATH_TO_OPENFRAMEWORKS = '/home/pi/openframeworks10.1/'
     PATH_TO_CONJUR_DATA = PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/data/settings.xml'
+    PATH_TO_DEFAULT_CONJUR_DATA = PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/data/settings_default.xml'
 
     def __init__(self, message_handler):
         self.message_handler = message_handler
@@ -42,19 +44,31 @@ class Data(object):
         self.update_screen = True
         self.confirm_action = None
         self.player_mode = 'now'
+        
+        self.feedback_active = False
         self.detour_active = False
         self.detour_mix_shaders = self.get_list_of_two_input_shaders()
         self.detour_settings = collections.OrderedDict([('current_detour',0), ('is_playing', False), ('is_recording', False), ('record_loop', False),       ('detour_size', False), ('detour_speed', 0), ('memory_full', False), ('mix_shader', self.detour_mix_shaders[0]), ('detour_position', 5), ('detour_start', 0), ('detour_end', 0), ('detour_mix', 0), ('is_delay', False)])
+
+        self.next_bankslot = '0-0'
+        self.current_bankslot = '0-0'
+        
+        self.shader_layer = 0
         
         ### persisted data (use default if doesnt exits):
+        if not os.path.isfile(self.PATH_TO_CONJUR_DATA):
+            os.remove(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON ) # keep the, in sync
+            copyfile(self.PATH_TO_DEFAULT_CONJUR_DATA, self.PATH_TO_CONJUR_DATA)
+
         self.bank_data = [self.create_empty_bank()]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
-        self.next_bankslot = '0-0'
-        self.current_bankslot = '0-0'
-
+        self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
+            self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
         self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)
 
@@ -62,12 +76,17 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
-
+        
 
         
     @staticmethod
     def create_empty_bank():
         empty_slot = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
+        return [empty_slot for i in range(10)]
+
+    @staticmethod
+    def create_empty_shader_bank():
+        empty_slot = dict(name='', path='', param_number=4, shad_type='-')
         return [empty_slot for i in range(10)]
      
     def _read_json(self, file_name):
@@ -103,6 +122,8 @@ class Data(object):
             for setting_key, setting_item in folder_item.items():
                 if setting_key == setting_name:
                     return folder_key, setting_key, setting_item
+
+##### setting and adding to sample mapping ######
 
     def create_new_slot_mapping_in_first_open(self, file_name):
         ######## used for mapping current video to next available slot ########
@@ -148,6 +169,33 @@ class Data(object):
         else:
             self.next_bankslot =  '{}-{}'.format(self.bank_number,new_value)
             return True
+
+ ######## setting and adding to shader mapping
+
+
+    def create_new_shader_mapping_in_first_open(self, file_name):
+        ######## used for mapping current shader to next available slot ########
+        for index, slot in enumerate(self.shader_bank_data[self.shader_layer]):
+            if (not slot['name']):
+                self.create_new_shader_mapping(index, file_name)
+                return True
+        return False
+
+    def create_new_shader_mapping(self, slot_number, file_name):
+        ######## used for mapping current shader to a specific slot ########
+        has_location, location = self._get_path_for_file(file_name)
+        print('file_name:{},has_location:{}, location:{}'.format(file_name,has_location, location))
+        new_slot = dict(name=file_name, path=location, shad_type='-', param_number=4)
+        self._update_a_shader_slots_data(slot_number, new_slot)
+
+    def clear_all_shader_slots(self):
+        self.shader_bank_data[self.shader_layer] = self.create_empty_shader_bank()
+        self._update_json(self.SHADER_BANK_DATA_JSON, self.shader_bank_data)
+
+    def update_shader_layer_by_amount(self, amount):
+        self.shader_layer = (self.shader_layer + amount) % len(self.shader_bank_data) 
+
+
 
     def update_setting_value(self, setting_folder, setting_name, setting_value):
         self.settings[setting_folder][setting_name]['value'] = setting_value
@@ -277,7 +325,7 @@ class Data(object):
 
     def _get_path_for_file(self, file_name):
         ######## returns full path for a given file name ########
-        for path in self.PATHS_TO_BROWSER:    
+        for path in self.PATHS_TO_BROWSER + self.PATHS_TO_SHADERS:    
             for root, dirs, files in os.walk(path):
                 if file_name in files:
                     return True, '{}/{}'.format(root, file_name)
@@ -316,6 +364,8 @@ class Data(object):
         display_modes = [[ "SAMPLER",'PLAYER'], ["BROWSER",'NAV_BROWSER'],["SETTINGS",'NAV_SETTINGS']]
         if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer' and self.settings['shader']['USE_SHADER']['value'] == 'enabled':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
+            if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
+                display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
         if not with_nav_mode:
@@ -331,6 +381,11 @@ class Data(object):
         ######## overwrite a given slots info with new data ########
         self.bank_data[self.bank_number][slot_number] = slot_info
         self._update_json(self.BANK_DATA_JSON, self.bank_data)
+
+    def _update_a_shader_slots_data(self, slot_number, slot_info):
+        ######## overwrite a given slots info with new data ########
+        self.shader_bank_data[self.shader_layer][slot_number] = slot_info
+        self._update_json(self.SHADER_BANK_DATA_JSON, self.shader_bank_data)
     
     @staticmethod
     def make_empty_if_none(input):

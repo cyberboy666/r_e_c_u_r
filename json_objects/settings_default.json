@@ -163,12 +163,45 @@
     },
     "shader": {
         "USE_SHADER": {
-            "action": "update_capture_settings",
+            "action": null,
             "options": [
                 "enabled",
                 "disabled"
             ],
             "value": "enabled"
+        },
+        "USE_SHADER_BANK": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "FIX_PARAM_OFFSET_LAYER": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "STROBE_AMOUNT": {
+            "action": null,
+            "options": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "value": 0
         },
         "X3_AS_SPEED": {
             "action": null,
@@ -366,7 +399,9 @@
             "action": "change_hdmi_settings",
             "options": [
                 "preferred",
-                "CEA 4 HDMI"
+                "CEA 4 HDMI",
+                "CEA 1 HDMI",
+                "CEA 17 HDMI"
             ],
             "value": "CEA 4 HDMI"
         },

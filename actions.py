@@ -7,7 +7,6 @@ import os
 from pythonosc import osc_message_builder
 from pythonosc import dispatcher
 from pythonosc import osc_server
-from pythonosc import dispatcher
 import git
 import threading
 import argparse
@@ -73,9 +72,11 @@ class Actions(object):
     def enter_on_shaders_selection(self):
         ##want to select shader if its not selected, and want to enter 'param' mode if it already is
         is_shader, is_selected_shader, selected_shader = self.shaders.enter_on_shaders_selection()
-        print('is selected shader: {}'.format(is_selected_shader))
         if is_selected_shader and selected_shader['param_number'] > 0:
             self.set_shader_param_mode()
+
+    def map_on_shaders_selection(self):
+        self.shaders.map_on_shaders_selection()
 
     def clear_all_slots(self):
         self.data.clear_all_slots()
@@ -271,12 +272,15 @@ class Actions(object):
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
     def toggle_shaders(self):
-        if self.shaders.selected_status == '▶':
+        if self.shaders.selected_status_list[self.data.shader_layer] == '▶':
             self.shaders.stop_selected_shader()
-        elif self.shaders.selected_status == '■':
+        elif self.shaders.selected_status_list[self.data.shader_layer] == '■':
             self.shaders.start_selected_shader()
         else:
             self.message_handler.set_message('INFO', 'no shader loaded')
+
+    def toggle_shader_speed(self):
+        self.shaders.toggle_shader_speed()
 
     def toggle_player_mode(self):
         if self.data.player_mode == 'now':
@@ -300,6 +304,53 @@ class Actions(object):
             is_playing =  not self.data.detour_settings['is_playing']
             self.data.detour_settings['is_playing'] = is_playing 
             self.video_driver.osc_client.send_message("/detour/is_playing", is_playing)
+
+    def toggle_feedback(self):
+        print('toggle here')
+        self.data.feedback_active = not self.data.feedback_active
+        self.video_driver.osc_client.send_message("/toggle_feedback", self.data.feedback_active)
+
+    def play_shader_0(self):
+        self.play_this_shader(0)
+
+    def play_shader_1(self):
+        self.play_this_shader(1)
+
+    def play_shader_2(self):
+        self.play_this_shader(2)
+
+    def play_shader_3(self):
+        self.play_this_shader(3)
+
+    def play_shader_4(self):
+        self.play_this_shader(4)
+
+    def play_shader_5(self):
+        self.play_this_shader(5)
+
+    def play_shader_6(self):
+        self.play_this_shader(6)
+
+    def play_shader_7(self):
+        self.play_this_shader(7)
+
+    def play_shader_8(self):
+        self.play_this_shader(8)
+
+    def play_shader_9(self):
+        self.play_this_shader(9)
+
+    def play_this_shader(self, number):
+        self.shaders.play_this_shader(number)
+
+    def previous_shader_layer(self):
+        self.data.update_shader_layer_by_amount(-1)
+
+    def next_shader_layer(self):
+        self.data.update_shader_layer_by_amount(1)
+
+    def clear_shader_bank(self):
+        self.data.clear_all_shader_slots()
 
     def toggle_detour_record(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
@@ -398,17 +449,60 @@ class Actions(object):
     def set_the_next_video_alpha_continuous(self, amount):
         self.video_driver.next_player.set_alpha_value(amount*255)
 
-    def set_the_shader_param_0_continuous(self, amount):
-        self.shaders.set_param_to_amount(0, amount)
+    def set_the_shader_param_0_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=0)
 
-    def set_the_shader_param_1_continuous(self, amount):
-        self.shaders.set_param_to_amount(1, amount)
+    def set_the_shader_param_1_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=0)
 
-    def set_the_shader_param_2_continuous(self, amount):
-        self.shaders.set_param_to_amount(2, amount)
+    def set_the_shader_param_2_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=0)
 
-    def set_the_shader_param_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(3, amount)
+    def set_the_shader_param_3_layer_offset_0_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=0)
+
+    def set_the_shader_param_0_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=1)
+
+    def set_the_shader_param_1_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=1)
+
+    def set_the_shader_param_2_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=1)
+
+    def set_the_shader_param_3_layer_offset_1_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=1)
+
+    def set_the_shader_param_0_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=2)
+
+    def set_the_shader_param_1_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=2)
+
+    def set_the_shader_param_2_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=2)
+
+    def set_the_shader_param_3_layer_offset_2_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=2)
+
+    def set_the_shader_param_0_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(0, amount, layer_offset=2)
+
+    def set_the_shader_param_1_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(1, amount, layer_offset=2)
+
+    def set_the_shader_param_2_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(2, amount, layer_offset=2)
+
+    def set_the_shader_param_3_layer_offset_3_continuous(self, amount):
+        self.shaders.set_param_to_amount(3, amount, layer_offset=2)
+
+    def set_strobe_amount_continuous(self, amount):
+        scaled_amount = int(amount * 10)
+        if self.data.settings['shader']['STROBE_AMOUNT']['value'] != scaled_amount:
+            print(scaled_amount)
+            self.video_driver.osc_client.send_message("/set_strobe", scaled_amount)
+            self.data.settings['shader']['STROBE_AMOUNT']['value'] = scaled_amount
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
@@ -440,6 +534,10 @@ class Actions(object):
                 subprocess.call(['tvservice --preferred'], shell=True)
             elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 4 HDMI':
                 subprocess.call(['tvservice -e=\"CEA 4 HDMI\"'], shell=True)
+            elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 17 HDMI':
+                subprocess.call(['tvservice -e=\"CEA 17 HDMI\"'], shell=True)
+            elif self.data.settings['video']['HDMI_MODE']['value'] == 'CEA 1 HDMI':
+                subprocess.call(['tvservice -e=\"CEA 1 HDMI\"'], shell=True)
             self.refresh_frame_buffer_and_restart_openframeworks()
 
     def check_and_set_output_mode_on_boot(self):
@@ -457,7 +555,6 @@ class Actions(object):
 
                 self.change_hdmi_settings('CEA 4 HDMI')
                 
-
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -605,10 +702,10 @@ class Actions(object):
         self.shaders.decrease_this_param(self.data.settings['shader']['SHADER_PARAM']['value'])
 
     def increase_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def decrease_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def increase_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
@@ -733,6 +830,8 @@ class Actions(object):
         current_recur_hash = recur_repo.head.object.hexsha
         current_conjur_hash = conjur_repo.head.object.hexsha
         current_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
+        os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
+        os.remove(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON ) 
         try:
             recur_repo.remotes.origin.pull()
             conjur_repo.remotes.origin.pull()
@@ -752,20 +851,15 @@ class Actions(object):
         new_conjur_hash = conjur_repo.head.object.hexsha
         new_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
         if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
-            #something has changed!
-            os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
-            if current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
-                self.message_handler.set_message('INFO', 'compiling OF pls wait')
-                self.tk.after(100,self.complie_openframeworks)
-            else:
-                self.restart_the_program()
+            #something has changed!            
+            self.restart_the_program()
         else:
             self.message_handler.set_message('INFO', 'up to date !')
 
-    def complie_openframeworks(self):
-        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
-        self.message_handler.set_message('INFO', 'finished compiling!')
-        self.restart_the_program()
+#    def complie_openframeworks(self):
+#        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
+#        self.message_handler.set_message('INFO', 'finished compiling!')
+#        self.restart_the_program()
 
     def shutdown_pi(self):
         subprocess.call(['sudo', 'shutdown', '-h', 'now'])

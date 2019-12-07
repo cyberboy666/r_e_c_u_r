@@ -129,15 +129,20 @@ class MidiInput(object):
             self.display.refresh_display()
 
     def call_method_name(self, method_name, argument=None):
+        # if the target method doesnt exist, call the handler
+        if not hasattr(self.actions, method_name):
+            self.call_parse_method_name(method_name, argument)
+            return
+
         if argument is not None:
             getattr(self.actions, method_name)(argument)
         else:
             getattr(self.actions, method_name)()
 
 
-
-
-
+    def call_parse_method_name(self, method_name, argument):
+        method, arguments = self.actions.get_callback_for_method(method_name, argument)
+        method(*arguments)
 
 
 

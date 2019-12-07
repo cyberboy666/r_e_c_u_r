@@ -4,6 +4,7 @@ import data_centre.length_setter as length_setter
 import sys
 import shlex
 import os
+import re
 from pythonosc import osc_message_builder
 from pythonosc import dispatcher
 from pythonosc import osc_server
@@ -867,6 +868,27 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
+    # TODO: make this interrogate the various components for available routes to parse
+    @property
+    def parserlist(self):
+        return { 
+                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader )
+        }
 
         
-        
+    def get_callback_for_method(self, method_name, argument):
+        for a in self.parserlist:
+            regex = a[0]
+            me = a[1]
+            matches = re.search(regex, method_name)
+
+            if matches:
+                found_method = me 
+                parsed_args = list(map(int,matches.groups()))
+                if argument:
+                    args = [argument] + parsed_args 
+                else:
+                    args = parsed_args 
+                
+                return (found_method, args)
+

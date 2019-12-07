@@ -112,14 +112,17 @@ class Shaders(object):
         self.shaders_menu_list = self.generate_shaders_list()
         return is_file, is_selected_shader, selected_shader
 
-    def play_this_shader(self, slot):
-        print(self.data.shader_bank_data[self.data.shader_layer])
-        if self.data.shader_bank_data[self.data.shader_layer][slot]['path']:
-            self.selected_shader_list[self.data.shader_layer] = self.data.shader_bank_data[self.data.shader_layer][slot]
-            self.selected_shader_list[self.data.shader_layer]['slot'] = slot
+    def play_that_shader(self, bank, slot):
+        if self.data.shader_bank_data[bank][slot]['path']:
+            self.selected_shader_list[bank] = self.data.shader_bank_data[bank][slot]
+            self.selected_shader_list[bank]['slot'] = slot
             self.load_selected_shader()
         else:
-            self.message_handler.set_message('INFO', 'this slot is empty')
+            self.message_handler.set_message('INFO', "shader slot %s:%s is empty"%(bank,slot))
+
+    def play_this_shader(self, slot):
+        print(self.data.shader_bank_data[self.data.shader_layer])
+        self.play_that_shader(self.data.shader_layer, slot)
 
     def increase_this_param(self, amount_change):
         param = self.focused_param

@@ -96,6 +96,12 @@
     "note_on 84": {
 	    "DEFAULT": ["toggle_shader_layer_2"]
     },
+    "note_on 70": {
+	    "DEFAULT": ["previous_shader_layer"]
+    },
+    "note_on 71": {
+	    "DEFAULT": ["next_shader_layer"]
+    },
 
 	"note_on 32": {
 		"DEFAULT": ["play_shader_0_0"]

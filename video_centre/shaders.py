@@ -167,7 +167,7 @@ class Shaders(object):
         if layer_offset is None:
             start_layer = self.data.shader_layer
             layer_offset = 0
-        layer = (start_layer + layer_offset) % 3 #4
+        layer = (start_layer + layer_offset) % 3
         print ("got transposed layer %s" % layer)
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layout_offset=layout_offset)

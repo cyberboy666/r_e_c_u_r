@@ -872,6 +872,7 @@ class Actions(object):
         self.message_handler.clear_all_messages()
 
     # TODO: make this interrogate the various components for available routes to parse
+    # this would include eg a custom script module..
     @property
     def parserlist(self):
         return { 

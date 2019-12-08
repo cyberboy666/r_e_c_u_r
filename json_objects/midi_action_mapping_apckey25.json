@@ -87,6 +87,15 @@
             "DEFAULT": ["set_the_shader_param_3_layer_offset_2_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
+    "note_on 82": {
+	    "DEFAULT": ["toggle_shader_layer_0"]
+    },
+    "note_on 83": {
+	    "DEFAULT": ["toggle_shader_layer_1"]
+    },
+    "note_on 84": {
+	    "DEFAULT": ["toggle_shader_layer_2"]
+    },
 
 	"note_on 32": {
 		"DEFAULT": ["play_shader_0_0"]

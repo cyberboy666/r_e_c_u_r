@@ -69,21 +69,30 @@ class Shaders(object):
                     return i
             return max_amount
 
-    def load_selected_shader(self):
-        selected_shader = self.selected_shader_list[self.data.shader_layer]
+    def load_shader_layer(self, layer):
+        selected_shader = self.selected_shader_list[layer]
         #self.selected_param_list[self.data.shader_layer] = [0.0,0.0,0.0,0.0]
         print("select shader: ", selected_shader)
-        self.osc_client.send_message("/shader/{}/load".format(str(self.data.shader_layer)), [selected_shader['path'],selected_shader['shad_type'] == '2in',selected_shader['param_number']])
-        if not self.selected_status_list[self.data.shader_layer] == '▶':
-            self.selected_status_list[self.data.shader_layer] = '■'
+        self.osc_client.send_message("/shader/{}/load".format(str(layer)), [selected_shader['path'],selected_shader['shad_type'] == '2in',selected_shader['param_number']])
+        if not self.selected_status_list[layer] == '▶':
+            self.selected_status_list[layer] = '■'
+
+    def load_selected_shader(self):
+        self.load_shader_layer(self.data.shader_layer)
+
+    def start_shader(self, layer):
+        self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), True)
+        self.selected_status_list[layer] = '▶'
+
+    def stop_shader(self, layer):
+        self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), False)
+        self.selected_status_list[layer] = '■'
 
     def start_selected_shader(self):
-        self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), True)
-        self.selected_status_list[self.data.shader_layer] = '▶'
+        self.start_shader(self.data.shader_layer)
 
     def stop_selected_shader(self):
-        self.osc_client.send_message("/shader/{}/is_active".format(str(self.data.shader_layer)), False)
-        self.selected_status_list[self.data.shader_layer] = '■'
+        self.stop_shader(self.data.shader_layer)
 
     def map_on_shaders_selection(self):
         index = self.shaders_menu.selected_list_index
@@ -112,13 +121,13 @@ class Shaders(object):
         self.shaders_menu_list = self.generate_shaders_list()
         return is_file, is_selected_shader, selected_shader
 
-    def play_that_shader(self, bank, slot):
-        if self.data.shader_bank_data[bank][slot]['path']:
-            self.selected_shader_list[bank] = self.data.shader_bank_data[bank][slot]
-            self.selected_shader_list[bank]['slot'] = slot
-            self.load_selected_shader()
+    def play_that_shader(self, layer, slot):
+        if self.data.shader_bank_data[layer][slot]['path']:
+            self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
+            self.selected_shader_list[layer]['slot'] = slot
+            self.load_shader_layer(layer)
         else:
-            self.message_handler.set_message('INFO', "shader slot %s:%s is empty"%(bank,slot))
+            self.message_handler.set_message('INFO', "shader slot %s:%s is empty"%(layer,slot))
 
     def play_this_shader(self, slot):
         print(self.data.shader_bank_data[self.data.shader_layer])
@@ -158,7 +167,8 @@ class Shaders(object):
         if layer_offset is None:
             start_layer = self.data.shader_layer
             layer_offset = 0
-        layer = start_layer + layer_offset % 4
+        layer = (start_layer + layer_offset) % 3 #4
+        print ("got transposed layer %s" % layer)
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layout_offset=layout_offset)
         else:

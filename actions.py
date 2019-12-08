@@ -272,13 +272,16 @@ class Actions(object):
         else:
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
-    def toggle_shaders(self):
-        if self.shaders.selected_status_list[self.data.shader_layer] == '▶':
-            self.shaders.stop_selected_shader()
-        elif self.shaders.selected_status_list[self.data.shader_layer] == '■':
-            self.shaders.start_selected_shader()
+    def toggle_shader_layer(self, layer):
+        if self.shaders.selected_status_list[layer] == '▶':
+            self.shaders.stop_shader(layer)
+        elif self.shaders.selected_status_list[layer] == '■':
+            self.shaders.start_shader(layer)
         else:
-            self.message_handler.set_message('INFO', 'no shader loaded')
+            self.message_handler.set_message('INFO', "no shader loaded into layer %s" % layer)
+
+    def toggle_shaders(self):
+        self.toggle_shader_layer(self.data.shader_layer)
 
     def toggle_shader_speed(self):
         self.shaders.toggle_shader_speed()
@@ -872,7 +875,8 @@ class Actions(object):
     @property
     def parserlist(self):
         return { 
-                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader )
+                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
+                ( r"toggle_shader_layer_([0-9])", self.toggle_shader_layer )
         }
 
         

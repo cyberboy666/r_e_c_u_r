@@ -20,7 +20,7 @@ class NumpadInput(object):
     def on_key_press(self, event):
         numpad = list(string.ascii_lowercase[0:19])
 
-        if event.char is '.':
+        if event.char is '.' or event.char is 'z':
             self.actions.quit_the_program()
         if event.char is 's':
             event.char = self.on_0_key_press()

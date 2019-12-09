@@ -27,3 +27,6 @@ class MessageHandler(object):
         if self.number_of_messages is 0:
             self.current_message = [None, None, None]
 
+    def clear_all_messages(self):
+        self.current_message = [None, None, None]
+        self.number_of_messages = 0

@@ -1,3 +1,4 @@
+
 keycode 82=a
 keycode 86=b
 keycode 22=c 
@@ -12,12 +13,24 @@ keycode 106=j
 keycode 80=k
 keycode 84=l
 keycode 88=m
-!note: the code will map 000 to n in the code
+!note: the python code will map 000 to n in the code
 keycode 77=o
 keycode 79=p
 keycode 83=q
 keycode 87=r
 keycode 90=s
 
-keycode 118=BackSpace 
-!note: for developing im going to use insert for backspacing 
+!note some keypads calculate numlock + keys internally needing more things to be mapped
+keycode 60=i
+
+keycode 112=f
+keycode 114=g
+keycode 117=h
+keycode 119=i
+keycode 111=k
+keycode 116=m
+keycode 110=p
+keycode 113=q
+keycode 115=r
+keycode 118=s
+

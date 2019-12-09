@@ -2,5 +2,5 @@
 *.log
 .vscode
 json_objects/display_data.json
-json_objects/next_bankslot_number.json
+json_objects/shader_bank_data.json
 json_objects/settings.json

@@ -17,7 +17,7 @@ class Data(object):
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
-    MIDI_MAPPING_JSON = 'midi_action_mapping.json'
+    MIDI_MAPPING_JSON = 'midi_action_mapping_apckey25.json'
     ANALOG_MAPPING_JSON = 'analog_action_mapping.json'
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
     PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'

@@ -12,6 +12,7 @@ class MidiInput(object):
         self.data = data
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
+        self.midi_feedback_device = None
         self.midi_setting = None
         self.port_index = 0
         self.midi_delay = 40
@@ -42,6 +43,7 @@ class MidiInput(object):
                 self.midi_device = mido.open_input(midi_device_on_port[subport_index])
                 self.data.midi_status = 'connected'
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
+                self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
                 self.poll_midi_input()
         elif self.data.midi_status == 'connected':
             self.data.midi_status = 'disconnected'
@@ -127,6 +129,12 @@ class MidiInput(object):
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()
+
+    def feedback_on(self, layer, slot):
+        import random
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=random.randint(0,127))
+        )
 
     def call_method_name(self, method_name, argument=None):
         # if the target method doesnt exist, call the handler

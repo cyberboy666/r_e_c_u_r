@@ -1,8 +1,4 @@
 
-## c_o_n_j_u_r branch
-
-WIP branch for intergrating with my experimental alternative openframeworks backend [c_o_n_j_u_r]
-
 # r_e_c_u_r
 
  an open diy py/pi based video sampler
@@ -22,13 +18,25 @@ __r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `in
 - load and trigger video samples from numbered slots in the _sampler_ bank
 - dynamically set and clear the start/end points of each sample as it plays
 - control and sequence all inputs and more with midi-usb
-- c_a_p_t_u_r : optional extension for live sampling through the pi camera input
 - many sampler modes for varied playback including: repeat, one-shot, gated, random, fixed-length, random-start and more 
 - exhaustive and extendable _settings_ menu  to suit your use
 
-### other feature ideas
+## extensions
 
-i started a [board] of some features i would like to explore 
+as of _V2.0_ the __r_e_c_u_r__ platform has been extended in a number of directions to complement live performance and  _\_recur\__ , the original video playing engine:
+
+- _\_captur\__ : input live video via CSI or USB , for live sampling and processing
+- _\_conjur\__ : glsl shader engine, map and trigger shader files and control parameters in real time; generate video or process and mix existing sources
+- _\_detour\__ : in-memory frame sampling (up to 500 frames), video scrubbing, playback speed and direction control, finger drumming
+- toggling internal feedback + strobe effect 
+
+_NOTE: most of the new V2.0 features are optimised for sd composite video output. Some of these extensions will work over HDMI but they are not fully supported - especially the live video input struggles_
+
+### extension video walkthroughs
+
+- [_conjur_ - playing shaders with r_e_c_u_r]
+- [_captur_ - processing live video with r_ e_c_u_r]
+- [_detour_ - frame-sampling with r_ e_c_u_r]
 
 ## main objectives:
 
@@ -42,11 +50,11 @@ i started a [board] of some features i would like to explore
 - [building] - how to diy r_e_c_u_r
 - [developing] - how to contribute to r_e_c_u_r
 
+many other things documented on the [wiki]
+
 ## status
 
 The nature of this project is to be open-ended and community driven. my r_e_c_u_r already solves the problems i initially built it for. what happens next depends on how it is used and received by you. if you like the idea please let me know / get involved !
-
-- the only _hardware_ option currently available is the `diy enclosure`; this is designed be low cost, hackable and accessible. you can modify and 3d print/laser cut your own case, the recommended keypad and lcd parts are the cheapest i could find (with some compromises), basically aiming to get these in the hands of as many other diy-er as interested. if there is any interest i have plans to offer a limited `boutique enclosure` option at some point - professional custom cut aluminum cover , hand wired mechanical keys , real vinyl printed stickers, no compromises! (another future idea : a eurorack version based on raspi3 compute)
 
 ## contact, donation and thanks
 
@@ -56,10 +64,12 @@ also facebook user group : https://www.facebook.com/groups/114465402691215/
 
 all feedback is appreciated. if you want to donate to this project you can do so with the above email via paypal : everything i receive will go into improving __r_e_c_u_r__. cheers to Leo Browning for the 3d modelling and vector art and to Ben Caldwell for heaps of help with the code!
 
-[c_o_n_j_u_r]: https://github.com/langolierz/c_o_n_j_u_r
-[vectorfront]: ./documentation/vectorfront_keys.png
-[video-thumbnail]: ./documentation/video-thumbnail.jpg
-[board]: https://trello.com/b/mmJJFyrp/feature-ideas
-[operating]: documentation/operate_docs.md
-[building]: documentation/build_docs.md
-[developing]: documentation/develop_docs.md
+[vectorfront]: ./enclosure/vectorfront_keys.png
+[video-thumbnail]: https://github.com/langolierz/r_e_c_u_r/wiki/images/video-thumbnail.jpg
+[operating]: https://github.com/langolierz/r_e_c_u_r/wiki/operate_docs
+[building]: https://github.com/langolierz/r_e_c_u_r/wiki/build_docs
+[developing]: https://github.com/langolierz/r_e_c_u_r/wiki/develop_docs
+[wiki]: https://github.com/langolierz/r_e_c_u_r/wiki
+[_conjur_ - playing shaders with r_e_c_u_r]: https://www.youtube.com/watch?v=ah2HY1fuv8w
+[_captur_ - processing live video with r_ e_c_u_r]: https://www.youtube.com/watch?v=e7m_YHEFahs
+[_detour_ - frame-sampling with r_ e_c_u_r]: https://www.youtube.com/watch?v=e9vrzn7c9R8

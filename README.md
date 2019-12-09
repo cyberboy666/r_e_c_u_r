@@ -1,11 +1,11 @@
 
 # r_e_c_u_r
 
- an open diy py/pi based video sampler
+ an open diy video sampler
  
  ![vectorfront][vectorfront]
  
-__r_e_c_u_r__ is an embedded python application on _raspberry pi3_ that uses `input` from the _keypad_ to control omxplayer's `video out` while displaying a simple text user interface on the _rpi lcd screen_ 
+__r_e_c_u_r__ is an embedded python/openframeworks application on _raspberry pi3_ that uses `input` from the _keypad_ to control  `video` while displaying a simple text ui on a _rpi lcd screen_ 
 
 ## in-depth video demo
 
@@ -34,9 +34,9 @@ _NOTE: most of the new V2.0 features are optimised for sd composite video output
 
 ### extension video walkthroughs
 
-- [_conjur_ - playing shaders with r_e_c_u_r]
-- [_captur_ - processing live video with r_ e_c_u_r]
-- [_detour_ - frame-sampling with r_ e_c_u_r]
+- [![conjur_walkthrough][conjur_thumbnail]](https://www.youtube.com/watch?v=ah2HY1fuv8w)
+- [![captur_walkthrough][captur_thumbnail]](https://www.youtube.com/watch?v=e7m_YHEFahs)
+- [![detour_walkthrough][detour_thumbnail]](https://www.youtube.com/watch?v=e9vrzn7c9R8)
 
 ## main objectives:
 
@@ -66,10 +66,10 @@ all feedback is appreciated. if you want to donate to this project you can do so
 
 [vectorfront]: ./enclosure/vectorfront_keys.png
 [video-thumbnail]: https://github.com/langolierz/r_e_c_u_r/wiki/images/video-thumbnail.jpg
+[conjur_thumbnail]: https://github.com/langolierz/r_e_c_u_r/wiki/images/conjur_video_thumbnail.jpg
+[captur_thumbnail]: https://github.com/langolierz/r_e_c_u_r/wiki/images/captur_video_thumbnail.jpg
+[detour_thumbnail]: https://github.com/langolierz/r_e_c_u_r/wiki/images/detour_video_thumbnail.jpg
 [operating]: https://github.com/langolierz/r_e_c_u_r/wiki/operate_docs
 [building]: https://github.com/langolierz/r_e_c_u_r/wiki/build_docs
 [developing]: https://github.com/langolierz/r_e_c_u_r/wiki/develop_docs
 [wiki]: https://github.com/langolierz/r_e_c_u_r/wiki
-[_conjur_ - playing shaders with r_e_c_u_r]: https://www.youtube.com/watch?v=ah2HY1fuv8w
-[_captur_ - processing live video with r_ e_c_u_r]: https://www.youtube.com/watch?v=e7m_YHEFahs
-[_detour_ - frame-sampling with r_ e_c_u_r]: https://www.youtube.com/watch?v=e9vrzn7c9R8

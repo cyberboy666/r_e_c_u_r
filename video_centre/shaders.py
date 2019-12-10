@@ -175,7 +175,7 @@ class Shaders(object):
         self.selected_param_list[layer][param] = amount
 
     def set_speed_to_amount(self, amount, layer_offset=0):
-        layer = self.data.shader_layer + layer_offset % 3
+        layer = (self.data.shader_layer + layer_offset) % 3
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
    

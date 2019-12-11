@@ -871,5 +871,5 @@ class Actions(object):
 
     @staticmethod
     def try_remove_file(path):
-        os.path.exists(path):
+        if os.path.exists(path):
             os.remove(filePath)

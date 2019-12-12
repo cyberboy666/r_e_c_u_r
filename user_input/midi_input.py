@@ -131,18 +131,24 @@ class MidiInput(object):
         if 'continuous' not in message_name:
             self.display.refresh_display()
 
-    def feedback_on(self, layer, slot):
-        import random
+    def feedback_shader_on(self, layer, slot):
         self.midi_feedback_device.send(
-                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=random.randint(0,127))
+                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=127)
+        )
+
+    def feedback_shader_off(self, layer, slot):
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=0)
         )
 
     def refresh_midi_feedback(self):
-        # loop over self.data (?) to discover which shaders etc are playing
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
             print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
-            if 'slot' in shader:
-                self.feedback_on(n, shader['slot'])
+            for x in range(0,8):
+                if 'slot' in shader and shader.get('slot',None)==x:
+                    self.feedback_shader_on(n, x)
+                else:
+                    self.feedback_shader_off(n, x)
 
         self.root.after(self.midi_delay, self.refresh_midi_feedback)
         

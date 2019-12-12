@@ -131,6 +131,26 @@ class MidiInput(object):
         if 'continuous' not in message_name:
             self.display.refresh_display()
 
+
+    def call_method_name(self, method_name, argument=None):
+        # if the target method doesnt exist, call the handler
+        if not hasattr(self.actions, method_name):
+            self.call_parse_method_name(method_name, argument)
+            return
+
+        if argument is not None:
+            getattr(self.actions, method_name)(argument)
+        else:
+            getattr(self.actions, method_name)()
+
+
+    def call_parse_method_name(self, method_name, argument):
+        method, arguments = self.actions.get_callback_for_method(method_name, argument)
+        method(*arguments)
+
+
+
+    # MIDI feedback code
     def feedback_shader_on(self, layer, slot):
         self.midi_feedback_device.send(
                 mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=127)
@@ -151,23 +171,7 @@ class MidiInput(object):
                     self.feedback_shader_off(n, x)
 
         self.root.after(self.midi_delay, self.refresh_midi_feedback)
-        
 
-    def call_method_name(self, method_name, argument=None):
-        # if the target method doesnt exist, call the handler
-        if not hasattr(self.actions, method_name):
-            self.call_parse_method_name(method_name, argument)
-            return
-
-        if argument is not None:
-            getattr(self.actions, method_name)(argument)
-        else:
-            getattr(self.actions, method_name)()
-
-
-    def call_parse_method_name(self, method_name, argument):
-        method, arguments = self.actions.get_callback_for_method(method_name, argument)
-        method(*arguments)
 
 
 

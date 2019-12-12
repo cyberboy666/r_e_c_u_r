@@ -9,6 +9,7 @@ class Shaders(object):
         self.root = root
         self.osc_client = osc_client
         self.message_handler = message_handler
+        self.message_handler.shaders = self
         self.data = data
         self.shaders_menu = menu.ShadersMenu(self.data, self.message_handler, self.MENU_HEIGHT )
         self.selected_shader_list = [self.EMPTY_SHADER for i in range(3)]

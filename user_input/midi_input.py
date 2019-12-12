@@ -44,6 +44,7 @@ class MidiInput(object):
                 self.data.midi_status = 'connected'
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
                 self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
+                self.root.after(self.midi_delay, self.refresh_midi_feedback)
                 self.poll_midi_input()
         elif self.data.midi_status == 'connected':
             self.data.midi_status = 'disconnected'
@@ -135,6 +136,16 @@ class MidiInput(object):
         self.midi_feedback_device.send(
                 mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=random.randint(0,127))
         )
+
+    def refresh_midi_feedback(self):
+        # loop over self.data (?) to discover which shaders etc are playing
+        for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
+            print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
+            if 'slot' in shader:
+                self.feedback_on(n, shader['slot'])
+
+        self.root.after(self.midi_delay, self.refresh_midi_feedback)
+        
 
     def call_method_name(self, method_name, argument=None):
         # if the target method doesnt exist, call the handler

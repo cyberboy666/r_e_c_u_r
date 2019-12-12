@@ -54,7 +54,7 @@ actions = Actions(tk, message_handler, data, video_driver, shaders, display, osc
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
-tk.midi_input = midi_input
+#tk.midi_input = midi_input
 analog_input = AnalogInput(tk, message_handler, display, actions, data)
 
 actions.check_and_set_output_mode_on_boot()

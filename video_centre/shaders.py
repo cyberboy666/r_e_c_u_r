@@ -124,7 +124,6 @@ class Shaders(object):
 
     def play_that_shader(self, layer, slot):
         if self.data.shader_bank_data[layer][slot]['path']:
-            self.root.midi_input.feedback_on(layer,slot)
             self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
             self.selected_shader_list[layer]['slot'] = slot
             self.load_shader_layer(layer)

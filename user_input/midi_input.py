@@ -151,9 +151,9 @@ class MidiInput(object):
 
 
     # MIDI feedback code
-    def feedback_shader_on(self, layer, slot):
+    def feedback_shader_on(self, layer, slot, colour=127):
         self.midi_feedback_device.send(
-                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=127)
+                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=int(colour))
         )
 
     def feedback_shader_off(self, layer, slot):
@@ -161,12 +161,30 @@ class MidiInput(object):
                 mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=0)
         )
 
+    def feedback_shader_layer_on(self, layer):
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=82+layer, velocity=127)
+        )
+    def feedback_shader_layer_off(self, layer):
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=82+layer, velocity=0)
+        )
+
     def refresh_midi_feedback(self):
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
-            print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
+            #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
+            if self.message_handler.shaders.selected_status_list[n] == '▶':
+                self.feedback_shader_layer_on(n)
+            else:
+                self.feedback_shader_layer_off(n)
             for x in range(0,8):
                 if 'slot' in shader and shader.get('slot',None)==x:
-                    self.feedback_shader_on(n, x)
+                    if self.message_handler.shaders.selected_status_list[n] == '▶':
+                        self.feedback_shader_on(n, x, 2)
+                    else:
+                        self.feedback_shader_on(n, x, 1)
+                elif self.data.shader_bank_data[n][x]['path']:
+                    self.feedback_shader_on(n, x, 3)
                 else:
                     self.feedback_shader_off(n, x)
 

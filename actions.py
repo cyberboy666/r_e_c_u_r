@@ -834,8 +834,9 @@ class Actions(object):
         current_recur_hash = recur_repo.head.object.hexsha
         current_conjur_hash = conjur_repo.head.object.hexsha
         current_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
-        os.remove('/home/pi/r_e_c_u_r/json_objects/settings.json')
-        os.remove(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON ) 
+
+        self.try_remove_file(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON )
+        self.try_remove_file(self.data.PATH_TO_DEFAULT_CONJUR_DATA) 
         try:
             recur_repo.remotes.origin.pull()
             conjur_repo.remotes.origin.pull()
@@ -871,6 +872,11 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
+    @staticmethod
+    def try_remove_file(path):
+        if os.path.exists(path):
+            os.remove(path)
+
     # TODO: make this interrogate the various components for available routes to parse
     # this would include eg a custom script module..
     @property
@@ -880,7 +886,6 @@ class Actions(object):
                 ( r"toggle_shader_layer_([0-9])", self.toggle_shader_layer )
         }
 
-        
     def get_callback_for_method(self, method_name, argument):
         for a in self.parserlist:
             regex = a[0]

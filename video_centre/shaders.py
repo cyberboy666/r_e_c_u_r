@@ -170,7 +170,7 @@ class Shaders(object):
             layer_offset = 0
         layer = (start_layer + layer_offset) % 3
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
-            self.set_speed_to_amount(amount, layout_offset=layout_offset)
+            self.set_speed_to_amount(amount, layer_offset=layer_offset)
         else:
             self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
         self.selected_param_list[layer][param] = amount

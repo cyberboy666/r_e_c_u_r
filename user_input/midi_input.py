@@ -170,7 +170,14 @@ class MidiInput(object):
                 mido.Message('note_on', note=82+layer, velocity=0)
         )
 
+    def feedback_show_layer(self, layer):
+        self.midi_feedback_device.send(
+            mido.Message('note_on', note=70, velocity=layer)
+        )
+
     def refresh_midi_feedback(self):
+        self.feedback_show_layer(self.data.shader_layer)
+
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
             if self.message_handler.shaders.selected_status_list[n] == '▶':

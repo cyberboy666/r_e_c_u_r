@@ -98,7 +98,8 @@
 	    "DEFAULT": ["toggle_shader_layer_2"]
     },
     "note_on 85": {
-	    "DEFAULT": ["toggle_feedback"]
+	    "DEFAULT": ["toggle_feedback"],
+	    "FN_DEFAULT": ["toggle_x3_as_speed"]
     },
     "note_on 86": {
 	    "DEFAULT": ["toggle_capture_preview"]

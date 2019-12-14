@@ -214,8 +214,10 @@ class MidiInput(object):
         self.feedback_show_layer(self.data.shader_layer)
 
         # show if internal feedback (the shader layer kind) is enabled
-        if self.data.feedback_active:
+        if self.data.feedback_active and not self.data.function_on:
             self.feedback_shader_feedback(self.COLOUR_GREEN)
+        elif self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and self.data.function_on:
+            self.feedback_shader_feedback(self.COLOUR_GREEN_BLINK)
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
 

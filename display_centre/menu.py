@@ -103,7 +103,7 @@ class BrowserMenu(Menu):
         root, dirs, files = next(os.walk(current_path))
 
         indent = ' ' * 4 * (current_level)
-        for folder in dirs:
+        for folder in sorted(dirs):
             is_open, char = self._check_folder_state(folder)
             self.menu_list.append(dict(name='{}{}{}'.format(indent, folder, char), slot='x'))
             if (is_open):
@@ -111,6 +111,7 @@ class BrowserMenu(Menu):
                 next_level = current_level + 1
                 self._add_folder_to_browser_list(next_path, next_level)
 
+        files.sort()
         for f in files:
             split_name = os.path.splitext(f)
             if (split_name[1] in ['.mp4', '.mkv', '.avi', '.mov']):

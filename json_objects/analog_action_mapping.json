@@ -1,0 +1,34 @@
+{
+    "0": {
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_mix_continuous"]
+	},
+    "1": {
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_speed_position_continuous"]
+	},
+    "2": {
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_start_continuous"]
+	},
+    "3": {
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_end_continuous"]
+	},
+    "4": {
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_mix_continuous"]
+	},
+    "5": {
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_speed_position_continuous"]
+	},
+    "6": {
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_start_continuous"]
+	},
+    "7": {
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_end_continuous"]
+	}
+}

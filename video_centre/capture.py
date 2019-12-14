@@ -23,20 +23,42 @@ class Capture(object):
 
 
     def create_capture_device(self):
-        if self.use_capture:
-            self.update_capture_settings()
-            try:
-                self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate)
-            except picamera.exc.PiCameraError as e:
-                self.use_capture = False
-                print('camera exception is {}'.format(e))
-                self.message_handler.set_message('INFO', 'no capture device attached') 
+        if self.data.settings['capture']['TYPE']['value'] != 'usb':
+            if self.use_capture:
+                if self.piCapture_with_no_source():
+                    return False
+                self.update_capture_settings()
+                
+                try:
+                    self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+                    return True
+                except picamera.exc.PiCameraError as e:
+                    self.use_capture = False
+                    self.data.settings['capture']['DEVICE']['value'] = 'disabled'
+                    print('camera exception is {}'.format(e))
+                    self.message_handler.set_message('INFO', 'no capture device attached')
+                    return False
+
+    def piCapture_with_no_source(self):
+        is_piCapture = subprocess.check_output(['pivideo', '--query', 'ready'])
+        if 'Video Processor was not found' not in str(is_piCapture):
+            self.data.settings['capture']['TYPE']['value'] = "piCaptureSd1"
+            is_source = subprocess.check_output(['pivideo', '--query', 'lock'])
+            if 'No active video detected' in str(is_source):
+                self.message_handler.set_message('INFO', 'piCapture detected w no input source')
+                return True
+        return False
 
     def update_capture_settings(self):
         ##setting class variables
         self.use_capture = self.data.settings['capture']['DEVICE']['value'] == 'enabled'
         self.resolution = self.convert_resolution_value(self.data.settings['capture']['RESOLUTION']['value'])
         self.framerate = self.convert_framerate_value(self.data.settings['capture']['FRAMERATE']['value'])
+        self.capture_type = self.data.settings['capture']['TYPE']['value']
+        if self.capture_type == "piCaptureSd1":
+            self.sensor_mode = 6
+        else:
+            self.sensor_mode = 0 
         ##update current instance (device) if in use
         if self.device and not self.device.closed:
             self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
@@ -51,22 +73,37 @@ class Capture(object):
         if self.use_capture == False:
             self.message_handler.set_message('INFO', 'capture not enabled')
             return False
-        if not self.device or self.device.closed:
-            self.create_capture_device()
-        self.is_previewing = True
-        self.device.start_preview()
-        self.set_preview_screen_size()
-        self.device.preview.layer = self.PREVIEW_LAYER
-        return True            
+        else:
+            if not self.device or self.device.closed:
+                is_created = self.create_capture_device()
+                if self.use_capture == False or not is_created:
+                    return False
+            self.is_previewing = True
+            self.device.start_preview()
+            self.set_preview_screen_size()
+            self.set_capture_settings()
+            self.device.preview.layer = self.PREVIEW_LAYER
+            return True            
+
+    def set_capture_settings(self):
+        if self.capture_type == "piCaptureSd1":
+            self.device.sensor_mode = 6
+            self.device.awb_mode = "off"
+            self.device.awb_gains = 1.0
+            self.device.exposure_mode = "off"
+        else:
+            self.sensor_mode = 0
+            
 
     def set_preview_screen_size(self):
-        if self.data.settings['other']['DEV_MODE_RESET']['value'] == 'on':
+        if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'on':
             self.device.preview.fullscreen = False
             self.device.preview.window = (50, 350, 500, 400)
         else:
             self.device.preview.fullscreen = True
 
     def stop_preview(self):
+
         self.device.stop_preview()
         self.is_previewing = False
         if not self.device.recording:
@@ -78,8 +115,10 @@ class Capture(object):
             return
         if not self.check_available_disk_space():
             return
-        if self.device.closed:
-            self.create_capture_device()
+        if self.device is None or self.device.closed:
+            is_created = self.create_capture_device()
+            if self.use_capture == False or not is_created:
+                return
         
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
@@ -117,8 +156,12 @@ class Capture(object):
     def convert_raw_recording(self):
         recording_path , recording_name = self.generate_recording_path()
         try:
-            mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
-            return mp4box_process , recording_name
+            if self.sensor_mode == 6:
+                mp4box_process = subprocess.Popen(['MP4Box', '-fps', '60', '-add', self.video_dir + '/raw.h264', recording_path])
+                return mp4box_process , recording_name
+            else:
+                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
+                return mp4box_process , recording_name
         except Exception as e:
             print(e)
             if hasattr(e, 'message'):
@@ -155,22 +198,18 @@ class Capture(object):
             return self.device.frame.timestamp / 1000000
 
     def get_preview_alpha(self):
-        if self.is_previewing:
-            return self.device.preview.alpha
-        else:
+        if self.is_previewing and self.device is not None:
+            try:
+                return self.device.preview.alpha
+            except Exception as e:
+                print(e)
+                if hasattr(e, 'message'):
+                    error_info = e.message
+                else:
+                    error_info = e
+                self.message_handler.set_message('ERROR',error_info)
+                return 0
             return 0
-
-    #def is_previewing(self):
-     #   if self.device.closed or not self.device.preview:
-      #      return False
-        #else:
-          #  return True
-
-    #def is_recording(self):
-     #   if self.device.recording:
-       #     return True
-        #else:
-          #  return False
 
     def set_colour(self, u_value, v_value):
         (u, v) = (128, 128)
@@ -204,8 +243,14 @@ class Capture(object):
         else:
             return int(fractions.Fraction(setting_value) * 1000000)
 
+    def receive_state(self, unused_addr, args):
+        pass
 
+    def close_capture(self):
+        if self.device is not None:
+            print('closing the old camera...')
+            self.device.close() 
 
-
-
+    def receive_recording_finished(self, path, value):
+        pass
 

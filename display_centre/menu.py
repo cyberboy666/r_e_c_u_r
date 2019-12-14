@@ -47,30 +47,6 @@ class Menu(object):
         else:
             return False, '|'
  
-    def generate_browser_list(self):
-        ######## starts the recursive process of listing all folders and video files to display ########
-        self.browser_list = []
-        for path in PATHS_TO_BROWSER:
-            self._add_folder_to_browser_list(path, 0)
-        
-        for browser_line in self.browser_list:
-            is_file, name = self.extract_file_type_and_name_from_browser_format(browser_line['name'])
-            if is_file:
-                is_slotted, bankslot_number = self._is_file_in_memory_bank(name)
-                if is_slotted:
-                    browser_line['slot'] = bankslot_number
-        
-    def generate_settings_list(self):
-        self.settings_list = []
-        for sub_setting in self.settings.keys():
-            if sub_setting in self.settings_open_folders:
-                self.settings_list.append(dict(name=sub_setting + '/', value=''))
-                for setting in self.settings[sub_setting]:
-                    setting_value = self.make_empty_if_none(self.settings[sub_setting][setting]['value'])
-                    self.settings_list.append(dict(name=' ' + setting, value=setting_value))
-            else:   
-                self.settings_list.append(dict(name=sub_setting + '|', value=''))
-
     @staticmethod
     def extract_file_type_and_name_from_menu_format(dir_name):
         # removes whitespace and folder state from display item ########
@@ -114,7 +90,7 @@ class BrowserMenu(Menu):
         files.sort()
         for f in files:
             split_name = os.path.splitext(f)
-            if (split_name[1] in ['.mp4', '.mkv', '.avi', '.mov']):
+            if (split_name[1].lower() in ['.mp4', '.mkv', '.avi', '.mov']):
                 self.menu_list.append(dict(name='{}{}'.format(indent, f), slot='-'))
 
     def _is_file_in_bank_data(self, file_name):
@@ -140,18 +116,25 @@ class BrowserMenu(Menu):
 
 class SettingsMenu(Menu):
 
-    FOLDER_ORDER = ['sampler', 'video', 'midi', 'capture', 'other' ]
-    SAMPLER_ORDER = ['LOAD_NEXT', 'RAND_START_MODE', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH' ]
-    VIDEO_ORDER = ['OUTPUT', 'SCREEN_MODE']
-    MIDI_ORDER = ['INPUT', 'STATUS']
-    CAPTURE_ORDER = ['DEVICE']
-    OTHER_ORDER = []
+    FOLDER_ORDER = ['video', 'sampler', 'user_input', 'capture', 'shader', 'detour', 'system' ]
+    SAMPLER_ORDER = ['LOOP_TYPE', 'LOAD_NEXT', 'RAND_START_MODE', 'RESET_PLAYERS', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH', 'FIXED_LENGTH_MULTIPLY' ]
+    VIDEO_ORDER = ['VIDEOPLAYER_BACKEND']
+    USER_INPUT_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT']
+    CAPTURE_ORDER = ['DEVICE', 'TYPE']
+    SHADER_ORDER = ['USER_SHADER']
+    DETOUR_ORDER = ['TRY_DEMO']
+    SYSTEM_ORDER = []
+
+    SETTINGS_TO_HIDE = ['OUTPUT' ]
 
     def __init__(self, data, message_handler, menu_height):
+
         Menu.__init__(self, data, message_handler, menu_height)
         self.generate_settings_list()
 
     def generate_settings_list(self):
+        self.check_for_settings_to_hide()
+
         self.menu_list = []
         ordered_folders = self.order_keys_from_list(self.data.settings, self.FOLDER_ORDER)
         for (setting_folder_key, setting_folder_item) in ordered_folders:
@@ -159,8 +142,9 @@ class SettingsMenu(Menu):
                 self.menu_list.append(dict(name='{}/'.format(setting_folder_key), value=''))
                 order_list_name = '{}_ORDER'.format(setting_folder_key.upper())
                 ordered_value = self.order_keys_from_list(setting_folder_item, getattr(self,order_list_name))
-                for (setting_details_key, setting_details_item) in ordered_value: 
-                    self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
+                for (setting_details_key, setting_details_item) in ordered_value:
+                    if not setting_details_key in self.SETTINGS_TO_HIDE:
+                        self.menu_list.append(dict(name='   {}'.format(setting_details_key), value=self.data.make_empty_if_none(setting_details_item['value'])))
             else:   
                 self.menu_list.append(dict(name='{}|'.format(setting_folder_key), value=''))
 
@@ -179,7 +163,14 @@ class SettingsMenu(Menu):
             self.update_open_folders(name)
             self.generate_settings_list()
             return False, ''
-        
+
+    def check_for_settings_to_hide(self):
+        self.SETTINGS_TO_HIDE = ['OUTPUT']
+        if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
+            self.SETTINGS_TO_HIDE = self.SETTINGS_TO_HIDE + ['SCREEN_MODE', 'BACKGROUND_COLOUR', 'FRAMERATE', 'IMAGE_EFFECT', 'RESOLUTION', 'SHUTTER']
+        else:
+            self.SETTINGS_TO_HIDE = self.SETTINGS_TO_HIDE + ['LOOP_TYPE']
+
     @staticmethod
     def order_keys_from_list(dictionary, order_list):
         ordered_tuple_list = []
@@ -191,9 +182,39 @@ class SettingsMenu(Menu):
                 ordered_tuple_list.append((other_key, dictionary[other_key]))
         return ordered_tuple_list
 
+class ShadersMenu(Menu):
 
+    def __init__(self, data, message_handler, menu_height):
+        Menu.__init__(self, data, message_handler, menu_height)
+        #self.top_menu_index = 1
+        #self.selected_list_index = 1
 
+    def generate_raw_shaders_list(self):
+        ######## starts the recursive process of listing all folders and shader files to display ########
+        self.menu_list = []
+        for path in self.data.PATHS_TO_SHADERS:
+            self._add_folder_to_shaders_list(path, 0)
+        return self.menu_list
+   
 
+    def _add_folder_to_shaders_list(self, current_path, current_level):
+        ######## adds the folders and shader files at the current level to the results list. recursively recalls at deeper level if folder is open ########
+        
+        root, dirs, files = next(os.walk(current_path))
+
+        indent = ' ' * 4 * (current_level)
+        for folder in dirs:
+            is_open, char = self._check_folder_state(folder)
+            self.menu_list.append(dict(name='{}{}{}'.format(indent, folder, char), is_shader=False))
+            if (is_open):
+                next_path = '{}/{}'.format(root, folder)
+                next_level = current_level + 1
+                self._add_folder_to_shaders_list(next_path, next_level)
+
+        for f in files:
+            split_name = os.path.splitext(f)
+            if (split_name[1].lower() in ['.frag', '.shader', '.glsl', '.glslf', '.fsh']):
+                self.menu_list.append(dict(name='{}{}'.format(indent, f), is_shader=True))
 
 
 

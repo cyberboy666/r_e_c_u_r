@@ -1,6 +1,7 @@
 import string
 import datetime
 import mido
+import subprocess
 
 class MidiInput(object):
     def __init__(self, root, message_handler, display, actions, data):
@@ -11,24 +12,39 @@ class MidiInput(object):
         self.data = data
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
-        self.midi_delay = 1
+        self.midi_setting = None
+        self.port_index = 0
+        self.midi_delay = 40
         self.try_open_port()
 
     def try_open_port(self):
-        midi_setting = self.data.settings['midi']['INPUT']['value']
+        #self.data.midi_status = 'disconnected'
+        self.midi_setting = self.data.settings['user_input']['MIDI_INPUT']['value']
+        self.port_index = self.data.midi_port_index
         #print('try open port : midi setting is {}'.format(midi_setting))
-        if midi_setting == 'enabled':
-            midi_ports = mido.get_input_names()
-            midi_device_on_port_20 = [s for s in midi_ports if '20:0' in s]
-            if midi_device_on_port_20:
-                if self.data.midi_status == 'disconnected':
-                    self.midi_device = mido.open_input(midi_device_on_port_20[0])
-                    self.data.midi_status = 'connected'
-                    self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
-                    self.poll_midi_input()
-            elif self.data.midi_status == 'connected':
-                self.data.midi_status = 'disconnected'
+        if self.midi_setting == 'usb':
+            self.actions.stop_serial_port_process()
+            self.open_this_port_and_start_listening('20')
+        elif self.midi_setting == 'serial':
+            self.actions.create_serial_port_process()
+            self.open_this_port_and_start_listening('serial')
+        else:
+            self.actions.stop_serial_port_process()     
+            self.data.midi_status = 'disconnected'
         self.root.after(1000, self.try_open_port)
+
+    def open_this_port_and_start_listening(self, port_phrase):
+        midi_ports = mido.get_input_names()
+        midi_device_on_port = [s for s in midi_ports if port_phrase in s]
+        if midi_device_on_port:
+            if self.data.midi_status == 'disconnected':
+                subport_index = self.port_index % len(midi_device_on_port) 
+                self.midi_device = mido.open_input(midi_device_on_port[subport_index])
+                self.data.midi_status = 'connected'
+                self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
+                self.poll_midi_input()
+        elif self.data.midi_status == 'connected':
+            self.data.midi_status = 'disconnected'
 
     def poll_midi_input(self):
         i = 0
@@ -36,8 +52,9 @@ class MidiInput(object):
         for message in self.midi_device.iter_pending():
             i = i + 1
             message_dict = message.dict()
-            ## only listening to midi channel 1 for now , will make it seletcable later
-            if not message_dict['channel'] == 0:
+            midi_channel = midi_setting = self.data.settings['user_input']['MIDI_CHANNEL']['value'] - 1
+
+            if not message_dict.get('channel', None) == midi_channel:
                 pass
             ## turning off noisey clock messages for now - may want to use them at some point
             elif message_dict['type'] == 'clock':
@@ -45,20 +62,30 @@ class MidiInput(object):
             ## trying to only let through step cc messages to increase response time
             elif message_dict['type'] == 'control_change':
                 control_number = message_dict['control']
+                print('control number is {} , cc_dict.keys is {}'.format(control_number, cc_dict.keys() ))
                 if not control_number in cc_dict.keys():
                     cc_dict[control_number] = message_dict['value']
+                    self.on_midi_message(message_dict)
                 else:
-                    step_size = 4
+                    step_size = 3
                     ignore_range = range(cc_dict[control_number] - step_size,cc_dict[control_number] + step_size)
+                    #print('value is {} and ignore range is {}'.format(message_dict['value'], ignore_range ))
                     if not message_dict['value'] in ignore_range:
                         cc_dict[control_number] = message_dict['value']
+                        #print(message_dict)
                         self.on_midi_message(message_dict)
-                print(cc_dict)
-            else:       
+                    #print(cc_dict)
+
+            else:
+                print(message_dict)       
                 self.on_midi_message(message_dict)
         if i > 0:
-            print('the number processed {}'.format(i))
-        self.root.after(self.midi_delay, self.poll_midi_input)
+            pass
+            #print('the number processed {}'.format(i))
+        if self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+            self.root.after(self.midi_delay, self.poll_midi_input)
+        else:
+            self.data.midi_status = 'disconnected'
 
     def on_midi_message(self, message_dict):
         if message_dict['type'] == 'note_on' and message_dict['velocity'] == 0:
@@ -91,9 +118,14 @@ class MidiInput(object):
             method_name = this_mapping[mode][0]
 
         print('the action being called is {}'.format(method_name))
-        self.call_method_name(method_name, mapped_message_value)
-        ## only update screen if not cc - seeing if cc can respond faster if not refreshing screen on every action
-        if 'cc' not in message_name:
+        if mapped_message_value is not None:
+            norm_message_value = mapped_message_value/127 
+            
+        else:
+            norm_message_value = None
+        self.call_method_name(method_name, norm_message_value)
+        ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
+        if 'continuous' not in message_name:
             self.display.refresh_display()
 
     def call_method_name(self, method_name, argument=None):
@@ -101,6 +133,7 @@ class MidiInput(object):
             getattr(self.actions, method_name)(argument)
         else:
             getattr(self.actions, method_name)()
+
 
 
 

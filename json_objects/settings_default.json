@@ -1,5 +1,26 @@
 {
     "capture": {
+        "TYPE": {
+            "action": "update_capture_settings",
+            "options": [
+                "piCamera",
+                "usb",
+                "piCaptureSd1"
+            ],
+            "value": "piCaptureSd1"
+        },
+        "PICAPTURE_INPUT": {
+            "action": "change_piCapture_input",
+            "options": [
+                "auto",
+                "video1",
+                "video2",
+                "video3",
+                "svideo",
+                "component"
+            ],
+            "value": "video1"
+        },
         "DEVICE": {
             "action": "update_capture_settings",
             "options": [
@@ -49,8 +70,8 @@
             "value": "auto"
         }
     },
-    "midi": {
-        "CHANNEL": {
+    "user_input": {
+        "MIDI_CHANNEL": {
             "action": null,
             "options": [
                 1,
@@ -72,21 +93,45 @@
             ],
             "value": 1
         },
-        "INPUT": {
+        "MIDI_INPUT": {
+            "action": null,
+            "options": [
+                "usb",
+                "serial",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "MIDI_STATUS": {
+            "action": "get_midi_status",
+            "options": [],
+            "value": null
+        },
+        "CYCLE_MIDI_PORT": {
+            "action": "cycle_midi_port_index",
+            "options": [],
+            "value": null
+        },
+        "ANALOG_INPUT": {
             "action": null,
             "options": [
                 "enabled",
                 "disabled"
             ],
             "value": "disabled"
-        },
-        "STATUS": {
-            "action": "get_midi_status",
-            "options": [],
-            "value": null
         }
     },
-    "other": {
+    "system": {
+        "UPDATE_CODE": {
+            "action": "try_pull_code_and_reset",
+            "options": [],
+            "value": null
+        },
+        "CLEAR_MESSAGE_BAR": {
+            "action": "clear_message",
+            "options": [],
+            "value": null
+        },
         "DEV_MODE_RESET": {
             "action": "switch_dev_mode",
             "options": [
@@ -101,9 +146,110 @@
             "value": null
         },
         "QUIT": {
-            "action": "quit_the_program",
+            "action": "confirm_quit",
             "options": [],
             "value": null
+        },
+        "SHUTDOWN_PI": {
+            "action": "shutdown_pi",
+            "options": [],
+            "value": null
+        },   
+        "RESTART_OPENFRAMEWORKS": {
+            "action": "restart_openframeworks",
+            "options": [],
+            "value": null
+        }
+    },
+    "shader": {
+        "USE_SHADER": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "enabled"
+        },
+        "USE_SHADER_BANK": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "FIX_PARAM_OFFSET_LAYER": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "STROBE_AMOUNT": {
+            "action": null,
+            "options": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ],
+            "value": 0
+        },
+        "X3_AS_SPEED": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "SHADER_PARAM": {
+            "action": null,
+            "options": [
+                0.01,
+                0.02,
+                0.05,
+                0.10,
+                0.15,
+                0.2,
+                0.3,
+                0.4
+            ],
+            "value": 0.10
+        }
+    },
+    "detour": {
+        "TRY_DEMO": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "DELAY_MODE": {
+            "action": "set_detour_delay_mode",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "SHADER_POSITION": {
+            "action": null,
+            "options": [
+                "input",
+                "output"
+            ],
+            "value": "output"
         }
     },
     "sampler": {
@@ -114,6 +260,19 @@
                 "off"
             ],
             "value": "off"
+        },
+        "RESET_PLAYERS": {
+            "action": "reset_players",
+            "options": [],
+            "value": null
+        },
+        "LOOP_TYPE": {
+            "action": "update_video_settings",
+            "options": [
+                "seamless",
+                "parallel"
+            ],
+            "value": "seamless"
         },
         "FIXED_LENGTH": {
             "action": "set_fixed_length",
@@ -198,7 +357,21 @@
                 "off"
             ],
             "value": "off"
-        }
+        },
+        "SEEK_TIME": {
+            "action": null,
+            "options": [
+                0.5,
+                1,
+                5,
+                10,
+                15,
+                30,
+                60,
+                120
+            ],
+            "value": 5
+        }    
     },
     "video": {
         "BACKGROUND_COLOUR": {
@@ -213,13 +386,24 @@
             ],
             "value": "black"
         },
+        "VIDEOPLAYER_BACKEND": {
+            "action": "switch_video_backend",
+            "options": [
+                "omxplayer",
+                "ofvideoplayer",
+                "ofxomxplayer"
+            ],
+            "value": "ofxomxplayer"
+        },
         "HDMI_MODE": {
             "action": "change_hdmi_settings",
             "options": [
                 "preferred",
-                "CEA 4 HDMI"
+                "CEA 4 HDMI",
+                "CEA 1 HDMI",
+                "CEA 17 HDMI"
             ],
-            "value": "preferred"
+            "value": "CEA 4 HDMI"
         },
         "COMPOSITE_PROGRESSIVE": {
             "action": "change_composite_setting",

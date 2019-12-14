@@ -139,6 +139,9 @@ class Shaders(object):
         else:
             self.set_speed_to_amount(0.75)
 
+    def set_x3_as_speed(self, status):
+        self.data.settings['shader']['X3_AS_SPEED']['value'] = 'enabled' if status else 'disabled'
+
     @staticmethod
     def get_new_param_amount(current, change):
         if current + change > 1:

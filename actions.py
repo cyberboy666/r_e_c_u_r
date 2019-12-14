@@ -352,6 +352,12 @@ class Actions(object):
     def clear_shader_bank(self):
         self.data.clear_all_shader_slots()
 
+    def toggle_x3_as_speed(self):
+        if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled':
+            self.shaders.set_x3_as_speed(False)
+        else:
+            self.shaders.set_x3_as_speed(True)
+
     def toggle_detour_record(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
             is_recording =  not self.data.detour_settings['is_recording']

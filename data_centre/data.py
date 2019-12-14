@@ -17,7 +17,7 @@ class Data(object):
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
-    MIDI_MAPPING_JSON = 'midi_action_mapping_apckey25.json'
+    MIDI_MAPPING_JSON = 'midi_action_mapping.json'
     ANALOG_MAPPING_JSON = 'analog_action_mapping.json'
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
     PATH_TO_DATA_OBJECTS = '/home/pi/r_e_c_u_r/json_objects/'
@@ -76,7 +76,17 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
-        
+    def load_midi_mapping_for_device(self, device_name):
+        # check if custom config file exists on disk for this device name
+        custom_file = self.MIDI_MAPPING_JSON.replace(".json","_%s.json"%device_name)
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + custom_file):
+            self.midi_mappings = self._read_json(custom_file)
+            self.message_handler.set_message('INFO', "Loaded %s for %s" % (custom_file, device_name)) #the slot you pressed is empty')
+            print ("loaded custom midi mapping for %s" % custom_file)
+        else:
+            print ("loading default midi mapping for %s" % (device_name))
+            self.midi_mappings = self._read_json(self.MIDI_MAPPINGS_JSON)
+        return self.midi_mappings
 
         
     @staticmethod

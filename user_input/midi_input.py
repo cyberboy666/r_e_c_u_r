@@ -42,9 +42,12 @@ class MidiInput(object):
                 subport_index = self.port_index % len(midi_device_on_port) 
                 self.midi_device = mido.open_input(midi_device_on_port[subport_index])
                 self.data.midi_status = 'connected'
+                self.data.midi_device_name = self.midi_device.name
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
-                self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
-                self.root.after(self.midi_delay, self.refresh_midi_feedback)
+                self.midi_mappings = self.data.load_midi_mapping_for_device(self.midi_device.name.split(":")[0])
+                if self.supports_midi_feedback(self.midi_device.name):
+                    self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
+                    self.root.after(self.midi_delay, self.refresh_midi_feedback)
                 self.poll_midi_input()
         elif self.data.midi_status == 'connected':
             self.data.midi_status = 'disconnected'
@@ -152,6 +155,13 @@ class MidiInput(object):
 
 
     # MIDI feedback code
+
+    def supports_midi_feedback(self, device_name):
+        supported_devices = ['APC Key 25']
+        for supported_device in supported_devices:
+            if device_name.startswith(supported_device):
+                return True
+
     def feedback_shader_on(self, layer, slot, colour=127):
         self.midi_feedback_device.send(
                 mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=int(colour))
@@ -176,11 +186,22 @@ class MidiInput(object):
             mido.Message('note_on', note=70, velocity=layer)
         )
 
+
+    COLOUR_GREEN = 1
+    COLOUR_GREEN_BLINK = 2
+    COLOUR_RED = 3
+    COLOUR_RED_BLINK = 4
+    COLOUR_AMBER = 5
+    COLOUR_AMBER_BLINK = 6
+
     def refresh_midi_feedback(self):
+
+        # show which layer is selected
         self.feedback_show_layer(self.data.shader_layer)
 
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
+            # show if layer is running or not
             if self.message_handler.shaders.selected_status_list[n] == '▶':
                 self.feedback_shader_layer_on(n)
             else:
@@ -188,17 +209,23 @@ class MidiInput(object):
             for x in range(0,8):
                 if 'slot' in shader and shader.get('slot',None)==x:
                     if self.message_handler.shaders.selected_status_list[n] == '▶':
-                        self.feedback_shader_on(n, x, 2)
+                        # show that slot is selected and running
+                        self.feedback_shader_on(n, x, self.COLOUR_GREEN)
                     else:
-                        self.feedback_shader_on(n, x, 1)
+                        # show that slot is selected but not running
+                        self.feedback_shader_on(n, x, self.COLOUR_AMBER_BLINK)
                 elif self.data.shader_bank_data[n][x]['path']:
-                    self.feedback_shader_on(n, x, 3)
+                    # show that slot is full but not selected
+                    self.feedback_shader_on(n, x, self.COLOUR_AMBER)
                 else:
+                    # hos that nothing in slot
                     self.feedback_shader_off(n, x)
 
-        print("refresh_midi_feedback")
+        #print("refresh_midi_feedback")
 
-        self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
+        if self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+          if self.supports_midi_feedback(self.data.midi_device_name):
+            self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
 
 
 

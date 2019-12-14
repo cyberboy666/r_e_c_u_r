@@ -98,7 +98,7 @@ class MidiInput(object):
         if 'control' in message_dict:
             mapped_message_name = '{} {}'.format(mapped_message_name,message_dict['control'])
             mapped_message_value = message_dict['value']
-        
+
         if mapped_message_name in self.midi_mappings.keys():
             self.run_action_for_mapped_message(mapped_message_name, mapped_message_value)
         else:
@@ -106,8 +106,12 @@ class MidiInput(object):
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):
         this_mapping = self.midi_mappings[message_name]
-        if self.data.control_mode in this_mapping:
+        if self.data.function_on and "FN_%s"%self.data.control_mode in this_mapping:
+            mode = "FN_%s"%self.data.control_mode
+        elif self.data.control_mode in this_mapping:
             mode = self.data.control_mode
+        elif self.data.function_on and "FN_DEFAULT" in this_mapping:
+            mode = "FN_DEFAULT"
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 

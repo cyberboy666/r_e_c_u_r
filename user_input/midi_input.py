@@ -162,6 +162,12 @@ class MidiInput(object):
             if device_name.startswith(supported_device):
                 return True
 
+    def feedback_shader_feedback(self, on):
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=85, velocity=int(on))
+        )
+
+
     def feedback_shader_on(self, layer, slot, colour=127):
         self.midi_feedback_device.send(
                 mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=int(colour))
@@ -169,7 +175,7 @@ class MidiInput(object):
 
     def feedback_shader_off(self, layer, slot):
         self.midi_feedback_device.send(
-                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=0)
+                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
         )
 
     def feedback_shader_layer_on(self, layer):
@@ -178,7 +184,7 @@ class MidiInput(object):
         )
     def feedback_shader_layer_off(self, layer):
         self.midi_feedback_device.send(
-                mido.Message('note_on', note=82+layer, velocity=0)
+                mido.Message('note_on', note=82+layer, velocity=self.COLOUR_OFF)
         )
 
     def feedback_show_layer(self, layer):
@@ -186,7 +192,7 @@ class MidiInput(object):
             mido.Message('note_on', note=70, velocity=layer)
         )
 
-
+    COLOUR_OFF = 0
     COLOUR_GREEN = 1
     COLOUR_GREEN_BLINK = 2
     COLOUR_RED = 3
@@ -198,6 +204,12 @@ class MidiInput(object):
 
         # show which layer is selected
         self.feedback_show_layer(self.data.shader_layer)
+
+        # show if internal feedback (the shader layer kind) is enabled
+        if self.data.feedback_active:
+            self.feedback_shader_feedback(self.COLOUR_RED_BLINK)
+        else:
+            self.feedback_shader_feedback(self.COLOUR_OFF)
 
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))

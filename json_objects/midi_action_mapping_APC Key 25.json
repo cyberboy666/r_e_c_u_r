@@ -96,6 +96,12 @@
     "note_on 84": {
 	    "DEFAULT": ["toggle_shader_layer_2"]
     },
+    "note_on 85": {
+	    "DEFAULT": ["toggle_feedback"]
+    },
+    "note_on 86": {
+	    "DEFAULT": ["toggle_capture_preview"]
+    },
     "note_on 70": {
 	    "DEFAULT": ["previous_shader_layer"]
     },

@@ -130,6 +130,7 @@ class MidiInput(object):
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()
+            #self.refresh_midi_feedback()
 
 
     def call_method_name(self, method_name, argument=None):
@@ -195,7 +196,9 @@ class MidiInput(object):
                 else:
                     self.feedback_shader_off(n, x)
 
-        self.root.after(self.midi_delay, self.refresh_midi_feedback)
+        print("refresh_midi_feedback")
+
+        self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
 
 
 

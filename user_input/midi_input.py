@@ -171,6 +171,10 @@ class MidiInput(object):
                 mido.Message('note_on', note=85, velocity=int(on))
         )
 
+    def feedback_capture_preview(self, on):
+        self.midi_feedback_device.send(
+                mido.Message('note_on', note=86, velocity=int(on))
+        )
 
     def feedback_shader_on(self, layer, slot, colour=127):
         self.midi_feedback_device.send(
@@ -211,9 +215,14 @@ class MidiInput(object):
 
         # show if internal feedback (the shader layer kind) is enabled
         if self.data.feedback_active:
-            self.feedback_shader_feedback(self.COLOUR_RED_BLINK)
+            self.feedback_shader_feedback(self.COLOUR_GREEN)
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
+
+        if self.actions.python_capture.is_previewing:
+            self.feedback_capture_preview(self.COLOUR_GREEN)
+        else:
+            self.feedback_capture_preview(self.COLOUR_OFF)
 
         for n,shader in enumerate(self.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))

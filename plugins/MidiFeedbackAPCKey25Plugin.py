@@ -54,9 +54,14 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         for plugin in self.pc.get_plugins(SequencePlugin):
             if isinstance(plugin, MidiActionsTestPlugin):
                 if plugin.is_playing():
-                    self.midi_feedback_device.send(
+                    if not plugin.is_paused():
+                        self.midi_feedback_device.send(
                             mido.Message('note_on', note=65, velocity=self.COLOUR_GREEN)
-                    )
+                        )
+                    else:
+                        self.midi_feedback_device.send(
+                            mido.Message('note_on', note=65, velocity=self.COLOUR_GREEN_BLINK)
+                        )
                 else:
                     self.midi_feedback_device.send(
                             mido.Message('note_on', note=65, velocity=self.COLOUR_OFF)

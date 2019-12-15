@@ -155,8 +155,8 @@ class MidiInput(object):
 
     def call_parse_method_name(self, method_name, argument):
         # first test if a registered plugin handles this for us
-        from data_centre.plugin_collection import MidiActionsPlugin
-        for plugin in self.data.plugins.get_plugins(MidiActionsPlugin):
+        from data_centre.plugin_collection import ActionsPlugin
+        for plugin in self.data.plugins.get_plugins(ActionsPlugin):
             if plugin.is_handled(method_name):
                 print ("Plugin %s is handling %s" % (plugin, method_name))
                 method, arguments = plugin.get_callback_for_method(method_name, argument)

@@ -32,13 +32,44 @@ class SequencePlugin(Plugin):
         super().__init__(plugin_collection)
 
     @property
+    def parserlist(self):
+        return [
+                # ( r"run_automation",  self.run_automation ),
+                # ( r"stop_automation", self.stop_automation )
+                # ( r"toggle_automation", self.toggle_automation )
+        ]
+
+    @property
     def position(self):
         import time
         passed = time.time() - self.automation_start
-        position = passed / self.duration*1000
+        if self.duration>0:
+            position = passed / self.duration*1000
+        else:
+            position = 100 / (passed/frequency)
         return position
 
+    def toggle_automation(self):
+        if not self.is_playing():
+            self.run_automation()
+        else:
+            self.stop_automation()
 
+    def stop_automation(self):
+        self.stop_flag = True
+
+    def pause_automation(self):
+        self.pause_flag = not self.pause_flag and self.is_playing()
+        if self.is_playing():
+            pass print ("playing")
+        else:
+            pass print ("not playing")
+        if not self.pause_flag and not self.is_playing():
+            print ("not paused, not playing - starting")
+            self.run_automation()
+
+    pause_flag = True
+    stop_flag = False
     automation_start = None
     duration = 2000
     frequency = 100
@@ -46,30 +77,37 @@ class SequencePlugin(Plugin):
         import time
         if not self.automation_start:
             self.automation_start = time.time()
+            self.pause_flag = False
 
         #print("running automation at %s!" % self.position)
-        self.run_sequence(self.position)
+        if not self.pause_flag:
+            self.run_sequence(self.position)
+        else:
+            self.automation_start += (time.time() - self.automation_start)
+            #print ("reset automation_start to %s" % self.automation_start)
 
-        if time.time() - self.automation_start < self.duration/1000:
+        if (self.duration==0 or time.time() - self.automation_start < self.duration/1000) and not self.stop_flag:
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
+            self.stop_flag = False
             self.automation_start = None
 
-
+    def is_paused(self):
+        return self.pause_flag
 
     def is_playing(self):
         return self.automation_start is not None
 
 
-class MidiActionsPlugin(Plugin):
+class ActionsPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
     @property
     def parserlist(self):
-        return {
+        return [
                 #( r"test_plugin", self.test_plugin )
-        }
+        ]
 
     def is_handled(self, method_name):
         for a in self.parserlist:

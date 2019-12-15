@@ -1,17 +1,20 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import MidiActionsPlugin, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 
-class MidiActionsTestPlugin(MidiActionsPlugin,SequencePlugin):
+class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
     @property
     def parserlist(self):
-        return {
+        return [ 
                 ( r"test_plugin", self.test_plugin ),
                 ( r"cycle_shaders", self.cycle_shaders ),
-                ( r"run_automation", self.run_automation )
-        }
+                ( r"run_automation",  self.run_automation ),
+                ( r"stop_automation", self.stop_automation ),
+                ( r"toggle_automation", self.pause_automation ),
+                #( r"pause_automation", self.pause_automation ),
+        ]
 
     def test_plugin(self):
         print ("TEST PLUGIN test_plugin CALLED!!")

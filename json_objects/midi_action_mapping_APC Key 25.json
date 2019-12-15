@@ -89,7 +89,7 @@
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "note_on 64": {
-	    "DEFAULT": ["test_plugin"]
+	    "DEFAULT": ["cycle_shaders"]
     },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0"]

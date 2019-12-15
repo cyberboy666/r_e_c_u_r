@@ -42,9 +42,6 @@ class MidiActionsPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-    def test_plugin(self):
-        print ("yay test_plugin %s" % i)
-
     @property
     def parserlist(self):
         return {
@@ -53,9 +50,11 @@ class MidiActionsPlugin(Plugin):
 
     def is_handled(self, method_name):
         for a in self.parserlist:
+            if (a[0]==method_name):
+                return True
             regex = a[0]
             me = a[1]
-            matches = re.search(regex, method_name)
+            matches = re.match(regex, method_name)
             if matches:
                 return True
 

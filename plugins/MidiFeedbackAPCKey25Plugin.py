@@ -69,7 +69,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
 
-        if self.pc.message_handler.actions.python_capture.is_previewing:
+        if self.pc.message_handler.actions.display.capture.is_previewing:
             self.feedback_capture_preview(self.COLOUR_GREEN)
         else:
             self.feedback_capture_preview(self.COLOUR_OFF)

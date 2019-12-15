@@ -167,8 +167,8 @@ class MidiInput(object):
         print ("Looking for a MIDI Feedback plugin that supports %s..." % midi_device)
         from data_centre.plugin_collection import MidiFeedbackPlugin
 
-        for p in self.data.plugins.plugins:
-            if isinstance(p, MidiFeedbackPlugin) and p.supports_midi_feedback(midi_device):
+        for p in self.data.plugins.get_plugins(MidiFeedbackPlugin):
+            if p.supports_midi_feedback(midi_device):
                 print ("Found one!  Opening device")
                 p.set_midi_device(mido.open_output(midi_device))
                 return p

@@ -39,7 +39,7 @@ class MidiFeedbackPlugin(Plugin):
         return argument
 
 
-
+# adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):
     """Upon creation, this class will read the plugins package for modules
     that contain a class definition that is inheriting from the Plugin class
@@ -66,6 +66,12 @@ class PluginCollection(object):
         print("Looking for plugins under package %s" % self.plugin_package)
         self.walk_package(self.plugin_package)
 
+
+    def get_plugins(self, clazz = None):
+        if clazz:
+            return [c for c in self.plugins if isinstance(c, clazz)]
+        else:
+            return self.plugins
 
     def apply_all_plugins_on_value(self, argument):
         """Apply all of the plugins on the argument supplied to this function

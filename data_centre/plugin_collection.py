@@ -1,6 +1,7 @@
 import inspect
 import os
 import pkgutil
+import re
 
 
 class Plugin(object):
@@ -24,7 +25,6 @@ class MidiFeedbackPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
         self.description = 'Outputs feedback about status to device eg MIDI pads'
-        self.pc = plugin_collection
 
     def supports_midi_feedback(self, device_name):
         return False
@@ -37,6 +37,57 @@ class MidiFeedbackPlugin(Plugin):
         argument
         """
         return argument
+
+class MidiActionsPlugin(Plugin):
+    def __init__(self, plugin_collection):
+        super().__init__(plugin_collection)
+
+    def test_plugin(self):
+        print ("yay test_plugin %s" % i)
+
+    @property
+    def parserlist(self):
+        return {
+                #( r"test_plugin", self.test_plugin )
+        }
+
+    def is_handled(self, method_name):
+        for a in self.parserlist:
+            regex = a[0]
+            me = a[1]
+            matches = re.search(regex, method_name)
+            if matches:
+                return True
+
+
+    def get_callback_for_method(self, method_name, argument):
+        for a in self.parserlist:
+            regex = a[0]
+            me = a[1]
+            matches = re.search(regex, method_name)
+
+            if matches:
+                found_method = me
+                parsed_args = list(map(int,matches.groups()))
+                if argument:
+                    args = [argument] + parsed_args
+                else:
+                    args = parsed_args
+
+                return (found_method, args)
+
+    def call_parse_method_name(self, method_name, argument):
+        method, arguments = self.actions.get_callback_for_method(method_name, argument)
+        method(*arguments)
+
+    def perform_operation(self, argument):
+        """The actual implementation of the identity plugin is to just return the
+        argument
+        """
+        return argument
+
+
+
 
 
 # adapted from https://github.com/gdiepen/python_plugin_example

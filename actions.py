@@ -889,7 +889,9 @@ class Actions(object):
     def parserlist(self):
         return { 
                 ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
-                ( r"toggle_shader_layer_([0-9])", self.toggle_shader_layer )
+                ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
+                ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
+                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader )
         }
 
     def get_callback_for_method(self, method_name, argument):

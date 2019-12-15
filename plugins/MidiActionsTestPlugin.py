@@ -10,6 +10,7 @@ class MidiActionsTestPlugin(MidiActionsPlugin):
         return {
                 ( r"test_plugin", self.test_plugin ),
                 ( r"cycle_shaders", self.cycle_shaders ),
+                ( r"run_automation", self.run_automation )
         }
 
     def test_plugin(self):
@@ -23,7 +24,6 @@ class MidiActionsTestPlugin(MidiActionsPlugin):
             self.cycle_count = 0
 
         for i,shader in enumerate(self.pc.message_handler.shaders.selected_shader_list):
-            #self.pc.midi_input.run_action_for_mapped_message(
             self.pc.midi_input.call_method_name(
                 "play_shader_%s_%s" % (i, self.cycle_count), None
             )
@@ -31,4 +31,34 @@ class MidiActionsTestPlugin(MidiActionsPlugin):
                 "start_shader_layer_%s" % i, None
             )
         self.cycle_count += 1
-                
+
+
+
+    automation_start = None
+    duration = 2000
+    frequency = 100
+    def run_automation(self):
+        import time
+        import math
+        if not self.automation_start:
+            self.automation_start = time.time()
+
+        passed = time.time() - self.automation_start
+        position = passed / self.duration*1000
+
+        #print("%s: position is %s" % (passed,position))
+
+        print("running automation at %s!" % position)
+
+        self.pc.midi_input.call_method_name(
+                "set_the_shader_param_0_layer_offset_0_continuous", position
+        )
+
+        self.pc.midi_input.call_method_name(
+                "set_the_shader_param_1_layer_offset_0_continuous", position
+        )
+
+        if time.time() - self.automation_start < self.duration/1000:
+            self.pc.midi_input.root.after(self.frequency, self.run_automation)
+        else:
+            self.automation_start = None

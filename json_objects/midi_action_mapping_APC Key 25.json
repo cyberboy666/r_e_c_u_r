@@ -91,6 +91,9 @@
     "note_on 64": {
 	    "DEFAULT": ["cycle_shaders"]
     },
+    "note_on 65": {
+	    "DEFAULT": ["run_automation"]
+    },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0"]
     },

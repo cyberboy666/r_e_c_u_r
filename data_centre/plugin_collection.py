@@ -13,12 +13,6 @@ class Plugin(object):
         self.description = 'UNKNOWN'
         self.pc = plugin_collection
 
-    def perform_operation(self, argument):
-        """The method that we expect all plugins to implement. This is the
-        method that our framework will call
-        """
-        raise NotImplementedError
-
 class MidiFeedbackPlugin(Plugin):
     """Base class for MIDI feedback plugins
     """
@@ -32,11 +26,40 @@ class MidiFeedbackPlugin(Plugin):
     def set_midi_device(self, midi_device):
         self.midi_feedback_device = midi_device
 
-    def perform_operation(self, argument):
-        """The actual implementation of the identity plugin is to just return the
-        argument
-        """
-        return argument
+
+class SequencePlugin(Plugin):
+    def __init__(self, plugin_collection):
+        super().__init__(plugin_collection)
+
+    @property
+    def position(self):
+        import time
+        passed = time.time() - self.automation_start
+        position = passed / self.duration*1000
+        return position
+
+
+    automation_start = None
+    duration = 2000
+    frequency = 100
+    def run_automation(self):
+        import time
+        if not self.automation_start:
+            self.automation_start = time.time()
+
+        #print("running automation at %s!" % self.position)
+        self.run_sequence(self.position)
+
+        if time.time() - self.automation_start < self.duration/1000:
+            self.pc.midi_input.root.after(self.frequency, self.run_automation)
+        else:
+            self.automation_start = None
+
+
+
+    def is_playing(self):
+        return self.automation_start is not None
+
 
 class MidiActionsPlugin(Plugin):
     def __init__(self, plugin_collection):
@@ -79,15 +102,6 @@ class MidiActionsPlugin(Plugin):
         method, arguments = self.actions.get_callback_for_method(method_name, argument)
         method(*arguments)
 
-    def perform_operation(self, argument):
-        """The actual implementation of the identity plugin is to just return the
-        argument
-        """
-        return argument
-
-
-
-
 
 # adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):
@@ -129,7 +143,9 @@ class PluginCollection(object):
         print()
         print('Applying all plugins on value %s:' %argument)
         for plugin in self.plugins:
-            print(" Applying %s on value %s yields value %s" % (plugin.description, argument, plugin.perform_operation(argument)))
+            #print(" Applying %s on value %s yields value %s" % (plugin.description, argument, plugin.perform_operation(argument)))
+            pass
+
 
     def walk_package(self, package):
         """Recursively walk the supplied package to retrieve all plugins

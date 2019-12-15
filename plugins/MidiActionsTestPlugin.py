@@ -1,7 +1,7 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import MidiActionsPlugin
+from data_centre.plugin_collection import MidiActionsPlugin, SequencePlugin
 
-class MidiActionsTestPlugin(MidiActionsPlugin):
+class MidiActionsTestPlugin(MidiActionsPlugin,SequencePlugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -32,24 +32,9 @@ class MidiActionsTestPlugin(MidiActionsPlugin):
             )
         self.cycle_count += 1
 
-
-
-    automation_start = None
-    duration = 2000
-    frequency = 100
-    def run_automation(self):
-        import time
-        import math
-        if not self.automation_start:
-            self.automation_start = time.time()
-
-        passed = time.time() - self.automation_start
-        position = passed / self.duration*1000
-
-        #print("%s: position is %s" % (passed,position))
-
-        print("running automation at %s!" % position)
-
+    duration = 5000
+    frequency = 50
+    def run_sequence(self, position):
         self.pc.midi_input.call_method_name(
                 "set_the_shader_param_0_layer_offset_0_continuous", position
         )
@@ -58,7 +43,3 @@ class MidiActionsTestPlugin(MidiActionsPlugin):
                 "set_the_shader_param_1_layer_offset_0_continuous", position
         )
 
-        if time.time() - self.automation_start < self.duration/1000:
-            self.pc.midi_input.root.after(self.frequency, self.run_automation)
-        else:
-            self.automation_start = None

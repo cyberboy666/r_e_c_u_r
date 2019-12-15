@@ -48,6 +48,20 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             mido.Message('note_on', note=70, velocity=layer)
         )
 
+    def feedback_plugin_status(self):
+        from data_centre.plugin_collection import SequencePlugin
+        from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin 
+        for plugin in self.pc.get_plugins(SequencePlugin):
+            if isinstance(plugin, MidiActionsTestPlugin):
+                if plugin.is_playing():
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=65, velocity=self.COLOUR_GREEN)
+                    )
+                else:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=65, velocity=self.COLOUR_OFF)
+                    )
+
     COLOUR_OFF = 0
     COLOUR_GREEN = 1
     COLOUR_GREEN_BLINK = 2
@@ -73,6 +87,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             self.feedback_capture_preview(self.COLOUR_GREEN)
         else:
             self.feedback_capture_preview(self.COLOUR_OFF)
+
+        self.feedback_plugin_status()
 
         for n,shader in enumerate(self.pc.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))

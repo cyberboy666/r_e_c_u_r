@@ -63,7 +63,7 @@ class Data(object):
         
         ### persisted data (use default if doesnt exits):
         if not os.path.isfile(self.PATH_TO_CONJUR_DATA):
-            os.remove(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON ) # keep the, in sync
+            self.try_remove_file(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON ) # keep the, in sync
             copyfile(self.PATH_TO_DEFAULT_CONJUR_DATA, self.PATH_TO_CONJUR_DATA)
 
         self.bank_data = [self.create_empty_bank()]
@@ -421,3 +421,7 @@ class Data(object):
         else:
             return []        
     
+    @staticmethod
+    def try_remove_file(path):
+        if os.path.exists(path):
+            os.remove(path)

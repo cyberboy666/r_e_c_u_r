@@ -53,41 +53,6 @@ class MidiInput(object):
         elif self.data.midi_status == 'connected':
             self.data.midi_status = 'disconnected'
 
-    def find_output_plugin(self, midi_device):
-        # loop over the midi_feedback module
-        # find one that self.supports_midi_feedback(self.midi_device.name):
-        # open the midi device self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
-        #import midi_feedback
-        #for name in dir(midi_feedback):
-        import os
-        #pkg = __import__("midi_feedback")
-        #for m in os.listdir( os.path()+"user_input/midi_input/midi_feedback" ): # if m.endswith( ".py" ):
-        #    print ("got class name %s"  %m)
-        #    #o = getattr("midi_feedback", name)
-        #    #print ("got a class %s" %o)
-
-        import pkgutil
-        import user_input.midi_feedback
-        import importlib
-
-        print (__file__)
-
-        plugin_path = "%s/midi_feedback" % (os.path.dirname(__file__))
-
-        #for n in pkgutil.iter_modules(os.path.dirname(__file__),""):
-        for n in os.listdir(plugin_path):
-            if n.startswith("midi_feedback") and n.endswith(".py"): 
-                module = importlib.import_module(n)
-                p = __import__("%s/%s" % (plugin_path, n))
-                if p.Feedback.supports_midi_feedback(midi_device.name):
-                    print("found supporting module!")
-                    self.midi_feedback_device = mido.open_output(midi_device)
-                    return p.Feedback(self)
-                print ("got module %s" % n)
-        print("done")
-
-        quit()
-
     def poll_midi_input(self):
         i = 0
         cc_dict = dict()
@@ -193,12 +158,29 @@ class MidiInput(object):
         method(*arguments)
 
 
+    # Plugins to support MIDI feedback
+
+    def find_output_plugin(self, midi_device):
+        # loop over the plugins
+        # find one that self.supports_midi_feedback(self.midi_device.name):
+        # open the midi device self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
+        print ("Looking for a MIDI Feedback plugin that supports %s..." % midi_device)
+        from data_centre.plugin_collection import MidiFeedbackPlugin
+
+        for p in self.data.plugins.plugins:
+            if isinstance(p, MidiFeedbackPlugin) and p.supports_midi_feedback(midi_device):
+                print ("Found one!  Opening device")
+                p.set_midi_device(mido.open_output(midi_device))
+                return p
+
+        print ("Didn't find one!")
+
     def refresh_midi_feedback(self):
 
         self.midi_output.refresh_midi_feedback()
 
-        if self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
-          if self.supports_midi_feedback(self.data.midi_device_name):
+        if self.midi_output and self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+          if self.midi_output.supports_midi_feedback(self.data.midi_device_name):
             self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
 
 

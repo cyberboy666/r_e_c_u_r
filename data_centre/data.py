@@ -8,6 +8,8 @@ from itertools import cycle
 from omxplayer.player import OMXPlayer
 from shutil import copyfile
 
+from data_centre import plugin_collection
+
 
 
 class Data(object):
@@ -32,6 +34,10 @@ class Data(object):
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
         self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
+
+        #initialise plugin manager
+        self.plugins = plugin_collection.PluginCollection("plugins", message_handler, self)
+        self.plugins.apply_all_plugins_on_value(5)
 
         ### state data
         self.auto_repeat_on = True

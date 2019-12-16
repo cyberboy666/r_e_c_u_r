@@ -65,14 +65,10 @@ class SequencePlugin(Plugin):
     def toggle_pause_automation(self):
         self.pause_flag = not self.is_paused()
         self.pause_flag = self.is_paused() and self.is_playing()
-        if self.is_playing():
-            print ("playing")
-        else:
-            print ("not playing")
         if not self.is_paused() and not self.is_playing():
-            print ("not paused, not playing - starting")
             self.run_automation()
 
+    store_passed = None
     pause_flag = True
     stop_flag = False
     automation_start = None
@@ -82,23 +78,27 @@ class SequencePlugin(Plugin):
         import time
         if not self.automation_start:
             self.automation_start = time.time()
-            print ("set automation_start to %s" % self.automation_start)
+            print ("%s: starting automation" % self.automation_start)
             self.pause_flag = False
 
         #print("running automation at %s!" % self.position)
         if not self.is_paused():
+            self.store_passed = None
             self.run_sequence(self.position)
-            print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
+            #print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
         else:
-            pass
-            self.automation_start += (time.time() - self.automation_start)
-            print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
+            #print ("%s: about to reset automation_start" % self.automation_start)
+            #print ("    got passed %s" % (time.time() - self.automation_start))
+            if not self.store_passed:
+                self.store_passed = (time.time() - self.automation_start)
+            self.automation_start = time.time() - self.store_passed
+            #print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
             #return
 
         if (time.time() - self.automation_start < self.duration/1000) and not self.stop_flag:
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
-            print("%s: stopping ! " % (time.time() - self.automation_start) )
+            print("%s: stopping !" % (time.time() - self.automation_start) )
             self.stop_flag = False
             self.automation_start = None
 

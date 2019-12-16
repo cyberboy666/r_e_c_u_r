@@ -92,7 +92,7 @@
 	    "DEFAULT": ["cycle_shaders"]
     },
     "note_on 65": {
-	    "DEFAULT": ["toggle_automation"]
+	    "DEFAULT": ["toggle_pause_automation"]
     },
     "note_on 66": {
 	    "DEFAULT": ["pause_automation"]

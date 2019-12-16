@@ -12,8 +12,8 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
                 ( r"cycle_shaders", self.cycle_shaders ),
                 ( r"run_automation",  self.run_automation ),
                 ( r"stop_automation", self.stop_automation ),
-                ( r"toggle_automation", self.pause_automation ),
-                #( r"pause_automation", self.pause_automation ),
+                ( r"toggle_pause_automation", self.toggle_pause_automation ),
+                ( r"pause_automation", self.pause_automation ),
         ]
 
     def test_plugin(self):

@@ -35,8 +35,9 @@ class SequencePlugin(Plugin):
     def parserlist(self):
         return [
                 # ( r"run_automation",  self.run_automation ),
-                # ( r"stop_automation", self.stop_automation )
-                # ( r"toggle_automation", self.toggle_automation )
+                # ( r"stop_automation", self.stop_automation ),
+                # ( r"toggle_automation", self.toggle_automation ),
+                # ( r"toggle_pause_automation", self.toggle_pause_automation ),
         ]
 
     @property
@@ -55,17 +56,20 @@ class SequencePlugin(Plugin):
         else:
             self.stop_automation()
 
+    def pause_automation(self):
+        self.pause_flag = not self.is_paused() and self.is_playing()
+
     def stop_automation(self):
         self.stop_flag = True
 
-    def pause_automation(self):
-        self.pause_flag = not self.pause_flag
-        self.pause_flag = self.pause_flag and self.is_playing()
+    def toggle_pause_automation(self):
+        self.pause_flag = not self.is_paused()
+        self.pause_flag = self.is_paused() and self.is_playing()
         if self.is_playing():
             print ("playing")
         else:
             print ("not playing")
-        if not self.pause_flag and not self.is_playing():
+        if not self.is_paused() and not self.is_playing():
             print ("not paused, not playing - starting")
             self.run_automation()
 
@@ -82,7 +86,7 @@ class SequencePlugin(Plugin):
             self.pause_flag = False
 
         #print("running automation at %s!" % self.position)
-        if not self.pause_flag:
+        if not self.is_paused():
             self.run_sequence(self.position)
             print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
         else:

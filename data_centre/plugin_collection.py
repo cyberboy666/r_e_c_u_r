@@ -59,11 +59,12 @@ class SequencePlugin(Plugin):
         self.stop_flag = True
 
     def pause_automation(self):
-        self.pause_flag = not self.pause_flag and self.is_playing()
+        self.pause_flag = not self.pause_flag
+        self.pause_flag = self.pause_flag and self.is_playing()
         if self.is_playing():
-            pass print ("playing")
+            print ("playing")
         else:
-            pass print ("not playing")
+            print ("not playing")
         if not self.pause_flag and not self.is_playing():
             print ("not paused, not playing - starting")
             self.run_automation()
@@ -77,18 +78,23 @@ class SequencePlugin(Plugin):
         import time
         if not self.automation_start:
             self.automation_start = time.time()
+            print ("set automation_start to %s" % self.automation_start)
             self.pause_flag = False
 
         #print("running automation at %s!" % self.position)
         if not self.pause_flag:
             self.run_sequence(self.position)
+            print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
         else:
+            pass
             self.automation_start += (time.time() - self.automation_start)
-            #print ("reset automation_start to %s" % self.automation_start)
+            print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
+            #return
 
-        if (self.duration==0 or time.time() - self.automation_start < self.duration/1000) and not self.stop_flag:
+        if (time.time() - self.automation_start < self.duration/1000) and not self.stop_flag:
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
+            print("%s: stopping ! " % (time.time() - self.automation_start) )
             self.stop_flag = False
             self.automation_start = None
 

@@ -26,6 +26,10 @@ class MidiFeedbackPlugin(Plugin):
     def set_midi_device(self, midi_device):
         self.midi_feedback_device = midi_device
 
+    def refresh_midi_feedback(self):
+        raise NotImplementedError
+
+
 
 class SequencePlugin(Plugin):
     def __init__(self, plugin_collection):
@@ -107,6 +111,9 @@ class SequencePlugin(Plugin):
 
     def is_playing(self):
         return self.automation_start is not None
+
+    def run_sequence(self, position):
+        raise NotImplementedError
 
 
 class ActionsPlugin(Plugin):

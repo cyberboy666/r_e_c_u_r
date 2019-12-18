@@ -97,6 +97,9 @@
     "note_on 66": {
 	    "DEFAULT": ["pause_automation"]
     },
+    "note_on 67": {
+	    "DEFAULT": ["run_automation"]
+    },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0"]
     },

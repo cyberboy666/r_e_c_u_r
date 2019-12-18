@@ -206,7 +206,9 @@ class PluginCollection(object):
                 clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
                 for (_, c) in clsmembers:
                     # Only add classes that are a sub class of Plugin, but NOT Plugin itself
-                    if issubclass(c, Plugin) & (c is not Plugin):
+                    # or one of the base classes
+                    ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin ]
+                    if issubclass(c, Plugin) & (c not in ignore_list):
                         print('    Found plugin class: %s.%s' % (c.__module__,c.__name__))
                         self.plugins.append(c(self))
 

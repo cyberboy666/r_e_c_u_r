@@ -721,13 +721,13 @@ class Actions(object):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
 
     def set_fixed_length(self, value):

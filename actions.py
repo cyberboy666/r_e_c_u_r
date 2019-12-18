@@ -891,7 +891,8 @@ class Actions(object):
                 ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
                 ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
                 ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
-                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader )
+                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
+                ( r"set_the_shader_param_([0-2])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount )
         }
 
     def get_callback_for_method(self, method_name, argument):
@@ -903,8 +904,9 @@ class Actions(object):
             if matches:
                 found_method = me 
                 parsed_args = list(map(int,matches.groups()))
-                if argument:
-                    args = [argument] + parsed_args 
+                if argument is not None:
+                    #args = [argument] + parsed_args 
+                    args = parsed_args + [argument]
                 else:
                     args = parsed_args 
                 

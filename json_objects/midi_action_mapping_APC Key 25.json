@@ -100,6 +100,36 @@
     "note_on 67": {
 	    "DEFAULT": ["run_automation"]
     },
+    "note_on 68": {
+	    "DEFAULT": ["store_next_preset"]
+    },
+    "note_on 69": {
+	    "DEFAULT": ["store_current_preset"]
+    },
+    "note_on 0": {
+	    "DEFAULT": ["switch_to_preset_0"]
+    },
+    "note_on 1": {
+	    "DEFAULT": ["switch_to_preset_1"]
+    },
+    "note_on 2": {
+	    "DEFAULT": ["switch_to_preset_2"]
+    },
+    "note_on 3": {
+	    "DEFAULT": ["switch_to_preset_3"]
+    },
+    "note_on 4": {
+            "DEFAULT": ["switch_to_preset_4"]
+    },
+    "note_on 5": {
+            "DEFAULT": ["switch_to_preset_5"]
+    },
+    "note_on 6": {
+            "DEFAULT": ["switch_to_preset_6"]
+    },
+    "note_on 7": {
+            "DEFAULT": ["switch_to_preset_7"]
+    },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0"]
     },

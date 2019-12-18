@@ -50,6 +50,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
     def feedback_plugin_status(self):
         from data_centre.plugin_collection import SequencePlugin
+
         from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin 
         for plugin in self.pc.get_plugins(SequencePlugin):
             if isinstance(plugin, MidiActionsTestPlugin):
@@ -65,6 +66,22 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                 else:
                     self.midi_feedback_device.send(
                             mido.Message('note_on', note=65, velocity=self.COLOUR_OFF)
+                    )
+
+        from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
+        for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
+            for pad in range(0,8):
+                if plugin.selected_preset==pad:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=pad, velocity=self.COLOUR_GREEN)
+                    )
+                elif plugin.presets[pad] is not None:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=pad, velocity=self.COLOUR_AMBER)
+                    )
+                else:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=pad, velocity=self.COLOUR_OFF)
                     )
 
     COLOUR_OFF = 0

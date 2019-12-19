@@ -75,11 +75,16 @@ class SequencePlugin(Plugin):
     store_passed = None
     pause_flag = True
     stop_flag = False
+    looping = True
     automation_start = None
     duration = 2000
     frequency = 100
     def run_automation(self):
         import time
+
+        if self.looping and self.automation_start is not None and (time.time() - self.automation_start > self.duration/1000):
+            self.automation_start = None
+
         if not self.automation_start:
             self.automation_start = time.time()
             print ("%s: starting automation" % self.automation_start)

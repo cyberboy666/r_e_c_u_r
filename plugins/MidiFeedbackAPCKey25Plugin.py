@@ -72,9 +72,14 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
             for pad in range(0,8):
                 if plugin.selected_preset==pad:
-                    self.midi_feedback_device.send(
+                    if plugin.presets[pad] is None:
+                        self.midi_feedback_device.send(
+                            mido.Message('note_on', note=pad, velocity=self.COLOUR_AMBER_BLINK)
+                        )
+                    else:
+                        self.midi_feedback_device.send(
                             mido.Message('note_on', note=pad, velocity=self.COLOUR_GREEN)
-                    )
+                        )
                 elif plugin.presets[pad] is not None:
                     self.midi_feedback_device.send(
                             mido.Message('note_on', note=pad, velocity=self.COLOUR_AMBER)

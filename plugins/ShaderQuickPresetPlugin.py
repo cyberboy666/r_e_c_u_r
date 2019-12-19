@@ -33,12 +33,13 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         ]
 
     def store_next_preset(self):
-        if self.selected_preset is None:
-            self.selected_preset = 0
-        else:
+        res = [i for i, val in enumerate(self.presets) if val == None][0]
+        if res is None:
             self.selected_preset += 1
+            self.selected_preset %= 10
+        else:
+            self.selected_preset = res
 
-        self.selected_preset %= 10
         self.store_current_preset()
 
     def store_current_preset(self):
@@ -60,6 +61,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         #if preset>len(self.presets):
         if self.presets[preset] is None:
             print ("no quick shader preset in slot %s!" % preset)
+            self.selected_preset = preset
             return
         print ("switching to preset %s" % preset)
         self.selected_preset = preset

@@ -174,6 +174,10 @@ class PluginCollection(object):
         #self.actions = message_handler.actions
         self.reload_plugins()
 
+    def read_json(self, file_name):
+        return self.data._read_plugin_json(file_name)
+    def update_json(self, file_name, data):
+        return self.data._update_plugin_json(file_name, data)
 
     def reload_plugins(self):
         """Reset the list of all plugins and initiate the walk over the main

@@ -34,9 +34,10 @@ class Data(object):
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
         self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
+        self.PATHS_TO_PLUGIN_DATA = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/json_objects/plugins' ]
 
         #initialise plugin manager
-        self.plugins = plugin_collection.PluginCollection("plugins", message_handler, self)
+        self.plugins = plugin_collection.PluginCollection("plugins", message_handler, self, self.PATHS_TO_PLUGIN_DATA)
         self.plugins.apply_all_plugins_on_value(5)
 
         ### state data
@@ -112,6 +113,16 @@ class Data(object):
 
     def _update_json(self, file_name, data):
         with open('{}{}'.format(self.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
+            json.dump(data, data_file, indent=4, sort_keys=True)
+
+    def _read_plugin_json(self, file_name):
+        for path in self.PATHS_TO_PLUGIN_DATA:
+            with open("{}/{}" % (path,file_name)) as data_file:
+                data = json.load(data_file)
+                return data
+
+    def _update_plugin_json(self, file_name, data):
+        with open("{}/{}" % (self.PATHS_TO_PLUGIN_DATA[0], file_name) as data_file:
             json.dump(data, data_file, indent=4, sort_keys=True)
 
     def update_conjur_dev_mode(self, value):

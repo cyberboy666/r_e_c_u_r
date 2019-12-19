@@ -8,24 +8,30 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
         self.presets = self.load_presets()
 
-        self.selected_preset = None
+        self.selected_preset = NoneA
+
+        self.PRESET_FILE_NAME = 'ShaderQuickPresetPlugin/presets.json'
 
     def load_presets(self):
-        return [None]*10
+        try:
+            return self.pc._read_plugin_json(self.PRESET_FILE_NAME)
+        except:
+            return [None]*10
+
+    def save_presets(self):
+        self.pc._update_plugin_json(self.PRESET_FILE_NAME)
 
     @property
     def parserlist(self):
         return [ 
-            ( r"store_next_preset", self.store_next_preset ),
-            ( r"store_current_preset", self.store_current_preset ),
-            ( r"switch_to_preset_([0-9])", self.switch_to_preset ),
+            ( r"load_presets",              self.load_presets ),
+            ( r"save_presets",              self.save_presets ),
+            ( r"store_next_preset",         self.store_next_preset ),
+            ( r"store_current_preset",      self.store_current_preset ),
+            ( r"switch_to_preset_([0-9])",  self.switch_to_preset ),
         ]
 
     def store_next_preset(self):
-        # store the current state to a preset
-        #insert_position = len(self.presets)
-        #if insert_position>10: insert_position = 0
-
         if self.selected_preset is None:
             self.selected_preset = 0
         else:

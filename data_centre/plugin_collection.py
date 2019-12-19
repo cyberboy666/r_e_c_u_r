@@ -83,6 +83,7 @@ class SequencePlugin(Plugin):
         import time
 
         if self.looping and self.automation_start is not None and (time.time() - self.automation_start > self.duration/1000):
+            print("restarting as start reached %s" % self.automation_start)
             self.automation_start = None
 
         if not self.automation_start:
@@ -107,7 +108,7 @@ class SequencePlugin(Plugin):
         if (time.time() - self.automation_start < self.duration/1000) and not self.stop_flag:
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
-            print("%s: stopping !" % (time.time() - self.automation_start) )
+            print("%s: stopping ! (stop_flag %s)" % ((time.time() - self.automation_start),self.stop_flag) )
             self.stop_flag = False
             self.automation_start = None
 

@@ -77,6 +77,7 @@ class SequencePlugin(Plugin):
     stop_flag = False
     looping = True
     automation_start = None
+    iterations_count = 0
     duration = 2000
     frequency = 100
     def run_automation(self):
@@ -84,6 +85,7 @@ class SequencePlugin(Plugin):
 
         if self.looping and self.automation_start is not None and (time.time() - self.automation_start >= self.duration/1000):
             print("restarting as start reached %s" % self.automation_start)
+            self.iterations_count += 1
             self.automation_start = None
 
         if not self.automation_start:
@@ -111,6 +113,7 @@ class SequencePlugin(Plugin):
             print("%s: stopping ! (stop_flag %s)" % ((time.time() - self.automation_start),self.stop_flag) )
             self.stop_flag = False
             self.automation_start = None
+            self.iterations_count = 0
 
     def is_paused(self):
         return self.pause_flag

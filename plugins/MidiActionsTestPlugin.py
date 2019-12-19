@@ -39,10 +39,10 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     frequency = 50
     def run_sequence(self, position):
         self.pc.midi_input.call_method_name(
-                "set_the_shader_param_0_layer_offset_0_continuous", position
+                "set_the_shader_param_0_layer_0_continuous", position
         )
 
         self.pc.midi_input.call_method_name(
-                "set_the_shader_param_1_layer_offset_0_continuous", position
+                "set_the_shader_param_1_layer_0_continuous", position
         )
 

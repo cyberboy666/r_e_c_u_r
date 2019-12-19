@@ -164,8 +164,11 @@ class MidiInput(object):
                 return
 
         # if not then fall back to using internal method
-        method, arguments = self.actions.get_callback_for_method(method_name, argument)
-        method(*arguments)
+        try:
+            method, arguments = self.actions.get_callback_for_method(method_name, argument)
+            method(*arguments)
+        except:
+            print ("Failed to find a method for '%s'" % method_name)
 
 
     # Plugins to support MIDI feedback

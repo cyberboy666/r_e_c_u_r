@@ -38,10 +38,10 @@ class SequencePlugin(Plugin):
     @property
     def parserlist(self):
         return [
-                # ( r"run_automation",  self.run_automation ),
-                # ( r"stop_automation", self.stop_automation ),
-                # ( r"toggle_automation", self.toggle_automation ),
-                # ( r"toggle_pause_automation", self.toggle_pause_automation ),
+                ( r"run_automation",  self.run_automation ),
+                ( r"stop_automation", self.stop_automation ),
+                ( r"toggle_pause_automation", self.toggle_pause_automation ),
+                ( r"pause_automation", self.pause_automation ),
         ]
 
     @property
@@ -82,7 +82,7 @@ class SequencePlugin(Plugin):
     def run_automation(self):
         import time
 
-        if self.looping and self.automation_start is not None and (time.time() - self.automation_start > self.duration/1000):
+        if self.looping and self.automation_start is not None and (time.time() - self.automation_start >= self.duration/1000):
             print("restarting as start reached %s" % self.automation_start)
             self.automation_start = None
 

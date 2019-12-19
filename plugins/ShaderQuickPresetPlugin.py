@@ -1,5 +1,6 @@
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+import copy
 
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
     def __init__(self, plugin_collection):
@@ -39,8 +40,8 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         insert_position = self.selected_preset
         self.presets[insert_position] = {
                 'selected_shader_slots': [ shader.get('slot',None) for shader in self.pc.message_handler.shaders.selected_shader_list ],
-                'shader_params': self.pc.message_handler.shaders.selected_param_list.copy(),
-                'layer_active_status': self.pc.message_handler.shaders.selected_status_list.copy(),
+                'shader_params': copy.deepcopy(self.pc.message_handler.shaders.selected_param_list),
+                'layer_active_status': copy.deepcopy(self.pc.message_handler.shaders.selected_status_list),
                 'feedback_active': self.pc.data.feedback_active,
         }
         print ("stored %s at position %s" % (self.presets[insert_position], insert_position))
@@ -64,7 +65,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
                     self.pc.midi_input.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
 
         for (layer, slot) in enumerate(preset.get('selected_shader_slots',[])):
-            if slot:
+            if slot is not None:
                 print("setting layer %s to slot %s" % (layer, slot))
                 self.pc.midi_input.call_method_name('play_shader_%s_%s' % (layer, slot))
 

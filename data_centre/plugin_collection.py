@@ -147,7 +147,7 @@ class ActionsPlugin(Plugin):
                 found_method = me
                 parsed_args = list(map(int,matches.groups()))
                 if argument:
-                    args = [argument] + parsed_args
+                    args = parsed_args + [argument]
                 else:
                     args = parsed_args
 

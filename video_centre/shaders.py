@@ -83,11 +83,13 @@ class Shaders(object):
 
     def start_shader(self, layer):
         self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), True)
-        self.selected_status_list[layer] = '▶'
+        if self.selected_status_list[layer] != '-':
+            self.selected_status_list[layer] = '▶'
 
     def stop_shader(self, layer):
         self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), False)
-        self.selected_status_list[layer] = '■'
+        if self.selected_status_list[layer] != '-':
+            self.selected_status_list[layer] = '■'
 
     def start_selected_shader(self):
         self.start_shader(self.data.shader_layer)

@@ -5,21 +5,22 @@ import copy
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
+        self.PRESET_FILE_NAME = 'ShaderQuickPresetPlugin/presets.json'
 
         self.presets = self.load_presets()
+        print("loaded presets %s" % self.presets)
 
-        self.selected_preset = NoneA
-
-        self.PRESET_FILE_NAME = 'ShaderQuickPresetPlugin/presets.json'
+        self.selected_preset = None
 
     def load_presets(self):
         try:
-            return self.pc._read_plugin_json(self.PRESET_FILE_NAME)
+            print("trying load presets? %s " % self.PRESET_FILE_NAME)
+            return self.pc.read_json(self.PRESET_FILE_NAME)
         except:
             return [None]*10
 
     def save_presets(self):
-        self.pc._update_plugin_json(self.PRESET_FILE_NAME)
+        self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
     @property
     def parserlist(self):
@@ -53,6 +54,8 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         print ("stored %s at position %s" % (self.presets[insert_position], insert_position))
         self.selected_preset = insert_position
 
+        self.save_presets()
+
     def switch_to_preset(self, preset):
         #if preset>len(self.presets):
         if self.presets[preset] is None:
@@ -83,3 +86,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
                 self.pc.midi_input.call_method_name('stop_shader_layer_%s' % layer)
 
         self.pc.data.feedback_active = preset.get('feedback_active',self.pc.data.feedback_active)
+        if self.pc.data.feedback_active:
+            self.pc.midi_input.call_method_name('enable_feedback')
+        else:
+            self.pc.midi_input.call_method_name('disable_feedback')

@@ -169,6 +169,8 @@ class MidiInput(object):
             method(*arguments)
         except:
             print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
 
 
     # Plugins to support MIDI feedback

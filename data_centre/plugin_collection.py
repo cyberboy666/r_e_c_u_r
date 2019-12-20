@@ -12,6 +12,7 @@ class Plugin(object):
     def __init__(self, plugin_collection):
         self.description = 'UNKNOWN'
         self.pc = plugin_collection
+        self.disabled = False
 
 class MidiFeedbackPlugin(Plugin):
     """Base class for MIDI feedback plugins
@@ -42,6 +43,7 @@ class SequencePlugin(Plugin):
                 ( r"stop_automation", self.stop_automation ),
                 ( r"toggle_pause_automation", self.toggle_pause_automation ),
                 ( r"pause_automation", self.pause_automation ),
+                ( r"toggle_loop_automation", self.toggle_loop_automation ),
         ]
 
     def position(self, now):
@@ -58,6 +60,9 @@ class SequencePlugin(Plugin):
             self.run_automation()
         else:
             self.stop_automation()
+
+    def toggle_loop_automation(self):
+        self.looping = not self.looping
 
     def pause_automation(self):
         self.pause_flag = not self.is_paused() and self.is_playing()
@@ -202,9 +207,9 @@ class PluginCollection(object):
 
     def get_plugins(self, clazz = None):
         if clazz:
-            return [c for c in self.plugins if isinstance(c, clazz)]
+            return [c for c in self.plugins if (isinstance(c, clazz) and not c.disabled)]
         else:
-            return self.plugins
+            return [c for c in self.plugins if not c.disabled]
 
     def apply_all_plugins_on_value(self, argument):
         """Apply all of the plugins on the argument supplied to this function

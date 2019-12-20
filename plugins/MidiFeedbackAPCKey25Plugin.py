@@ -51,26 +51,63 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_plugin_status(self):
         from data_centre.plugin_collection import SequencePlugin
 
-        from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin 
+        from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin
+        from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
         for plugin in self.pc.get_plugins(SequencePlugin):
-            if isinstance(plugin, MidiActionsTestPlugin):
+            if isinstance(plugin, ShaderLoopRecordPlugin): #MidiActionsTestPlugin):
+
+                NOTE_PLAY_STATUS = 65
+                NOTE_RECORD_STATUS = 66 
+                NOTE_OVERDUB_STATUS = 67
+
                 if plugin.is_playing():
                     if not plugin.is_paused():
                         self.midi_feedback_device.send(
-                            mido.Message('note_on', note=65, velocity=self.COLOUR_GREEN)
+                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_GREEN)
                         )
                     else:
                         self.midi_feedback_device.send(
-                            mido.Message('note_on', note=65, velocity=self.COLOUR_GREEN_BLINK)
+                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_GREEN_BLINK)
                         )
                 else:
                     self.midi_feedback_device.send(
-                            mido.Message('note_on', note=65, velocity=self.COLOUR_OFF)
+                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_OFF)
+                    )
+                if plugin.recording:
+                    if plugin.is_paused():
+                        self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_RED_BLINK)
+                            )
+                    else:
+                        self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_RED)
+                            )
+                else:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_OFF)
+                    )
+                if plugin.overdub:
+                    if plugin.is_paused():
+                        self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_RED_BLINK)
+                            )
+                    else:
+                        self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_RED)
+                            )
+                else:
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_OFF)
                     )
 
+                
+
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
+        #print ("feedback_plugin_status")
         for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
+            #print ("for plugin %s" % plugin)
             for pad in range(0,8):
+                #print ("checking selected_preset %s vs pad %s" % (plugin.selected_preset, pad))
                 if plugin.selected_preset==pad:
                     if plugin.presets[pad] is None:
                         self.midi_feedback_device.send(

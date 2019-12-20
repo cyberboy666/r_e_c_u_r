@@ -4,6 +4,7 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
+        self.disabled = True
 
     @property
     def parserlist(self):
@@ -14,6 +15,7 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
                 ( r"stop_automation", self.stop_automation ),
                 ( r"toggle_pause_automation", self.toggle_pause_automation ),
                 ( r"pause_automation", self.pause_automation ),
+                ( r"toggle_loop_automation", self.toggle_loop_automation ),
         ]
 
     def test_plugin(self):

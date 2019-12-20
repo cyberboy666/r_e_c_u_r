@@ -95,10 +95,10 @@
 	    "DEFAULT": ["toggle_pause_automation"]
     },
     "note_on 66": {
-	    "DEFAULT": ["pause_automation"]
+	    "DEFAULT": ["toggle_record_automation"]
     },
     "note_on 67": {
-	    "DEFAULT": ["run_automation"]
+	    "DEFAULT": ["toggle_overdub_automation"]
     },
     "note_on 68": {
 	    "DEFAULT": ["store_next_preset"]

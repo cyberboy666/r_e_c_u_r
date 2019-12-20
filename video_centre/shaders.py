@@ -126,9 +126,10 @@ class Shaders(object):
 
     def play_that_shader(self, layer, slot):
         if self.data.shader_bank_data[layer][slot]['path']:
-            self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
-            self.selected_shader_list[layer]['slot'] = slot
-            self.load_shader_layer(layer)
+            if self.selected_shader_list[layer].get('slot') is None or self.selected_shader_list[layer]['slot'] != slot:
+                self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
+                self.selected_shader_list[layer]['slot'] = slot
+                self.load_shader_layer(layer)
         else:
             self.message_handler.set_message('INFO', "shader slot %s:%s is empty"%(layer,slot))
 

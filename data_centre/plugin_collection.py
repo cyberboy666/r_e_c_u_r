@@ -179,12 +179,21 @@ class PluginCollection(object):
     that contain a class definition that is inheriting from the Plugin class
     """
 
+    @property
+    def shaders(self):
+        return self.message_handler.shaders
+
+    """@property
+    def midi_input(self):
+        return self.data.midi_input"""
+
     def __init__(self, plugin_package, message_handler, data):
         """Constructor that initiates the reading of all available plugins
         when an instance of the PluginCollection object is created
         """
         self.plugin_package = plugin_package
         self.message_handler = message_handler
+        #self.shaders = lambda: data.shaders
         self.data = data
         #self.actions = message_handler.actions
         self.reload_plugins()

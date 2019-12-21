@@ -190,4 +190,54 @@ class Shaders(object):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
    
+    # methods for helping dealing with storing and recalling shader parameter frame states
+    def get_live_frame(self):
+        #print("get_live_frame: %s" % self.pc.message_handler.shaders.selected_param_list)
+        import copy #from copy import deepcopy
+        frame = {
+                'selected_shader_slots': [ shader.get('slot',None) for shader in self.selected_shader_list ],
+                'shader_params': copy.deepcopy(self.selected_param_list),
+                'layer_active_status': copy.deepcopy(self.selected_status_list),
+                'feedback_active': self.data.feedback_active,
+                'x3_as_speed': self.data.settings['shader']['X3_AS_SPEED']['value']
+        }
+        #print("built frame: %s" % frame['shader_params'])
+        return frame
+
+    def recall_frame_params(self, preset, ignored = None):
+        if not preset:
+            return
+        #print("recall_frame_params got: %s" % preset.get('shader_params'))
+        for (layer, param_list) in enumerate(preset.get('shader_params')):
+            if param_list:
+                for param,value in enumerate(param_list):
+                  if value is not None: # and (ignored is None or ignored['shader_params'][layer][param] is None):
+                    #print("recalling layer %s param %s: value %s" % (layer,param,value))
+                    self.data.plugins.midi_input.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
+
+        if preset.get('feedback_active') is not None:
+            self.data.feedback_active = preset.get('feedback_active',self.data.feedback_active)
+            if self.data.feedback_active:
+                self.data.plugins.midi_input.call_method_name('enable_feedback')
+            else:
+                self.data.plugins.midi_input.call_method_name('disable_feedback')
+
+    def recall_frame(self, preset, ignored = None):
+
+        self.data.settings['shader']['X3_AS_SPEED']['value'] = preset.get('x3_as_speed')
+
+        self.recall_frame_params(preset, ignored)
+
+        for (layer, slot) in enumerate(preset.get('selected_shader_slots',[])):
+            if slot is not None:
+                #print("setting layer %s to slot %s" % (layer, slot))
+                self.data.plugins.midi_input.call_method_name('play_shader_%s_%s' % (layer, slot))
+
+        for (layer, active) in enumerate(preset.get('layer_active_status',[])):
+            # print ("got %s layer with status %s " % (layer,active))
+            if active=='▶':
+                self.data.plugins.midi_input.call_method_name('start_shader_layer_%s' % layer)
+            else:
+                self.data.plugins.midi_input.call_method_name('stop_shader_layer_%s' % layer)
+
 

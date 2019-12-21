@@ -64,7 +64,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         return self.frames
 
     def reset_ignored(self):
-        self.ignored = { 'shader_params': [[None]*4]*3 }
+        self.ignored = { 'shader_params': [[None]*4,[None]*4,[None]*4] }
 
     duration = 2000
     frequency = 25 
@@ -76,12 +76,12 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         #print("got frame index %s" % current_frame_index)
 
-        current_frame = self.get_live_frame().copy()
+        current_frame = self.pc.shaders.get_live_frame().copy()
         if self.DEBUG_FRAMES: print("current_frame copy before recall is %s" % current_frame['shader_params'])
 
         if not self.recording:
             #pass
-            self.recall_frame(current_frame_index)
+            self.recall_frame_index(current_frame_index)
         #if self.overdub:
         #    self.recall_frame(current_frame_index,ignored = self.last_frame
         if self.recording:
@@ -92,12 +92,12 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             if self.DEBUG_FRAMES: print("diffed frame is %s" % diff['shader_params'])
             if self.overdub and self.frames[current_frame_index]:
                 self.ignored = self.merge_frames(self.ignored, diff)
-                self.recall_frame(current_frame_index, ignored = self.ignored)
+                self.recall_frame_index(current_frame_index, ignored = self.ignored)
                 #self.ignored = self.merge_frames(self.ignored, diff)
                 diff = self.merge_frames(self.frames[current_frame_index], diff)
                 if self.DEBUG_FRAMES:  print("after diff2 is: %s" % diff['shader_params'])
             self.frames[current_frame_index] = diff #self.get_frame_diff(self.last_frame,current_frame)
-            self.last_frame = self.get_live_frame()
+            self.last_frame = self.pc.shaders.get_live_frame()
         if self.DEBUG_FRAMES:  print("<<<<<<<<<<<<<< frame at %s" % position)
 
     # overlay frame2 on frame1
@@ -144,14 +144,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         return diff
 
 
-    def get_live_frame(self):
-        from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
-        live = self.pc.get_plugins(ShaderQuickPresetPlugin)[0].get_live_frame().copy()
-        if self.DEBUG_FRAMES:  print ("------\nget_live_frame got %s" % live['shader_params'])
-        return live
-
-    def recall_frame(self, index, ignored = None):
-        from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
+    def recall_frame_index(self, index, ignored = None):
+        #from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
         if ignored is not None:
             f = self.frames[index].copy()
             for ix,x in enumerate(ignored['shader_params']):
@@ -159,8 +153,12 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
                   if p is not None:
                       print("ignoring %ix,%ip" % (ix,ip))
                       f['shader_params'][ix][ip] = None  
-            self.pc.get_plugins(ShaderQuickPresetPlugin)[0].recall_frame_params(f)
+            #self.pc.get_plugins(ShaderQuickPresetPlugin)[0].recall_frame_params(f)
+            self.pc.shaders.recall_frame_params(f)
         else:
             if self.DEBUG_FRAMES:  print("recall_frame about to recall %s" % self.frames[index])
-            self.pc.get_plugins(ShaderQuickPresetPlugin)[0].recall_frame_params(self.frames[index])
+            #self.pc.get_plugins(ShaderQuickPresetPlugin)[0].recalL_frame_params(self.frames[index])
+            self.pc.shaders.recall_frame_params(self.frames[index])
+        #print("recalling \t%s\nwith ignored\t%s" % (self.frames[index].copy(),ignored))
+        self.pc.shaders.recall_frame_params(self.frames[index].copy(), ignored)
 

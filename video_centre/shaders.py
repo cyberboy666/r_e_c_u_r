@@ -243,4 +243,49 @@ class Shaders(object):
             else:
                 self.data.plugins.midi_input.call_method_name('stop_shader_layer_%s' % layer)
 
+    DEBUG_FRAMES = False
+
+    # overlay frame2 on frame1
+    def merge_frames(self, frame1, frame2):
+        from copy import deepcopy
+        f = deepcopy(frame1) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("merge_frames: got frame1\t%s" % frame1)
+        if self.DEBUG_FRAMES:  print("merge_frames: got frame2\t%s" % frame2)
+        for i,f2 in enumerate(frame2['shader_params']):
+            for i2,p in enumerate(f2):
+                if p is not None:
+                    f['shader_params'][i][i2] = p
+        if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
+        return f
+
+    def get_frame_diff(self, last_frame, current_frame):
+        if not last_frame: return current_frame
+
+        if self.DEBUG_FRAMES:
+            print(">>>>get_frame_diff>>>>")
+            print("last_frame: \t%s" % last_frame['shader_params'])
+            print("current_frame: \t%s" % current_frame['shader_params'])
+
+        #values = [[None]*4]*3 # 3 shader layers, 4 params
+        values = [[None]*4,[None]*4,[None]*4]
+        #print (current_frame.get('shader_params'))
+        for layer,params in enumerate(current_frame.get('shader_params',[[None]*4]*3)):
+            #if self.DEBUG_FRAMES:  print("got layer %s params: %s" % (layer, params))
+            for param,p in enumerate(params):
+                if p is not None and p != last_frame.get('shader_params')[layer][param]:
+                    if self.DEBUG_FRAMES: print("setting layer %s param %s to %s" % (layer,param,p))
+                    values[layer][param] = p
+
+        if last_frame['feedback_active'] != current_frame['feedback_active']:
+            feedback_active = current_frame['feedback_active']
+        else:
+            feedback_active = None
+
+        if self.DEBUG_FRAMES: print("values is\t%s" % values)
+
+        diff = { 'shader_params': values, 'feedback_active': feedback_active }
+        if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
+
+        return diff
+
 

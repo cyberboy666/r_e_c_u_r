@@ -205,15 +205,18 @@ class Shaders(object):
         return frame
 
     def recall_frame_params(self, preset, ignored = None):
-        if not preset:
+        if preset is None:
             return
         #print("recall_frame_params got: %s" % preset.get('shader_params'))
-        for (layer, param_list) in enumerate(preset.get('shader_params')):
+        for (layer, param_list) in enumerate(preset.get('shader_params',[])):
             if param_list:
                 for param,value in enumerate(param_list):
-                  if value is not None: # and (ignored is None or ignored['shader_params'][layer][param] is None):
-                    #print("recalling layer %s param %s: value %s" % (layer,param,value))
-                    self.data.plugins.midi_input.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
+                    if (ignored is not None and ignored['shader_params'][layer][param] is not None):
+                        print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
+                        continue
+                    if (value is not None):
+                      #print("recalling layer %s param %s: value %s" % (layer,param,value))
+                      self.data.plugins.midi_input.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
 
         if preset.get('feedback_active') is not None:
             self.data.feedback_active = preset.get('feedback_active',self.data.feedback_active)

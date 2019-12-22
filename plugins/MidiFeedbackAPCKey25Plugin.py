@@ -59,6 +59,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                 NOTE_PLAY_STATUS = 65
                 NOTE_RECORD_STATUS = 66 
                 NOTE_OVERDUB_STATUS = 67
+                NOTE_CLIP_STATUS_ROW = 8
 
                 if plugin.is_playing():
                     if not plugin.is_paused():
@@ -99,8 +100,20 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     self.midi_feedback_device.send(
                             mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_OFF)
                     )
-
-                
+                for i in range(plugin.MAX_CLIPS):
+                    if plugin.selected_clip==i:
+                        if plugin.is_playing() and not plugin.is_paused():
+                            self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN)
+                            )
+                        else:
+                            self.midi_feedback_device.send(
+                                mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN_BLINK)
+                            )
+                    else:
+                       self.midi_feedback_device.send(
+                            mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_OFF)
+                    )
 
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
         #print ("feedback_plugin_status")

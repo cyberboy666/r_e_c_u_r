@@ -69,15 +69,8 @@ class AnalogInput(object):
             norm_channel_value = None
 
         print('the action being called is {}'.format(method_name))
-        self.call_method_name(method_name, norm_channel_value)
+        self.actions.call_method_name(method_name, norm_channel_value)
         ## not sure whether we want to update the screen in general; here - probably not most of the time ...
         #if 'cc' not in message_name:
          #   self.display.refresh_display()
 
-    def call_method_name(self, method_name, argument=None):
-        if argument is not None:
-            getattr(self.actions, method_name)(argument)
-        else:
-            getattr(self.actions, method_name)()
-
-            

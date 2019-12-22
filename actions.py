@@ -921,3 +921,34 @@ class Actions(object):
                 
                 return (found_method, args)
 
+    def call_method_name(self, method_name, argument=None):
+        # if the target method doesnt exist, call the handler
+        if not hasattr(self, method_name):
+            self.call_parse_method_name(method_name, argument)
+            return
+
+        if argument is not None:
+            getattr(self, method_name)(argument)
+        else:
+            getattr(self, method_name)()
+
+
+    def call_parse_method_name(self, method_name, argument):
+        # first test if a registered plugin handles this for us
+        from data_centre.plugin_collection import ActionsPlugin
+        for plugin in self.data.plugins.get_plugins(ActionsPlugin):
+            if plugin.is_handled(method_name):
+                print ("Plugin %s is handling %s" % (plugin, method_name))
+                method, arguments = plugin.get_callback_for_method(method_name, argument)
+                method(*arguments)
+                return
+
+        # if not then fall back to using internal method
+        try:
+            method, arguments = self.get_callback_for_method(method_name, argument)
+            method(*arguments)
+        except:
+            print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
+

@@ -183,6 +183,10 @@ class PluginCollection(object):
     def shaders(self):
         return self.message_handler.shaders
 
+    @property
+    def actions(self):
+        return self.message_handler.actions
+
     """@property
     def midi_input(self):
         return self.data.midi_input"""

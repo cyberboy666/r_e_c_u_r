@@ -134,43 +134,11 @@ class MidiInput(object):
             
         else:
             norm_message_value = None
-        self.call_method_name(method_name, norm_message_value)
+        self.actions.call_method_name(method_name, norm_message_value)
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()
             #self.refresh_midi_feedback()
-
-
-    def call_method_name(self, method_name, argument=None):
-        # if the target method doesnt exist, call the handler
-        if not hasattr(self.actions, method_name):
-            self.call_parse_method_name(method_name, argument)
-            return
-
-        if argument is not None:
-            getattr(self.actions, method_name)(argument)
-        else:
-            getattr(self.actions, method_name)()
-
-
-    def call_parse_method_name(self, method_name, argument):
-        # first test if a registered plugin handles this for us
-        from data_centre.plugin_collection import ActionsPlugin
-        for plugin in self.data.plugins.get_plugins(ActionsPlugin):
-            if plugin.is_handled(method_name):
-                print ("Plugin %s is handling %s" % (plugin, method_name))
-                method, arguments = plugin.get_callback_for_method(method_name, argument)
-                method(*arguments)
-                return
-
-        # if not then fall back to using internal method
-        try:
-            method, arguments = self.actions.get_callback_for_method(method_name, argument)
-            method(*arguments)
-        except:
-            print ("Failed to find a method for '%s'" % method_name)
-            import traceback
-            traceback.print_exc()
 
 
     # Plugins to support MIDI feedback

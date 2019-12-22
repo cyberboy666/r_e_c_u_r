@@ -61,59 +61,51 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                 NOTE_OVERDUB_STATUS = 67
                 NOTE_CLIP_STATUS_ROW = 8
 
+                colour = self.COLOUR_OFF
                 if plugin.is_playing():
-                    if not plugin.is_paused():
-                        self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_GREEN)
-                        )
-                    else:
-                        self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_GREEN_BLINK)
-                        )
-                else:
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=self.COLOUR_OFF)
-                    )
+                    colour = self.COLOUR_GREEN
+                    if plugin.is_paused():
+                        colour += self.BLINK
+                self.midi_feedback_device.send(
+                    mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=colour)
+                )
+
+                colour = self.COLOUR_OFF
                 if plugin.recording:
-                    if plugin.is_paused():
-                        self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_RED_BLINK)
-                            )
-                    else:
-                        self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_RED)
-                            )
-                else:
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=self.COLOUR_OFF)
-                    )
+                    colour = self.COLOUR_GREEN
+                    if plugin.is_ignoring():
+                       colour += self.BLINK
+
+                self.midi_feedback_device.send(
+                        mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=colour)
+                )
+
+                colour = self.COLOUR_OFF
                 if plugin.overdub:
-                    if plugin.is_paused():
-                        self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_RED_BLINK)
-                            )
-                    else:
-                        self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_RED)
-                            )
-                else:
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=self.COLOUR_OFF)
-                    )
+                    colour = self.COLOUR_RED
+                    if plugin.is_paused() or plugin.is_ignoring():
+                        colour += self.BLINK
+                self.midi_feedback_device.send(
+                        mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=colour)
+                )
+
                 for i in range(plugin.MAX_CLIPS):
-                    if plugin.selected_clip==i:
+                    if i in plugin.running_clips:
                         if plugin.is_playing() and not plugin.is_paused():
-                            self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN)
-                            )
+                            colour = self.COLOUR_GREEN
                         else:
-                            self.midi_feedback_device.send(
-                                mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN_BLINK)
-                            )
+                            colour = self.COLOUR_AMBER
+                        if plugin.selected_clip==i: #blink if selected
+                            colour += self.BLINK
+                    elif plugin.selected_clip==i:
+                        colour = self.COLOUR_RED_BLINK
                     else:
-                       self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_OFF)
+                        colour = self.COLOUR_OFF
+
+                    self.midi_feedback_device.send(
+                            mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=colour)
                     )
+ 
 
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
         #print ("feedback_plugin_status")
@@ -121,24 +113,19 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             #print ("for plugin %s" % plugin)
             for pad in range(0,8):
                 #print ("checking selected_preset %s vs pad %s" % (plugin.selected_preset, pad))
+                colour = self.COLOUR_OFF
                 if plugin.selected_preset==pad:
                     if plugin.presets[pad] is None:
-                        self.midi_feedback_device.send(
-                            mido.Message('note_on', note=pad, velocity=self.COLOUR_AMBER_BLINK)
-                        )
+                        colour = self.COLOUR_AMBER_BLINK
                     else:
-                        self.midi_feedback_device.send(
-                            mido.Message('note_on', note=pad, velocity=self.COLOUR_GREEN)
-                        )
+                        colour = self.COLOUR_GREEN
                 elif plugin.presets[pad] is not None:
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=pad, velocity=self.COLOUR_AMBER)
-                    )
-                else:
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=pad, velocity=self.COLOUR_OFF)
-                    )
+                    colour = self.COLOUR_AMBER
+                self.midi_feedback_device.send(
+                        mido.Message('note_on', note=pad, velocity=colour)
+                )
 
+    BLINK = 1
     COLOUR_OFF = 0
     COLOUR_GREEN = 1
     COLOUR_GREEN_BLINK = 2
@@ -190,8 +177,4 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     self.feedback_shader_off(n, x)
 
         #print("refresh_midi_feedback")
-
-        #if self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
-        #  if self.supports_midi_feedback(self.data.midi_device_name):
-        #    self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
 

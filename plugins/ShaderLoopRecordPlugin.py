@@ -49,7 +49,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
                 ( r"toggle_record_automation", self.toggle_record_automation ),
                 ( r"toggle_overdub_automation", self.toggle_overdub_automation ),
                 ( r"clear_automation", self.clear_clip ),
-                ( r"select_automation_clip_([0-3])", self.select_clip ),
+                ( r"select_automation_clip_([0-7])", self.select_clip ),
+                ( r"toggle_automation_clip_([0-7])", self.toggle_clip )
         ]
 
     def toggle_overdub_automation(self):
@@ -81,14 +82,30 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         if self.DEBUG_FRAMES: print ("clear_frames set to %s" % (int(self.duration / self.frequency)))
         return self.frames
 
+    def toggle_clip(self,clip = None):
+        if clip is None:
+            clip = self.selected_clip
+        else:
+            self.selected_clip = clip
+
+        #self.running_clips[clip] = not self.running_clips[clip]
+        if clip in self.running_clips:
+            self.running_clips.remove(clip)
+        else:
+            self.running_clips.append(clip)
+        print("running clips looks like %s" %self.running_clips)
+
     def reset_ignored(self):
         # print("!!!!resetting ignored")
         self.ignored = { 'shader_params': [[None]*4,[None]*4,[None]*4] }
+    def is_ignoring(self):
+        return not self.pc.shaders.is_frame_empty(self.ignored)
 
     def select_clip(self, clip):
         self.selected_clip = clip
 
     selected_clip = 0
+    running_clips = [ ] #False ] * self.MAX_CLIPS
 
     duration = 2000
     frequency = 10 #25 
@@ -97,7 +114,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     #ignored = None # set in reset_ignored in init - used for tracking what parans have changed since overdub
     last_frame = None # for tracking what's changed between frames when overdubbing
     last_saved_index = None # for backfilling
-    DEBUG_FRAMES = True#True
+    DEBUG_FRAMES = False#True
     def run_sequence(self, position):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
@@ -110,11 +127,12 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         #print ("%s clips, looks like %s" % (len(self.frames),self.frames))
 
         #print("selected_clip is %s "%selected_clip)
-        clip = self.frames[selected_clip]
-        saved_frame = self.frames[selected_clip][current_frame_index]
-        if not self.recording:
-            self.pc.shaders.recall_frame(saved_frame)
-        if self.recording:
+        #clip = self.frames[selected_clip]
+        for selected_clip in self.running_clips:
+          saved_frame = self.frames[selected_clip][current_frame_index]
+          if not self.recording or (selected_clip!=self.selected_clip):
+              self.pc.shaders.recall_frame(saved_frame)
+          if self.recording and selected_clip==self.selected_clip:
             if self.last_frame is None: 
                 self.last_frame = current_frame
             if self.DEBUG_FRAMES: print("last frame is \t\t%s" % self.last_frame['shader_params'])

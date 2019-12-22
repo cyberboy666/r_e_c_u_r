@@ -274,6 +274,19 @@ class Shaders(object):
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return f
 
+    def is_frame_empty(self, frame):
+        #from copy import deepcopy
+        #f = deepcopy(frame) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("is_frame_empty: got frame\t%s" % frame)
+        for i,f in enumerate(frame['shader_params']):
+            for i2,p in enumerate(f):
+                if p is not None: #ignored['shader_params'][i][i2] is not None:
+                    return False
+        if frame.get('feedback_active') is not None:
+            return False
+        if self.DEBUG_FRAMES:  print("is_frame_empty: got return true" % f)
+        return True
+
 
     def get_frame_diff(self, last_frame, current_frame):
         if not last_frame: return current_frame

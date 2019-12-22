@@ -3,6 +3,9 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 import copy
 
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
+
+    MAX_PRESETS = 8
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
         self.PRESET_FILE_NAME = 'ShaderQuickPresetPlugin/presets.json'
@@ -14,7 +17,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
     def load_presets(self):
         print("trying load presets? %s " % self.PRESET_FILE_NAME)
-        return self.pc.read_json(self.PRESET_FILE_NAME) or ([None]*10)
+        return self.pc.read_json(self.PRESET_FILE_NAME) or ([None]*self.MAX_PRESETS)
 
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
@@ -31,9 +34,9 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
     def store_next_preset(self):
         res = [i for i, val in enumerate(self.presets) if val == None]
-        if res is None:
+        if res is None or not res:
             self.selected_preset += 1
-            self.selected_preset %= 10
+            self.selected_preset %= self.MAX_PRESETS 
         else:
             self.selected_preset = res[0]
 

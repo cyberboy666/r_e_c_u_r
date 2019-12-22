@@ -76,7 +76,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     #ignored = None # set in reset_ignored in init - used for tracking what parans have changed since overdub
     last_frame = None # for tracking what's changed between frames when overdubbing
     last_saved_index = None # for backfilling
-    DEBUG_FRAMES = #True
+    DEBUG_FRAMES = False#True
     def run_sequence(self, position):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))

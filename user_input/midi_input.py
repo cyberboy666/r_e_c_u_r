@@ -123,26 +123,8 @@ class MidiInput(object):
             
         else:
             norm_message_value = None
-        self.call_method_name(method_name, norm_message_value)
+        self.actions.call_method_name(method_name, norm_message_value)
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()
-
-    def call_method_name(self, method_name, argument=None):
-        # if the target method doesnt exist, call the handler
-        if not hasattr(self.actions, method_name):
-            self.call_parse_method_name(method_name, argument)
-            return
-
-        if argument is not None:
-            getattr(self.actions, method_name)(argument)
-        else:
-            getattr(self.actions, method_name)()
-
-
-    def call_parse_method_name(self, method_name, argument):
-        method, arguments = self.actions.get_callback_for_method(method_name, argument)
-        method(*arguments)
-
-
 

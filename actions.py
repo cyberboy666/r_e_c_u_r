@@ -905,10 +905,26 @@ class Actions(object):
                 found_method = me 
                 parsed_args = list(map(int,matches.groups()))
                 if argument is not None:
-                    #args = [argument] + parsed_args 
                     args = parsed_args + [argument]
                 else:
                     args = parsed_args 
                 
                 return (found_method, args)
+
+    def call_method_name(self, method_name, argument=None):
+        # if the target method doesnt exist, call the handler
+        if not hasattr(self, method_name):
+            self.call_parse_method_name(method_name, argument)
+            return
+
+        if argument is not None:
+            getattr(self, method_name)(argument)
+        else:
+            getattr(self, method_name)()
+
+
+    def call_parse_method_name(self, method_name, argument):
+        method, arguments = self.get_callback_for_method(method_name, argument)
+        method(*arguments)
+
 

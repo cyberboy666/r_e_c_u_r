@@ -204,16 +204,16 @@ class Shaders(object):
         #print("built frame: %s" % frame['shader_params'])
         return frame
 
-    def recall_frame_params(self, preset, ignored = None):
+    def recall_frame_params(self, preset):
         if preset is None:
             return
         #print("recall_frame_params got: %s" % preset.get('shader_params'))
         for (layer, param_list) in enumerate(preset.get('shader_params',[])):
             if param_list:
                 for param,value in enumerate(param_list):
-                    if (ignored is not None and ignored['shader_params'][layer][param] is not None):
-                        print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
-                        continue
+                    #if (ignored is not None and ignored['shader_params'][layer][param] is not None):
+                    #    print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
+                    #    continue
                     if (value is not None):
                       #print("recalling layer %s param %s: value %s" % (layer,param,value))
                       self.data.plugins.midi_input.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
@@ -225,11 +225,12 @@ class Shaders(object):
             else:
                 self.data.plugins.midi_input.call_method_name('disable_feedback')
 
-    def recall_frame(self, preset, ignored = None):
+    def recall_frame(self, preset):
 
         self.data.settings['shader']['X3_AS_SPEED']['value'] = preset.get('x3_as_speed')
 
-        self.recall_frame_params(preset, ignored)
+        # x3_as_speed affects preset recall, so do that first
+        self.recall_frame_params(preset)
 
         for (layer, slot) in enumerate(preset.get('selected_shader_slots',[])):
             if slot is not None:
@@ -255,6 +256,8 @@ class Shaders(object):
             for i2,p in enumerate(f2):
                 if p is not None:
                     f['shader_params'][i][i2] = p
+        if frame2['feedback_active'] is not None:
+            f['feedback_active'] = frame2['feedback_active']
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return f
 
@@ -266,6 +269,8 @@ class Shaders(object):
             for i2,p in enumerate(f2):
                 if ignored['shader_params'][i][i2] is not None:
                     f['shader_params'][i][i2] = None
+        if ignored.get('feedback_active') is not None:
+            f['feedback_active'] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return f
 

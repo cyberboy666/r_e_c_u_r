@@ -73,10 +73,10 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     frequency = 10 #25 
     recording = False
     overdub = True 
-    ignored = None # set in reset_ignored in init - used for tracking what parans have changed since overdub
+    #ignored = None # set in reset_ignored in init - used for tracking what parans have changed since overdub
     last_frame = None # for tracking what's changed between frames when overdubbing
     last_saved_index = None # for backfilling
-    DEBUG_FRAMES = False#True
+    DEBUG_FRAMES = #True
     def run_sequence(self, position):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
@@ -97,6 +97,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             if self.DEBUG_FRAMES: print("diffed frame is \t%s" % diff['shader_params'])
             if self.overdub and self.frames[current_frame_index]:
                 # add the params tweaked this frame to the params to be ignored by recall
+                if self.DEBUG_FRAMES: print("saved frame is \t%s" % self.frames[current_frame_index]['shader_params'])
                 self.ignored = self.pc.shaders.merge_frames(self.ignored, diff)
                 diff = self.pc.shaders.merge_frames(
                         self.pc.shaders.get_frame_ignored(self.frames[current_frame_index], self.ignored),
@@ -117,6 +118,6 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             self.last_frame = self.pc.shaders.get_live_frame() #diff
         if self.DEBUG_FRAMES:  print("<<<<<<<<<<<<<< frame at %s" % current_frame_index)
 
-    def recall_frame_index(self, index, ignored = None):
-        self.pc.shaders.recall_frame_params(self.frames[index].copy(), ignored)
+    def recall_frame_index(self, index):
+        self.pc.shaders.recall_frame_params(self.frames[index].copy())
 

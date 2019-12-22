@@ -140,7 +140,6 @@ class MidiInput(object):
             self.display.refresh_display()
             #self.refresh_midi_feedback()
 
-
     # Plugins to support MIDI feedback
 
     def find_output_plugin(self, midi_device):
@@ -165,7 +164,4 @@ class MidiInput(object):
         if self.midi_output and self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
           if self.midi_output.supports_midi_feedback(self.data.midi_device_name):
             self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
-
-
-
 

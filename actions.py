@@ -892,7 +892,7 @@ class Actions(object):
                 ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
                 ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
                 ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
-                ( r"set_the_shader_param_([0-4])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount )
+                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount )
         }
 
     def get_callback_for_method(self, method_name, argument):
@@ -924,7 +924,11 @@ class Actions(object):
 
 
     def call_parse_method_name(self, method_name, argument):
-        method, arguments = self.get_callback_for_method(method_name, argument)
-        method(*arguments)
-
+        try:
+            method, arguments = self.get_callback_for_method(method_name, argument)
+            method(*arguments)
+        except:
+            print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
 

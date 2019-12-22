@@ -153,6 +153,18 @@
 	    "DEFAULT": ["next_shader_layer"]
     },
 
+    "note_on 8": {
+	    "DEFAULT": ["select_automation_clip_0"]
+    },
+    "note_on 9": {
+	    "DEFAULT": ["select_automation_clip_1"]
+    },
+    "note_on 10": {
+	    "DEFAULT": ["select_automation_clip_2"]
+    },
+    "note_on 11": {
+	    "DEFAULT": ["select_automation_clip_3"]
+    },
 	"note_on 32": {
 		"DEFAULT": ["play_shader_0_0"]
 	},

@@ -258,6 +258,18 @@ class Shaders(object):
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return f
 
+    def get_frame_ignored(self, frame, ignored):
+        from copy import deepcopy
+        f = deepcopy(frame) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("get_frame_ignored: got frame\t%s" % frame)
+        for i,f2 in enumerate(frame['shader_params']):
+            for i2,p in enumerate(f2):
+                if ignored['shader_params'][i][i2] is not None:
+                    f['shader_params'][i][i2] = None
+        if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
+        return f
+
+
     def get_frame_diff(self, last_frame, current_frame):
         if not last_frame: return current_frame
 
@@ -276,7 +288,7 @@ class Shaders(object):
                     if self.DEBUG_FRAMES: print("setting layer %s param %s to %s" % (layer,param,p))
                     values[layer][param] = p
 
-        if last_frame['feedback_active'] != current_frame['feedback_active']:
+        if current_frame['feedback_active'] is not None and last_frame['feedback_active'] != current_frame['feedback_active']:
             feedback_active = current_frame['feedback_active']
         else:
             feedback_active = None

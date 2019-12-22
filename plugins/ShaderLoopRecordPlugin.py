@@ -66,16 +66,17 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         return self.frames
 
     def reset_ignored(self):
-        print("!!!!resetting ignored")
+        # print("!!!!resetting ignored")
         self.ignored = { 'shader_params': [[None]*4,[None]*4,[None]*4] }
 
     duration = 2000
     frequency = 10 #25 
     recording = False
-    overdub = True
-    last_frame = None
-    last_saved_index = None
-    DEBUG_FRAMES = True
+    overdub = True 
+    ignored = None # set in reset_ignored in init - used for tracking what parans have changed since overdub
+    last_frame = None # for tracking what's changed between frames when overdubbing
+    last_saved_index = None # for backfilling
+    DEBUG_FRAMES = False#True
     def run_sequence(self, position):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
@@ -85,33 +86,32 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         if self.DEBUG_FRAMES: print("current_frame copy before recall is %s" % current_frame['shader_params'])
 
         if not self.recording:
-            #pass
             self.recall_frame_index(current_frame_index)
-        #if self.overdub:
-        #    self.recall_frame(current_frame_index,ignored = self.last_frame
         if self.recording:
             if self.last_frame is None: 
                 self.last_frame = current_frame
             if self.DEBUG_FRAMES: print("pre-diff frame is\t%s" % current_frame['shader_params'])
-            if self.DEBUG_FRAMES: print("last frame is  \t%s" %self.last_frame['shader_params'])
-            if self.DEBUG_FRAMES: print("current f is   \t%s" %current_frame['shader_params'])
+            if self.DEBUG_FRAMES: print("last frame is \t\t%s" % self.last_frame['shader_params'])
+            if self.DEBUG_FRAMES: print("current f is  \t\t%s" % current_frame['shader_params'])
             diff = self.pc.shaders.get_frame_diff(self.last_frame,current_frame)
             if self.DEBUG_FRAMES: print("diffed frame is \t%s" % diff['shader_params'])
             if self.overdub and self.frames[current_frame_index]:
+                # add the params tweaked this frame to the params to be ignored by recall
                 self.ignored = self.pc.shaders.merge_frames(self.ignored, diff)
-                self.recall_frame_index(current_frame_index, ignored = self.ignored)
-                #self.ignored = self.merge_frames(self.ignored, diff)
-                #diff = self.pc.shaders.merge_frames(self.frames[current_frame_index], diff)
+                diff = self.pc.shaders.merge_frames(
+                        self.pc.shaders.get_frame_ignored(self.frames[current_frame_index], self.ignored),
+                        diff
+                )
                 #diff = self.pc.shaders.merge_frames(self.pc.shaders.get_live_frame(), diff)
                 self.pc.shaders.recall_frame(diff)
-                if self.DEBUG_FRAMES:  print("after diff2 is:\t%s" % diff['shader_params'])
-            print("||||saving frame \t%s" % (diff['shader_params']))
+                if self.DEBUG_FRAMES:  print("after diff2 is:  \t%s" % diff['shader_params'])
+            if self.DEBUG_FRAMES: print("||||saving frame \t%s" % (diff['shader_params']))
             self.frames[current_frame_index] = diff #self.get_frame_diff(self.last_frame,current_frame)
             #backfill frames
             if self.last_saved_index is not None:
-                print ("last_saved_index is %s, current_frame_index is %s" % (self.last_saved_index, current_frame_index))
-                for i in range(current_frame_index - (self.last_saved_index)):
-                    print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames)))
+                if self.DEBUG_FRAMES: print ("last_saved_index is %s, current_frame_index is %s" % (self.last_saved_index, current_frame_index))
+                for i in range(current_frame_index - (self.last_saved_index) - 1):
+                    if self.DEBUG_FRAMES:print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames)))
                     self.frames[(self.last_saved_index+i+1)%len(self.frames)] = diff
             self.last_saved_index = current_frame_index
             self.last_frame = self.pc.shaders.get_live_frame() #diff

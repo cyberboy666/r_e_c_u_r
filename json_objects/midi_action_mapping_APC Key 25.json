@@ -161,10 +161,9 @@
     "note_on 71": {
 	    "DEFAULT": ["next_shader_layer"]
     },
-
     "note_on 8": {
 	    "DEFAULT": ["toggle_automation_clip_0"],
-	    "FN_DEFAULT": ["select_automation_clip_1"]
+	    "FN_DEFAULT": ["select_automation_clip_0"]
     },
     "note_on 9": {
 	    "DEFAULT": ["toggle_automation_clip_1"],

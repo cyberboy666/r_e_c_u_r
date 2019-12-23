@@ -103,6 +103,6 @@
         	"PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
 	},
 	"/volume_proc": {
-		"DEFAULT": ["set_layer_0_param_0_audio_react_volume"]
+		"DEFAULT": ["modulate_layer_0_param_0_continuous"]
 	}
 }

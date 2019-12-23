@@ -114,13 +114,13 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             for pad in range(0,8):
                 #print ("checking selected_preset %s vs pad %s" % (plugin.selected_preset, pad))
                 colour = self.COLOUR_OFF
-                if plugin.selected_preset==pad:
-                    if plugin.presets[pad] is None:
-                        colour = self.COLOUR_AMBER_BLINK
-                    else:
+                if plugin.last_recalled==pad:
+                    if plugin.presets[pad] is not None:
                         colour = self.COLOUR_GREEN
                 elif plugin.presets[pad] is not None:
                     colour = self.COLOUR_AMBER
+                if plugin.selected_preset==pad:
+                    colour += self.BLINK
                 self.midi_feedback_device.send(
                         mido.Message('note_on', note=pad, velocity=colour)
                 )

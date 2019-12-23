@@ -14,6 +14,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         print("loaded presets %s" % self.presets)
 
         self.selected_preset = None
+        self.last_recalled = None
 
     def load_presets(self):
         print("trying load presets? %s " % self.PRESET_FILE_NAME)
@@ -29,7 +30,8 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
             ( r"save_presets",              self.save_presets ),
             ( r"store_next_preset",         self.store_next_preset ),
             ( r"store_current_preset",      self.store_current_preset ),
-            ( r"switch_to_preset_([0-9])",  self.switch_to_preset ),
+            ( r"switch_to_preset_([0-%i])"%self.MAX_PRESETS,  self.switch_to_preset ),
+            ( r"select_preset_([0-%i])"%self.MAX_PRESETS, self.select_preset ),
         ]
 
     def store_next_preset(self):
@@ -52,6 +54,9 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
         self.save_presets()
 
+    def select_preset(self, preset):
+        self.selected_preset = preset
+
     def switch_to_preset(self, preset):
         #if preset>len(self.presets):
         if self.presets[preset] is None:
@@ -60,10 +65,10 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
             return
         print ("switching to preset %s" % preset)
         self.selected_preset = preset
-        #self.pc.message_handler.actions.shaders.selected_shader_list = self.presets[preset].get('selected_shader_list',self.pc.message_handler.actions.shaders.selected_shader_list)
+
+        self.last_recalled = preset
         preset = self.presets[preset]
 
         print ("recalled preset %s" % preset)
-
         self.pc.shaders.recall_frame(preset)
 

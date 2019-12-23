@@ -98,6 +98,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     def reset_ignored(self):
         # print("!!!!resetting ignored")
         self.ignored = { 'shader_params': [[None]*4,[None]*4,[None]*4] }
+
     def is_ignoring(self):
         return not self.pc.shaders.is_frame_empty(self.ignored)
 
@@ -128,6 +129,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
 
         #print("selected_clip is %s "%selected_clip)
         #clip = self.frames[selected_clip]
+        if self.recording and not self.selected_clip in self.running_clips:
+            self.running_clips += [ self.selected_clip ]
         for selected_clip in self.running_clips:
           saved_frame = self.frames[selected_clip][current_frame_index]
           if not self.recording or (selected_clip!=self.selected_clip):

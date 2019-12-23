@@ -100,9 +100,9 @@
 	},
 	"s": {
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
-        "PLAY_SHADER": ["play_shader_9","confirm_shutdown"],
-	"volume": {
-		"DEFAULT": ["set_layer_0_param_0_audio_react_volume"],
+        	"PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
+	},
+	"/volume_proc": {
+		"DEFAULT": ["set_layer_0_param_0_audio_react_volume"]
 	}
-    }
 }

@@ -104,7 +104,8 @@
 	    "DEFAULT": ["store_next_preset"]
     },
     "note_on 69": {
-	    "DEFAULT": ["store_current_preset"]
+	    "DEFAULT": ["store_current_preset"],
+	    "FN_DEFAULT": ["clear_current_preset"]
     },
     "note_on 0": {
 	    "DEFAULT": ["switch_to_preset_0"],

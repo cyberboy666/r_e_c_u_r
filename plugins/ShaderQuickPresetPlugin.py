@@ -32,6 +32,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
             ( r"store_current_preset",      self.store_current_preset ),
             ( r"switch_to_preset_([0-%i])"%self.MAX_PRESETS,  self.switch_to_preset ),
             ( r"select_preset_([0-%i])"%self.MAX_PRESETS, self.select_preset ),
+            ( r"clear_current_preset", self.clear_current_preset ),
         ]
 
     def store_next_preset(self):
@@ -44,6 +45,13 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
         self.store_current_preset()
 
+    def clear_current_preset(self):
+        if self.selected_preset is None:
+            return
+        self.presets[self.selected_preset] = None
+
+        self.save_presets()
+
     def store_current_preset(self):
         if self.selected_preset is None: self.selected_preset = 0
 
@@ -51,6 +59,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         self.presets[insert_position] = self.pc.shaders.get_live_frame()
         #print ("stored %s at position %s" % (self.presets[insert_position], insert_position))
         self.selected_preset = insert_position
+        self.last_recalled = insert_position
 
         self.save_presets()
 

@@ -56,12 +56,14 @@ class OscInput(object):
 
         if self.data.function_on and len(this_mapping[mode]) > 1:
             print('the action being called is {}'.format(this_mapping[mode][1]))
-            getattr(self.actions, this_mapping[mode][1])()
+            #getattr(self.actions, this_mapping[mode][1])()
+            self.actions.call_method_name(this_mapping[mode][1])
             if self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
                 self.data.function_on = False
         else:
             print('the action being called is {}'.format(this_mapping[mode][0]))
-            getattr(self.actions, this_mapping[mode][0])()
+            #getattr(self.actions, this_mapping[mode][0])()
+            self.actions.call_method_name(this_mapping[mode][0])
       
         self.display.refresh_display()
 

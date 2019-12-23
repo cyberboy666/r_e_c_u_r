@@ -41,7 +41,7 @@ class OscInput(object):
         self.osc_server.shutdown()
 
     def process_command(self, addr, args):
-        print("!!!!!!!!!!!!!!!!%s\t%s" %(addr,args))
+        #print("!!!!!!!!!!!!!!!!%s\t%s" %(addr,args))
         #print ("%s" %self.osc_mappings.keys())
         if addr in self.osc_mappings:
             print("got a mapping for %s" % addr)

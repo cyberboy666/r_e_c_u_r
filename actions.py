@@ -922,7 +922,6 @@ class Actions(object):
 
     def call_method_name(self, method_name, argument=None):
         # if the target method doesnt exist, call the handler
-        print ("call method name passed %s" % method_name)
         if not hasattr(self, method_name):
             self.call_parse_method_name(method_name, argument)
             return

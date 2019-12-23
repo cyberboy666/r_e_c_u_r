@@ -29,22 +29,21 @@ class OscInput(object):
         this_dispatcher = dispatcher.Dispatcher()
         this_dispatcher.map("/recurOsc", self.on_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
-        this_dispatcher.map("/*", self.process_command)
+        this_dispatcher.map("/*", self.on_osc_message)
         
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)
         server_thread.start()
-        print("started server on %s\n(%s)" % (server.server_address,dir(server)))
         return server
 
     def exit_osc_server(self, unused_addr, args):
         self.osc_server.shutdown()
 
-    def process_command(self, addr, args):
+    def on_osc_message(self, addr, args):
         #print("!!!!!!!!!!!!!!!!%s\t%s" %(addr,args))
         #print ("%s" %self.osc_mappings.keys())
         if addr in self.osc_mappings:
-            print("got a mapping for %s" % addr)
+            print("got a mapping for %s with value %s" % (addr,args))
             self.actions.call_method_name(self.osc_mappings[addr]['DEFAULT'][0], args)
 
     def on_osc_input(self, addr, args):

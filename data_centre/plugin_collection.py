@@ -161,7 +161,7 @@ class ActionsPlugin(Plugin):
             if matches:
                 found_method = me
                 parsed_args = list(map(int,matches.groups()))
-                if argument:
+                if argument is not None:
                     args = parsed_args + [argument]
                 else:
                     args = parsed_args

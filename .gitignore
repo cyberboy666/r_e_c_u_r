@@ -3,6 +3,9 @@
 .vscode
 *.orig
 *.rej
+*.backup
+*.swp
+*.bk
 json_objects/display_data.json
 json_objects/shader_bank_data.json
 json_objects/settings.json

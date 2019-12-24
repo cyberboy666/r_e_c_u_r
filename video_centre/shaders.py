@@ -17,6 +17,7 @@ class Shaders(object):
         self.shaders_menu_list = self.generate_shaders_list()
                  
         self.selected_status_list = ['-','-','-'] ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_modulation_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
         #self.load_selected_shader()
@@ -179,11 +180,20 @@ class Shaders(object):
         self.set_param_layer_to_amount(param, layer, amount)
 
     def set_param_layer_to_amount(self, param, layer, amount):
+        amount += self.selected_modulation_list[layer][param]
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layer) #layer_offset=layer-self.data.shader_layer)
         else:
             self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
         self.selected_param_list[layer][param] = amount
+
+    def modulate_param_layer_offset_to_amount(self, param, amount, layer_offset = 0):
+        layer = (self.data.shader_layer + layer_offset) % 3
+        self.modulate_param_layer_to_amount(param, layer, amount)
+
+    def modulate_param_layer_to_amount(self, param, layer, amount):
+        self.selected_modulation_list[layer][param] = amount
+        self.set_param_layer_to_amount(param, layer, amount)
 
     def set_speed_offset_to_amount(self, layer_offset, amount):
         self.set_speed_to_amount(amount, layer_offset)

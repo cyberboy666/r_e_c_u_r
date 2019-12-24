@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 15:53:08 UTC 2019
+Tue 24 Dec 17:08:24 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
@@ -166,6 +166,7 @@ for branch=feature_midi_feedback_plugin
   * start_shader_layer_([0-2])
   * stop_shader_layer_([0-2])
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
+  * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes

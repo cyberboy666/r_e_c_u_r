@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 15:06:56 UTC 2019
+Tue 24 Dec 15:50:09 UTC 2019
 
 for branch=feature_shader_midi
 
@@ -161,6 +161,7 @@ for branch=feature_shader_midi
   * start_shader_layer_([0-2])
   * stop_shader_layer_([0-2])
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
+  * set_shader_speed_layer_([0-2])_amount
 
 ----
 

@@ -1,10 +1,10 @@
-====== Auto-generated Actions list ======\n
-Tue 24 Dec 14:10:09 UTC 2019
+# Auto-generated Actions list
+
+Tue 24 Dec 14:19:44 UTC 2019
 
 for branch=feature_shader_midi
 
-
-===== Methods =====
+# Methods
   *   call_method_name(method_name, argument=None)
   *   call_parse_method_name(method_name, argument)
   *   change_composite_setting(setting_value)
@@ -156,7 +156,7 @@ for branch=feature_shader_midi
   *   try_pull_code_and_reset
   *   try_remove_file(path)
 
-===== Dynamic routes =====
+# Dynamic routes
   * play_shader_([0-9])_([0-9])
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])

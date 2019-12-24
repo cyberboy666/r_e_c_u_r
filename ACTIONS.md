@@ -1,10 +1,10 @@
-====== Auto-generated Actions list ======\n
-Tue 24 Dec 14:06:25 UTC 2019
+# Auto-generated Actions list
+
+Tue 24 Dec 14:17:51 UTC 2019
 
 for branch=feature_list_actions
 
-
-===== Methods =====
+# Methods
   *   change_composite_setting(setting_value)
   *   change_hdmi_settings(setting_value)
   *   change_output_mode(setting_value)

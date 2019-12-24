@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 14:31:13 UTC 2019
+Tue 24 Dec 15:09:04 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
@@ -160,19 +160,14 @@ for branch=feature_midi_feedback_plugin
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
 
-# Dynamic routes
-  * play_shader_([0-9])_([0-9])
+## Dynamic routes
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])
-  * toggle_shader_layer_([0-2])
-  * start_shader_layer_([0-2])
   * start_shader_layer_([0-2])
   * stop_shader_layer_([0-2])
-  * stop_shader_layer_([0-2])
-  * set_the_shader_param_([0-3])_layer_([0-2])_continuous
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
 
-# Plugin routes
+### Plugin routes
   * test_plugin	(from MidiActionsTestPlugin)
   * cycle_shaders	(from MidiActionsTestPlugin)
   * run_automation	(from MidiActionsTestPlugin)

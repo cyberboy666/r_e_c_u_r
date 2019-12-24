@@ -51,8 +51,6 @@ class SequencePlugin(Plugin):
         passed = now - self.automation_start
         if self.duration>0:
             position = passed / self.duration*1000
-        else:
-            position = 100 / (passed/frequency)
         return position
 
     def toggle_automation(self):

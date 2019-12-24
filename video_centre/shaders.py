@@ -185,6 +185,9 @@ class Shaders(object):
             self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
         self.selected_param_list[layer][param] = amount
 
+    def set_speed_offset_to_amount(self, layer_offset, amount):
+        self.set_speed_to_amount(amount, layer_offset)
+
     def set_speed_to_amount(self, amount, layer_offset=0):
         layer = (self.data.shader_layer + layer_offset) % 3
         self.set_speed_to_amount_layer(layer)
@@ -202,7 +205,8 @@ class Shaders(object):
                 'shader_params': copy.deepcopy(self.selected_param_list),
                 'layer_active_status': copy.deepcopy(self.selected_status_list),
                 'feedback_active': self.data.feedback_active,
-                'x3_as_speed': self.data.settings['shader']['X3_AS_SPEED']['value']
+                'x3_as_speed': self.data.settings['shader']['X3_AS_SPEED']['value'],
+                'shader_speeds': copy.deepcopy(self.selected_speed_list),
         }
         #print("built frame: %s" % frame['shader_params'])
         return frame
@@ -234,6 +238,10 @@ class Shaders(object):
                 self.data.plugins.actions.call_method_name('enable_x3_as_speed')
             else:
                 self.data.plugins.actions.call_method_name('enable_x3_as_speed')"""
+
+        for (layer, speed) in enumerate(preset.get('shader_speeds',[])):
+            if speed is not None:
+                self.data.plugins.actions.call_method_name('set_shader_speed_layer_%s_amount' % layer, speed)
 
     def recall_frame(self, preset):
 
@@ -270,6 +278,9 @@ class Shaders(object):
             f['feedback_active'] = frame2['feedback_active']
         if frame2['x3_as_speed'] is not None:
             f['x3_as_speed'] = frame2['x3_as_speed']
+        for i,s in enumerate(frame2['shader_speeds']):
+            if s is not None:
+                f['shader_speeds'][i] = s
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return f
 
@@ -285,6 +296,10 @@ class Shaders(object):
             f['feedback_active'] = None
         if ignored.get('x3_as_speed') is not None:
             f['x3_as_speed'] = None
+        if ignored.get('shader_speeds') is not None:
+          for i,s in enumerate(frame['shader_speeds']):
+            if ignored['shader_speeds'][i] is not None:
+                f['shader_speeds'][i] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return f
 
@@ -300,6 +315,10 @@ class Shaders(object):
             return False
         if frame.get('x3_as_speed') is not None:
             return False
+        if frame.get('shader_speeds') is not None:
+          for i,f in enumerate(frame['shader_speeds']):
+            if f is not None:
+                return False
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true" % f)
         return True
 
@@ -312,13 +331,13 @@ class Shaders(object):
             print("last_frame: \t%s" % last_frame['shader_params'])
             print("current_frame: \t%s" % current_frame['shader_params'])
 
-        values = [[None]*4,[None]*4,[None]*4]
+        param_values = [[None]*4,[None]*4,[None]*4]
         for layer,params in enumerate(current_frame.get('shader_params',[[None]*4]*3)):
             #if self.DEBUG_FRAMES:  print("got layer %s params: %s" % (layer, params))
             for param,p in enumerate(params):
                 if p is not None and p != last_frame.get('shader_params')[layer][param]:
                     if self.DEBUG_FRAMES: print("setting layer %s param %s to %s" % (layer,param,p))
-                    values[layer][param] = p
+                    param_values[layer][param] = p
 
         if current_frame['feedback_active'] is not None and last_frame['feedback_active'] != current_frame['feedback_active']:
             feedback_active = current_frame['feedback_active']
@@ -330,12 +349,18 @@ class Shaders(object):
         else:
             x3_as_speed = None
 
+        speed_values = [None]*3
+        for layer,param in enumerate(current_frame.get('shader_speeds',[None]*3)):
+            if param is not None and param != last_frame['shader_speeds'][layer]:
+                speed_values[layer] = param
+
         if self.DEBUG_FRAMES: print("values is\t%s" % values)
 
         diff = { 
-                'shader_params': values, 
+                'shader_params': param_values, 
                 'feedback_active': feedback_active,
-                'x3_as_speed': x3_as_speed
+                'x3_as_speed': x3_as_speed,
+                'shader_speeds': speed_values
         }
         if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
 

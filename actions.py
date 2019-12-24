@@ -908,6 +908,7 @@ class Actions(object):
                 ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
                 ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
                 ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount ),
+                ( r"set_shader_speed_layer_offset_([0-2])_amount", self.shaders.set_speed_offset_to_amount ),
                 ( r"set_shader_speed_layer_([0-2])_amount", self.shaders.set_speed_layer_to_amount ),
         }
 

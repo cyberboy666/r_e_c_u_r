@@ -207,6 +207,7 @@ class Shaders(object):
                 'feedback_active': self.data.feedback_active,
                 'x3_as_speed': self.data.settings['shader']['X3_AS_SPEED']['value'],
                 'shader_speeds': copy.deepcopy(self.selected_speed_list),
+                'strobe_amount': self.data.settings['shader']['STROBE_AMOUNT']['value'] / 10.0
         }
         #print("built frame: %s" % frame['shader_params'])
         return frame
@@ -242,6 +243,9 @@ class Shaders(object):
         for (layer, speed) in enumerate(preset.get('shader_speeds',[])):
             if speed is not None:
                 self.data.plugins.actions.call_method_name('set_shader_speed_layer_%s_amount' % layer, speed)
+
+        if preset.get('strobe_amount') is not None:
+            self.data.plugins.actions.set_strobe_amount_continuous(preset.get('strobe_amount'))
 
     def recall_frame(self, preset):
 
@@ -288,6 +292,9 @@ class Shaders(object):
                 if s is not None:
                     f['shader_speeds'][i] = s
 
+        if frame2.get('strobe_amount'):
+            f['strobe_amount'] = frame2.get('strobe_amount')
+
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return f
 
@@ -307,6 +314,8 @@ class Shaders(object):
           for i,s in enumerate(frame.get('shader_speeds')):
             if ignored['shader_speeds'][i] is not None:
                 f['shader_speeds'][i] = None
+        if ignored.get('strobe_amount') is not None:
+            f['strobe_amount'] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return f
 
@@ -326,6 +335,8 @@ class Shaders(object):
           for i,f in enumerate(frame['shader_speeds']):
             if f is not None:
                 return False
+        if frame.get('strobe_amount') is not None:
+            return False
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
         return True
 
@@ -361,6 +372,11 @@ class Shaders(object):
             if param is not None and param != last_frame['shader_speeds'][layer]:
                 speed_values[layer] = param
 
+        if current_frame['strobe_amount'] is not None and last_frame['strobe_amount'] != current_frame['strobe_amount']:
+            strobe_amount = current_frame['strobe_amount']
+        else:
+            strobe_amount = None
+
         if self.DEBUG_FRAMES: 
             print("param_values is\t%s" % param_values)
             print("speed_values is\t%s" % speed_values)
@@ -369,7 +385,8 @@ class Shaders(object):
                 'shader_params': param_values, 
                 'feedback_active': feedback_active,
                 'x3_as_speed': x3_as_speed,
-                'shader_speeds': speed_values
+                'shader_speeds': speed_values,
+                'strobe_amount': strobe_amount,
         }
         if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
 

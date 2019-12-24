@@ -1,10 +1,10 @@
-====== Auto-generated Actions list ======\n
-Tue 24 Dec 14:13:39 UTC 2019
+# Auto-generated Actions list
+
+Tue 24 Dec 14:21:37 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
-
-===== Methods =====
+# Methods
   *   call_method_name(method_name, argument=None)
   *   call_parse_method_name(method_name, argument)
   *   change_composite_setting(setting_value)
@@ -161,9 +161,7 @@ for branch=feature_midi_feedback_plugin
   *   try_pull_code_and_reset
   *   try_remove_file(path)
 
-
-
-===== Dynamic routes =====
+# Dynamic routes
   * play_shader_([0-9])_([0-9])
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])
@@ -175,8 +173,7 @@ for branch=feature_midi_feedback_plugin
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
 
-
-==== Plugin routes ====
+# Plugin routes
   * test_plugin	(from MidiActionsTestPlugin)
   * cycle_shaders	(from MidiActionsTestPlugin)
   * run_automation	(from MidiActionsTestPlugin)

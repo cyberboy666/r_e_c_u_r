@@ -274,13 +274,20 @@ class Shaders(object):
             for i2,p in enumerate(f2):
                 if p is not None:
                     f['shader_params'][i][i2] = p
+
         if frame2['feedback_active'] is not None:
             f['feedback_active'] = frame2['feedback_active']
+
         if frame2['x3_as_speed'] is not None:
             f['x3_as_speed'] = frame2['x3_as_speed']
-        for i,s in enumerate(frame2['shader_speeds']):
-            if s is not None:
-                f['shader_speeds'][i] = s
+
+        if f.get('shader_speeds') is None:
+            f['shader_speeds'] = frame2.get('shader_speeds')
+        else:
+            for i,s in enumerate(frame2['shader_speeds']):
+                if s is not None:
+                    f['shader_speeds'][i] = s
+
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return f
 
@@ -297,7 +304,7 @@ class Shaders(object):
         if ignored.get('x3_as_speed') is not None:
             f['x3_as_speed'] = None
         if ignored.get('shader_speeds') is not None:
-          for i,s in enumerate(frame['shader_speeds']):
+          for i,s in enumerate(frame.get('shader_speeds')):
             if ignored['shader_speeds'][i] is not None:
                 f['shader_speeds'][i] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
@@ -319,7 +326,7 @@ class Shaders(object):
           for i,f in enumerate(frame['shader_speeds']):
             if f is not None:
                 return False
-        if self.DEBUG_FRAMES:  print("is_frame_empty: got return true" % f)
+        if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
         return True
 
 
@@ -354,7 +361,9 @@ class Shaders(object):
             if param is not None and param != last_frame['shader_speeds'][layer]:
                 speed_values[layer] = param
 
-        if self.DEBUG_FRAMES: print("values is\t%s" % values)
+        if self.DEBUG_FRAMES: 
+            print("param_values is\t%s" % param_values)
+            print("speed_values is\t%s" % speed_values)
 
         diff = { 
                 'shader_params': param_values, 

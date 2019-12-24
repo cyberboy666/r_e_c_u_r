@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 14:30:29 UTC 2019
+Tue 24 Dec 15:06:56 UTC 2019
 
 for branch=feature_shader_midi
 
@@ -157,14 +157,9 @@ for branch=feature_shader_midi
 
 # Dynamic routes
   * play_shader_([0-9])_([0-9])
-  * play_shader_([0-9])_([0-9])
-  * toggle_shader_layer_([0-2])
   * toggle_shader_layer_([0-2])
   * start_shader_layer_([0-2])
-  * start_shader_layer_([0-2])
   * stop_shader_layer_([0-2])
-  * stop_shader_layer_([0-2])
-  * set_the_shader_param_([0-3])_layer_([0-2])_continuous
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
 
 ----

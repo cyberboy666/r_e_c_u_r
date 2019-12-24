@@ -12,7 +12,7 @@ grep " def " actions.py | grep -v "^#" | sed -e 's/ def //' | sed -e 's/self//' 
 echo
 
 echo  "# Dynamic routes"
-grep '( r"' actions.py | sed -e 's/\(.*\)"\(.*\)"\(.*\)/  * \2/p'
+grep '( r"' actions.py | sed -e 's/\(.*\)"\(.*\)"\(.*\)/  * \2/'
 echo 
 
 echo "----"

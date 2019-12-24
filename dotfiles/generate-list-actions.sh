@@ -8,7 +8,7 @@ echo
 
 echo "# Methods"
 grep " def " actions.py | grep -v "^#" | sed -e 's/ def //' | sed -e 's/self//' | sed -e 's/(, /(/' | sed -e 's/()//' | sed -e 's/\(.*\)/  *\1/' | sed -e 's/://' | sort -n \
-	        | grep -v "check_if_should_start_openframeworks\|create_serial_port_process\|__init__\|persist_composite_setting\|receive_detour_info\|_refresh_frame_buffer\|refresh_frame_buffer_and_restart_openframeworks\|run_script\|setup_osc_server\|start_confirm_action\|stop_serial_port_process\|stop_openframeworks_process\|update_capture_settings\|update_config_settings\|update_video_settings"
+	| grep -v "check_if_should_start_openframeworks\|create_serial_port_process\|__init__\|persist_composite_setting\|receive_detour_info\|_refresh_frame_buffer\|refresh_frame_buffer_and_restart_openframeworks\|run_script\|setup_osc_server\|start_confirm_action\|stop_serial_port_process\|stop_openframeworks_process\|update_capture_settings\|update_config_settings\|update_video_settings\|try_remove_file"
 echo
 
 echo "# Dynamic routes"

@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 14:21:37 UTC 2019
+Tue 24 Dec 14:31:13 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
@@ -159,7 +159,6 @@ for branch=feature_midi_feedback_plugin
   *   toggle_x3_as_speed
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
-  *   try_remove_file(path)
 
 # Dynamic routes
   * play_shader_([0-9])_([0-9])

@@ -129,7 +129,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
 
         #print("selected_clip is %s "%selected_clip)
         #clip = self.frames[selected_clip]
-        if self.recording and not self.selected_clip in self.running_clips:
+        if self.recording and self.selected_clip not in self.running_clips:
             self.running_clips += [ self.selected_clip ]
         for selected_clip in self.running_clips:
           saved_frame = self.frames[selected_clip][current_frame_index]

@@ -180,13 +180,16 @@ class Shaders(object):
 
     def set_param_layer_to_amount(self, param, layer, amount):
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
-            self.set_speed_to_amount(amount, layer_offset=layer-self.data.shader_layer)
+            self.set_speed_to_amount(amount, layer) #layer_offset=layer-self.data.shader_layer)
         else:
             self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
         self.selected_param_list[layer][param] = amount
 
     def set_speed_to_amount(self, amount, layer_offset=0):
         layer = (self.data.shader_layer + layer_offset) % 3
+        self.set_speed_to_amount_layer(layer)
+   
+    def set_speed_layer_to_amount(self, layer, amount):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
    
@@ -280,7 +283,7 @@ class Shaders(object):
                     f['shader_params'][i][i2] = None
         if ignored.get('feedback_active') is not None:
             f['feedback_active'] = None
-        if ignored.get('x3_as_speed']) is not None:
+        if ignored.get('x3_as_speed') is not None:
             f['x3_as_speed'] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return f
@@ -296,7 +299,7 @@ class Shaders(object):
         if frame.get('feedback_active') is not None:
             return False
         if frame.get('x3_as_speed') is not None:
-            retun False
+            return False
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true" % f)
         return True
 
@@ -324,6 +327,8 @@ class Shaders(object):
 
         if current_frame['x3_as_speed'] is not None and last_frame['x3_as_speed'] != current_frame['x3_as_speed']:
             x3_as_speed = current_frame['x3_as_speed']
+        else:
+            x3_as_speed = None
 
         if self.DEBUG_FRAMES: print("values is\t%s" % values)
 

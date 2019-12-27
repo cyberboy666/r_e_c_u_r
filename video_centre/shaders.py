@@ -14,8 +14,12 @@ class Shaders(object):
         self.selected_shader_list = [self.EMPTY_SHADER for i in range(3)]
         self.focused_param = 0
         self.shaders_menu_list = self.generate_shaders_list()
+
+        self.selected_modulation_slot = 0
                  
         self.selected_status_list = ['-','-','-'] ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
+        self.modulation_value = [0.0,0.0,0.0,0.0]
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
         #self.load_selected_shader()
@@ -154,6 +158,9 @@ class Shaders(object):
     def set_x3_as_speed(self, status):
         self.data.settings['shader']['X3_AS_SPEED']['value'] = 'enabled' if status else 'disabled'
 
+    def select_shader_modulation_slot(self, slot):
+        self.selected_modulation_slot = slot
+
     @staticmethod
     def get_new_param_amount(current, change):
         if current + change > 1:
@@ -177,9 +184,64 @@ class Shaders(object):
     def set_param_layer_to_amount(self, param, layer, amount):
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layer) #layer_offset=layer-self.data.shader_layer)
-        else:
-            self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
-        self.selected_param_list[layer][param] = amount
+        else: 
+            self.selected_param_list[layer][param] = amount
+            self.update_param_layer(param,layer)
+
+    def get_modulation_value_list(self, amount, values, levels):
+        l = []
+        for i,v in enumerate(values):
+            l.append(self.get_modulation_value(amount, v, levels[i]))
+
+        from statistics import mean
+        #print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
+        return mean(l)
+
+    def get_modulation_value(self, amount, value, level):
+        if level==0:
+            return amount
+
+        # TODO: read from list of input formulas, from plugins etc to modulate the value
+        temp_amount = amount + (value * level)
+        #print("from amount %s, modulation is %s, temp_amount is %s" % (amount, modulation, temp_amount))
+        if temp_amount <  0: temp_amount = 0 # input range is 0-1 so convert back
+        if temp_amount >  1: temp_amount = 1 # modulation however is -1 to +1
+
+        return temp_amount
+
+    def send_param_layer_amount_message(self, param, layer, amount):
+        self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
+
+    def modulate_param_to_amount(self, param, value):
+        self.modulation_value[param] = (value-0.5)*2
+        for layer,params in enumerate(self.selected_param_list):
+          for ip,p in enumerate(params):
+              for p2,v in enumerate(self.selected_modulation_level[layer][ip]):
+                  if v!=0:
+                      self.update_param_layer(ip,layer)
+                      break
+
+    def set_param_layer_offset_modulation_level(self, param, layer, level):
+        layer = (self.data.shader_layer + layer) % 3
+        self.set_param_layer_modulation_level(param, layer, level)
+
+    def set_param_layer_modulation_level(self, param, layer, level):
+        self.selected_modulation_level[layer][param][self.selected_modulation_slot] = level
+        self.update_param_layer(param, layer)
+
+    def update_param_layer(self, param, layer):
+        # merge all applicable layers
+
+        self.send_param_layer_amount_message(param, layer,
+                self.get_modulation_value_list(
+                    self.selected_param_list[layer][param],
+                    self.modulation_value,#[0], #param],
+                    self.selected_modulation_level[layer][param]
+                )
+        )
+
+    def set_speed_offset_to_amount(self, layer_offset, amount):
+        self.set_speed_to_amount(amount, layer_offset)
 
     def set_speed_to_amount(self, amount, layer_offset=0):
         layer = (self.data.shader_layer + layer_offset) % 3
@@ -188,4 +250,5 @@ class Shaders(object):
     def set_speed_layer_to_amount(self, layer, amount):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
+   
 

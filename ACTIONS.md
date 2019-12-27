@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Wed 25 Dec 21:01:28 GMT 2019
+Fri 27 Dec 00:45:21 UTC 2019
 
 for branch=feature_shaders_parameter_modulation
 
@@ -61,6 +61,7 @@ for branch=feature_shaders_parameter_modulation
   *   load_this_detour_shader
   *   _load_this_slot_into_next_player(slot)
   *   map_on_shaders_selection
+  *   modulate_param_layer_offset_to_amount(param, layer, amount)
   *   move_browser_selection_down
   *   move_browser_selection_up
   *   move_settings_selection_down
@@ -167,7 +168,7 @@ for branch=feature_shaders_parameter_modulation
   * stop_shader_layer_([0-2])
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
   * modulate_the_shader_param_([0-3])_layer_([0-2])_continuous
-  * modulate_the_shader_param_([0-3))_layer_offset_([0-2])_continuous
+  * modulate_the_shader_param_([0-3])_layer_offset_([0-2])_continuous
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
 

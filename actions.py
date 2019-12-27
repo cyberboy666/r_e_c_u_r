@@ -198,6 +198,12 @@ class Actions(object):
     def toggle_function(self):
         self.data.function_on = not self.data.function_on
 
+    def function_on(self):
+        self.data.function_on = True
+
+    def function_off(self):
+        self.data.function_on = False
+
     def next_bank(self):
         self.data.update_bank_number_by_amount(1)
         print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
@@ -312,6 +318,16 @@ class Actions(object):
     def toggle_feedback(self):
         print('toggle here')
         self.data.feedback_active = not self.data.feedback_active
+        self.set_feedback_state(self.data.feedback_active)
+
+    def enable_feedback(self):
+        self.set_feedback_state(True)
+
+    def disable_feedback(self):
+        self.set_feedback_state(False)
+
+    def set_feedback_state(self, state):
+        self.data.feedback_active = state
         self.video_driver.osc_client.send_message("/toggle_feedback", self.data.feedback_active)
 
     def play_shader_0(self):

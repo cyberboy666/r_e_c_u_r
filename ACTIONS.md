@@ -1,12 +1,10 @@
 # Auto-generated Actions list
 
-Fri 27 Dec 01:02:54 UTC 2019
+Fri 27 Dec 01:05:51 UTC 2019
 
 for branch=feature_shader_midi
 
 # Methods
-  *   call_method_name(method_name, argument=None)
-  *   call_parse_method_name(method_name, argument)
   *   change_composite_setting(setting_value)
   *   change_hdmi_settings(setting_value)
   *   change_output_mode(setting_value)
@@ -31,12 +29,15 @@ for branch=feature_shader_midi
   *   decrease_shader_param
   *   decrease_speed
   *   decrease_this_param
+  *   disable_feedback
+  *   enable_feedback
   *   enter_on_browser_selection
   *   enter_on_settings_selection
   *   enter_on_shaders_selection
   *   exit_openframeworks
   *   exit_osc_server(unused_addr, args)
-  *   get_callback_for_method(method_name, argument)
+  *   function_off
+  *   function_on
   *   get_midi_status
   *   increase_mix_shader
   *   increase_param_focus
@@ -93,6 +94,7 @@ for branch=feature_shader_midi
   *   set_detour_mix_continuous(amount)
   *   set_detour_speed_position_continuous(amount)
   *   set_detour_start_continuous(amount)
+  *   set_feedback_state(state)
   *   set_fixed_length(value)
   *   set_playing_sample_end_to_current_duration
   *   set_playing_sample_start_to_current_duration

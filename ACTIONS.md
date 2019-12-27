@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 15:50:09 UTC 2019
+Fri 27 Dec 01:02:54 UTC 2019
 
 for branch=feature_shader_midi
 
@@ -65,7 +65,6 @@ for branch=feature_shader_midi
   *   move_shaders_selection_up
   *   next_bank
   *   next_shader_layer
-  *   parserlist
   *   perform_confirm_action
   *   play_shader_0
   *   play_shader_1

@@ -1,12 +1,10 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 17:08:24 UTC 2019
+Fri 27 Dec 01:07:40 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
 # Methods
-  *   call_method_name(method_name, argument=None)
-  *   call_parse_method_name(method_name, argument)
   *   change_composite_setting(setting_value)
   *   change_hdmi_settings(setting_value)
   *   change_output_mode(setting_value)
@@ -40,7 +38,6 @@ for branch=feature_midi_feedback_plugin
   *   exit_osc_server(unused_addr, args)
   *   function_off
   *   function_on
-  *   get_callback_for_method(method_name, argument)
   *   get_midi_status
   *   increase_mix_shader
   *   increase_param_focus
@@ -69,7 +66,6 @@ for branch=feature_midi_feedback_plugin
   *   move_shaders_selection_up
   *   next_bank
   *   next_shader_layer
-  *   parserlist
   *   perform_confirm_action
   *   play_shader_0
   *   play_shader_1

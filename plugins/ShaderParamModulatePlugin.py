@@ -14,5 +14,5 @@ class ShaderParamModulatePlugin(ActionsPlugin):#,SequencePlugin):
 
     def set_layer_param_audio_react_volume(self, layer, param, value):
         print ("set_layer_param_audio_react_volume layer %s:%s is %s" % (layer, param, value))
-        self.pc.actions.call_method_name("modulate_the_shader_param_%s_layer_continuous"%(param,layer), value)
+        self.pc.actions.call_method_name("modulate_the_shader_param_%s_layer_%s_continuous"%(param,layer), value)
 

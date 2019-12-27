@@ -4,6 +4,8 @@ import mido
 
 class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
+    status = {}
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
         self.description = 'Outputs feedback to APC Key 25'
@@ -14,39 +16,40 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             if device_name.startswith(supported_device):
                 return True
 
-    def feedback_shader_feedback(self, on):
+    def set_status(self, command='note_on', note=None, velocity=None):
+        self.status[note] = {
+                'command': command,
+                'note': note,
+                'velocity': velocity
+        }
+        #print("set status to %s: %s" % (note, self.status[note]))
+
+    def send_command(self, command='note_on', note=None, velocity=None):
+        #print("send_command(%s, %s)" % (note, velocity))
         self.midi_feedback_device.send(
-                mido.Message('note_on', note=85, velocity=int(on))
+            mido.Message(command, note=note, velocity=velocity)
         )
+
+    def feedback_shader_feedback(self, on):
+        self.set_status(note=85, velocity=int(on))
 
     def feedback_capture_preview(self, on):
-        self.midi_feedback_device.send(
-                mido.Message('note_on', note=86, velocity=int(on))
-        )
+        self.set_status(note=86, velocity=int(on))
 
     def feedback_shader_on(self, layer, slot, colour=127):
-        self.midi_feedback_device.send(
-                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=int(colour))
-        )
+        self.set_status(note=(32-(layer)*8)+slot, velocity=int(colour))
 
     def feedback_shader_off(self, layer, slot):
-        self.midi_feedback_device.send(
-                mido.Message('note_on', note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
-        )
+        self.set_status(note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
 
     def feedback_shader_layer_on(self, layer):
-        self.midi_feedback_device.send(
-                mido.Message('note_on', note=82+layer, velocity=127)
-        )
+        self.set_status(note=82+layer, velocity=127)
+        
     def feedback_shader_layer_off(self, layer):
-        self.midi_feedback_device.send(
-                mido.Message('note_on', note=82+layer, velocity=self.COLOUR_OFF)
-        )
+        self.set_status(note=82+layer, velocity=self.COLOUR_OFF)
 
     def feedback_show_layer(self, layer):
-        self.midi_feedback_device.send(
-            mido.Message('note_on', note=70, velocity=layer)
-        )
+        self.set_status(note=70, velocity=layer)
 
     def feedback_plugin_status(self):
         from data_centre.plugin_collection import SequencePlugin
@@ -66,28 +69,21 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     colour = self.COLOUR_GREEN
                     if plugin.is_paused():
                         colour += self.BLINK
-                self.midi_feedback_device.send(
-                    mido.Message('note_on', note=NOTE_PLAY_STATUS, velocity=colour)
-                )
+                self.set_status(command='note_on', note=NOTE_PLAY_STATUS, velocity=colour)
 
                 colour = self.COLOUR_OFF
                 if plugin.recording:
                     colour = self.COLOUR_GREEN
                     if plugin.is_ignoring():
                        colour += self.BLINK
-
-                self.midi_feedback_device.send(
-                        mido.Message('note_on', note=NOTE_RECORD_STATUS, velocity=colour)
-                )
+                self.set_status(command='note_on', note=NOTE_RECORD_STATUS, velocity=colour)
 
                 colour = self.COLOUR_OFF
                 if plugin.overdub:
                     colour = self.COLOUR_RED
                     if plugin.is_paused() or plugin.is_ignoring():
                         colour += self.BLINK
-                self.midi_feedback_device.send(
-                        mido.Message('note_on', note=NOTE_OVERDUB_STATUS, velocity=colour)
-                )
+                self.set_status(command='note_on', note=NOTE_OVERDUB_STATUS, velocity=colour)
 
                 for i in range(plugin.MAX_CLIPS):
                     if i in plugin.running_clips:
@@ -101,10 +97,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                         colour = self.COLOUR_RED_BLINK
                     else:
                         colour = self.COLOUR_OFF
-
-                    self.midi_feedback_device.send(
-                            mido.Message('note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=colour)
-                    )
+                    self.set_status(command='note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=colour)
  
 
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
@@ -122,9 +115,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     if plugin.presets[pad] is None:
                         colour = self.COLOUR_RED
                     colour += self.BLINK
-                self.midi_feedback_device.send(
-                        mido.Message('note_on', note=pad, velocity=colour)
-                )
+                self.set_status(command='note_on', note=pad, velocity=colour)
 
     BLINK = 1
     COLOUR_OFF = 0
@@ -177,5 +168,17 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     # hos that nothing in slot
                     self.feedback_shader_off(n, x)
 
+        self.update_device()
+
         #print("refresh_midi_feedback")
 
+    last_state = None
+    def update_device(self):
+        from copy import deepcopy
+        print("in update device status is %s" % self.status)
+        for i,c in self.status.items():
+            #'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
+            if self.last_state is None or self.last_state[i]!=c:
+                print("got command: %s: %s" % (i,c))
+                self.send_command(**c)
+        self.last_state = deepcopy(self.status)

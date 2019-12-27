@@ -7,8 +7,24 @@ import inspect
 from itertools import cycle
 from omxplayer.player import OMXPlayer
 from shutil import copyfile
+import threading 
 
 from data_centre import plugin_collection
+
+class AsyncWrite(threading.Thread):
+    def __init__(self, filename, data, mode='json'):
+        threading.Thread.__init__(self)
+        self.filename = filename
+        self.data = data
+        self.mode = mode
+
+    def run(self):
+        with open(self.filename, "w+") as data_file:
+            if self.mode=='json':
+                json.dump(self.data, data_file, indent=4, sort_keys=True)
+            else:
+                data_file.write(self.data)
+            data_file.close()
 
 
 
@@ -129,8 +145,10 @@ class Data(object):
         print ("no plugin data loaded for %s" % file_name)
 
     def _update_plugin_json(self, file_name, data):
-        with open("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), "w+") as data_file:
-            json.dump(data, data_file, indent=4, sort_keys=True)
+        #with open("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), "w+") as data_file:
+        #    json.dump(data, data_file, indent=4, sort_keys=True)
+        writer = AsyncWrite("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), data, mode='json')
+        writer.start()
 
     def update_conjur_dev_mode(self, value):
         print(value)

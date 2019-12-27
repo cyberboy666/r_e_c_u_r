@@ -317,8 +317,7 @@ class Actions(object):
 
     def toggle_feedback(self):
         print('toggle here')
-        self.data.feedback_active = not self.data.feedback_active
-        self.set_feedback_state(self.data.feedback_active)
+        self.set_feedback_state(not self.data.feedback_active)
 
     def enable_feedback(self):
         self.set_feedback_state(True)

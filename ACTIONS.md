@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 14:34:29 UTC 2019
+Fri 27 Dec 00:59:08 UTC 2019
 
 for branch=feature_midi_extra_mappings
 
@@ -29,6 +29,8 @@ for branch=feature_midi_extra_mappings
   *   decrease_shader_param
   *   decrease_speed
   *   decrease_this_param
+  *   disable_feedback
+  *   enable_feedback
   *   enter_on_browser_selection
   *   enter_on_settings_selection
   *   enter_on_shaders_selection
@@ -92,6 +94,7 @@ for branch=feature_midi_extra_mappings
   *   set_detour_mix_continuous(amount)
   *   set_detour_speed_position_continuous(amount)
   *   set_detour_start_continuous(amount)
+  *   set_feedback_state(state)
   *   set_fixed_length(value)
   *   set_playing_sample_end_to_current_duration
   *   set_playing_sample_start_to_current_duration

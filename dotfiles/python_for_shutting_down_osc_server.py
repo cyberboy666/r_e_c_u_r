@@ -6,7 +6,7 @@ import argparse
 def setup_osc_client():
     client_parser = argparse.ArgumentParser()
     client_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
-    client_parser.add_argument("--port", type=int, default=9000, help="the port")
+    client_parser.add_argument("--port", type=int, default=5433, help="the port")
 
     client_args = client_parser.parse_args()
 

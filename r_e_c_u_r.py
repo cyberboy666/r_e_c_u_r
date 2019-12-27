@@ -12,6 +12,7 @@ from data_centre.data import Data
 from display_centre.display import Display
 from display_centre.messages import MessageHandler
 from user_input.numpad_input import NumpadInput
+from user_input.osc_input import OscInput
 from user_input.midi_input import MidiInput
 from user_input.analog_input import AnalogInput
 from video_centre.video_driver import VideoDriver
@@ -53,6 +54,7 @@ display = Display(tk, video_driver, shaders, message_handler, data)
 actions = Actions(tk, message_handler, data, video_driver, shaders, display, osc_client)
 
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
+osc_input = OscInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
 analog_input = AnalogInput(tk, message_handler, display, actions, data)
 

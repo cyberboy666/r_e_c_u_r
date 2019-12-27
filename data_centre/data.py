@@ -17,6 +17,7 @@ class Data(object):
     SETTINGS_JSON = 'settings.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
+    OSC_MAPPING_JSON = 'osc_action_mapping.json'
     MIDI_MAPPING_JSON = 'midi_action_mapping.json'
     ANALOG_MAPPING_JSON = 'analog_action_mapping.json'
     EMPTY_SLOT = dict(name='', location='', length=-1, start=-1, end=-1, rate=1)
@@ -73,6 +74,7 @@ class Data(object):
             self.settings = self._read_json(self.SETTINGS_JSON)
 
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
+        self.osc_mappings = self._read_json(self.OSC_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 

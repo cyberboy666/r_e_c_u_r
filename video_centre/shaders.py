@@ -198,7 +198,7 @@ class Shaders(object):
             l.append(self.get_modulation_value(amount, v, levels[i]))
 
         from statistics import mean
-        print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
+        #print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
         return mean(l)
 
     def get_modulation_value(self, amount, value, level):

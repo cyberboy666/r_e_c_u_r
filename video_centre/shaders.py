@@ -194,7 +194,7 @@ class Shaders(object):
     def get_modulation_value(self, amount, modulation):
         # TODO: read from list of input formulas, from plugins etc to modulate the value
         temp_amount = amount + modulation
-        print("from amount %s, modulation is %s, temp_amount is %s" % (amount, modulation, temp_amount))
+        #print("from amount %s, modulation is %s, temp_amount is %s" % (amount, modulation, temp_amount))
         if temp_amount <  0: temp_amount = 0 # input range is 0-1 so convert back
         if temp_amount >  1: temp_amount = 1 # modulation however is -1 to +1
 
@@ -270,7 +270,7 @@ class Shaders(object):
             """if self.data.settings['shader']['X3_AS_SPEED']['value']:
                 self.data.plugins.actions.call_method_name('enable_x3_as_speed')
             else:
-                self.data.plugins.actions.call_method_name('enable_x3_as_speed')"""
+                self.data.plugins.actions.call_method_name('disable_x3_as_speed')"""
 
         for (layer, speed) in enumerate(preset.get('shader_speeds',[])):
             if speed is not None:
@@ -355,20 +355,24 @@ class Shaders(object):
         #from copy import deepcopy
         #f = deepcopy(frame) #frame1.copy()
         if self.DEBUG_FRAMES:  print("is_frame_empty: got frame\t%s" % frame)
-        for i,f in enumerate(frame['shader_params']):
-            for i2,p in enumerate(f):
-                if p is not None: #ignored['shader_params'][i][i2] is not None:
-                    return False
+
         if frame.get('feedback_active') is not None:
             return False
         if frame.get('x3_as_speed') is not None:
             return False
+        if frame.get('strobe_amount') is not None:
+            return False
+
+        for i,f in enumerate(frame['shader_params']):
+            for i2,p in enumerate(f):
+                if p is not None: #ignored['shader_params'][i][i2] is not None:
+                    return False
+
         if frame.get('shader_speeds') is not None:
           for i,f in enumerate(frame['shader_speeds']):
             if f is not None:
                 return False
-        if frame.get('strobe_amount') is not None:
-            return False
+
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
         return True
 

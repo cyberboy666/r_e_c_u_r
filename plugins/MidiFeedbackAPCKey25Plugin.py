@@ -175,10 +175,10 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     last_state = None
     def update_device(self):
         from copy import deepcopy
-        print("in update device status is %s" % self.status)
+        #print("in update device status is %s" % self.status)
         for i,c in self.status.items():
             #'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
             if self.last_state is None or self.last_state[i]!=c:
-                print("got command: %s: %s" % (i,c))
+                #print("got command: %s: %s" % (i,c))
                 self.send_command(**c)
         self.last_state = deepcopy(self.status)

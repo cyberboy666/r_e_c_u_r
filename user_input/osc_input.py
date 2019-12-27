@@ -47,15 +47,13 @@ class OscInput(object):
             self.actions.call_method_name(self.osc_mappings[addr]['DEFAULT'][0], args)
 
     def on_osc_input(self, addr, args):
-        print("!!!!!!!!!!!!!!!!" + addr + ", " + args)
+        #print("!!!!!!!!!!!!!!!!" + addr + ", " + args)
         numpad = list(string.ascii_lowercase[0:19])
 
         if args in numpad:
             self.run_action_for_osc_channel(args)
         else:
             print('{} is not in keypad map'.format(args))
-            #if args in self.osc_mappings:
-            #    self
 
     def run_action_for_osc_channel(self, channel, args = None):
         this_mapping = self.osc_mappings[channel]

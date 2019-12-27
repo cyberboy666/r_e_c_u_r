@@ -180,12 +180,16 @@ class Shaders(object):
         self.set_param_layer_to_amount(param, layer, amount)
 
     def set_param_layer_to_amount(self, param, layer, amount):
-        temp_amount = self.get_modulation_value(amount, self.selected_modulation_list[layer][param])
+        temp_amount = self.get_modulation_value(
+                amount, 
+                self.selected_modulation_list[layer][param]
+        )
         if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and param == 3:
             self.set_speed_to_amount(amount, layer) #layer_offset=layer-self.data.shader_layer)
         else: 
             self.send_param_layer_amount_message(param, layer, temp_amount)
         self.selected_param_list[layer][param] = amount
+        #print("set_param_layer_to_amount %s" % amount)
 
     def get_modulation_value(self, amount, modulation):
         # TODO: read from list of input formulas, from plugins etc to modulate the value
@@ -205,7 +209,13 @@ class Shaders(object):
 
     def modulate_param_layer_to_amount(self, param, layer, amount):
         self.selected_modulation_list[layer][param] = amount-0.5
-        self.send_param_layer_amount_message(param, layer, self.get_modulation_value(amount, self.selected_modulation_list[layer][param]))
+
+        self.send_param_layer_amount_message(param, layer, 
+                self.get_modulation_value(
+                    self.selected_param_list[layer][param],
+                    self.selected_modulation_list[layer][param]
+                )
+        )
 
     def set_speed_offset_to_amount(self, layer_offset, amount):
         self.set_speed_to_amount(amount, layer_offset)

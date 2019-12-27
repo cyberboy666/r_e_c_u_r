@@ -10,6 +10,10 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         super().__init__(plugin_collection)
         self.description = 'Outputs feedback to APC Key 25'
 
+    def set_midi_device(self, device):
+        super().set_midi_device(device)
+        self.last_state = None
+
     def supports_midi_feedback(self, device_name):
         supported_devices = ['APC Key 25']
         for supported_device in supported_devices:

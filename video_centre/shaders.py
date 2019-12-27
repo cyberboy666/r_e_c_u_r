@@ -342,7 +342,7 @@ class Shaders(object):
             f['feedback_active'] = None
         if ignored.get('x3_as_speed') is not None:
             f['x3_as_speed'] = None
-        if ignored.get('shader_speeds') is not None:
+        if ignored.get('shader_speeds') is not None and frame.get('shader_speeds'):
           for i,s in enumerate(frame.get('shader_speeds')):
             if ignored['shader_speeds'][i] is not None:
                 f['shader_speeds'][i] = None

@@ -102,7 +102,16 @@
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
         	"PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
 	},
-	"/volume_proc": {
-		"DEFAULT": ["modulate_layer_0_param_0_continuous"]
+	"/kick": {
+		"DEFAULT": ["modulate_the_shader_param_0_layer_0_continuous"]
+	},
+	"/high": {
+		"DEFAULT": ["modulate_the_shader_param_1_layer_0_continuous"]
+	},
+	"/himid": {
+		"DEFAULT": ["modulate_the_shader_param_0_layer_2_continuous"]
+	},
+	"/volume": {
+		"DEFAULT": ["modulate_the_shader_param_3_layer_0_continuous"]
 	}
 }

@@ -36,14 +36,14 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_capture_preview(self, on):
         self.set_status(note=86, velocity=int(on))
 
-    def feedback_shader_on(self, layer, slot, colour=127):
+    def feedback_shader_on(self, layer, slot, colour=self.COLOUR_GREEN):
         self.set_status(note=(32-(layer)*8)+slot, velocity=int(colour))
 
     def feedback_shader_off(self, layer, slot):
         self.set_status(note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
 
     def feedback_shader_layer_on(self, layer):
-        self.set_status(note=82+layer, velocity=127)
+        self.set_status(note=82+layer, velocity=self.COLOUR_GREEN)
         
     def feedback_shader_layer_off(self, layer):
         self.set_status(note=82+layer, velocity=self.COLOUR_OFF)
@@ -59,8 +59,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         for plugin in self.pc.get_plugins(SequencePlugin):
             if isinstance(plugin, ShaderLoopRecordPlugin): #MidiActionsTestPlugin):
 
-                NOTE_PLAY_STATUS = 65
-                NOTE_RECORD_STATUS = 66 
+                NOTE_PLAY_STATUS    = 65
+                NOTE_RECORD_STATUS  = 66 
                 NOTE_OVERDUB_STATUS = 67
                 NOTE_CLIP_STATUS_ROW = 8
 
@@ -134,8 +134,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         # show if internal feedback (the shader layer kind) is enabled
         if self.pc.data.feedback_active and not self.pc.data.function_on:
             self.feedback_shader_feedback(self.COLOUR_GREEN)
-        elif self.pc.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and self.pc.data.function_on:
-            self.feedback_shader_feedback(self.COLOUR_GREEN_BLINK)
+        #elif self.pc.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and self.pc.data.function_on:
+        #    self.feedback_shader_feedback(self.COLOUR_GREEN_BLINK)
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
 

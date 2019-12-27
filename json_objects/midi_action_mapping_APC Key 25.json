@@ -61,22 +61,22 @@
     },
     "control_change 52": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["modulate_the_shader_param_0_layer_offset_0_continuous"],
+	    "FN_DEFAULT": ["set_param_0_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"]
     },
     "control_change 53": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["modulate_the_shader_param_1_layer_offset_0_continuous"],
+	    "FN_DEFAULT": ["set_param_1_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_start_continuous"]
     },
     "control_change 54": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["modulate_the_shader_param_2_layer_offset_0_continuous"],
+	    "FN_DEFAULT": ["set_param_2_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 55": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["modulate_the_shader_param_3_layer_offset_0_continuous"],
+	    "FN_DEFAULT": ["set_param_3_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 56": {
@@ -147,17 +147,20 @@
 	    "FN_DEFAULT": ["select_preset_7"]
     },
     "note_on 82": {
-	    "DEFAULT": ["toggle_shader_layer_0"]
+	    "DEFAULT": ["toggle_shader_layer_0"],
+	    "FN_DEFAULT": ["select_shader_modulation_slot_0"]
     },
     "note_on 83": {
-	    "DEFAULT": ["toggle_shader_layer_1"]
+	    "DEFAULT": ["toggle_shader_layer_1"],
+	    "FN_DEFAULT": ["select_shader_modulation_slot_1"]
     },
     "note_on 84": {
-	    "DEFAULT": ["toggle_shader_layer_2"]
+	    "DEFAULT": ["toggle_shader_layer_2"],
+	    "FN_DEFAULT": ["select_shader_modulation_slot_2"]
     },
     "note_on 85": {
 	    "DEFAULT": ["toggle_feedback"],
-	    "FN_DEFAULT": ["toggle_x3_as_speed"]
+	    "FN_DEFAULT": ["select_shader_modulation_slot_3"]
     },
     "note_on 86": {
 	    "DEFAULT": ["toggle_capture_preview"]

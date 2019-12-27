@@ -43,7 +43,7 @@ class OscInput(object):
         #print("!!!!!!!!!!!!!!!!%s\t%s" %(addr,args))
         #print ("%s" %self.osc_mappings.keys())
         if addr in self.osc_mappings:
-            print("got a mapping for %s with value %s" % (addr,args))
+            #'print("got a mapping for %s with value %s" % (addr,args))
             self.actions.call_method_name(self.osc_mappings[addr]['DEFAULT'][0], args)
 
     def on_osc_input(self, addr, args):

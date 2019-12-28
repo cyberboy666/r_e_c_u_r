@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 27 Dec 01:05:51 UTC 2019
+Sat 28 Dec 18:59:34 UTC 2019
 
 for branch=feature_shader_midi
 
@@ -162,6 +162,11 @@ for branch=feature_shader_midi
   * start_shader_layer_([0-2])
   * stop_shader_layer_([0-2])
   * set_the_shader_param_([0-3])_layer_([0-2])_continuous
+  * modulate_param_([0-3])_to_amount_continuous
+  * set_param_([0-3])_layer_([0-2])_modulation_level_continuous
+  * set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous
+  * select_shader_modulation_slot_([0-3])
+  * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
 
 ----

@@ -1,6 +1,10 @@
 # Auto-generated Actions list
 
+<<<<<<< HEAD
 Sat 28 Dec 19:02:22 UTC 2019
+=======
+Sat 28 Dec 18:59:34 UTC 2019
+>>>>>>> feature_shader_midi
 
 for branch=feature_midi_feedback_plugin
 

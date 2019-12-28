@@ -23,6 +23,11 @@ class Shaders(object):
         self.modulation_value = [0.0,0.0,0.0,0.0]
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
+
+        self.selected_modulation_slot = 0
+        self.selected_modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
+        self.modulation_value = [0.0,0.0,0.0,0.0]
+
         #self.load_selected_shader()
 
     def generate_shaders_list(self):
@@ -164,6 +169,14 @@ class Shaders(object):
 
     def select_shader_modulation_slot(self, slot):
         self.selected_modulation_slot = slot
+
+    def reset_modulation(self, slot):
+        for layer in self.selected_modulation_level:
+            for layer,levels in enumerate(layer):
+                levels[slot] = 0.0
+
+    def reset_selected_modulation(self):
+        self.reset_modulation(self.selected_modulation_slot)
 
     @staticmethod
     def get_new_param_amount(current, change):
@@ -454,5 +467,4 @@ class Shaders(object):
         if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
 
         return diff
-
 

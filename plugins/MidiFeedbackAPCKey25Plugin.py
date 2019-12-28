@@ -40,7 +40,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_capture_preview(self, on):
         self.set_status(note=86, velocity=int(on))
 
-    def feedback_shader_on(self, layer, slot, colour=self.COLOUR_GREEN):
+    def feedback_shader_on(self, layer, slot, colour=None):
+        if colour is None: colour = self.COLOUR_GREEN
         self.set_status(note=(32-(layer)*8)+slot, velocity=int(colour))
 
     def feedback_shader_off(self, layer, slot):

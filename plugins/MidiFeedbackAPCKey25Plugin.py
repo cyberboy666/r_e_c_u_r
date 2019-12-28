@@ -47,14 +47,22 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_shader_off(self, layer, slot):
         self.set_status(note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
 
+    NOTE_SCENE_LAUNCH_COLUMN = 82
     def feedback_shader_layer_on(self, layer):
-        self.set_status(note=82+layer, velocity=self.COLOUR_GREEN)
+        self.set_status(note=self.NOTE_SCENE_LAUNCH_COLUMN+layer, velocity=self.COLOUR_GREEN)
         
     def feedback_shader_layer_off(self, layer):
-        self.set_status(note=82+layer, velocity=self.COLOUR_OFF)
+        self.set_status(note=self.NOTE_SCENE_LAUNCH_COLUMN+layer, velocity=self.COLOUR_OFF)
 
     def feedback_show_layer(self, layer):
         self.set_status(note=70, velocity=layer)
+
+    def feedback_show_modulation(self, slot):
+        for i in range(self.NOTE_SCENE_LAUNCH_COLUMN,self.NOTE_SCENE_LAUNCH_COLUMN+4):
+            if slot==i-self.NOTE_SCENE_LAUNCH_COLUMN:
+                self.set_status(note=i, velocity=self.COLOUR_GREEN)
+            else:
+                self.set_status(note=i, velocity=self.COLOUR_OFF)
 
     def feedback_plugin_status(self):
         from data_centre.plugin_collection import SequencePlugin
@@ -133,7 +141,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
     def refresh_midi_feedback(self):
 
-        # show which layer is selected
+        # show which layer is selected (where parameter offset goes to)
         self.feedback_show_layer(self.pc.data.shader_layer)
 
         # show if internal feedback (the shader layer kind) is enabled
@@ -144,20 +152,24 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
 
-        if self.pc.message_handler.actions.display.capture.is_previewing:
+        if self.pc.message_handler.actions.display.capture.is_previewing and not self.pc.data.function_on:
             self.feedback_capture_preview(self.COLOUR_GREEN)
         else:
             self.feedback_capture_preview(self.COLOUR_OFF)
+
+        if self.pc.data.function_on:
+            self.feedback_show_modulation(self.pc.shaders.selected_modulation_slot)
 
         self.feedback_plugin_status()
 
         for n,shader in enumerate(self.pc.message_handler.shaders.selected_shader_list):
             #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
             # show if layer is running or not
-            if self.pc.message_handler.shaders.selected_status_list[n] == '▶':
-                self.feedback_shader_layer_on(n)
-            else:
-                self.feedback_shader_layer_off(n)
+            if not self.pc.data.function_on:
+                if self.pc.message_handler.shaders.selected_status_list[n] == '▶':
+                    self.feedback_shader_layer_on(n)
+                else:
+                    self.feedback_shader_layer_off(n)
             for x in range(0,8):
                 if 'slot' in shader and shader.get('slot',None)==x:
                     if self.pc.message_handler.shaders.selected_status_list[n] == '▶':

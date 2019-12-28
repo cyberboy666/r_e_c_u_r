@@ -1,3 +1,5 @@
+doctea's experimental branch, implementing enhanced MIDI/actions, APC Key 25 MIDI feedback, and a plugin system with some demo plugins to store/recall shader presets, record/playback shader parameter automation and enable sound reactivity via OSC.
+
 
 # r_e_c_u_r
 

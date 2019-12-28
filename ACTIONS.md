@@ -1,10 +1,6 @@
 # Auto-generated Actions list
 
-<<<<<<< HEAD
-Sat 28 Dec 19:02:22 UTC 2019
-=======
-Sat 28 Dec 18:59:34 UTC 2019
->>>>>>> feature_shader_midi
+Sat 28 Dec 21:34:01 UTC 2019
 
 for branch=feature_midi_feedback_plugin
 
@@ -170,6 +166,8 @@ for branch=feature_midi_feedback_plugin
   * modulate_param_([0-3])_to_amount_continuous
   * set_param_([0-3])_layer_([0-2])_modulation_level_continuous
   * set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous
+  * reset_selected_modulation
+  * reset_modulation_([0-3])
   * select_shader_modulation_slot_([0-3])
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount

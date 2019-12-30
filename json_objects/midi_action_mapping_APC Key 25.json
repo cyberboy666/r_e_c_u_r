@@ -281,6 +281,14 @@
 	},
 	"note_off 98": {
 		"DEFAULT": ["function_off"]
+	},
+	"note_on 91": {
+		"DEFAULT": ["send_serial_macro_0"],
+		"FN_DEFAULT": ["send_serial_macro_1"]
+	},
+	"note_on 92": {
+		"DEFAULT": ["send_serial_macro_2"],
+		"FN_DEFAULT": ["send_serial_macro_3"]
 	}
 }
 

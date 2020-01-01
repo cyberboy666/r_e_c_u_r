@@ -288,7 +288,7 @@
 	},
 	"note_on 93": {
 		"DEFAULT": ["send_serial_macro_2"],
-		"FN_DEFAULT": ["send_serial_macro_3"]
+		"FN_DEFAULT": ["send_random_settings"]
 	}
 }
 

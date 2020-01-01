@@ -2,9 +2,12 @@ import serial
 from serial import Serial
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+import threading
 
 class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     ser = None
+
+    commands = "GRAEIVXYZ012345Cgraeivxyzc"
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -19,13 +22,14 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
                 "vYca5S"
         ]
 
-    def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
+    def open_serial(self, port='/dev/ttyUSB0', baudrate=38400):
         if self.ser is not None:
             self.ser.close()
         try:
             self.ser = serial.Serial(
                 port=port,
-                baudrate=baudrate
+                baudrate=baudrate,
+                timeout=None
             )
         except Exception as e:
             print ("open_serial failed: " + e)
@@ -34,6 +38,7 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     def parserlist(self):
         return [
                 ( r"send_serial_macro_([0-9])", self.send_serial_macro ),
+                ( r"send_random_settings", self.send_random_settings ),
                 ( r"open_serial", self.open_serial )
         ]
 
@@ -49,13 +54,22 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
         except Exception as e:
             print("%s: send_serial_string failed for '%s'" % (e,string.encode()))
 
-    def read_serial_string(self, what):
+    def send_random_settings(self):
+        import random
+        output = ""
+        output += "".join(random.sample(self.commands,5))
+        self.send_serial_string(output)
+
+    def read_serial_string(self): #, what):
+        print("starting read?")
         read = self.ser.readline()
+        print("read %s" % read)
         self.handle_device_status(reading)
 
     def get_device_status(self):
         #self.send_serial_string('S')
-        self.read_serial_string(self.handle_device_status)
+        #self.read_serial_string(self.handle_device_status)
+        print("starting thread to listen?")
         thread = threading.Thread(target=self.read_serial_string)#, args=None)
 
     def handle_device_status(self, result):

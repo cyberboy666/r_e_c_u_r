@@ -32,7 +32,9 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
                 timeout=None
             )
         except Exception as e:
-            print ("open_serial failed: " + e)
+            print ("open_serial failed: " + str(type(e)))
+            import traceback
+            traceback.print_exc()
 
     @property
     def parserlist(self):

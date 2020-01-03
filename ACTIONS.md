@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 28 Dec 21:34:01 UTC 2019
+Fri 3 Jan 22:07:13 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -180,6 +180,9 @@ for branch=feature_midi_feedback_plugin
   * toggle_pause_automation	(from MidiActionsTestPlugin)
   * pause_automation	(from MidiActionsTestPlugin)
   * toggle_loop_automation	(from MidiActionsTestPlugin)
+  * send_serial_macro_([0-9])	(from SerialSendPlugin)
+  * send_serial_string_(.*)	(from SerialSendPlugin)
+  * send_random_settings	(from SerialSendPlugin)
   * run_automation	(from ShaderLoopRecordPlugin)
   * stop_automation	(from ShaderLoopRecordPlugin)
   * toggle_pause_automation	(from ShaderLoopRecordPlugin)

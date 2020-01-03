@@ -918,6 +918,10 @@ class Actions(object):
                 ( r"set_shader_speed_layer_([0-2])_amount", self.shaders.set_speed_layer_to_amount ),
         }
 
+    def detect_types(self, args):
+        a = [ int(arg) if str(arg).isnumeric() else str(arg) for arg in list(args) ]
+        return a
+
     def get_callback_for_method(self, method_name, argument):
         for a in self.parserlist:
             regex = a[0]
@@ -926,7 +930,7 @@ class Actions(object):
 
             if matches:
                 found_method = me 
-                parsed_args = list(map(int,matches.groups()))
+                parsed_args = self.detect_types(matches.groups()) #list(map(int,matches.groups()))
                 if argument is not None:
                     args = parsed_args + [argument]
                 else:

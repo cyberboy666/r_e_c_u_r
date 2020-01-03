@@ -40,6 +40,7 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     def parserlist(self):
         return [
                 ( r"send_serial_macro_([0-9])", self.send_serial_macro ),
+                ( r"send_serial_string_(.*)", self.send_serial_string ),
                 ( r"send_random_settings", self.send_random_settings ),
                 ( r"open_serial", self.open_serial )
         ]

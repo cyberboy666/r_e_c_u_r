@@ -158,7 +158,7 @@ class ActionsPlugin(Plugin):
 
             if matches:
                 found_method = me
-                parsed_args = list(map(int,matches.groups()))
+                parsed_args = self.pc.actions.detect_types(matches.groups())
                 if argument is not None:
                     args = parsed_args + [argument]
                 else:
@@ -166,9 +166,9 @@ class ActionsPlugin(Plugin):
 
                 return (found_method, args)
 
-    def call_parse_method_name(self, method_name, argument):
-        method, arguments = self.actions.get_callback_for_method(method_name, argument)
-        method(*arguments)
+    #def call_parse_method_name(self, method_name, argument):
+    #    method, arguments = self.actions.get_callback_for_method(method_name, argument)
+    #    method(*arguments)
 
 
 # adapted from https://github.com/gdiepen/python_plugin_example

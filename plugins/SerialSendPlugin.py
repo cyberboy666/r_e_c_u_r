@@ -4,7 +4,7 @@ import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 import threading
 
-class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
+class SerialSendPlugin(ActionsPlugin,SequencePlugin):
     ser = None
 
     commands = "GRAEIVXYZ012345Cgraeivxyzc"

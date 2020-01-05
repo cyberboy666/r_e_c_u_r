@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Tue 24 Dec 14:29:29 UTC 2019
+Fri 3 Jan 22:08:36 UTC 2020
 
-for branch=feature_list_actions
+for branch=feature_shader_midi
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -29,11 +29,15 @@ for branch=feature_list_actions
   *   decrease_shader_param
   *   decrease_speed
   *   decrease_this_param
+  *   disable_feedback
+  *   enable_feedback
   *   enter_on_browser_selection
   *   enter_on_settings_selection
   *   enter_on_shaders_selection
   *   exit_openframeworks
   *   exit_osc_server(unused_addr, args)
+  *   function_off
+  *   function_on
   *   get_midi_status
   *   increase_mix_shader
   *   increase_param_focus
@@ -90,6 +94,7 @@ for branch=feature_list_actions
   *   set_detour_mix_continuous(amount)
   *   set_detour_speed_position_continuous(amount)
   *   set_detour_start_continuous(amount)
+  *   set_feedback_state(state)
   *   set_fixed_length(value)
   *   set_playing_sample_end_to_current_duration
   *   set_playing_sample_start_to_current_duration
@@ -143,11 +148,28 @@ for branch=feature_list_actions
   *   toggle_player_mode
   *   toggle_play_on_player
   *   toggle_screen_mirror
+  *   toggle_shader_layer(layer)
   *   toggle_shaders
   *   toggle_shader_speed
   *   toggle_show_on_player
+  *   toggle_x3_as_speed
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
+
+# Dynamic routes
+  * play_shader_([0-9])_([0-9])
+  * toggle_shader_layer_([0-2])
+  * start_shader_layer_([0-2])
+  * stop_shader_layer_([0-2])
+  * set_the_shader_param_([0-3])_layer_([0-2])_continuous
+  * modulate_param_([0-3])_to_amount_continuous
+  * set_param_([0-3])_layer_([0-2])_modulation_level_continuous
+  * set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous
+  * reset_selected_modulation
+  * reset_modulation_([0-3])
+  * select_shader_modulation_slot_([0-3])
+  * set_shader_speed_layer_offset_([0-2])_amount
+  * set_shader_speed_layer_([0-2])_amount
 
 ----
 

@@ -27,6 +27,7 @@ class OscInput(object):
         server_args = server_parser.parse_args()
 
         this_dispatcher = dispatcher.Dispatcher()
+
         this_dispatcher.map("/keyboard/*", self.on_osc_input)
         this_dispatcher.map("/shaderparam0", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam1", self.on_param_osc_input)
@@ -59,29 +60,22 @@ class OscInput(object):
 
         self.run_action_for_osc_channel(addr, param_value=args)
         
-
-
     def run_action_for_osc_channel(self, channel, param_value=None):
         this_mapping = self.osc_mappings[channel]
         if self.data.control_mode in this_mapping:
             mode = self.data.control_mode
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
-
+            
         if self.data.function_on and len(this_mapping[mode]) > 1:
-            print('the action being called is {}'.format(this_mapping[mode][1]))
-            getattr(self.actions, this_mapping[mode][1])()
+            method_name = this_mapping[mode][1]
             if self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
                 self.data.function_on = False
         else:
-            print('the action being called is {}'.format(this_mapping[mode][0]))
+            method_name = this_mapping[mode][0]
+            
+        self.actions.call_method_name(method_name, param_value)
 
-            if param_value is not None:
-                getattr(self.actions, this_mapping[mode][0])(param_value)
-            else:
-                getattr(self.actions, this_mapping[mode][0])()
-                self.display.refresh_display()
-        
-
-
+        if 'continuous' not in method_name:
+            self.display.refresh_display()
 

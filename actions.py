@@ -4,6 +4,7 @@ import data_centre.length_setter as length_setter
 import sys
 import shlex
 import os
+import re
 from pythonosc import osc_message_builder
 from pythonosc import dispatcher
 from pythonosc import osc_server
@@ -197,6 +198,12 @@ class Actions(object):
     def toggle_function(self):
         self.data.function_on = not self.data.function_on
 
+    def function_on(self):
+        self.data.function_on = True
+
+    def function_off(self):
+        self.data.function_on = False
+
     def next_bank(self):
         self.data.update_bank_number_by_amount(1)
         print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
@@ -271,13 +278,16 @@ class Actions(object):
         else:
             self.message_handler.set_message('INFO', 'cant mirror in dev mode')
 
-    def toggle_shaders(self):
-        if self.shaders.selected_status_list[self.data.shader_layer] == '▶':
-            self.shaders.stop_selected_shader()
-        elif self.shaders.selected_status_list[self.data.shader_layer] == '■':
-            self.shaders.start_selected_shader()
+    def toggle_shader_layer(self, layer):
+        if self.shaders.selected_status_list[layer] == '▶':
+            self.shaders.stop_shader(layer)
+        elif self.shaders.selected_status_list[layer] == '■':
+            self.shaders.start_shader(layer)
         else:
-            self.message_handler.set_message('INFO', 'no shader loaded')
+            self.message_handler.set_message('INFO', "no shader loaded into layer %s" % layer)
+
+    def toggle_shaders(self):
+        self.toggle_shader_layer(self.data.shader_layer)
 
     def toggle_shader_speed(self):
         self.shaders.toggle_shader_speed()
@@ -307,7 +317,16 @@ class Actions(object):
 
     def toggle_feedback(self):
         print('toggle here')
-        self.data.feedback_active = not self.data.feedback_active
+        self.set_feedback_state(not self.data.feedback_active)
+
+    def enable_feedback(self):
+        self.set_feedback_state(True)
+
+    def disable_feedback(self):
+        self.set_feedback_state(False)
+
+    def set_feedback_state(self, state):
+        self.data.feedback_active = state
         self.video_driver.osc_client.send_message("/toggle_feedback", self.data.feedback_active)
 
     def play_shader_0(self):
@@ -351,6 +370,12 @@ class Actions(object):
 
     def clear_shader_bank(self):
         self.data.clear_all_shader_slots()
+
+    def toggle_x3_as_speed(self):
+        if self.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled':
+            self.shaders.set_x3_as_speed(False)
+        else:
+            self.shaders.set_x3_as_speed(True)
 
     def toggle_detour_record(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
@@ -868,5 +893,69 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
+    @staticmethod
+    def try_remove_file(path):
+        if os.path.exists(path):
+            os.remove(path)
 
+    # TODO: make this interrogate the various components for available routes to parse
+    # this would include eg a custom script module..
+    @property
+    def parserlist(self):
+        return { 
+                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
+                ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
+                ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
+                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
+                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount ),
+                ( r"modulate_param_([0-3])_to_amount_continuous", self.shaders.modulate_param_to_amount ),
+                ( r"set_param_([0-3])_layer_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
+                ( r"set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
+                ( r"reset_selected_modulation", self.shaders.reset_selected_modulation ),
+                ( r"reset_modulation_([0-3])", self.shaders.reset_modulation ),
+                ( r"select_shader_modulation_slot_([0-3])", self.shaders.select_shader_modulation_slot ),
+                ( r"set_shader_speed_layer_offset_([0-2])_amount",               self.shaders.set_speed_offset_to_amount ),
+                ( r"set_shader_speed_layer_([0-2])_amount", self.shaders.set_speed_layer_to_amount ),
+        }
+
+    def detect_types(self, args):
+        a = [ int(arg) if str(arg).isnumeric() else str(arg) for arg in list(args) ]
+        return a
+
+    def get_callback_for_method(self, method_name, argument):
+        for a in self.parserlist:
+            regex = a[0]
+            me = a[1]
+            matches = re.search(regex, method_name)
+
+            if matches:
+                found_method = me 
+                parsed_args = self.detect_types(matches.groups()) #list(map(int,matches.groups()))
+                if argument is not None:
+                    args = parsed_args + [argument]
+                else:
+                    args = parsed_args 
+                
+                return (found_method, args)
+
+    def call_method_name(self, method_name, argument=None):
+        # if the target method doesnt exist, call the handler
+        if not hasattr(self, method_name):
+            self.call_parse_method_name(method_name, argument)
+            return
+
+        if argument is not None:
+            getattr(self, method_name)(argument)
+        else:
+            getattr(self, method_name)()
+
+
+    def call_parse_method_name(self, method_name, argument):
+        try:
+            method, arguments = self.get_callback_for_method(method_name, argument)
+            method(*arguments)
+        except:
+            print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
 

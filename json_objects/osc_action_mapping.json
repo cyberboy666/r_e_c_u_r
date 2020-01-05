@@ -116,6 +116,18 @@
 	},
 	"s": {
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
-        "PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
-    }
+        	"PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
+	},
+	"/volume": {
+		"DEFAULT": ["modulate_param_0_to_amount_continuous"]
+	},
+	"/kick": {
+		"DEFAULT": ["modulate_param_1_to_amount_continuous"]
+	},
+	"/himid": {
+		"DEFAULT": ["modulate_param_2_to_amount_continuous"]
+	},
+	"/high": {
+		"DEFAULT": ["modulate_param_3_to_amount_continuous"]
+	}
 }

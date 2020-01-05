@@ -40,43 +40,35 @@
 		"DEFAULT": ["set_the_shader_param_3_layer_offset_2_continuous"]
 	},
     "control_change 48": {
-            "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
-            "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-            "FN_DEFAULT": ["set_strobe_amount_continuous"]
+            "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
+            "NAV_DETOUR": ["set_detour_speed_position_continuous"]
     },
     "control_change 49": {
-            "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
-	    "FN_DEFAULT": ["set_shader_speed_layer_0_amount"],
+            "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
 	    "NAV_DETOUR": ["set_detour_start_continuous"]
     },
     "control_change 50": {
-            "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous"],
-	    "FN_DEFAULT": ["set_shader_speed_layer_1_amount"],
+            "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 51": {
-            "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
-	    "FN_DEFAULT": ["set_shader_speed_layer_2_amount"],
+            "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 52": {
-            "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["set_param_0_layer_offset_0_modulation_level_continuous"],
+            "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous","set_param_0_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"]
     },
     "control_change 53": {
-            "DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["set_param_1_layer_offset_0_modulation_level_continuous"],
+            "DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous","set_param_1_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_start_continuous"]
     },
     "control_change 54": {
-            "DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["set_param_2_layer_offset_0_modulation_level_continuous"],
+            "DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous","set_param_2_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 55": {
-            "DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous"],
-	    "FN_DEFAULT": ["set_param_3_layer_offset_0_modulation_level_continuous"],
+            "DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous","set_param_3_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
     },
     "control_change 56": {
@@ -111,56 +103,43 @@
 	    "DEFAULT": ["store_next_preset"]
     },
     "note_on 69": {
-	    "DEFAULT": ["store_current_preset"],
-	    "FN_DEFAULT": ["clear_current_preset"]
+	    "DEFAULT": ["store_current_preset","clear_current_preset"]
     },
     "note_on 0": {
-	    "DEFAULT": ["switch_to_preset_0"],
-	    "FN_DEFAULT": ["select_preset_0"]
+	    "DEFAULT": ["switch_to_preset_0","select_preset_0"]
     },
     "note_on 1": {
-	    "DEFAULT": ["switch_to_preset_1"],
-	    "FN_DEFAULT": ["select_preset_1"]
+	    "DEFAULT": ["switch_to_preset_1","select_preset_1"]
     },
     "note_on 2": {
-	    "DEFAULT": ["switch_to_preset_2"],
-	    "FN_DEFAULT": ["select_preset_2"]
+	    "DEFAULT": ["switch_to_preset_2","select_preset_2"]
     },
     "note_on 3": {
-	    "DEFAULT": ["switch_to_preset_3"],
-	    "FN_DEFAULT": ["select_preset_3"]
+	    "DEFAULT": ["switch_to_preset_3","select_preset_3"]
     },
     "note_on 4": {
-            "DEFAULT": ["switch_to_preset_4"],
-	    "FN_DEFAULT": ["select_preset_4"]
+            "DEFAULT": ["switch_to_preset_4","select_preset_4"]
     },
     "note_on 5": {
-            "DEFAULT": ["switch_to_preset_5"],
-            "FN_DEFAULT": ["select_preset_5"]
+            "DEFAULT": ["switch_to_preset_5","select_preset_5"]
     },
     "note_on 6": {
-            "DEFAULT": ["switch_to_preset_6"],
-	    "FN_DEFAULT": ["select_preset_6"]
+            "DEFAULT": ["switch_to_preset_6","select_preset_6"]
     },
     "note_on 7": {
-            "DEFAULT": ["switch_to_preset_7"],
-	    "FN_DEFAULT": ["select_preset_7"]
+            "DEFAULT": ["switch_to_preset_7","select_preset_7"]
     },
     "note_on 82": {
-	    "DEFAULT": ["toggle_shader_layer_0"],
-	    "FN_DEFAULT": ["select_shader_modulation_slot_0"]
+	    "DEFAULT": ["toggle_shader_layer_0","select_shader_modulation_slot_0"]
     },
     "note_on 83": {
-	    "DEFAULT": ["toggle_shader_layer_1"],
-	    "FN_DEFAULT": ["select_shader_modulation_slot_1"]
+	    "DEFAULT": ["toggle_shader_layer_1","select_shader_modulation_slot_1"]
     },
     "note_on 84": {
-	    "DEFAULT": ["toggle_shader_layer_2"],
-	    "FN_DEFAULT": ["select_shader_modulation_slot_2"]
+	    "DEFAULT": ["toggle_shader_layer_2","select_shader_modulation_slot_2"]
     },
     "note_on 85": {
-	    "DEFAULT": ["toggle_feedback"],
-	    "FN_DEFAULT": ["select_shader_modulation_slot_3"]
+	    "DEFAULT": ["toggle_feedback","select_shader_modulation_slot_3"]
     },
     "note_on 86": {
 	    "DEFAULT": ["toggle_capture_preview"]
@@ -172,36 +151,28 @@
 	    "DEFAULT": ["next_shader_layer"]
     },
     "note_on 8": {
-	    "DEFAULT": ["toggle_automation_clip_0"],
-	    "FN_DEFAULT": ["select_automation_clip_0"]
+	    "DEFAULT": ["toggle_automation_clip_0","select_automation_clip_0"]
     },
     "note_on 9": {
-	    "DEFAULT": ["toggle_automation_clip_1"],
-	    "FN_DEFAULT": ["select_automation_clip_1"]
+	    "DEFAULT": ["toggle_automation_clip_1","select_automation_clip_1"]
     },
     "note_on 10": {
-	    "DEFAULT": ["toggle_automation_clip_2"],
-	    "FN_DEFAULT": ["select_automation_clip_2"]
+	    "DEFAULT": ["toggle_automation_clip_2","select_automation_clip_2"]
     },
     "note_on 11": {
-	    "DEFAULT": ["toggle_automation_clip_3"],
-	    "FN_DEFAULT": ["select_automation_clip_3"]
+	    "DEFAULT": ["toggle_automation_clip_3","select_automation_clip_3"]
     },
     "note_on 12": {
-            "DEFAULT": ["toggle_automation_clip_4"],
-	    "FN_DEFAULT": ["select_automation_clip_4"]
+            "DEFAULT": ["toggle_automation_clip_4","select_automation_clip_4"]
     },
     "note_on 13": {
-            "DEFAULT": ["toggle_automation_clip_5"],
-	    "FN_DEFAULT": ["select_automation_clip_5"]
+            "DEFAULT": ["toggle_automation_clip_5","select_automation_clip_5"]
     },
     "note_on 14": {
-            "DEFAULT": ["toggle_automation_clip_6"],
-	    "FN_DEFAULT": ["select_automation_clip_6"]
+            "DEFAULT": ["toggle_automation_clip_6","select_automation_clip_6"]
     },
     "note_on 15": {
-            "DEFAULT": ["toggle_automation_clip_7"],
-	    "FN_DEFAULT": ["select_automation_clip_7"]
+            "DEFAULT": ["toggle_automation_clip_7","select_automation_clip_7"]
     },
 
 	"note_on 32": {
@@ -283,12 +254,10 @@
 		"DEFAULT": ["function_off"]
 	},
 	"note_on 91": {
-		"DEFAULT": ["send_serial_macro_0"],
-		"FN_DEFAULT": ["send_serial_macro_1"]
+		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["send_serial_string_hellO"],
-		"FN_DEFAULT": ["send_random_settings"]
+		"DEFAULT": ["send_serial_string_hellO","send_random_settings"]
 	}
 }
 

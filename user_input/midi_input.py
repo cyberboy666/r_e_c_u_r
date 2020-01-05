@@ -117,8 +117,8 @@ class MidiInput(object):
             mode = "FN_%s"%self.data.control_mode
         elif self.data.control_mode in this_mapping:
             mode = self.data.control_mode
-        elif self.data.function_on and "FN_DEFAULT" in this_mapping:
-            mode = "FN_DEFAULT"
+        #elif self.data.function_on and "FN_DEFAULT" in this_mapping:
+        #    mode = "FN_DEFAULT"
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 

@@ -57,7 +57,7 @@ class OscInput(object):
             print('{} is not in keypad map'.format(args))
 
     def on_param_osc_input(self, addr, args):
-        print("the address", addr)
+        print("on_param_osc_input: address %s : %s " % (addr,args))
 
         self.run_action_for_osc_channel(addr, param_value=args)
         

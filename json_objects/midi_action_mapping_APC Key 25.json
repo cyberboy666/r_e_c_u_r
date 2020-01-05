@@ -129,6 +129,9 @@
     "note_on 7": {
             "DEFAULT": ["switch_to_preset_7","select_preset_7"]
     },
+    "note_on 81": {
+	    "DEFAULT": ["","reset_selected_modulation"]
+    },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0","select_shader_modulation_slot_0"]
     },

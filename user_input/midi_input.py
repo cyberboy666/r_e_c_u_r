@@ -125,7 +125,7 @@ class MidiInput(object):
 
         if self.data.function_on and len(this_mapping[mode]) > 1:
             method_name = this_mapping[mode][1]
-            self.data.function_on = False
+            #self.data.function_on = False
         else:
             method_name = this_mapping[mode][0]
 

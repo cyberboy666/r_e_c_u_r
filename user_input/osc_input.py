@@ -34,6 +34,7 @@ class OscInput(object):
         this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
+        this_dispatcher.map("/*", self.on_param_osc_input)
         
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)

@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 3 Jan 22:07:13 UTC 2020
+Sun 5 Jan 15:57:32 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -201,6 +201,8 @@ for branch=feature_midi_feedback_plugin
   * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * send_serial_macro_([0-9])	(from WJSendPlugin)
+  * send_serial_string_(.*)	(from WJSendPlugin)
 
 ----
 

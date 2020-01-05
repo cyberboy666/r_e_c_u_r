@@ -1,6 +1,6 @@
 import display_centre.menu as menu
 import os
-
+from statistics import mean
 
 class Shaders(object):
     MENU_HEIGHT = 10
@@ -210,7 +210,6 @@ class Shaders(object):
         for i,v in enumerate(values):
             l.append(self.get_modulation_value(amount, v, levels[i]))
 
-        from statistics import mean
         #print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
         return mean(l)
 

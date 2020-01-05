@@ -27,7 +27,11 @@ class OscInput(object):
         server_args = server_parser.parse_args()
 
         this_dispatcher = dispatcher.Dispatcher()
-        this_dispatcher.map("/recurOsc", self.on_osc_input)
+        this_dispatcher.map("/keyboard/*", self.on_osc_input)
+        this_dispatcher.map("/shaderparam0", self.on_param_osc_input)
+        this_dispatcher.map("/shaderparam1", self.on_param_osc_input)
+        this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
+        this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
@@ -38,16 +42,26 @@ class OscInput(object):
     def exit_osc_server(self, unused_addr, args):
         self.osc_server.shutdown()
 
-    def on_osc_input(self, unused_addr, args):
+    def on_osc_input(self, addr, args):
+        args = str(args)
         print("!!!!!!!!!!!!!!!!" + args)
+        print("the address", addr)
+        key = addr[-1]
         numpad = list(string.ascii_lowercase[0:19])
 
-        if args in numpad:
-            self.run_action_for_osc_channel(args)
+        if key in numpad:
+            self.run_action_for_osc_channel(key)
         else:
             print('{} is not in keypad map'.format(args))
 
-    def run_action_for_osc_channel(self, channel):
+    def on_param_osc_input(self, addr, args):
+        print("the address", addr)
+
+        self.run_action_for_osc_channel(addr, param_value=args)
+        
+
+
+    def run_action_for_osc_channel(self, channel, param_value=None):
         this_mapping = self.osc_mappings[channel]
         if self.data.control_mode in this_mapping:
             mode = self.data.control_mode
@@ -61,7 +75,13 @@ class OscInput(object):
                 self.data.function_on = False
         else:
             print('the action being called is {}'.format(this_mapping[mode][0]))
-            getattr(self.actions, this_mapping[mode][0])()
-      
-        self.display.refresh_display()
+
+            if param_value is not None:
+                getattr(self.actions, this_mapping[mode][0])(param_value)
+            else:
+                getattr(self.actions, this_mapping[mode][0])()
+                self.display.refresh_display()
+        
+
+
 

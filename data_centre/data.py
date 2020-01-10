@@ -101,6 +101,12 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
+        from utils import docs
+        docs.generate_mappings_doc("MIDI mappings", self.midi_mappings)
+        docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
+        docs.generate_mappings_doc("Key mappings", self.analog_mappings, column_one_header="Analogue input")
+        #quit()
+
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name
         custom_file = self.MIDI_MAPPING_JSON.replace(".json","_%s.json"%device_name)
@@ -112,7 +118,6 @@ class Data(object):
             print ("loading default midi mapping for %s" % (device_name))
             self.midi_mappings = self._read_json(self.MIDI_MAPPINGS_JSON)
         return self.midi_mappings
-
         
     @staticmethod
     def create_empty_bank():

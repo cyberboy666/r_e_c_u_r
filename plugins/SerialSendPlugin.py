@@ -6,12 +6,16 @@ import threading
 
 class SerialSendPlugin(ActionsPlugin,SequencePlugin):
     ser = None
-
     commands = "GRAEIVXYZ012345Cgraeivxyzc"
+
+    disabled = False
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
-        self.disabled = False
+
+        if self.disabled:
+            print ("SerialSendPlugin is disabled, not initialising")
+            return
 
         self.open_serial()
 
@@ -31,6 +35,7 @@ class SerialSendPlugin(ActionsPlugin,SequencePlugin):
                 baudrate=baudrate,
                 timeout=None
             )
+            print ("opened serial %s at %s" % (port, baudrate))
         except Exception as e:
             print ("open_serial failed: " + str(type(e)))
             import traceback

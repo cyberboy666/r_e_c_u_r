@@ -8,11 +8,11 @@ class Plugin(object):
     """Base class that each plugin must inherit from. within this class
     you must define the methods that all of your plugins must implement
     """
+    disabled = False
 
     def __init__(self, plugin_collection):
         self.description = 'UNKNOWN'
         self.pc = plugin_collection
-        self.disabled = False
 
 class MidiFeedbackPlugin(Plugin):
     """Base class for MIDI feedback plugins

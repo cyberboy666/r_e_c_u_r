@@ -2,6 +2,7 @@ import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 
 class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
+    disabled = False
     MAX_CLIPS = 8
 
     def __init__(self, plugin_collection):

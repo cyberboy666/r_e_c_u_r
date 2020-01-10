@@ -3,6 +3,7 @@ from data_centre.plugin_collection import MidiFeedbackPlugin
 import mido
 
 class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
+    disabled = False
 
     status = {}
 

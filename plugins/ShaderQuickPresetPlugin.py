@@ -3,6 +3,7 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 import copy
 
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
+    disabled = False
 
     MAX_PRESETS = 8
 

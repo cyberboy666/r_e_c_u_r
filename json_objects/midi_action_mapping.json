@@ -4,15 +4,15 @@
         "NAV_DETOUR": ["set_detour_mix_continuous"]
 	},
     "control_change 1": {
-		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
         "NAV_DETOUR": ["set_detour_speed_position_continuous"]
 	},
     "control_change 2": {
-		"DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous"],
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
         "NAV_DETOUR": ["set_detour_start_continuous"]
 	},
     "control_change 3": {
-		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
         "NAV_DETOUR": ["set_detour_end_continuous"]
 	},
     "control_change 4": {

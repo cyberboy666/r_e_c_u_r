@@ -7,6 +7,24 @@ import inspect
 from itertools import cycle
 from omxplayer.player import OMXPlayer
 from shutil import copyfile
+import threading 
+
+from data_centre import plugin_collection
+
+class AsyncWrite(threading.Thread):
+    def __init__(self, filename, data, mode='json'):
+        threading.Thread.__init__(self)
+        self.filename = filename
+        self.data = data
+        self.mode = mode
+
+    def run(self):
+        with open(self.filename, "w+") as data_file:
+            if self.mode=='json':
+                json.dump(self.data, data_file, indent=4, sort_keys=True)
+            else:
+                data_file.write(self.data)
+            data_file.close()
 
 
 
@@ -33,6 +51,11 @@ class Data(object):
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
         self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
+        self.PATHS_TO_PLUGIN_DATA = [ '/home/pi/r_e_c_u_r/json_objects/plugins', self.PATH_TO_EXTERNAL_DEVICES ]
+
+        #initialise plugin manager
+        self.plugins = plugin_collection.PluginCollection("plugins", message_handler, self)
+        self.plugins.apply_all_plugins_on_value(5)
 
         ### state data
         self.auto_repeat_on = True
@@ -78,7 +101,17 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
-        
+    def load_midi_mapping_for_device(self, device_name):
+        # check if custom config file exists on disk for this device name
+        custom_file = self.MIDI_MAPPING_JSON.replace(".json","_%s.json"%device_name)
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + custom_file):
+            self.midi_mappings = self._read_json(custom_file)
+            self.message_handler.set_message('INFO', "Loaded %s for %s" % (custom_file, device_name)) #the slot you pressed is empty')
+            print ("loaded custom midi mapping for %s" % custom_file)
+        else:
+            print ("loading default midi mapping for %s" % (device_name))
+            self.midi_mappings = self._read_json(self.MIDI_MAPPINGS_JSON)
+        return self.midi_mappings
 
         
     @staticmethod
@@ -99,6 +132,23 @@ class Data(object):
     def _update_json(self, file_name, data):
         with open('{}{}'.format(self.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
             json.dump(data, data_file, indent=4, sort_keys=True)
+
+    def _read_plugin_json(self, file_name):
+        for path in self.PATHS_TO_PLUGIN_DATA:
+            print("trying path %s"%path)
+            try:
+                with open("%s/%s" % (path,file_name)) as data_file:
+                    data = json.load(data_file)
+                    return data
+            except:
+                pass
+        print ("no plugin data loaded for %s" % file_name)
+
+    def _update_plugin_json(self, file_name, data):
+        #with open("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), "w+") as data_file:
+        #    json.dump(data, data_file, indent=4, sort_keys=True)
+        writer = AsyncWrite("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), data, mode='json')
+        writer.start()
 
     def update_conjur_dev_mode(self, value):
         print(value)

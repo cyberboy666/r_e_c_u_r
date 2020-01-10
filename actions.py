@@ -530,7 +530,7 @@ class Actions(object):
             self.data.settings['shader']['STROBE_AMOUNT']['value'] = scaled_amount
 
     def get_midi_status(self):
-        self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
+        self.message_handler.set_message('INFO', ("midi status is {} to %s"%(self.data.midi_device_name)).format(self.data.midi_status))
 
     def cycle_midi_port_index(self):
         self.data.midi_port_index = self.data.midi_port_index + 1
@@ -573,13 +573,13 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
-            
+
             if self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
                 
                 self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
 
                 self.change_hdmi_settings('CEA 4 HDMI')
-                
+
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -591,8 +591,9 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
-            print('conjur pid is {}'.format(self.openframeworks_process.pid))
+            with open("conjur.log","w+") as out:
+                self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'], stdout=out)
+                print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
@@ -736,13 +737,13 @@ class Actions(object):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
 
     def set_fixed_length(self, value):
@@ -893,6 +894,9 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
+    def modulate_param_layer_offset_to_amount(self, param, layer, amount):
+        self.shaders.modulate_param_layer_offset_to_amount(param, amount, layer_offset=layer)
+
     @staticmethod
     def try_remove_file(path):
         if os.path.exists(path):
@@ -902,12 +906,12 @@ class Actions(object):
     # this would include eg a custom script module..
     @property
     def parserlist(self):
-        return { 
+        return {
                 ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
                 ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
                 ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
                 ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
-                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount ),
+                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous",      self.shaders.set_param_layer_to_amount ),
                 ( r"modulate_param_([0-3])_to_amount_continuous", self.shaders.modulate_param_to_amount ),
                 ( r"set_param_([0-3])_layer_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
                 ( r"set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
@@ -915,7 +919,7 @@ class Actions(object):
                 ( r"reset_modulation_([0-3])", self.shaders.reset_modulation ),
                 ( r"select_shader_modulation_slot_([0-3])", self.shaders.select_shader_modulation_slot ),
                 ( r"set_shader_speed_layer_offset_([0-2])_amount",               self.shaders.set_speed_offset_to_amount ),
-                ( r"set_shader_speed_layer_([0-2])_amount", self.shaders.set_speed_layer_to_amount ),
+                ( r"set_shader_speed_layer_([0-2])_amount",                      self.shaders.set_speed_layer_to_amount ),
         }
 
     def detect_types(self, args):
@@ -951,6 +955,16 @@ class Actions(object):
 
 
     def call_parse_method_name(self, method_name, argument):
+        # first test if a registered plugin handles this for us
+        from data_centre.plugin_collection import ActionsPlugin
+        for plugin in self.data.plugins.get_plugins(ActionsPlugin):
+            if plugin.is_handled(method_name):
+                print ("Plugin %s is handling %s" % (plugin, method_name))
+                method, arguments = plugin.get_callback_for_method(method_name, argument)
+                method(*arguments)
+                return
+
+        # if not then fall back to using internal method
         try:
             method, arguments = self.get_callback_for_method(method_name, argument)
             method(*arguments)

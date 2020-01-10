@@ -1,6 +1,6 @@
 {
     "control_change 0": {
-		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
         "NAV_DETOUR": ["set_detour_mix_continuous"]
 	},
     "control_change 1": {

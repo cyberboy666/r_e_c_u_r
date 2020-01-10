@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Fri 3 Jan 22:08:36 UTC 2020
+Fri 10 Jan 17:25:14 UTC 2020
 
-for branch=feature_shader_midi
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -58,6 +58,7 @@ for branch=feature_shader_midi
   *   load_this_detour_shader
   *   _load_this_slot_into_next_player(slot)
   *   map_on_shaders_selection
+  *   modulate_param_layer_offset_to_amount(param, layer, amount)
   *   move_browser_selection_down
   *   move_browser_selection_up
   *   move_settings_selection_down
@@ -156,7 +157,7 @@ for branch=feature_shader_midi
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
 
-# Dynamic routes
+## Dynamic routes
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])
   * start_shader_layer_([0-2])
@@ -170,6 +171,15 @@ for branch=feature_shader_midi
   * select_shader_modulation_slot_([0-3])
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
+
+### Plugin routes
+  * test_plugin	(from MidiActionsTestPlugin)
+  * cycle_shaders	(from MidiActionsTestPlugin)
+  * run_automation	(from MidiActionsTestPlugin)
+  * stop_automation	(from MidiActionsTestPlugin)
+  * toggle_pause_automation	(from MidiActionsTestPlugin)
+  * pause_automation	(from MidiActionsTestPlugin)
+  * toggle_loop_automation	(from MidiActionsTestPlugin)
 
 ----
 

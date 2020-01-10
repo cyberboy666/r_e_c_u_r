@@ -112,7 +112,7 @@ class Data(object):
         custom_file = self.MIDI_MAPPING_JSON.replace(".json","_%s.json"%device_name)
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + custom_file):
             self.midi_mappings = self._read_json(custom_file)
-            self.message_handler.set_message('INFO', "Loaded %s for %s" % (custom_file, device_name)) #the slot you pressed is empty')
+            self.message_handler.set_message('INFO', "Loaded %s for %s" % (custom_file, device_name))
             print ("loaded custom midi mapping for %s" % custom_file)
         else:
             print ("loading default midi mapping for %s" % (device_name))
@@ -140,7 +140,7 @@ class Data(object):
 
     def _read_plugin_json(self, file_name):
         for path in self.PATHS_TO_PLUGIN_DATA:
-            print("trying path %s"%path)
+            print("loading plugin data %s" % path)
             try:
                 with open("%s/%s" % (path,file_name)) as data_file:
                     data = json.load(data_file)

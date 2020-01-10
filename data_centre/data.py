@@ -78,7 +78,11 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
-        
+        from utils import docs
+        docs.generate_mappings_doc("MIDI mappings", self.midi_mappings)
+        docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
+        docs.generate_mappings_doc("Key mappings", self.analog_mappings, column_one_header="Analogue input")
+        #quit()
 
         
     @staticmethod

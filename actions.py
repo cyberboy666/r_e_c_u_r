@@ -573,13 +573,13 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
-            
+
             if self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
                 
                 self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
 
                 self.change_hdmi_settings('CEA 4 HDMI')
-                
+
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -591,8 +591,9 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
-            print('conjur pid is {}'.format(self.openframeworks_process.pid))
+            with open("conjur.log","w+") as out:
+                self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'], stdout=out)
+                print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)

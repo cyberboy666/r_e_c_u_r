@@ -267,3 +267,203 @@ class Shaders(object):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
    
+    # methods for helping dealing with storing and recalling shader parameter frame states
+    def get_live_frame(self):
+        #print("get_live_frame: %s" % self.pc.message_handler.shaders.selected_param_list)
+        import copy #from copy import deepcopy
+        frame = {
+                'selected_shader_slots': [ shader.get('slot',None) for shader in self.selected_shader_list ],
+                'shader_params': copy.deepcopy(self.selected_param_list),
+                'layer_active_status': copy.deepcopy(self.selected_status_list),
+                'feedback_active': self.data.feedback_active,
+                'x3_as_speed': self.data.settings['shader']['X3_AS_SPEED']['value'],
+                'shader_speeds': copy.deepcopy(self.selected_speed_list),
+                'strobe_amount': self.data.settings['shader']['STROBE_AMOUNT']['value'] / 10.0
+        }
+        #print("built frame: %s" % frame['shader_params'])
+        return frame
+
+    def recall_frame_params(self, preset):
+        if preset is None:
+            return
+        #print("recall_frame_params got: %s" % preset.get('shader_params'))
+        for (layer, param_list) in enumerate(preset.get('shader_params',[])):
+            if param_list:
+                for param,value in enumerate(param_list):
+                    #if (ignored is not None and ignored['shader_params'][layer][param] is not None):
+                    #    print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
+                    #    continue
+                    if (value is not None):
+                      #print("recalling layer %s param %s: value %s" % (layer,param,value))
+                      self.data.plugins.actions.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
+
+        if preset.get('feedback_active') is not None:
+            self.data.feedback_active = preset.get('feedback_active',self.data.feedback_active)
+            if self.data.feedback_active:
+                self.data.plugins.actions.call_method_name('enable_feedback')
+            else:
+                self.data.plugins.actions.call_method_name('disable_feedback')
+
+        if preset.get('x3_as_speed') is not None:
+            self.data.settings['shader']['X3_AS_SPEED']['value'] = preset.get('x3_as_speed',self.data.settings['shader']['X3_AS_SPEED']['value'])
+            """if self.data.settings['shader']['X3_AS_SPEED']['value']:
+                self.data.plugins.actions.call_method_name('enable_x3_as_speed')
+            else:
+                self.data.plugins.actions.call_method_name('disable_x3_as_speed')"""
+
+        for (layer, speed) in enumerate(preset.get('shader_speeds',[])):
+            if speed is not None:
+                self.data.plugins.actions.call_method_name('set_shader_speed_layer_%s_amount' % layer, speed)
+
+        if preset.get('strobe_amount') is not None:
+            self.data.plugins.actions.set_strobe_amount_continuous(preset.get('strobe_amount'))
+
+    def recall_frame(self, preset):
+
+        self.data.settings['shader']['X3_AS_SPEED']['value'] = preset.get('x3_as_speed')
+
+        # x3_as_speed affects preset recall, so do that first
+        self.recall_frame_params(preset)
+
+        for (layer, slot) in enumerate(preset.get('selected_shader_slots',[])):
+            if slot is not None:
+                #print("setting layer %s to slot %s" % (layer, slot))
+                self.data.plugins.actions.call_method_name('play_shader_%s_%s' % (layer, slot))
+
+        for (layer, active) in enumerate(preset.get('layer_active_status',[])):
+            # print ("got %s layer with status %s " % (layer,active))
+            if active=='▶':
+                self.data.plugins.actions.call_method_name('start_shader_layer_%s' % layer)
+            else:
+                self.data.plugins.actions.call_method_name('stop_shader_layer_%s' % layer)
+
+    DEBUG_FRAMES = False
+
+    # overlay frame2 on frame1
+    def merge_frames(self, frame1, frame2):
+        from copy import deepcopy
+        f = deepcopy(frame1) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("merge_frames: got frame1\t%s" % frame1)
+        if self.DEBUG_FRAMES:  print("merge_frames: got frame2\t%s" % frame2)
+        for i,f2 in enumerate(frame2['shader_params']):
+            for i2,p in enumerate(f2):
+                if p is not None:
+                    f['shader_params'][i][i2] = p
+
+        if frame2['feedback_active'] is not None:
+            f['feedback_active'] = frame2['feedback_active']
+
+        if frame2['x3_as_speed'] is not None:
+            f['x3_as_speed'] = frame2['x3_as_speed']
+
+        if f.get('shader_speeds') is None:
+            f['shader_speeds'] = frame2.get('shader_speeds')
+        else:
+            for i,s in enumerate(frame2['shader_speeds']):
+                if s is not None:
+                    f['shader_speeds'][i] = s
+
+        if frame2.get('strobe_amount'):
+            f['strobe_amount'] = frame2.get('strobe_amount')
+
+        if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
+        return f
+
+    def get_frame_ignored(self, frame, ignored):
+        from copy import deepcopy
+        f = deepcopy(frame) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("get_frame_ignored: got frame\t%s" % frame)
+        for i,f2 in enumerate(frame['shader_params']):
+            for i2,p in enumerate(f2):
+                if ignored['shader_params'][i][i2] is not None:
+                    f['shader_params'][i][i2] = None
+        if ignored.get('feedback_active') is not None:
+            f['feedback_active'] = None
+        if ignored.get('x3_as_speed') is not None:
+            f['x3_as_speed'] = None
+        if ignored.get('shader_speeds') is not None and frame.get('shader_speeds'):
+          for i,s in enumerate(frame.get('shader_speeds')):
+            if ignored['shader_speeds'][i] is not None:
+                f['shader_speeds'][i] = None
+        if ignored.get('strobe_amount') is not None:
+            f['strobe_amount'] = None
+        if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
+        return f
+
+    def is_frame_empty(self, frame):
+        #from copy import deepcopy
+        #f = deepcopy(frame) #frame1.copy()
+        if self.DEBUG_FRAMES:  print("is_frame_empty: got frame\t%s" % frame)
+
+        if frame.get('feedback_active') is not None:
+            return False
+        if frame.get('x3_as_speed') is not None:
+            return False
+        if frame.get('strobe_amount') is not None:
+            return False
+
+        for i,f in enumerate(frame['shader_params']):
+            for i2,p in enumerate(f):
+                if p is not None: #ignored['shader_params'][i][i2] is not None:
+                    return False
+
+        if frame.get('shader_speeds') is not None:
+          for i,f in enumerate(frame['shader_speeds']):
+            if f is not None:
+                return False
+
+        if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
+        return True
+
+
+    def get_frame_diff(self, last_frame, current_frame):
+        if not last_frame: return current_frame
+
+        if self.DEBUG_FRAMES:
+            print(">>>>get_frame_diff>>>>")
+            print("last_frame: \t%s" % last_frame['shader_params'])
+            print("current_frame: \t%s" % current_frame['shader_params'])
+
+        param_values = [[None]*4,[None]*4,[None]*4]
+        for layer,params in enumerate(current_frame.get('shader_params',[[None]*4]*3)):
+            #if self.DEBUG_FRAMES:  print("got layer %s params: %s" % (layer, params))
+            for param,p in enumerate(params):
+                if p is not None and p != last_frame.get('shader_params')[layer][param]:
+                    if self.DEBUG_FRAMES: print("setting layer %s param %s to %s" % (layer,param,p))
+                    param_values[layer][param] = p
+
+        if current_frame['feedback_active'] is not None and last_frame['feedback_active'] != current_frame['feedback_active']:
+            feedback_active = current_frame['feedback_active']
+        else:
+            feedback_active = None
+
+        if current_frame['x3_as_speed'] is not None and last_frame['x3_as_speed'] != current_frame['x3_as_speed']:
+            x3_as_speed = current_frame['x3_as_speed']
+        else:
+            x3_as_speed = None
+
+        speed_values = [None]*3
+        for layer,param in enumerate(current_frame.get('shader_speeds',[None]*3)):
+            if param is not None and param != last_frame['shader_speeds'][layer]:
+                speed_values[layer] = param
+
+        if current_frame['strobe_amount'] is not None and last_frame['strobe_amount'] != current_frame['strobe_amount']:
+            strobe_amount = current_frame['strobe_amount']
+        else:
+            strobe_amount = None
+
+        if self.DEBUG_FRAMES: 
+            print("param_values is\t%s" % param_values)
+            print("speed_values is\t%s" % speed_values)
+
+        diff = { 
+                'shader_params': param_values, 
+                'feedback_active': feedback_active,
+                'x3_as_speed': x3_as_speed,
+                'shader_speeds': speed_values,
+                'strobe_amount': strobe_amount,
+        }
+        if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
+
+        return diff
+

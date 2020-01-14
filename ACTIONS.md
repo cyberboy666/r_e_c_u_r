@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 10 Jan 21:54:08 UTC 2020
+Tue 14 Jan 23:41:54 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -188,6 +188,7 @@ for branch=feature_midi_feedback_plugin
   * toggle_pause_automation	(from ShaderLoopRecordPlugin)
   * pause_automation	(from ShaderLoopRecordPlugin)
   * toggle_loop_automation	(from ShaderLoopRecordPlugin)
+  * set_automation_speed	(from ShaderLoopRecordPlugin)
   * toggle_record_automation	(from ShaderLoopRecordPlugin)
   * toggle_overdub_automation	(from ShaderLoopRecordPlugin)
   * clear_automation	(from ShaderLoopRecordPlugin)

@@ -44,14 +44,20 @@ class SequencePlugin(Plugin):
                 ( r"toggle_pause_automation", self.toggle_pause_automation ),
                 ( r"pause_automation", self.pause_automation ),
                 ( r"toggle_loop_automation", self.toggle_loop_automation ),
+                ( r"set_automation_speed", self.set_speed ),
         ]
 
-    def position(self, now):
+    def set_speed(self, speed):
+        self.speed = 2.0 * (2.0*(speed-0.5))
+        print ("automation speed is now %s" % self.speed)
+
+    """def position(self, now):
         import time
         passed = now - self.automation_start
         if self.duration>0:
             position = passed / self.duration*1000
-        return position
+        return position"""
+    position = 0.0
 
     def toggle_automation(self):
         if not self.is_playing():
@@ -70,9 +76,26 @@ class SequencePlugin(Plugin):
 
     def toggle_pause_automation(self):
         self.pause_flag = not self.is_paused()
-        self.pause_flag = self.is_paused() and self.is_playing()
-        if not self.is_paused() and not self.is_playing():
+        self.last_delta = -1
+        #self.pause_flag = self.is_paused() and self.is_playing()
+        if not self.is_paused() and self.is_playing(): #not self.is_playing():
             self.run_automation()
+
+    last_delta = -1 
+    def delta(self, now):
+        if self.last_delta==-1: 
+            self.last_delta = now
+        r = now - self.last_delta
+        self.last_delta = now
+        return r
+
+    speed = 0.25 #1.0
+    def move_delta(self, delta, speed):
+        self.position += delta * speed
+        if self.looping and self.position>1.0:
+            self.position = 0.0
+        elif self.looping and self.position<0:
+            self.position = 1.0
 
     store_passed = None
     pause_flag = True
@@ -87,31 +110,35 @@ class SequencePlugin(Plugin):
 
         now = time.time()
 
-        if self.looping and self.automation_start is not None and (now - self.automation_start >= self.duration/1000):
+        """if self.looping and self.automation_start is not None and (now - self.automation_start >= self.duration/1000):
             print("restarting as start reached %s" % self.automation_start)
             self.iterations_count += 1
-            self.automation_start = None
+            self.automation_start = None"""
 
-        if not self.automation_start:
+        """if not self.automation_start:
             self.automation_start = now
             print ("%s: starting automation" % self.automation_start)
-            self.pause_flag = False
+            self.pause_flag = False"""
 
         #print("running automation at %s!" % self.position)
         if not self.is_paused():
             self.store_passed = None
-            self.run_sequence(self.position(now))
+            delta = self.delta(now)
+            self.move_delta(delta, self.speed)
+            self.run_sequence(self.position)
+            #print("position is now %s" % self.position)
+            #self.run_sequence(self.position(now))
             #print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
-        else:
+        """else:
             #print ("%s: about to reset automation_start" % self.automation_start)
             #print ("    got passed %s" % (time.time() - self.automation_start))
             if not self.store_passed:
                 self.store_passed = (now - self.automation_start)
             self.automation_start = now - self.store_passed
             #print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
-            #return
+            #return"""
 
-        if (now - self.automation_start < self.duration/1000) and not self.stop_flag:
+        if not self.stop_flag: # and (now - self.automation_start < self.duration/1000):
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
             print("%s: stopping ! (stop_flag %s)" % ((now - self.automation_start),self.stop_flag) )
@@ -123,7 +150,8 @@ class SequencePlugin(Plugin):
         return self.pause_flag
 
     def is_playing(self):
-        return self.automation_start is not None
+        return not self.is_paused() or self.stop_flag
+        #return self.automation_start is not None 
 
     def run_sequence(self, position):
         raise NotImplementedError

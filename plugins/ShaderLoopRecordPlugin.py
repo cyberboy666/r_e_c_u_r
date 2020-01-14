@@ -47,6 +47,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
                 ( r"toggle_pause_automation", self.toggle_pause_automation ),
                 ( r"pause_automation", self.pause_automation ),
                 ( r"toggle_loop_automation", self.toggle_loop_automation ),
+                ( r"set_automation_speed", self.set_speed ),
                 ( r"toggle_record_automation", self.toggle_record_automation ),
                 ( r"toggle_overdub_automation", self.toggle_overdub_automation ),
                 ( r"clear_automation", self.clear_clip ),

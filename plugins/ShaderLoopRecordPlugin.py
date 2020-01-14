@@ -120,6 +120,11 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     DEBUG_FRAMES = False#True
     def run_sequence(self, position):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
+        if current_frame_index<0:
+            current_frame_index = (self.duration/self.frequency) - current_frame_index
+        if current_frame_index > self.duration/self.frequency:
+            current_frame_index = self.duration/self.frequency
+
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
         #print("got frame index %s" % current_frame_index)
 

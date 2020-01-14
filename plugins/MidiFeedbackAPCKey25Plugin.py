@@ -66,9 +66,11 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                 self.set_status(note=i, velocity=self.COLOUR_OFF)
 
     def feedback_plugin_status(self):
-        from data_centre.plugin_collection import SequencePlugin
+      from data_centre.plugin_collection import SequencePlugin
 
-        from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin
+      from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin
+
+      try:
         from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
         for plugin in self.pc.get_plugins(SequencePlugin):
             if isinstance(plugin, ShaderLoopRecordPlugin): #MidiActionsTestPlugin):
@@ -130,6 +132,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                         colour = self.COLOUR_RED
                     colour += self.BLINK
                 self.set_status(command='note_on', note=pad, velocity=colour)
+      except:
+          print ("failed running extra plugin feedback")
 
     BLINK = 1
     COLOUR_OFF = 0

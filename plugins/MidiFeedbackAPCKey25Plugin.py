@@ -13,7 +13,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
     def get_note(self,action,default):
         bind = self.pc.midi_input.find_binding_for_action(action)
-        if 'note ' in bind:
+        if bind and 'note ' in bind:
             return int(play_bind.split(' ')[1])
         else:
             return default
@@ -128,7 +128,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                         colour = self.COLOUR_OFF
                     self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=colour)
       except Exception as e:
-          print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))
+          pass
+          #print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))
  
       try:
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
@@ -148,7 +149,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     colour += self.BLINK
                 self.set_status(command='note_on', note=pad, velocity=colour)
       except Exception as e:
-          print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))
+          pass
+          #print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))
 
     BLINK = 1
     COLOUR_OFF = 0

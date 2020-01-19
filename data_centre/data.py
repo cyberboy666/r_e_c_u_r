@@ -116,7 +116,7 @@ class Data(object):
             print ("loaded custom midi mapping for %s" % custom_file)
         else:
             print ("loading default midi mapping for %s" % (device_name))
-            self.midi_mappings = self._read_json(self.MIDI_MAPPINGS_JSON)
+            self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         return self.midi_mappings
         
     @staticmethod

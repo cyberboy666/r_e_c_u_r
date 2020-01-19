@@ -10,6 +10,7 @@ class MidiInput(object):
         self.display = display
         self.actions = actions
         self.data = data
+        self.data.midi_input = self
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
         self.midi_feedback_device = None
@@ -165,4 +166,13 @@ class MidiInput(object):
         if self.midi_output and self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
           if self.midi_output.supports_midi_feedback(self.data.midi_device_name):
             self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
+
+
+    def find_binding_for_action(self, action):
+        for bind,a in self.midi_mappings.items():
+            #print("looped over %s : %s " % (bind,a))
+            for (b,c) in a.items():
+                if action in c:
+                    #print ("find_binding_for_action(%s) got %s" % (action, bind))
+                    return bind
 

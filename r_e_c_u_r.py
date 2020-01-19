@@ -57,7 +57,6 @@ message_handler.actions = actions
 numpad_input = NumpadInput(tk, message_handler, display, actions, data)
 osc_input = OscInput(tk, message_handler, display, actions, data)
 midi_input = MidiInput(tk, message_handler, display, actions, data)
-data.plugins.midi_input = midi_input
 
 analog_input = AnalogInput(tk, message_handler, display, actions, data)
 

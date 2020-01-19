@@ -213,9 +213,9 @@ class PluginCollection(object):
     def actions(self):
         return self.message_handler.actions
 
-    """@property
+    @property
     def midi_input(self):
-        return self.data.midi_input"""
+        return self.data.midi_input
 
     def __init__(self, plugin_package, message_handler, data):
         """Constructor that initiates the reading of all available plugins

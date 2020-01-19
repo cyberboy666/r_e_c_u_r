@@ -11,9 +11,23 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         super().__init__(plugin_collection)
         self.description = 'Outputs feedback to APC Key 25'
 
+    def get_note(self,action,default):
+        bind = self.pc.midi_input.find_binding_for_action(action)
+        if 'note ' in bind:
+            return int(play_bind.split(' ')[1])
+        else:
+            return default
+
     def set_midi_device(self, device):
         super().set_midi_device(device)
         self.last_state = None
+
+        self.NOTE_PLAY_SHADER = self.get_note('play_shader_0_0',32)
+        self.NOTE_SHADER_FEEDBACK = self.get_note('toggle_feedback',85)
+        self.NOTE_SCENE_LAUNCH_COLUMN = self.get_note('toggle_shader_layer_0',82)
+        self.NOTE_MODULATION_COLUMN = self.get_note('select_shader_modulation_slot_0', self.NOTE_SCENE_LAUNCH_COLUMN)
+        self.NOTE_CAPTURE_PREVIEW = self.get_note('toggle_capture_preview', 86)
+        self.NOTE_CLIP_STATUS_ROW = self.get_note('toggle_automation_clip_0', 8)
 
     def supports_midi_feedback(self, device_name):
         supported_devices = ['APC Key 25']
@@ -36,19 +50,18 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         )
 
     def feedback_shader_feedback(self, on):
-        self.set_status(note=85, velocity=int(on))
+        self.set_status(note=self.NOTE_SHADER_FEEDBACK, velocity=int(on))
 
     def feedback_capture_preview(self, on):
-        self.set_status(note=86, velocity=int(on))
+        self.set_status(note=self.NOTE_CAPTURE_PREVIEW, velocity=int(on))
 
     def feedback_shader_on(self, layer, slot, colour=None):
         if colour is None: colour = self.COLOUR_GREEN
-        self.set_status(note=(32-(layer)*8)+slot, velocity=int(colour))
+        self.set_status(note=(self.NOTE_PLAY_SHADER-(layer)*8)+slot, velocity=int(colour))
 
     def feedback_shader_off(self, layer, slot):
-        self.set_status(note=(32-(layer)*8)+slot, velocity=self.COLOUR_OFF)
+        self.set_status(note=(self.NOTE_PLAY_SHADER-(layer)*8)+slot, velocity=self.COLOUR_OFF)
 
-    NOTE_SCENE_LAUNCH_COLUMN = 82
     def feedback_shader_layer_on(self, layer):
         self.set_status(note=self.NOTE_SCENE_LAUNCH_COLUMN+layer, velocity=self.COLOUR_GREEN)
         
@@ -59,8 +72,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.set_status(note=70, velocity=layer)
 
     def feedback_show_modulation(self, slot):
-        for i in range(self.NOTE_SCENE_LAUNCH_COLUMN,self.NOTE_SCENE_LAUNCH_COLUMN+4):
-            if slot==i-self.NOTE_SCENE_LAUNCH_COLUMN:
+        for i in range(self.NOTE_MODULATION_COLUMN,self.NOTE_MODULATION_COLUMN+4):
+            if slot==i-self.NOTE_MODULATION_COLUMN:
                 self.set_status(note=i, velocity=self.COLOUR_GREEN)
             else:
                 self.set_status(note=i, velocity=self.COLOUR_OFF)
@@ -78,7 +91,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                 NOTE_PLAY_STATUS    = 65
                 NOTE_RECORD_STATUS  = 66 
                 NOTE_OVERDUB_STATUS = 67
-                NOTE_CLIP_STATUS_ROW = 8
+                #NOTE_CLIP_STATUS_ROW = 8
 
                 colour = self.COLOUR_OFF
                 if plugin.is_playing():
@@ -113,9 +126,11 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                         colour = self.COLOUR_RED_BLINK
                     else:
                         colour = self.COLOUR_OFF
-                    self.set_status(command='note_on', note=NOTE_CLIP_STATUS_ROW+i, velocity=colour)
+                    self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=colour)
+      except Exception as e:
+          print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))
  
-
+      try:
         from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
         #print ("feedback_plugin_status")
         for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
@@ -132,8 +147,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                         colour = self.COLOUR_RED
                     colour += self.BLINK
                 self.set_status(command='note_on', note=pad, velocity=colour)
-      except:
-          print ("failed running extra plugin feedback")
+      except Exception as e:
+          print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))
 
     BLINK = 1
     COLOUR_OFF = 0

@@ -13,21 +13,29 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
     def get_note(self,action,default):
         bind = self.pc.midi_input.find_binding_for_action(action)
-        if bind and 'note ' in bind:
-            return int(play_bind.split(' ')[1])
+        if bind is not None and 'note_on' in bind:
+            return int(bind.split(' ')[1])
         else:
+            print ("bind is %s, returning default" % bind)
             return default
 
     def set_midi_device(self, device):
         super().set_midi_device(device)
         self.last_state = None
 
+        self.init_notes()
+
+    def init_notes(self):
         self.NOTE_PLAY_SHADER = self.get_note('play_shader_0_0',32)
         self.NOTE_SHADER_FEEDBACK = self.get_note('toggle_feedback',85)
         self.NOTE_SCENE_LAUNCH_COLUMN = self.get_note('toggle_shader_layer_0',82)
         self.NOTE_MODULATION_COLUMN = self.get_note('select_shader_modulation_slot_0', self.NOTE_SCENE_LAUNCH_COLUMN)
         self.NOTE_CAPTURE_PREVIEW = self.get_note('toggle_capture_preview', 86)
         self.NOTE_CLIP_STATUS_ROW = self.get_note('toggle_automation_clip_0', 8)
+        self.NOTE_SHADER_PRESET_ROW = self.get_note('select_preset_0', 0)
+        self.NOTE_SHADER_LAYER_ON = [
+                self.get_note('toggle_shader_layer_%i',8+(i*16)) for i in range(0,3)
+            ]
 
     def supports_midi_feedback(self, device_name):
         supported_devices = ['APC Key 25']
@@ -63,10 +71,10 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.set_status(note=(self.NOTE_PLAY_SHADER-(layer)*8)+slot, velocity=self.COLOUR_OFF)
 
     def feedback_shader_layer_on(self, layer):
-        self.set_status(note=self.NOTE_SCENE_LAUNCH_COLUMN+layer, velocity=self.COLOUR_GREEN)
+        self.set_status(note=self.NOTE_SHADER_LAYER_ON[layer], velocity=self.COLOUR_GREEN)
         
     def feedback_shader_layer_off(self, layer):
-        self.set_status(note=self.NOTE_SCENE_LAUNCH_COLUMN+layer, velocity=self.COLOUR_OFF)
+        self.set_status(note=self.NOTE_SHADER_LAYER_ON[layer], velocity=self.COLOUR_OFF)
 
     def feedback_show_layer(self, layer):
         self.set_status(note=70, velocity=layer)
@@ -147,7 +155,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     if plugin.presets[pad] is None:
                         colour = self.COLOUR_RED
                     colour += self.BLINK
-                self.set_status(command='note_on', note=pad, velocity=colour)
+                self.set_status(command='note_on', note=self.NOTE_SHADER_PRESET_ROW+pad, velocity=colour)
       except Exception as e:
           pass
           #print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))

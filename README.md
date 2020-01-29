@@ -1,5 +1,7 @@
 This is doctea's experimental 'plugins' branch, including 'shader gadget' plugins.
 
+Started adding some documentation for some of these features on the wiki at https://github.com/langolierz/r_e_c_u_r/wiki/Sound-reactivity and https://github.com/langolierz/r_e_c_u_r/wiki/using-the-modulation-parameters.
+
 Some quick notes, including about how the modulation features work:-
 
 * Plugins are python classes... With adaptations to recur main code to look up actions in plugins of ActionPlugin class, so plugins can provide extra actions that can be mapped to midi/keyboard/osc

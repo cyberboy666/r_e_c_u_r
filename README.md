@@ -1,6 +1,9 @@
 This is doctea's experimental 'plugins' branch, including 'shader gadget' plugins.
 
-Started adding some documentation for some of these features on the wiki at https://github.com/langolierz/r_e_c_u_r/wiki/Sound-reactivity and https://github.com/langolierz/r_e_c_u_r/wiki/using-the-modulation-parameters.
+Started adding some documentation for some of these features on the wiki here:
+* https://github.com/langolierz/r_e_c_u_r/wiki/Sound-reactivity
+* https://github.com/langolierz/r_e_c_u_r/wiki/using-the-modulation-parameters
+* https://github.com/langolierz/r_e_c_u_r/wiki/Plugins
 
 Some quick notes, including about how the modulation features work:-
 

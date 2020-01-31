@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 31 Jan 21:15:31 UTC 2020
+Fri 31 Jan 23:23:49 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -174,6 +174,8 @@ for branch=feature_midi_feedback_plugin
 
 ### Plugin routes
   * (.*)|invert	(from ManipulatePlugin)
+  * (.*)|f:(.*):	(from ManipulatePlugin)
+  * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * send_serial_macro_([0-9])	(from SerialSendPlugin)
   * send_serial_string_(.*)	(from SerialSendPlugin)

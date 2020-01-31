@@ -26,7 +26,8 @@ class ManipulatePlugin(ActionsPlugin):
         return [ 
                 ( r"^(.*)\|invert$", self.invert ),
                 ( r"^(.*)\|f:(.*):$", self.formula ),
-                ( r"^set_variable_([a-zA-Z0-9]+)$", self.set_variable )
+                ( r"^set_variable_([a-zA-Z0-9]+)$", self.set_variable ),
+                ( r"^(.*)<([a-zA-Z0-9]+)$", self.recall_variable )
         ]
 
     variables = {}
@@ -51,3 +52,9 @@ class ManipulatePlugin(ActionsPlugin):
 
     def set_variable(self, var_name, value):
         self.variables[var_name] = value
+
+    def recall_variable(self, action, var_name, *args):
+        print ("recall_variable(%s) got args %s" % (var_name,args))
+        self.pc.actions.call_method_name(
+                action, self.variables.get(var_name)# + list(args)
+        )

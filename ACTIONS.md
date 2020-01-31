@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 31 Jan 21:13:49 UTC 2020
+Fri 31 Jan 23:22:31 UTC 2020
 
 for branch=feature_plugins
 
@@ -174,6 +174,8 @@ for branch=feature_plugins
 
 ### Plugin routes
   * (.*)|invert	(from ManipulatePlugin)
+  * (.*)|f:(.*):	(from ManipulatePlugin)
+  * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)

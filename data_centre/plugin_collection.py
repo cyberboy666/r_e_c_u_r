@@ -39,12 +39,12 @@ class SequencePlugin(Plugin):
     @property
     def parserlist(self):
         return [
-                ( r"run_automation",  self.run_automation ),
-                ( r"stop_automation", self.stop_automation ),
-                ( r"toggle_pause_automation", self.toggle_pause_automation ),
-                ( r"pause_automation", self.pause_automation ),
-                ( r"toggle_loop_automation", self.toggle_loop_automation ),
-                ( r"set_automation_speed", self.set_speed ),
+                ( r"^run_automation$",  self.run_automation ),
+                ( r"^stop_automation$", self.stop_automation ),
+                ( r"^toggle_pause_automation$", self.toggle_pause_automation ),
+                ( r"^pause_automation$", self.pause_automation ),
+                ( r"^toggle_loop_automation$", self.toggle_loop_automation ),
+                ( r"^set_automation_speed$", self.set_speed ),
         ]
 
     def set_speed(self, speed):
@@ -193,11 +193,6 @@ class ActionsPlugin(Plugin):
                     args = parsed_args
 
                 return (found_method, args)
-
-    #def call_parse_method_name(self, method_name, argument):
-    #    method, arguments = self.actions.get_callback_for_method(method_name, argument)
-    #    method(*arguments)
-
 
 # adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):

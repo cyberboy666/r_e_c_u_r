@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 31 Jan 20:26:31 UTC 2020
+Fri 31 Jan 21:15:31 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -173,6 +173,7 @@ for branch=feature_midi_feedback_plugin
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * (.*)|invert	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * send_serial_macro_([0-9])	(from SerialSendPlugin)
   * send_serial_string_(.*)	(from SerialSendPlugin)
@@ -203,6 +204,8 @@ for branch=feature_midi_feedback_plugin
   * toggle_pause_automation	(from TestPlugin)
   * pause_automation	(from TestPlugin)
   * toggle_loop_automation	(from TestPlugin)
+  * print_arguments	(from TestPlugin)
+  * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
 
 ----
 

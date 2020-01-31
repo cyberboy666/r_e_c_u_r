@@ -89,12 +89,10 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_plugin_status(self):
       from data_centre.plugin_collection import SequencePlugin
 
-      from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin
-
       try:
         from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
         for plugin in self.pc.get_plugins(SequencePlugin):
-            if isinstance(plugin, ShaderLoopRecordPlugin): #MidiActionsTestPlugin):
+            if isinstance(plugin, ShaderLoopRecordPlugin):
 
                 NOTE_PLAY_STATUS    = 65
                 NOTE_RECORD_STATUS  = 66 

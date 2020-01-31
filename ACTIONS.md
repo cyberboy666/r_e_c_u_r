@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 31 Jan 20:19:55 UTC 2020
+Fri 31 Jan 21:13:49 UTC 2020
 
 for branch=feature_plugins
 
@@ -173,6 +173,7 @@ for branch=feature_plugins
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * (.*)|invert	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)
@@ -181,6 +182,8 @@ for branch=feature_plugins
   * toggle_pause_automation	(from TestPlugin)
   * pause_automation	(from TestPlugin)
   * toggle_loop_automation	(from TestPlugin)
+  * print_arguments	(from TestPlugin)
+  * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
 
 ----
 

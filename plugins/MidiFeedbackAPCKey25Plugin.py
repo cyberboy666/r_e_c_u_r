@@ -225,7 +225,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         #print("in update device status is %s" % self.status)
         for i,c in self.status.items():
             #'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
-            if self.last_state is None or self.last_state[i]!=c:
+            if self.last_state is None or (i not in self.last_state or self.last_state[i]!=c):
                 #print("got command: %s: %s" % (i,c))
                 self.send_command(**c)
         self.last_state = deepcopy(self.status)

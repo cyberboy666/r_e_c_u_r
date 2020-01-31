@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 10 Jan 17:25:14 UTC 2020
+Fri 31 Jan 20:19:55 UTC 2020
 
 for branch=feature_plugins
 
@@ -173,13 +173,14 @@ for branch=feature_plugins
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
-  * test_plugin	(from MidiActionsTestPlugin)
-  * cycle_shaders	(from MidiActionsTestPlugin)
-  * run_automation	(from MidiActionsTestPlugin)
-  * stop_automation	(from MidiActionsTestPlugin)
-  * toggle_pause_automation	(from MidiActionsTestPlugin)
-  * pause_automation	(from MidiActionsTestPlugin)
-  * toggle_loop_automation	(from MidiActionsTestPlugin)
+  * (.*)&&(.*)	(from MultiActionsPlugin)
+  * test_plugin	(from TestPlugin)
+  * cycle_shaders	(from TestPlugin)
+  * run_automation	(from TestPlugin)
+  * stop_automation	(from TestPlugin)
+  * toggle_pause_automation	(from TestPlugin)
+  * pause_automation	(from TestPlugin)
+  * toggle_loop_automation	(from TestPlugin)
 
 ----
 

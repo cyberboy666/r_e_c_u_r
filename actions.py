@@ -1,6 +1,7 @@
 import subprocess
 import tracemalloc
 import data_centre.length_setter as length_setter
+from inspect import signature
 import sys
 import shlex
 import os
@@ -907,19 +908,19 @@ class Actions(object):
     @property
     def parserlist(self):
         return {
-                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
-                ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
-                ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
-                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
-                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous",      self.shaders.set_param_layer_to_amount ),
-                ( r"modulate_param_([0-3])_to_amount_continuous", self.shaders.modulate_param_to_amount ),
-                ( r"set_param_([0-3])_layer_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
-                ( r"set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
-                ( r"reset_selected_modulation", self.shaders.reset_selected_modulation ),
-                ( r"reset_modulation_([0-3])", self.shaders.reset_modulation ),
-                ( r"select_shader_modulation_slot_([0-3])", self.shaders.select_shader_modulation_slot ),
-                ( r"set_shader_speed_layer_offset_([0-2])_amount",               self.shaders.set_speed_offset_to_amount ),
-                ( r"set_shader_speed_layer_([0-2])_amount",                      self.shaders.set_speed_layer_to_amount ),
+                ( r"^play_shader_([0-9])_([0-9])$", self.shaders.play_that_shader ),
+                ( r"^toggle_shader_layer_([0-2])$", self.toggle_shader_layer ),
+                ( r"^start_shader_layer_([0-2])$",  self.shaders.start_shader ),
+                ( r"^stop_shader_layer_([0-2])$",   self.shaders.stop_shader ),
+                ( r"^set_the_shader_param_([0-3])_layer_([0-2])_continuous$",      self.shaders.set_param_layer_to_amount ),
+                ( r"^modulate_param_([0-3])_to_amount_continuous$", self.shaders.modulate_param_to_amount ),
+                ( r"^set_param_([0-3])_layer_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_modulation_level ),
+                ( r"^set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_offset_modulation_level ),
+                ( r"^reset_selected_modulation$", self.shaders.reset_selected_modulation ),
+                ( r"^reset_modulation_([0-3])$", self.shaders.reset_modulation ),
+                ( r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot ),
+                ( r"^set_shader_speed_layer_offset_([0-2])_amount$",               self.shaders.set_speed_offset_to_amount ),
+                ( r"^set_shader_speed_layer_([0-2])_amount$",                      self.shaders.set_speed_layer_to_amount ),
         }
 
     def detect_types(self, args):
@@ -942,34 +943,46 @@ class Actions(object):
                 
                 return (found_method, args)
 
+        return None, None
+
     def call_method_name(self, method_name, argument=None):
-        # if the target method doesnt exist, call the handler
-        if not hasattr(self, method_name):
-            self.call_parse_method_name(method_name, argument)
+        method = None
+        arguments = None
+
+        # first check if we have a native method to handle this for us
+        # todo: assess whether it would still be performant/desirable to be able to override core actions with plugins?
+        if hasattr(self, method_name):
+            method = getattr(self, method_name)
+            if argument is not None:
+                arguments = [argument]
+
+        # if not then check if its handled by one of our parserlist dynamic route methods
+        if method is None:
+            method, arguments = self.get_callback_for_method(method_name, argument)
+
+        # if still nothing then test if a registered plugin handles this for us -- perhaps this ought to go first?
+        if method is None:
+            from data_centre.plugin_collection import ActionsPlugin
+            for plugin in self.data.plugins.get_plugins(ActionsPlugin):
+                if plugin.is_handled(method_name):
+                    print ("Plugin %s is handling %s" % (plugin, method_name))
+                    method, arguments = plugin.get_callback_for_method(method_name, argument)
+                    break # only deal with the first plugin
+
+        if method is None:
+            print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
             return
 
-        if argument is not None:
-            getattr(self, method_name)(argument)
-        else:
-            getattr(self, method_name)()
-
-
-    def call_parse_method_name(self, method_name, argument):
-        # first test if a registered plugin handles this for us
-        from data_centre.plugin_collection import ActionsPlugin
-        for plugin in self.data.plugins.get_plugins(ActionsPlugin):
-            if plugin.is_handled(method_name):
-                print ("Plugin %s is handling %s" % (plugin, method_name))
-                method, arguments = plugin.get_callback_for_method(method_name, argument)
-                method(*arguments)
-                return
-
-        # if not then fall back to using internal method
         try:
-            method, arguments = self.get_callback_for_method(method_name, argument)
-            method(*arguments)
+            #print ("for method_name %s, arguments is %s and len is %s" % (method_name, arguments, len(signature(method).parameters)))
+            if arguments is not None and len(signature(method).parameters)==len(arguments): # only pass arguments if count matches method sig
+                method(*arguments)
+            else:
+                method()
         except:
-            print ("Failed to find a method for '%s'" % method_name)
+            print ("Exception calling action for '%s' with arguments ( %s ) " % ( method_name, arguments))
             import traceback
             traceback.print_exc()
 

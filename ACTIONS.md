@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Tue 14 Jan 23:41:54 UTC 2020
+Fri 31 Jan 20:26:31 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -173,13 +173,7 @@ for branch=feature_midi_feedback_plugin
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
-  * test_plugin	(from MidiActionsTestPlugin)
-  * cycle_shaders	(from MidiActionsTestPlugin)
-  * run_automation	(from MidiActionsTestPlugin)
-  * stop_automation	(from MidiActionsTestPlugin)
-  * toggle_pause_automation	(from MidiActionsTestPlugin)
-  * pause_automation	(from MidiActionsTestPlugin)
-  * toggle_loop_automation	(from MidiActionsTestPlugin)
+  * (.*)&&(.*)	(from MultiActionsPlugin)
   * send_serial_macro_([0-9])	(from SerialSendPlugin)
   * send_serial_string_(.*)	(from SerialSendPlugin)
   * send_random_settings	(from SerialSendPlugin)
@@ -202,6 +196,13 @@ for branch=feature_midi_feedback_plugin
   * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * test_plugin	(from TestPlugin)
+  * cycle_shaders	(from TestPlugin)
+  * run_automation	(from TestPlugin)
+  * stop_automation	(from TestPlugin)
+  * toggle_pause_automation	(from TestPlugin)
+  * pause_automation	(from TestPlugin)
+  * toggle_loop_automation	(from TestPlugin)
 
 ----
 

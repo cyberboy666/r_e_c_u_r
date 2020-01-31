@@ -10,13 +10,13 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     @property
     def parserlist(self):
         return [ 
-                ( r"test_plugin", self.test_plugin ),
-                ( r"cycle_shaders", self.cycle_shaders ),
-                ( r"run_automation",  self.run_automation ),
-                ( r"stop_automation", self.stop_automation ),
-                ( r"toggle_pause_automation", self.toggle_pause_automation ),
-                ( r"pause_automation", self.pause_automation ),
-                ( r"toggle_loop_automation", self.toggle_loop_automation ),
+                ( r"^test_plugin$", self.test_plugin ),
+                ( r"^cycle_shaders$", self.cycle_shaders ),
+                ( r"^run_automation$",  self.run_automation ),
+                ( r"^stop_automation$", self.stop_automation ),
+                ( r"^toggle_pause_automation$", self.toggle_pause_automation ),
+                ( r"^pause_automation$", self.pause_automation ),
+                ( r"^toggle_loop_automation$", self.toggle_loop_automation ),
         ]
 
     def test_plugin(self):
@@ -42,7 +42,7 @@ class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
     frequency = 50
     def run_sequence(self, position):
         self.pc.actions.call_method_name(
-                "set_the_shader_param_0_layer_0_continuous", position
+                "set_the_shader_param_3_layer_0_continuous", position
         )
 
         self.pc.actions.call_method_name(

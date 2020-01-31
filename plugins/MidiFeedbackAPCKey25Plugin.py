@@ -89,12 +89,10 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     def feedback_plugin_status(self):
       from data_centre.plugin_collection import SequencePlugin
 
-      from plugins.MidiActionsTestPlugin import MidiActionsTestPlugin
-
       try:
         from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
         for plugin in self.pc.get_plugins(SequencePlugin):
-            if isinstance(plugin, ShaderLoopRecordPlugin): #MidiActionsTestPlugin):
+            if isinstance(plugin, ShaderLoopRecordPlugin):
 
                 NOTE_PLAY_STATUS    = 65
                 NOTE_RECORD_STATUS  = 66 
@@ -225,7 +223,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         #print("in update device status is %s" % self.status)
         for i,c in self.status.items():
             #'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
-            if self.last_state is None or self.last_state[i]!=c:
+            if self.last_state is None or (i not in self.last_state or self.last_state[i]!=c):
                 #print("got command: %s: %s" % (i,c))
                 self.send_command(**c)
         self.last_state = deepcopy(self.status)

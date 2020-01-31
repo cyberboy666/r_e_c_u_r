@@ -12,11 +12,11 @@ grep " def " actions.py | grep -v "^#" | sed -e 's/ def //' | sed -e 's/self//' 
 echo
 
 echo "## Dynamic routes"
-grep '( r"' actions.py | sed -e 's/\(.*\)"\(.*\)"\(.*\)/  * \2/'
+grep '( r"' actions.py | sed -e 's/\(.*\)"\(.*\)"\(.*\)/  * \2/'  | sed -e 's/\$//' | sed -e 's/\^//'
 echo
 
 echo "### Plugin routes"
-grep "( r\"" plugins/*.py | sed -e 's/plugins\/\(.*\)\.py:\(.*\)\( r\"\)\(.*\)\"\(.*\)/  * \4\t(from \1)/' | grep -v "open_serial"
+grep "( r\"" plugins/*.py | sed -e 's/plugins\/\(.*\)\.py:\(.*\)\( r\"\)\(.*\)\"\(.*\)/  * \4\t(from \1)/' | grep -v "open_serial" | sed -e 's/\$//' | sed -e 's/\^//'
 echo 
 
 echo "----"

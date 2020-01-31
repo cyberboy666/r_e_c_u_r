@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Fri 31 Jan 23:23:15 UTC 2020
+Fri 31 Jan 23:42:30 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -176,6 +176,7 @@ for branch=feature_plugins_shader_gadgets
   * (.*)|invert	(from ManipulatePlugin)
   * (.*)|f:(.*):	(from ManipulatePlugin)
   * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
+  * (.*)<([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * run_automation	(from ShaderLoopRecordPlugin)
   * stop_automation	(from ShaderLoopRecordPlugin)

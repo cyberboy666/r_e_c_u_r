@@ -2,10 +2,16 @@ import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin
 
 class MultiActionsPlugin(ActionsPlugin):
-    disabled = False
+    disabled = False # this is only a demo of very basic multi-actions plugin -- superceded by ManipulatePlugin
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
+        try:
+            from plugins import ManipulatePlugin
+            self.disabled = True # if we've found ManipulatePlugin then disable this one
+        except:
+            # if it fails, we're good to go (so long as not disabled explictly above)
+            pass
 
     @property
     def parserlist(self):

@@ -531,7 +531,8 @@ class Actions(object):
             self.data.settings['shader']['STROBE_AMOUNT']['value'] = scaled_amount
 
     def get_midi_status(self):
-        self.message_handler.set_message('INFO', ("midi status is {} to %s"%(self.data.midi_device_name)).format(self.data.midi_status))
+        device_name = 'none' if not hasattr(self.data,'midi_device_name') else self.data.midi_device_name
+        self.message_handler.set_message('INFO', ("midi status is {} to %s"%(device_name)).format(self.data.midi_status))
 
     def cycle_midi_port_index(self):
         self.data.midi_port_index = self.data.midi_port_index + 1

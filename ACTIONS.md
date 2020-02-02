@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 1 Feb 00:16:29 UTC 2020
+Sun 2 Feb 20:16:48 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -173,10 +173,12 @@ for branch=feature_plugins_shader_gadgets
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
   * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
+  * (.*)>&(.*)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * run_automation	(from ShaderLoopRecordPlugin)
   * stop_automation	(from ShaderLoopRecordPlugin)

@@ -88,7 +88,8 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
             self.send_buffered(queue, command)
         self.queue.clear()
 
-        self.pc.shaders.root.after(self.THROTTLE, self.refresh)
+        if self.ser is not None:
+            self.pc.shaders.root.after(self.THROTTLE, self.refresh)
 
     def send(self, queue, output):
         #self.send_buffered(queue,output)

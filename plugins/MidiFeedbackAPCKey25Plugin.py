@@ -33,8 +33,8 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.NOTE_CAPTURE_PREVIEW = self.get_note('toggle_capture_preview', 86)
         self.NOTE_CLIP_STATUS_ROW = self.get_note('toggle_automation_clip_0', 8)
         self.NOTE_SHADER_PRESET_ROW = self.get_note('select_preset_0', 0)
-        self.NOTE_SHADER_LAYER_ON = [
-                self.get_note('toggle_shader_layer_%i',8+(i*16)) for i in range(0,3)
+        self.NOTE_SHADER_LAYER_ON = [ #82, 83, 84
+                self.get_note('toggle_shader_layer_%i'%i, 82+i) for i in range(0,3)
             ]
 
     def supports_midi_feedback(self, device_name):
@@ -210,7 +210,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     # show that slot is full but not selected
                     self.feedback_shader_on(n, x, self.COLOUR_AMBER)
                 else:
-                    # hos that nothing in slot
+                    # has nothing in slot
                     self.feedback_shader_off(n, x)
 
         self.update_device()

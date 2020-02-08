@@ -21,7 +21,7 @@ class MidiFeedbackLaunchpadPlugin(MidiFeedbackAPCKey25Plugin):
         self.NOTE_CLIP_STATUS_ROW = self.get_note('toggle_automation_clip_0', 8)
         self.NOTE_SHADER_PRESET_ROW = self.get_note('select_preset_0', 112)
         self.NOTE_SHADER_LAYER_ON = [
-            self.get_note('toggle_shader_layer_%i',8+(i*16)) for i in range(0,3)
+            self.get_note('toggle_shader_layer_%i'%i,8+(i*16)) for i in range(0,3)
         ]
 
     def supports_midi_feedback(self, device_name):

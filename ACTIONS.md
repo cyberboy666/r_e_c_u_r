@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sun 2 Feb 20:16:48 UTC 2020
+Sat 8 Feb 19:00:40 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -207,6 +207,13 @@ for branch=feature_plugins_shader_gadgets
   * toggle_loop_automation	(from TestPlugin)
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
+  * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
+  * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_set_mix	(from WJSendPlugin)
+  * wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
+  * wj_send_append_([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
 
 ----
 

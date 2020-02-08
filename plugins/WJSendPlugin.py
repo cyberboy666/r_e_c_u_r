@@ -82,7 +82,9 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
         self.set_colour(self.colour_x, self.colour_y)
 
     def set_colour(self, x, y):       
-        output = "VPS:217{:02x}{:02x}".format(x,y)
+        import random
+        #output = "VPS:L{:02x}{:02x}{:02x}".format(x,y,random.randint(0,255))
+        output = "VPS:L{:02X}{:02X}".format(x,y) #,random.randint(0,255))
         self.send_serial_string(output)
 
     def send_random_settings(self):

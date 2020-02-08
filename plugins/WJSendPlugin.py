@@ -66,7 +66,10 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                 ( r"^open_serial$", self.open_serial ),
                 ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string ),
                 ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
-                ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position )
+                ( r"^wj_set_back_colour_([x|y|z])$", self.set_back_colour ),
+                ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position ),
+                ( r"^wj_send_append_([A-Z:[0-9a-zA-Z])$", self.send_append ),
+                ( r"^wj_set_mix$", self.set_mix )
         ]
 
     def send_serial_macro(self, macro):
@@ -108,6 +111,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
     colour_x = 127
     colour_y = 127
     def set_colour(self, chan, dim, value):
+        # chan can be A, B or T (both)
         if dim=='x':
             self.colour_x = int(255*value)
         elif dim=='y':
@@ -115,6 +119,21 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
 
         output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) #,random.randint(0,255))
         self.send('VCC', output)
+
+    back_colour_x = 127
+    back_colour_y = 127
+    back_colour_z = 127
+    def set_back_colour(self, dim, value):
+        # chan can be A, B or T (both)
+        if dim=='x':
+            self.back_colour_x = int(255*value)
+        elif dim=='y':
+            self.back_colour_y = int(255*value)
+        elif dim=='z':
+            self.back_colour_z = int(255*value)
+
+        output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z) #,random.randint(0,255))
+        self.send('VBM', output)
 
     position_x = 127
     position_y = 127
@@ -127,26 +146,11 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
         output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
         self.send('VPS:{}'.format(mode), output)
 
-    """
-    def send_random_settings(self):
-        import random
-        output = ""
-        #output += "".join(random.sample(self.commands,5))
-        output += "VPS:217%s%s" % (hex(random.randint(0,255)), hex(random.randint(0,255)))
-        self.send_serial_string(output)
+    def set_mix(self, value):
+        output = "VMM:{:04X}".format(int(255*255*value))
+        self.send('VMM', output)
 
-    def read_serial_string(self): #, what):
-        print("starting read?")
-        read = self.ser.readline()
-        print("read %s" % read)
-        self.handle_device_status(reading)
 
-    def get_device_status(self):
-        #self.send_serial_string('S')
-        #self.read_serial_string(self.handle_device_status)
-        print("starting thread to listen?")
-        thread = threading.Thread(target=self.read_serial_string)#, args=None)
-
-    def handle_device_status(self, result):
-        print("get_device_status got %s" % result)
-    """
+    def send_append(self, command, value):
+        # append value to the command as a hex value
+        self.send(command.split(':')[0], "{}{:02X}".format(command,int(255*value)))

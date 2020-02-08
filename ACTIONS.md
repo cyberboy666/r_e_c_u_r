@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 1 Feb 00:16:53 UTC 2020
+Sat 8 Feb 13:06:50 UTC 2020
 
 for branch=feature_midi_feedback_plugin
 
@@ -173,10 +173,12 @@ for branch=feature_midi_feedback_plugin
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
   * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
+  * (.*)>&(.*)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * send_serial_macro_([0-9])	(from SerialSendPlugin)
   * send_serial_string_(.*)	(from SerialSendPlugin)

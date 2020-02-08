@@ -68,8 +68,9 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                 ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
                 ( r"^wj_set_back_colour_([x|y|z])$", self.set_back_colour ),
                 ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position ),
+                ( r"^wj_set_mix$", self.set_mix ),
+                ( r"^wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])$", self.send_append_pad ),
                 ( r"^wj_send_append_([A-Z:[0-9a-zA-Z])$", self.send_append ),
-                ( r"^wj_set_mix$", self.set_mix )
         ]
 
     def send_serial_macro(self, macro):
@@ -154,3 +155,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
     def send_append(self, command, value):
         # append value to the command as a hex value
         self.send(command.split(':')[0], "{}{:02X}".format(command,int(255*value)))
+
+    def send_append_pad(self, pad, command, value):
+        # append value, padded to length
+        self.send(command.split(':')[0], ("{}{:0%iX}"%pad).format(command,int(255*value)))

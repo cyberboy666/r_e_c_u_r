@@ -16,9 +16,6 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                                           rtscts=True, # TODO : test without this one
                                           timeout=timeout)"""
 
-    commands = "GRAEIVXYZ012345Cgraeivxyzc"
-    macros = []
-
     THROTTLE = 1 # milliseconds to wait between refreshing parameters
 
     def __init__(self, plugin_collection):
@@ -60,9 +57,6 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
     @property
     def parserlist(self):
         return [
-                ( r"^send_serial_macro_([0-9])$", self.send_serial_macro ),
-                ( r"^send_serial_string_(.*)$", self.send_serial_string ),
-                #( r"^send_random_colour$", self.send_random_settings ),
                 ( r"^open_serial$", self.open_serial ),
                 ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string ),
                 ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
@@ -72,9 +66,6 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                 ( r"^wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])$", self.send_append_pad ),
                 ( r"^wj_send_append_([A-Z:[0-9a-zA-Z])$", self.send_append ),
         ]
-
-    def send_serial_macro(self, macro):
-        self.send_serial_string(self.macros[macro])
 
     def send_serial_string(self, string):
         try:

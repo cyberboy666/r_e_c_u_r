@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 1 Feb 00:15:28 UTC 2020
+Sat 8 Feb 18:58:59 UTC 2020
 
 for branch=feature_plugins
 
@@ -173,10 +173,12 @@ for branch=feature_plugins
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
   * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
   * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
+  * (.*)>&(.*)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)
@@ -187,6 +189,13 @@ for branch=feature_plugins
   * toggle_loop_automation	(from TestPlugin)
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
+  * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
+  * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_set_mix	(from WJSendPlugin)
+  * wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
+  * wj_send_append_([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
 
 ----
 

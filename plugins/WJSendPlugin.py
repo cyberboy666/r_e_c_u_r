@@ -19,6 +19,8 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
     commands = "GRAEIVXYZ012345Cgraeivxyzc"
     macros = []
 
+    THROTTLE = 1 # milliseconds to wait between refreshing parameters
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -26,7 +28,11 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
             print ("WJSendPlugin is disabled, not opening serial")
             return
 
-        self.open_serial()
+        #self.open_serial()
+        #print ("starting refresh?")
+        self.pc.actions.tk.after(500, self.refresh)
+        #tk.after(500, self.refresh)
+
 
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
@@ -42,6 +48,10 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                 rtscts=True, # TODO : test without this one
                 timeout=None #timeout
             )
+
+            print ("starting refresh?")
+
+            #self.pc.midi_input.root.after(500, self.refresh)
         except Exception as e:
             print ("open_serial failed: " + str(type(e)))
             import traceback
@@ -73,14 +83,30 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
         except Exception as e:
             print("%s: send_serial_string failed for '%s'" % (e,string.encode()))
 
+    queue = {}
+    def refresh(self):
+        #print("refresh called!")
+        if not self.ser or self.ser is None:
+            self.open_serial()
+
+        for queue, command in self.queue.items():
+            self.send_buffered(queue, command)
+        self.queue.clear()
+
+        self.pc.shaders.root.after(self.THROTTLE, self.refresh)
+
+    def send(self, queue, output):
+        #self.send_buffered(queue,output)
+        self.queue[queue] = output
+
     last = {}
     def send_buffered(self, queue, output):
         if self.last.get(queue)!=output:
             self.send_serial_string(output)
             self.last[queue] = output
 
-    colour_x = 0
-    colour_y = 0
+    colour_x = 127
+    colour_y = 127
     def set_colour(self, chan, dim, value):
         if dim=='x':
             self.colour_x = int(255*value)
@@ -88,18 +114,18 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
             self.colour_y = int(255*value)
 
         output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) #,random.randint(0,255))
-        self.send_buffered('VCC', output)
+        self.send('VCC', output)
 
-    position_x = 0
-    position_y = 0
+    position_x = 127
+    position_y = 127
     def set_position(self, mode, dim, value):
-        if dim=='x':
+        if dim=='y': # yes, y is really x!
             self.position_x = int(255*value)
-        elif dim=='y':
+        elif dim=='x': # yes, x is really y!
             self.position_y = int(255*value)
 
         output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
-        self.send_buffered('VPS:{}'.format(mode), output)
+        self.send('VPS:{}'.format(mode), output)
 
     """
     def send_random_settings(self):

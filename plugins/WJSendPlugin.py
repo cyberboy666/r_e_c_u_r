@@ -17,6 +17,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                                           timeout=timeout)"""
 
     commands = "GRAEIVXYZ012345Cgraeivxyzc"
+    macros = []
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -51,11 +52,11 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
         return [
                 ( r"^send_serial_macro_([0-9])$", self.send_serial_macro ),
                 ( r"^send_serial_string_(.*)$", self.send_serial_string ),
-                ( r"^send_random_colour$", self.send_random_settings ),
+                #( r"^send_random_colour$", self.send_random_settings ),
                 ( r"^open_serial$", self.open_serial ),
-                ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string),
-                ( r"^wj_set_colour_x$", self.set_colour_x),
-                ( r"^wj_set_colour_y$", self.set_colour_y),
+                ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string ),
+                ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
+                ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position )
         ]
 
     def send_serial_macro(self, macro):
@@ -72,21 +73,35 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
         except Exception as e:
             print("%s: send_serial_string failed for '%s'" % (e,string.encode()))
 
+    last = {}
+    def send_buffered(self, queue, output):
+        if self.last.get(queue)!=output:
+            self.send_serial_string(output)
+            self.last[queue] = output
+
     colour_x = 0
     colour_y = 0
-    def set_colour_x(self, x):
-        self.colour_x = int(x * 255)
-        self.set_colour(self.colour_x, self.colour_y)
-    def set_colour_y(self, y):
-        self.colour_y = int(y * 255)
-        self.set_colour(self.colour_x, self.colour_y)
+    def set_colour(self, chan, dim, value):
+        if dim=='x':
+            self.colour_x = int(255*value)
+        elif dim=='y':
+            self.colour_y = int(255*value)
 
-    def set_colour(self, x, y):       
-        import random
-        #output = "VPS:L{:02x}{:02x}{:02x}".format(x,y,random.randint(0,255))
-        output = "VPS:L{:02X}{:02X}".format(x,y) #,random.randint(0,255))
-        self.send_serial_string(output)
+        output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) #,random.randint(0,255))
+        self.send_buffered('VCC', output)
 
+    position_x = 0
+    position_y = 0
+    def set_position(self, mode, dim, value):
+        if dim=='x':
+            self.position_x = int(255*value)
+        elif dim=='y':
+            self.position_y = int(255*value)
+
+        output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
+        self.send_buffered('VPS:{}'.format(mode), output)
+
+    """
     def send_random_settings(self):
         import random
         output = ""
@@ -108,3 +123,4 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
 
     def handle_device_status(self, result):
         print("get_device_status got %s" % result)
+    """

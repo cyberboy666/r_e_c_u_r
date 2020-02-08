@@ -1,5 +1,5 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin#, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin#, SequencePlugin
 #import math
 from math import sin, cos, tan, log, exp, pi
 
@@ -41,7 +41,7 @@ TODO: >> ??    invert|set_the_shader_param_0_layer_>>print_arguments>>set_variab
 
 """
 
-class ManipulatePlugin(ActionsPlugin):
+class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
     disabled = False
 
     def __init__(self, plugin_collection):
@@ -55,8 +55,22 @@ class ManipulatePlugin(ActionsPlugin):
                 ( r"^f:(.*):\|(.*)$", self.formula ), # formula eg ```f:sin(x):|```
                 ( r"^set_variable_([a-zA-Z0-9]+)$", self.set_variable ),
                 ( r"^([A-Z0-9]+)>(.*)$", self.recall_variable ), # recall variable and pipe into righthand side eg ```VAR1>invert|set_the_shader_.....```
-                ( r"^(.*)>\&(.*)$", self.run_multi ) # pick up piped commands that duplicate a chain of values last
+                ( r"^(.*)>\&(.*)$", self.run_multi ), # pick up piped commands that duplicate a chain of values last
+                ( "MANIPULA", None )
         ]
+
+    def show_plugin(self, display, display_mode):
+        from tkinter import Text, END
+        #super(DisplayPlugin).show_plugin(display, display_mode)
+        display.display_text.insert(END, '{} \n'.format(display.body_title))
+        display.display_text.insert(END, "test from ManipulatePlugin!\n")
+
+        for key,value in self.variables.items():
+            display.display_text.insert(END, "\t" + key + "\t{:03.2f}\n".format(value))
+
+
+    def get_display_modes(self):
+        return ["MANIPULA",None] #"NAV_MANIPULATE"]
 
     def run_multi(self, action1, action2, value):
         print("multi running %s and %s with value %s" % (action1, action2, value))

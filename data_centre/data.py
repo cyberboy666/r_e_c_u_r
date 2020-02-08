@@ -426,6 +426,12 @@ class Data(object):
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
+
+        if hasattr(self, 'plugins') and self.plugins is not None:
+            from data_centre.plugin_collection import DisplayPlugin
+            for plugin in self.plugins.get_plugins(DisplayPlugin):
+                display_modes.append(plugin.get_display_modes())
+
         if not with_nav_mode:
             return [mode[0] for mode in display_modes]
         return display_modes

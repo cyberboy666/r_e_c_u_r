@@ -92,9 +92,16 @@ class Display(object):
             self._load_shader_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
+        else:
+            from data_centre.plugin_collection import DisplayPlugin
+            for plugin in self.data.plugins.get_plugins(DisplayPlugin):
+                if plugin.is_handled(self.data.display_mode):
+                    self._load_plugin_page(self.data.display_mode, plugin)
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         
+    def _load_plugin_page(self, display_mode, plugin):
+        plugin.show_plugin(self, display_mode)
 
     def _load_sampler(self):
         bank_data = self.data.bank_data[self.data.bank_number]

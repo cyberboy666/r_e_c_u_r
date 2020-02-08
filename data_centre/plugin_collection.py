@@ -194,6 +194,22 @@ class ActionsPlugin(Plugin):
 
                 return (found_method, args)
 
+class DisplayPlugin(Plugin):
+    def __init__(self, plugin_collection):
+        super().__init__(plugin_collection)
+
+        def is_handled(self, name):
+            raise NotImplementedError
+
+        def get_display_modes(self):
+            raise NotImplementedError
+
+        def show_plugin(self, display):
+            from tkinter import Text, END
+            #display_text.insert(END, 'test from DisplayPlugin')
+            display.display_text.insert(END, '{} \n'.format(display.body_title))
+
+
 # adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):
     """Upon creation, this class will read the plugins package for modules
@@ -267,7 +283,7 @@ class PluginCollection(object):
                 for (_, c) in clsmembers:
                     # Only add classes that are a sub class of Plugin, but NOT Plugin itself
                     # or one of the base classes
-                    ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin ]
+                    ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin, DisplayPlugin ]
                     if issubclass(c, Plugin) & (c not in ignore_list):
                         print('    Found plugin class: %s.%s' % (c.__module__,c.__name__))
                         self.plugins.append(c(self))

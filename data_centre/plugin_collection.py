@@ -202,7 +202,7 @@ class PluginCollection(object):
 
     @property
     def shaders(self):
-        return self.message_handler.shaders
+        return self.actions.shaders
 
     @property
     def actions(self):

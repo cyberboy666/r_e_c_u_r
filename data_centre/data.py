@@ -53,10 +53,6 @@ class Data(object):
         self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
         self.PATHS_TO_PLUGIN_DATA = [ '/home/pi/r_e_c_u_r/json_objects/plugins', self.PATH_TO_EXTERNAL_DEVICES ]
 
-        #initialise plugin manager
-        self.plugins = plugin_collection.PluginCollection("plugins", message_handler, self)
-        self.plugins.apply_all_plugins_on_value(5)
-
         ### state data
         self.auto_repeat_on = True
         self.function_on = False
@@ -106,6 +102,11 @@ class Data(object):
         docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
         docs.generate_mappings_doc("Key mappings", self.analog_mappings, column_one_header="Analogue input")
         #quit()
+
+    def initialise_plugins(self):
+        #initialise plugin manager
+        self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
+        self.plugins.apply_all_plugins_on_value(5)
 
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name

@@ -156,7 +156,7 @@ class SequencePlugin(Plugin):
     def run_sequence(self, position):
         raise NotImplementedError
 
-
+from typing import Pattern
 class ActionsPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -168,12 +168,21 @@ class ActionsPlugin(Plugin):
         ]
 
     def is_handled(self, method_name):
+
+        if isinstance(self, DisplayPlugin):
+            if method_name in self.get_display_modes():
+                return True
+
         for a in self.parserlist:
             if (a[0]==method_name):
                 return True
             regex = a[0]
             me = a[1]
+            #if not isinstance(regex, Pattern):
+            #    continue
+
             matches = re.match(regex, method_name)
+
             if matches:
                 return True
 
@@ -182,6 +191,9 @@ class ActionsPlugin(Plugin):
         for a in self.parserlist:
             regex = a[0]
             me = a[1]
+            #if not isinstance(regex, Pattern):
+            #    continue
+
             matches = re.search(regex, method_name)
 
             if matches:

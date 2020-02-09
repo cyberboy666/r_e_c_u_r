@@ -56,7 +56,6 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
                 ( r"^set_variable_([a-zA-Z0-9]+)$", self.set_variable ),
                 ( r"^([A-Z0-9]+)>(.*)$", self.recall_variable ), # recall variable and pipe into righthand side eg ```VAR1>invert|set_the_shader_.....```
                 ( r"^(.*)>\&(.*)$", self.run_multi ), # pick up piped commands that duplicate a chain of values last
-                ( "MANIPULA", None )
         ]
 
     def show_plugin(self, display, display_mode):
@@ -70,10 +69,10 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
 
 
     def get_display_modes(self):
-        return ["MANIPULA",None] #"NAV_MANIPULATE"]
+        return ["MANIPULA","NAV_MANI"] #"NAV_MANIPULATE"]
 
     def run_multi(self, action1, action2, value):
-        print("multi running %s and %s with value %s" % (action1, action2, value))
+        print("ManipulatePlugin>> multi-running '%s' and '%s' with value %s" % (action1, action2, value))
         self.pc.actions.call_method_name(action1, value)
         self.pc.actions.call_method_name(action2, value)
 
@@ -89,20 +88,20 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
 
     def formula(self, formula, action, value):
         self.variables['x'] = value
-        print("evaluating formula `%s` with value `%s`" % (formula, value))
+        print("ManipulatePlugin>> evaluating formula `%s` with value `%s`" % (formula, value))
         value = eval(formula, globals(), self.variables)
-        print("got evaluated value `%s`" % value)
+        print("ManipulatePlugin>> got evaluated value `%s`" % value)
 
         self.pc.actions.call_method_name(
                 action, value
         )
 
     def set_variable(self, var_name, value):
-        print("set_variable     (%s) to %s" % (var_name, value))
+        print("ManipulatePlugin>> set_variable     (%s) to %s" % (var_name, value))
         self.variables[var_name] = value
 
     def recall_variable(self, var_name, action, *args):
-        print ("recall_variable (%s) as %s" % (var_name,args))
+        print ("ManipulatePlugin>> recall_variable (%s) as %s" % (var_name,args))
         self.pc.actions.call_method_name(
                 action, self.variables.get(var_name)# + list(args)
         )
@@ -118,14 +117,14 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
                 tail, value
         )"""
 
-    def pipe(self, left, right, value):
+    """def pipe(self, left, right, value):
         # ??
-        print("pipe calling left '%s' and right '%s', both with value '%s'" % (left, right, value))
+        print("ManipulatePlugin>> pipe calling left '%s' and right '%s', both with value '%s'" % (left, right, value))
         self.pc.actions.call_method_name(
                 left, value
         )
 
         self.pc.actions.call_method_name(
                 right, value
-        )
+        )"""
 

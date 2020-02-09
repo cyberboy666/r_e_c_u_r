@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 8 Feb 19:00:40 UTC 2020
+Sun 9 Feb 16:03:51 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -210,10 +210,11 @@ for branch=feature_plugins_shader_gadgets
   * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
   * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
   * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
+  * wj_set_back_wash_colour_([x|y|z])	(from WJSendPlugin)
   * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
   * wj_set_mix	(from WJSendPlugin)
-  * wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
-  * wj_send_append_([A-Z:[0-9a-zA-Z])	(from WJSendPlugin)
+  * wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_send_append_([:0-9a-zA-Z]*)	(from WJSendPlugin)
 
 ----
 

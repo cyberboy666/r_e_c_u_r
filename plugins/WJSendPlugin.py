@@ -124,7 +124,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         elif dim=='y':
             self.colour_y = int(255*value)
 
-        output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) #,random.randint(0,255))
+        output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) 
         self.send('VCC', output)
 
     back_colour_x = 127
@@ -139,9 +139,10 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         elif dim=='z':
             self.back_colour_z = int(255*value)
 
-        output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z) #,random.randint(0,255))
+        output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z)
         self.send('VBM', output)
 
+    # this doesnt seem to work on WJ-MX30 at least, or maybe i dont know how to get it into the right mode?
     back_wash_colour_x = 127
     back_wash_colour_y = 127
     back_wash_colour_z = 127
@@ -154,7 +155,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         elif dim=='z':
             self.back_wash_colour_z = int(255*value)
 
-        output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) #,random.randint(0,255))
+        output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) 
         self.send('VBW', output)
 
 

@@ -58,7 +58,7 @@
     },
     "control_change 51": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
-            "NAV_DETOUR": ["set_detour_end_continuous"]
+            "NAV_DETOUR": ["set_detour_end_continuous"],
 	    "WJMXSEND": ["wj_set_colour_T_y"]
     },
     "control_change 52": {

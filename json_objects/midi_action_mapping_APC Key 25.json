@@ -42,40 +42,44 @@
     "control_change 48": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-	    "MANIPULA": ["wj_set_colour_T_x","wj_set_position_N_x"]
+            "WJMXSEND": ["wj_set_position_N_x"],
+	    "MANIPULA": ["set_variable_A"]
     },
     "control_change 49": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
 	    "NAV_DETOUR": ["set_detour_start_continuous"],
-	    "MANIPULA": ["wj_set_colour_T_y","wj_set_position_N_y"]
+	    "WJMXSEND": ["wj_set_position_N_y"],
+	    "MANIPULA": ["f:sin(x*pi):|set_variable_SIN"]
     },
     "control_change 50": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
-            "NAV_DETOUR": ["set_detour_end_continuous"]
+            "NAV_DETOUR": ["set_detour_end_continuous"],
+            "WJMXSEND": ["wj_set_colour_T_x"]
     },
     "control_change 51": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"]
+	    "WJMXSEND": ["wj_set_colour_T_y"]
     },
     "control_change 52": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous","set_param_0_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-	    "MANIPULA": ["wj_set_mix"]
+	    "WJMXSEND": ["wj_set_mix","wj_send_append_pad_2_VCG:T"]
     },
     "control_change 53": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous","set_param_1_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_start_continuous"],
-	    "MANIPULA": ["wj_set_back_colour_x"]
+	    "WJMXSEND": ["wj_set_back_colour_x","wj_set_back_wash_colour_x"]
     },
     "control_change 54": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous","set_param_2_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "MANIPULA": ["wj_set_back_colour_y"]
+	    "WJMXSEND": ["wj_set_back_colour_y","wj_set_back_wash_colour_y"]
     },
     "control_change 55": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous","set_param_3_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "MANIPULA": ["wj_set_back_colour_z"]
+	    "WJMXSEND": ["wj_set_back_colour_z","wj_set_back_wash_colour_z"]
     },
     "control_change 56": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_2_continuous"],

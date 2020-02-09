@@ -1,10 +1,10 @@
 import serial
 from serial import Serial
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
 import threading
 
-class WJSendPlugin(ActionsPlugin,SequencePlugin):
+class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     disabled = False#True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
@@ -54,6 +54,19 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
             import traceback
             traceback.print_exc()
 
+    def show_plugin(self, display, display_mode):
+        from tkinter import Text, END
+        #super(DisplayPlugin).show_plugin(display, display_mode)
+        #print("show plugin?")
+        display.display_text.insert(END, '{} \n'.format(display.body_title))
+        display.display_text.insert(END, "test from WJSendPlugin!\n\n")
+
+        for queue, last in self.last.items():
+            display.display_text.insert(END, "last %s:\t%s\n" % (queue,self.last.get(queue)))
+
+    def get_display_modes(self):
+        return ["WJMXSEND","NAV_WJMX"]
+
     @property
     def parserlist(self):
         return [
@@ -61,10 +74,11 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
                 ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string ),
                 ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
                 ( r"^wj_set_back_colour_([x|y|z])$", self.set_back_colour ),
+                ( r"^wj_set_back_wash_colour_([x|y|z])$", self.set_back_wash_colour ),
                 ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position ),
                 ( r"^wj_set_mix$", self.set_mix ),
-                ( r"^wj_send_append_pad_([0-9]*)_(([A-Z:[0-9a-zA-Z])$", self.send_append_pad ),
-                ( r"^wj_send_append_([A-Z:[0-9a-zA-Z])$", self.send_append ),
+                ( r"^wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)$", self.send_append_pad ),
+                ( r"^wj_send_append_([:0-9a-zA-Z]*)$", self.send_append ),
         ]
 
     def send_serial_string(self, string):
@@ -127,6 +141,22 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin):
 
         output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z) #,random.randint(0,255))
         self.send('VBM', output)
+
+    back_wash_colour_x = 127
+    back_wash_colour_y = 127
+    back_wash_colour_z = 127
+    def set_back_wash_colour(self, dim, value):
+        # chan can be A, B or T (both)
+        if dim=='x':
+            self.back_wash_colour_x = int(255*value)
+        elif dim=='y':
+            self.back_wash_colour_y = int(255*value)
+        elif dim=='z':
+            self.back_wash_colour_z = int(255*value)
+
+        output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) #,random.randint(0,255))
+        self.send('VBW', output)
+
 
     position_x = 127
     position_y = 127

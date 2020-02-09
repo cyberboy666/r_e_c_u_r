@@ -468,9 +468,18 @@ class Display(object):
             else:
                 selected_list.append('<{}>'.format(v[:2].lower()))                
         # 18 char to PURPLE : 18 - 29 ,18 after 
+        if selected_list_index>4:
+            selected_list = selected_list[selected_list_index-4:len(selected_list)]
+            selected_list = ['--'] + selected_list
         selected_string = ''.join(selected_list)
-        output = ('-' * (19 - (selected_list_index * 4))) + selected_string + ('-' * (18 - ((len(display_modes) - selected_list_index - 1) * 4)))
-        
+        #if len(selected_string)<19:
+        #    selected_string += '-'*(21-len(selected_string))
+        #selected_string = selected_string[:30]
+        #wid = 19 #int(2+((len(display_modes)/2)*4))
+        output =    ('-' * ((19) - (selected_list_index * 4))) + \
+                    selected_string + \
+                    ('-' * (18 - ((len(display_modes) - selected_list_index - 1) * 4)))
+        output = output[0:46]
         return output
 
     @staticmethod

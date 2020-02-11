@@ -221,6 +221,14 @@ class DisplayPlugin(Plugin):
             #display_text.insert(END, 'test from DisplayPlugin')
             display.display_text.insert(END, '{} \n'.format(display.body_title))
 
+class ModulationReceiverPlugin(Plugin):
+    def __init__(self, plugin_collection):
+        super().__init__(plugin_collection)
+
+    def set_modulation_value(self, param, value):
+        print("||||||set_modulation_value dummy!")
+        raise NotImplementedError
+
 
 # adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):
@@ -295,7 +303,7 @@ class PluginCollection(object):
                 for (_, c) in clsmembers:
                     # Only add classes that are a sub class of Plugin, but NOT Plugin itself
                     # or one of the base classes
-                    ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin, DisplayPlugin ]
+                    ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin, DisplayPlugin, ModulationReceiverPlugin ] 
                     if issubclass(c, Plugin) & (c not in ignore_list):
                         print('    Found plugin class: %s.%s' % (c.__module__,c.__name__))
                         self.plugins.append(c(self))

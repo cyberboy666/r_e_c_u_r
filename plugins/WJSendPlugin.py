@@ -1,10 +1,10 @@
 import serial
 from serial import Serial
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin
 import threading
 
-class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
+class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin,ModulationReceiverPlugin):
     disabled = False#True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
@@ -30,6 +30,19 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         self.pc.actions.tk.after(500, self.refresh)
         #tk.after(500, self.refresh)
 
+    def set_modulation_value(self, param, value):
+        # take modulation value and throw it to local parameter
+        print("||||| wjsend  set_modulation_value!")
+        if param==0:
+            self.set_mix((0.5+value)/2)
+        elif param==1:
+            self.set_colour('T', 'x', 0.5+value)
+        elif param==2:
+            self.set_colour('T', 'y', 0.5+value)
+        elif param==3:
+            self.set_back_colour('x', 0.5+value)
+        else:
+            print("unknown param %s!" % param)
 
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
@@ -98,9 +111,12 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         if not self.ser or self.ser is None:
             self.open_serial()
 
-        for queue, command in self.queue.items():
-            self.send_buffered(queue, command)
-        self.queue.clear()
+        try:
+            for queue, command in self.queue.items():
+                self.send_buffered(queue, command)
+            self.queue.clear()
+        except:
+            print ("!!! CAUGHT EXCEPTION running queue !!!")
 
         if self.ser is not None:
             self.pc.shaders.root.after(self.THROTTLE, self.refresh)

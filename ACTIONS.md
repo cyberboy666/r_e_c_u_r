@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Sun 9 Feb 15:57:04 UTC 2020
+Sun 9 Feb 16:03:51 UTC 2020
 
-for branch=feature_plugins
+for branch=feature_plugins_shader_gadgets
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -180,6 +180,24 @@ for branch=feature_plugins
   * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
   * (.*)>&(.*)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
+  * run_automation	(from ShaderLoopRecordPlugin)
+  * stop_automation	(from ShaderLoopRecordPlugin)
+  * toggle_pause_automation	(from ShaderLoopRecordPlugin)
+  * pause_automation	(from ShaderLoopRecordPlugin)
+  * toggle_loop_automation	(from ShaderLoopRecordPlugin)
+  * set_automation_speed	(from ShaderLoopRecordPlugin)
+  * toggle_record_automation	(from ShaderLoopRecordPlugin)
+  * toggle_overdub_automation	(from ShaderLoopRecordPlugin)
+  * clear_automation	(from ShaderLoopRecordPlugin)
+  * select_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
+  * toggle_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
+  * load_presets	(from ShaderQuickPresetPlugin)
+  * save_presets	(from ShaderQuickPresetPlugin)
+  * store_next_preset	(from ShaderQuickPresetPlugin)
+  * store_current_preset	(from ShaderQuickPresetPlugin)
+  * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
+  * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
+  * clear_current_preset	(from ShaderQuickPresetPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)
   * run_automation	(from TestPlugin)

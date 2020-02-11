@@ -3,6 +3,7 @@ import os
 import pkgutil
 import re
 
+from plugins.frame_manager import FrameManager, Frame
 
 class Plugin(object):
     """Base class that each plugin must inherit from. within this class
@@ -210,16 +211,16 @@ class DisplayPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        def is_handled(self, name):
+    def is_handled(self, name):
             raise NotImplementedError
 
-        def get_display_modes(self):
+    def get_display_modes(self):
             raise NotImplementedError
 
-        def show_plugin(self, display):
-            from tkinter import Text, END
-            #display_text.insert(END, 'test from DisplayPlugin')
-            display.display_text.insert(END, '{} \n'.format(display.body_title))
+    def show_plugin(self, display):
+        from tkinter import Text, END
+        #display_text.insert(END, 'test from DisplayPlugin')
+        display.display_text.insert(END, '{} \n'.format(display.body_title))
 
 class ModulationReceiverPlugin(Plugin):
     def __init__(self, plugin_collection):
@@ -258,6 +259,8 @@ class PluginCollection(object):
         self.data = data
         #self.actions = message_handler.actions
         self.reload_plugins()
+
+        self.fm = FrameManager(self)
 
     def read_json(self, file_name):
         return self.data._read_plugin_json(file_name)

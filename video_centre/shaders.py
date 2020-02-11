@@ -1,6 +1,7 @@
 import display_centre.menu as menu
 import os
 from statistics import mean
+from data_centre.plugin_collection import ModulationReceiverPlugin
 
 class Shaders(object):
     MENU_HEIGHT = 10
@@ -228,6 +229,8 @@ class Shaders(object):
 
     def modulate_param_to_amount(self, param, value):
         self.modulation_value[param] = (value-0.5)*2
+        for plugin in self.data.plugins.get_plugins(ModulationReceiverPlugin):
+            plugin.set_modulation_value(param, self.modulation_value[param])
         for layer,params in enumerate(self.selected_param_list):
           for ip,p in enumerate(params):
               for p2,v in enumerate(self.selected_modulation_level[layer][ip]):

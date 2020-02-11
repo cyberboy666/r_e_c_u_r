@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Sun 9 Feb 16:03:51 UTC 2020
+Tue 11 Feb 23:58:41 UTC 2020
 
-for branch=feature_plugins_shader_gadgets
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)

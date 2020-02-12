@@ -40,7 +40,7 @@ class Frame:
         return self
 
     def store_copy(self, f):
-        print("told to store_copy %s" % f)
+        #print("told to store_copy %s" % f)
         if f is not None:
             if f.get('f') is not None: #isinstance(f, Frame):
                 f = f.get('f')

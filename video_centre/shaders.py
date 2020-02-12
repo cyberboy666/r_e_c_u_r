@@ -20,6 +20,8 @@ class Shaders(object):
         self.selected_modulation_slot = 0
                  
         self.selected_status_list = ['-','-','-'] ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
+        self.modulation_value = [0.0,0.0,0.0,0.0]
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
 

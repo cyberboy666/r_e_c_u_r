@@ -21,7 +21,7 @@ class OscInput(object):
 
     def setup_osc_server(self):
         server_parser = argparse.ArgumentParser()
-        server_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
+        server_parser.add_argument("--ip", default="0.0.0.0", help="the ip")
         server_parser.add_argument("--port", type=int, default=5433, help="the port")
 
         server_args = server_parser.parse_args()

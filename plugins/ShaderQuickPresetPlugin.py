@@ -1,6 +1,7 @@
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 import copy
+from plugins.frame_manager import Frame
 
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
     disabled = False
@@ -19,7 +20,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
 
     def load_presets(self):
         print("trying load presets? %s " % self.PRESET_FILE_NAME)
-        return self.pc.read_json(self.PRESET_FILE_NAME) or ([None]*self.MAX_PRESETS)
+        return [ Frame(self.pc).store_copy(x) for x in (self.pc.read_json(self.PRESET_FILE_NAME) or ([None]*self.MAX_PRESETS)) ]
 
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
@@ -57,7 +58,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         if self.selected_preset is None: self.selected_preset = 0
 
         insert_position = self.selected_preset
-        self.presets[insert_position] = self.pc.shaders.get_live_frame()
+        self.presets[insert_position] = self.pc.fm.get_live_frame()
         #print ("stored %s at position %s" % (self.presets[insert_position], insert_position))
         self.selected_preset = insert_position
         self.last_recalled = insert_position
@@ -80,5 +81,5 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         preset = self.presets[preset]
 
         print ("recalled preset %s" % preset)
-        self.pc.shaders.recall_frame(preset)
+        self.pc.fm.recall_frame(preset)
 

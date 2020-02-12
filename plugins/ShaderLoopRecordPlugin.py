@@ -1,16 +1,36 @@
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+from plugins.frame_manager import Frame
 
 class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     disabled = False
     MAX_CLIPS = 8
+    frames = [] 
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
         self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
 
-        self.frames = self.load_presets()
+        #TODO: this doesnt work
+        """self.frames = [ 
+                [ 
+                    Frame(self.pc).store_copy(f) 
+                     for f in [
+                      z for z in [ 
+                        frame for frame in [ 
+                            clip for clip in self.load_presets() 
+                        ] 
+                      ] 
+                    ]
+                ] 
+            ]"""
+        for clip in self.load_presets():
+            c = []
+            for frame in clip:
+                c.append(Frame(self.pc).store_copy(frame))
+            self.frames.append(c)
+
         self.reset_ignored()
 
     def load_presets(self):
@@ -71,7 +91,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             self.save_presets()
 
     def get_empty_clip(self, duration = 2000):
-        return [{}] * (int(duration / self.frequency))
+        return [None] * (int(duration / self.frequency))
 
     def get_factory_reset(self):
         return [ self.get_empty_clip(self.duration) for i in range(self.MAX_CLIPS) ]
@@ -99,10 +119,10 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
 
     def reset_ignored(self):
         # print("!!!!resetting ignored")
-        self.ignored = { 'shader_params': [[None]*4,[None]*4,[None]*4] }
+        self.ignored = Frame(self.pc).store_copy({ 'shader_params': [[None]*4,[None]*4,[None]*4] })
 
     def is_ignoring(self):
-        return not self.pc.shaders.is_frame_empty(self.ignored)
+        return not self.pc.fm.is_frame_empty(self.ignored)
 
     def select_clip(self, clip):
         self.selected_clip = clip
@@ -128,7 +148,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
         #print("got frame index %s" % current_frame_index)
 
-        current_frame = self.pc.shaders.get_live_frame().copy()
+        current_frame = self.pc.fm.get_live_frame() #.copy()
 
         selected_clip = self.selected_clip
         if self.DEBUG_FRAMES: print("current_frame copy before recall is %s" % current_frame['shader_params'])
@@ -141,25 +161,26 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         for selected_clip in self.running_clips:
           saved_frame = self.frames[selected_clip][current_frame_index]
           if not self.recording or (selected_clip!=self.selected_clip):
-              self.pc.shaders.recall_frame(saved_frame)
+              self.pc.fm.recall_frame(saved_frame)
           if self.recording and selected_clip==self.selected_clip:
             if self.last_frame is None: 
                 self.last_frame = current_frame
             if self.DEBUG_FRAMES: print("last frame is \t\t%s" % self.last_frame['shader_params'])
             if self.DEBUG_FRAMES: print("current f is  \t\t%s" % current_frame['shader_params'])
-            diff = self.pc.shaders.get_frame_diff(self.last_frame,current_frame)
+            diff = self.pc.fm.get_frame_diff(self.last_frame,current_frame)
             if self.DEBUG_FRAMES: print("diffed frame is \t%s" % diff['shader_params'])
 
             if self.overdub and saved_frame:
                 # add the params tweaked this frame to the params to be ignored by recall
                 if self.DEBUG_FRAMES: print("saved frame is \t%s" % saved_frame['shader_params'])
-                self.ignored = self.pc.shaders.merge_frames(self.ignored, diff)
-                diff = self.pc.shaders.merge_frames(
-                        self.pc.shaders.get_frame_ignored(saved_frame, self.ignored),
+                self.ignored = self.pc.fm.merge_frames(self.ignored, diff)
+                print("about to call get_ignored_frames with %s\n and\n %s" % (saved_frame.f, self.ignored.f))
+                diff = self.pc.fm.merge_frames(
+                        self.pc.fm.get_frame_ignored(saved_frame, self.ignored),
                         diff
                 )
                 #diff = self.pc.shaders.merge_frames(self.pc.shaders.get_live_frame(), diff)
-                self.pc.shaders.recall_frame(diff)
+                self.pc.fm.recall_frame(diff)
                 if self.DEBUG_FRAMES:  print("after diff2 is:  \t%s" % diff['shader_params'])
             if self.DEBUG_FRAMES: print("||||saving frame \t%s" % (diff['shader_params']))
             self.frames[selected_clip][current_frame_index] = diff #self.get_frame_diff(self.last_frame,current_frame)
@@ -170,7 +191,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
                     if self.DEBUG_FRAMES:print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames[selected_clip])))
                     self.frames[selected_clip][(self.last_saved_index+i+1)%len(self.frames[selected_clip])] = diff
             self.last_saved_index = current_frame_index
-            self.last_frame = self.pc.shaders.get_live_frame() #diff
+            self.last_frame = self.pc.fm.get_live_frame() #diff
         if self.DEBUG_FRAMES:  print("<<<<<<<<<<<<<< frame at %s" % current_frame_index)
 
     """def recall_frame_index(self, index):

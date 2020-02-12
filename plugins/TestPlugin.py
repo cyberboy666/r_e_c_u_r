@@ -1,7 +1,7 @@
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
 
-class MidiActionsTestPlugin(ActionsPlugin,SequencePlugin):
+class TestPlugin(ActionsPlugin,SequencePlugin):
     disabled = True
 
     def __init__(self, plugin_collection):

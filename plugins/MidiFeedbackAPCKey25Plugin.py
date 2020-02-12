@@ -133,6 +133,13 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
                     else:
                         colour = self.COLOUR_OFF
                     self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=colour)
+
+                """ # doesnt really work well, but shows progress of clip in leds
+                if plugin.is_playing() and not plugin.is_paused():
+                    for i in range(0,plugin.MAX_CLIPS):
+                        if i==int(plugin.position*plugin.MAX_CLIPS):
+                            self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN)
+                """
       except Exception as e:
           pass
           #print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))

@@ -43,7 +43,8 @@
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
             "WJMXSEND": ["wj_set_position_N_x"],
-	    "MANIPULA": ["set_variable_A"]
+	    "MANIPULA": ["set_variable_A"],
+	    "LOOPREC": ["set_automation_speed"]
     },
     "control_change 49": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],

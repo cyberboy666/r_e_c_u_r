@@ -1,8 +1,8 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
 from plugins.frame_manager import Frame
 
-class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
+class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     disabled = False
     MAX_CLIPS = 8
     frames = [] 
@@ -58,6 +58,46 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.frames)
 
+    def get_display_modes(self):
+        return ['LOOPREC','NAV_LP']
+
+    def show_plugin(self, display, display_mode):
+        from tkinter import Text, END
+        #super(DisplayPlugin).show_plugin(display, display_mode)
+        display.display_text.insert(END, '{} \n'.format(display.body_title))
+        display.display_text.insert(END, "test from ShaderLoopRecordPlugin!\n")
+        status = ""
+        status+="playing" if self.is_playing() else "stopped"
+        status+="\t"
+        status+="paused" if self.is_paused() else "unpaused"
+        status+="\t"
+        status+="REC" if self.recording else "---"
+        status+="*" if self.is_ignoring() else " "
+        status+="\t"
+        status+="Overdub" if self.overdub else "-------"
+        status+="\t"
+        status+="Looping" if self.looping else "Once"
+        status+="\n"
+
+        display.display_text.insert(END, status)
+        display.display_text.insert(END, ("Position:\t{:03.2f}%\t[{:15s}]".format(self.position,("#"*int(self.position*15)))))
+        display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed)))
+        display.display_text.insert(END, ("Duration:\t{:03.2f}s\n".format(((self.duration/1000)/self.speed)/4)))
+        #distance s = d/t    d = s*t   t = d/s
+
+        status = "\nEnabled clips:\t"
+        for i in range(0,self.MAX_CLIPS):
+            status+="#" if i==self.selected_clip and i in self.running_clips else\
+                    "/" if i==self.selected_clip and i not in self.running_clips else\
+                    "=" if i in self.running_clips else\
+                    '_'
+        status += "\n"
+        display.display_text.insert(END, status)
+ 
+        """for key,value in self.variables.items():
+            display.display_text.insert(END, "\t" + key + "\t{:03.2f}\n".format(value))"""
+
+
 
     @property
     def parserlist(self):
@@ -90,7 +130,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             self.last_saved_index = None
             self.save_presets()
 
-    def get_empty_clip(self, duration = 2000):
+    def get_empty_clip(self, duration = 4000):
         return [None] * (int(duration / self.frequency))
 
     def get_factory_reset(self):
@@ -130,7 +170,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
     selected_clip = 0
     running_clips = [ ] #False ] * self.MAX_CLIPS
 
-    duration = 2000
+    duration = 4000
     frequency = 10 #25 
     recording = False
     overdub = True 
@@ -142,8 +182,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
         current_frame_index = int(position * (int(self.duration / self.frequency)))
         if current_frame_index<0:
             current_frame_index = (self.duration/self.frequency) - current_frame_index
-        if current_frame_index > self.duration/self.frequency:
-            current_frame_index = self.duration/self.frequency
+        if current_frame_index >= self.duration: # self.duration/self.frequency:
+            current_frame_index = "(self.duration/self.frequency) +""" (current_frame_index%self.duration)
 
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
         #print("got frame index %s" % current_frame_index)
@@ -188,7 +228,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin):
             if self.last_saved_index is not None:
                 if self.DEBUG_FRAMES: print ("last_saved_index is %s, current_frame_index is %s" % (self.last_saved_index, current_frame_index))
                 for i in range(current_frame_index - (self.last_saved_index) ):
-                    if self.DEBUG_FRAMES:print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames[selected_clip])))
+                    if self.DEBUG_FRAMES: print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames[selected_clip])))
                     self.frames[selected_clip][(self.last_saved_index+i+1)%len(self.frames[selected_clip])] = diff
             self.last_saved_index = current_frame_index
             self.last_frame = self.pc.fm.get_live_frame() #diff

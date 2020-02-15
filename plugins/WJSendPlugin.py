@@ -16,6 +16,18 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin,ModulationReceiver
                                           rtscts=True, # TODO : test without this one
                                           timeout=timeout)"""
 
+    """self.commands = {
+            'VCG:': {
+                'name': 'Colour Corrector Gain',
+                'cmd': 'VCG:',
+            },
+            'VCC:': {
+                'name': 'Colour Corrector XY',
+                'cmd': 'VCC',
+                'callback': self.set_colour
+            }
+    }"""
+
     THROTTLE = 1 # milliseconds to wait between refreshing parameters
 
     def __init__(self, plugin_collection):
@@ -32,7 +44,7 @@ class WJSendPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin,ModulationReceiver
 
     def set_modulation_value(self, param, value):
         # take modulation value and throw it to local parameter
-        print("||||| wjsend  set_modulation_value!")
+        print("||||| wjsend  set_modulation_value for param %s with value %s!" % (param, value))
         if param==0:
             self.set_mix((0.5+value)/2)
         elif param==1:

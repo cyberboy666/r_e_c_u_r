@@ -42,7 +42,7 @@
     "control_change 48": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-            "WJMXSEND": ["wj_set_position_N_x"],
+            "NAV_WJMX": ["wj_set_position_N_x"],
 	    "NAV_MANI": ["set_variable_A"],
 	    "NAV_LFO": ["set_lfo_modulation_0_level"]
     },

@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Wed 12 Feb 00:09:50 UTC 2020
+Sun 16 Feb 17:13:17 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -173,6 +173,8 @@ for branch=feature_plugins_shader_gadgets
   * set_shader_speed_layer_([0-2])_amount
 
 ### Plugin routes
+  * set_lfo_modulation_([0-3])_level	(from LFOModulation)
+  * toggle_lfo_active	(from LFOModulation)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)

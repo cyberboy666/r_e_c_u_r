@@ -29,7 +29,8 @@
         "SHADER_PARAM": ["return_to_default_control_mode"],
         "CONFIRM": ["perform_confirm_action"],
         "NAV_DETOUR": ["toggle_detour_play"],
-        "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"]
+        "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"],
+	"LFOMODU": ["toggle_lfo_active"]
 	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"],

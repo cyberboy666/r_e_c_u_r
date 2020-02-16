@@ -69,7 +69,10 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         display.display_text.insert(END, status)
         display.display_text.insert(END, ("Position:\t{:03.2f}%\t[{:15s}]".format(self.position,("#"*int(self.position*15)))))
         display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed)))
-        display.display_text.insert(END, ("Duration:\t{:03.2f}s\n".format(((self.duration/1000)/self.speed)/4)))
+        if self.speed==0.0:
+            display.display_text.insert(END, ("Duration:\tinfinity!\n"))
+        else:
+            display.display_text.insert(END, ("Duration:\t{:03.2f}s\n".format(((self.duration/1000)/self.speed)/4)))
         #distance s = d/t    d = s*t   t = d/s
 
         status = "\nEnabled clips:\t"

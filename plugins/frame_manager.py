@@ -87,7 +87,7 @@ class Frame:
 
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
-            print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
+            #print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
             plugin.recall_frame_data(self.f.get(plugin.frame_key))
 
     def recall_frame(self):

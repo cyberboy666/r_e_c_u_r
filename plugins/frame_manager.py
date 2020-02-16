@@ -35,8 +35,10 @@ class Frame:
                 'shader_speeds': copy.deepcopy(self.pc.shaders.selected_speed_list),
                 'strobe_amount': self.pc.shaders.data.settings['shader']['STROBE_AMOUNT']['value'] / 10.0
         }
+        #print("about to call get_plugin_frame_data")
+        frame.update(self.pc.fm.get_plugin_frame_data())
         self.f = frame
-        #print("built frame: %s" % frame['shader_params'])
+        #print("built frame: %s" % self.f)
         return self
 
     def store_copy(self, f):
@@ -82,6 +84,11 @@ class Frame:
 
         if self.f.get('strobe_amount') is not None:
             self.pc.actions.set_strobe_amount_continuous(self.f.get('strobe_amount'))
+
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            #print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
+            plugin.recall_frame_data(self.f.get(plugin.frame_key))
 
     def recall_frame(self):
         preset = self
@@ -135,6 +142,11 @@ class Frame:
         if frame2.f.get('strobe_amount'):
             f['strobe_amount'] = frame2.f.get('strobe_amount')
 
+        # todo: merge from plugins
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            f[plugin.frame_key] = frame2.f.get(plugin.frame_key)
+
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return Frame(self.pc).store_copy(f)
  
@@ -159,6 +171,9 @@ class Frame:
         if ignored.get('strobe_amount') is not None:
             f['strobe_amount'] = None
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
+
+        # todo: find ignored from plugin
+
         return Frame(self.pc).store_copy(f)
 
     def is_empty(self):
@@ -182,6 +197,14 @@ class Frame:
         if frame.get('shader_speeds') is not None:
           for i,f in enumerate(frame['shader_speeds']):
             if f is not None:
+                return False
+
+        # todo: check empty from plugins
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            if frame.get(plugin.frame_key) is None:
+                continue
+            if len(frame.get(plugin.frame_key))>1:
                 return False
 
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
@@ -229,6 +252,13 @@ class Frame:
             print("param_values is\t%s" % param_values)
             print("speed_values is\t%s" % speed_values)
 
+        # todo: check diff from plugins
+        plugin_data = {}
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            if current_frame.get(plugin.frame_key) is not None:
+                plugin_data[plugin.frame_key] = plugin.get_frame_diff(last_frame, current_frame)
+
         diff = {
                 'shader_params': param_values,
                 'feedback_active': feedback_active,
@@ -236,6 +266,7 @@ class Frame:
                 'shader_speeds': speed_values,
                 'strobe_amount': strobe_amount,
         }
+        diff.update(plugin_data)
         if self.DEBUG_FRAMES: print("returning\t%s\n^^^^" % diff['shader_params'])
 
         return Frame(self.pc).store_copy(diff)
@@ -275,4 +306,13 @@ class FrameManager:
 
     def get_frame_diff(self, last_frame, current_frame):
         return last_frame.get_diff(current_frame)
+
+    def get_plugin_frame_data(self):
+        data = {}
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            data[plugin.frame_key] = plugin.get_frame_data()
+
+        print("get_plugin_frame_data looks like %s" % data)
+        return data
 

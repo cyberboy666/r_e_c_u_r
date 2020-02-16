@@ -12,19 +12,6 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
 
-        #TODO: this doesnt work
-        """self.frames = [ 
-                [ 
-                    Frame(self.pc).store_copy(f) 
-                     for f in [
-                      z for z in [ 
-                        frame for frame in [ 
-                            clip for clip in self.load_presets() 
-                        ] 
-                      ] 
-                    ]
-                ] 
-            ]"""
         for clip in self.load_presets():
             c = []
             for frame in clip:
@@ -188,7 +175,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         if self.DEBUG_FRAMES: print (">>>>>>>>>>>>>>frame at %i%%: %i" % (position*100, current_frame_index))
         #print("got frame index %s" % current_frame_index)
 
-        current_frame = self.pc.fm.get_live_frame() #.copy()
+        if self.recording:
+            current_frame = self.pc.fm.get_live_frame() #.copy()
 
         selected_clip = self.selected_clip
         if self.DEBUG_FRAMES: print("current_frame copy before recall is %s" % current_frame['shader_params'])
@@ -198,6 +186,10 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         #clip = self.frames[selected_clip]
         if self.is_playing() and self.recording and self.selected_clip not in self.running_clips:
             self.running_clips += [ self.selected_clip ]
+        if self.recording:
+            current_frame = self.pc.fm.get_live_frame() #.copy()
+        if self.DEBUG_FRAMES: print("current_frame copy before recall is %s" % current_frame['shader_params'])
+
         for selected_clip in self.running_clips:
           saved_frame = self.frames[selected_clip][current_frame_index]
           if not self.recording or (selected_clip!=self.selected_clip):
@@ -214,7 +206,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                 # add the params tweaked this frame to the params to be ignored by recall
                 if self.DEBUG_FRAMES: print("saved frame is \t%s" % saved_frame['shader_params'])
                 self.ignored = self.pc.fm.merge_frames(self.ignored, diff)
-                print("about to call get_ignored_frames with %s\n and\n %s" % (saved_frame.f, self.ignored.f))
+                if self.DEBUG_FRAMES: print("about to call get_ignored_frames with %s\n and\n %s" % (saved_frame.f, self.ignored.f))
                 diff = self.pc.fm.merge_frames(
                         self.pc.fm.get_frame_ignored(saved_frame, self.ignored),
                         diff

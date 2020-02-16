@@ -977,7 +977,7 @@ class Actions(object):
             return
 
         try:
-            #print ("for method_name %s, arguments is %s and len is %s" % (method_name, arguments, len(signature(method).parameters)))
+            #print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
             if arguments is not None and len(signature(method).parameters)==len(arguments): # only pass arguments if count matches method sig
                 method(*arguments)
             else:

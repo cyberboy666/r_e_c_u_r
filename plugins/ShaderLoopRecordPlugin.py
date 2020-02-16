@@ -46,7 +46,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         self.pc.update_json(self.PRESET_FILE_NAME, self.frames)
 
     def get_display_modes(self):
-        return ['LOOPREC','NAV_LP']
+        return ['LOOPREC','NAV_LPRC']
 
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END

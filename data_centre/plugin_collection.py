@@ -222,7 +222,6 @@ class DisplayPlugin(Plugin):
         #display_text.insert(END, 'test from DisplayPlugin')
         display.display_text.insert(END, '{} \n'.format(display.body_title))
 
-
 class ModulationReceiverPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -230,7 +229,6 @@ class ModulationReceiverPlugin(Plugin):
     def set_modulation_value(self, param, value):
         print("||||||set_modulation_value dummy!")
         raise NotImplementedError
-
 
 class AutomationSourcePlugin(Plugin):
     @property

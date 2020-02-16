@@ -114,16 +114,8 @@ class MidiInput(object):
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):
         this_mapping = self.midi_mappings[message_name]
-        #if self.data.function_on and "FN_%s"%self.data.control_mode in this_mapping:
-        #    mode = "FN_%s"%self.data.control_mode
-        #el
-        #print ("got mapping %s" % this_mapping)
         if self.data.control_mode in this_mapping:
             mode = self.data.control_mode
-        elif self.data.display_mode in this_mapping:
-            mode = self.data.display_mode
-        #elif self.data.function_on and "FN_DEFAULT" in this_mapping:
-        #    mode = "FN_DEFAULT"
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'
 
@@ -133,8 +125,8 @@ class MidiInput(object):
         else:
             method_name = this_mapping[mode][0]
 
-        print('[][][][][ in mode {}, the action being called is {} from message_name {} in control_mode {}'
-                .format(mode, method_name, message_name, self.data.control_mode))
+        #print('[][][][][ in mode {}, the action being called is {} from message_name {} in control_mode {}'
+        #        .format(mode, method_name, message_name, self.data.control_mode))
         if mapped_message_value is not None:
             norm_message_value = mapped_message_value/127 
             

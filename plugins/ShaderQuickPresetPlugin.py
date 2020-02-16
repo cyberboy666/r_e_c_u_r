@@ -38,14 +38,17 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
         ]
 
     def store_next_preset(self):
+        # find an empty slot
         res = [i for i, val in enumerate(self.presets) if val == None]
         if res is None or not res:
+            # didnt find an empty slot, save to current
+            self.store_current_preset()
             self.selected_preset += 1
             self.selected_preset %= self.MAX_PRESETS 
         else:
+            # found an empty slot, save to it
             self.selected_preset = res[0]
-
-        self.store_current_preset()
+            self.store_current_preset()
 
     def clear_current_preset(self):
         if self.selected_preset is None:

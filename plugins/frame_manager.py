@@ -313,6 +313,6 @@ class FrameManager:
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             data[plugin.frame_key] = plugin.get_frame_data()
 
-        print("get_plugin_frame_data looks like %s" % data)
+        #print("get_plugin_frame_data looks like %s" % data)
         return data
 

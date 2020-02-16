@@ -142,7 +142,6 @@ class Frame:
         if frame2.f.get('strobe_amount'):
             f['strobe_amount'] = frame2.f.get('strobe_amount')
 
-        # todo: merge from plugins
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             f[plugin.frame_key] = plugin.merge_data(f.get(plugin.frame_key),frame2.f.get(plugin.frame_key))
@@ -171,16 +170,11 @@ class Frame:
         if ignored.get('strobe_amount') is not None:
             f['strobe_amount'] = None
 
-        # todo: find ignored from plugin
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             if ignored.get(plugin.frame_key) is not None:
                 #print("ignoring for %s:\n\t%s\n" % (plugin.frame_key, ignored.get(plugin.frame_key)))
-                # TODO: move this into the plugin so plugin can handle its own data
-                for queue,item in frame.get(plugin.frame_key,{}).items():
-                    if ignored.get(plugin.frame_key).get(queue) is not None:
-                        #print ("\tfound that should ignore %s (%s) ?" % (queue, item))
-                        f[plugin.frame_key][queue] = None
+                f[plugin.frame_key] = plugin.get_ignored_data(f.get(plugin.frame_key,{}),ignored.get(plugin.frame_key,{}))
 
         if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return Frame(self.pc).store_copy(f)
@@ -208,13 +202,11 @@ class Frame:
             if f is not None:
                 return False
 
-        # todo: check empty from plugins
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             if frame.get(plugin.frame_key) is None:
                 continue
-            # TODO: move this into the plugin so that it can handle what it does
-            if len(frame.get(plugin.frame_key))>0:
+            if not plugin.is_frame_data_empty(frame.get(plugin.frame_key)):
                 return False
 
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
@@ -262,7 +254,6 @@ class Frame:
             print("param_values is\t%s" % param_values)
             print("speed_values is\t%s" % speed_values)
 
-        # todo: check diff from plugins
         plugin_data = {}
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):

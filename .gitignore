@@ -1,6 +1,10 @@
 *.pyc
 *.log
 .vscode
+*.swp
 json_objects/display_data.json
 json_objects/shader_bank_data.json
 json_objects/settings.json
+*.patch
+*.orig
+*.rej

@@ -1,6 +1,5 @@
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
-from plugins.frame_manager import Frame
 
 class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     disabled = False

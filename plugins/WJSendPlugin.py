@@ -47,7 +47,11 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def get_frame_data(self):
         diff = self.last_record.copy()
         #self.last_record = {}
+        #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
+
+    """def clear_recorded_frame(self):
+        self.last_record = {}"""
 
     def get_frame_diff(self, last_frame, current_frame):
         lf = last_frame.get(self.frame_key)
@@ -57,7 +61,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             return {}
 
         if lf is None or not lf:
-            return { self.frame_key: cf.copy() }
+            return cf.copy()
 
         diff = {}
         for queue,message in cf.items():
@@ -66,6 +70,18 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
         #print (">>>>>> returning diff\n%s\n<<<<<" % diff)
         return diff
+
+    def merge_data(self, data1, data2):
+        print (">>>merge_data passed\n\t%s\nand\n\t%s" % (data1,data2))
+        output = {}
+        if data1 is None:
+            output = data2.copy()
+        else:
+            output = data1.copy()
+            output.update(data2)
+        print("merge_data returning\n\t%s" % output)
+        print("<<<<<<")
+        return output
 
     def recall_frame_data(self, data):
         if data is None:
@@ -166,12 +182,19 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     last = {}
     def send_buffered(self, queue, output, record = True):
+        # TODO: remove this crap when i'm sure the bug has been fixed
+        if output is not None and (type(output) is dict or 'WJSendPlugin' in output):
+            print ("\n\n\ncaught fucker?")
+            import traceback
+            traceback.print_stack()
+            quit()
+
         if self.last.get(queue)!=output:
             self.send_serial_string(output)
             self.last[queue] = output
-        if record:
-            print("### send_buffered is setting last_record[%s] to %s" % (queue,output))
-            self.last_record[queue] = output
+            if record:
+                print("### send_buffered is setting last_record[%s] to %s" % (queue,output))
+                self.last_record[queue] = output
 
     def send_append(self, command, value):
         # append value to the command as a hex value

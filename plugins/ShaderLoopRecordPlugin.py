@@ -68,7 +68,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         display.display_text.insert(END, status)
         display.display_text.insert(END, ("Position:\t{:03.2f}%\t[{:15s}]".format(self.position,("#"*int(self.position*15)))))
-        display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed)))
+        display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed*100)))
         if self.speed==0.0:
             display.display_text.insert(END, ("Duration:\tinfinity!\n"))
         else:

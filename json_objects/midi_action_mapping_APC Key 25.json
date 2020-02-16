@@ -43,23 +43,27 @@
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
             "WJMXSEND": ["wj_set_position_N_x"],
-	    "MANIPULA": ["set_variable_A"]
+	    "MANIPULA": ["set_variable_A"],
+	    "LFOMODU": ["set_lfo_modulation_0_level"]
     },
     "control_change 49": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
 	    "NAV_DETOUR": ["set_detour_start_continuous"],
 	    "WJMXSEND": ["wj_set_position_N_y"],
-	    "MANIPULA": ["f:sin(x*pi):|set_variable_SIN"]
+	    "MANIPULA": ["f:sin(x*pi):|set_variable_SIN"],
+	    "LFOMODU": ["set_lfo_modulation_1_level"]
     },
     "control_change 50": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-            "WJMXSEND": ["wj_set_colour_T_x"]
+            "WJMXSEND": ["wj_set_colour_T_x"],
+	    "LFOMODU": ["set_lfo_modulation_2_level"]
     },
     "control_change 51": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "WJMXSEND": ["wj_set_colour_T_y"]
+	    "WJMXSEND": ["wj_set_colour_T_y"],
+	    "LFOMODU": ["set_lfo_modulation_3_level"]
     },
     "control_change 52": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous","set_param_0_layer_offset_0_modulation_level_continuous"],

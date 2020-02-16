@@ -72,15 +72,15 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         return diff
 
     def merge_data(self, data1, data2):
-        print (">>>merge_data passed\n\t%s\nand\n\t%s" % (data1,data2))
+        #print (">>>merge_data passed\n\t%s\nand\n\t%s" % (data1,data2))
         output = {}
         if data1 is None:
             output = data2.copy()
         else:
             output = data1.copy()
             output.update(data2)
-        print("merge_data returning\n\t%s" % output)
-        print("<<<<<<")
+        #print("merge_data returning\n\t%s" % output)
+        #print("<<<<<<")
         return output
 
     def recall_frame_data(self, data):

@@ -83,12 +83,27 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         #print("<<<<<<")
         return output
 
+    def get_ignored_data(self, data, ignored):
+        #frame = self.f
+        f = data.copy() #frame.get(self.frame_key,{})
+        for queue,item in f.items(): #frame.get(self.frame_key,{}).items():
+            if ignored.get(queue) is not None:
+                #print ("\tfound that should ignore %s (%s) ?" % (queue, item))
+                f[queue] = None
+        return f
+
+    def is_frame_data_empty(self, data):
+        if len(data)>0:
+            return False
+        return True
+
     def recall_frame_data(self, data):
         if data is None:
             return
         # print(">>>>recall from data:\n\t%s\n" %data)
         for queue, item in data.items():
-            self.send_buffered(queue, item, record = False)
+            if item is not None:
+                self.send_buffered(queue, item, record = False)
 
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
@@ -150,7 +165,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             print("sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3'
             self.ser.write(output) #.encode())
-            print("sent string '%s'" % output) #.encode('ascii'))
+            #print("sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:

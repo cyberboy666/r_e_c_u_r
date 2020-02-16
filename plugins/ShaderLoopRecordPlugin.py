@@ -207,10 +207,14 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                 if self.DEBUG_FRAMES: print("saved frame is \t%s" % saved_frame['shader_params'])
                 self.ignored = self.pc.fm.merge_frames(self.ignored, diff)
                 if self.DEBUG_FRAMES: print("about to call get_ignored_frames with %s\n and\n %s" % (saved_frame.f, self.ignored.f))
+                """print("got self.ignored:\n\t%s\n" % self.ignored.f)
+                print("diff is currently:\n\t%s\n" % diff.f)
+                print("saved_frame is currently:\n\t%s\n" % saved_frame.f)"""
                 diff = self.pc.fm.merge_frames(
                         self.pc.fm.get_frame_ignored(saved_frame, self.ignored),
                         diff
                 )
+                #print("got merged:\n\t%s\n" % diff.f)
                 #diff = self.pc.shaders.merge_frames(self.pc.shaders.get_live_frame(), diff)
                 self.pc.fm.recall_frame(diff)
                 if self.DEBUG_FRAMES:  print("after diff2 is:  \t%s" % diff['shader_params'])

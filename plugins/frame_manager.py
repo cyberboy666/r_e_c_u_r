@@ -87,7 +87,7 @@ class Frame:
 
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
-            #print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
+            print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
             plugin.recall_frame_data(self.f.get(plugin.frame_key))
 
     def recall_frame(self):
@@ -145,7 +145,7 @@ class Frame:
         # todo: merge from plugins
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
-            f[plugin.frame_key] = frame2.f.get(plugin.frame_key)
+            f[plugin.frame_key] = plugin.merge_data(f.get(plugin.frame_key),frame2.f.get(plugin.frame_key))
 
         if self.DEBUG_FRAMES:  print("merge_frames: got return\t%s" % f)
         return Frame(self.pc).store_copy(f)
@@ -170,10 +170,19 @@ class Frame:
                 f['shader_speeds'][i] = None
         if ignored.get('strobe_amount') is not None:
             f['strobe_amount'] = None
-        if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
 
         # todo: find ignored from plugin
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            if ignored.get(plugin.frame_key) is not None:
+                #print("ignoring for %s:\n\t%s\n" % (plugin.frame_key, ignored.get(plugin.frame_key)))
+                # TODO: move this into the plugin so plugin can handle its own data
+                for queue,item in frame.get(plugin.frame_key,{}).items():
+                    if ignored.get(plugin.frame_key).get(queue) is not None:
+                        #print ("\tfound that should ignore %s (%s) ?" % (queue, item))
+                        f[plugin.frame_key][queue] = None
 
+        if self.DEBUG_FRAMES:  print("get_frame_ignored: got return\t%s" % f)
         return Frame(self.pc).store_copy(f)
 
     def is_empty(self):
@@ -204,7 +213,8 @@ class Frame:
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             if frame.get(plugin.frame_key) is None:
                 continue
-            if len(frame.get(plugin.frame_key))>1:
+            # TODO: move this into the plugin so that it can handle what it does
+            if len(frame.get(plugin.frame_key))>0:
                 return False
 
         if self.DEBUG_FRAMES:  print("is_frame_empty: got return true")
@@ -312,6 +322,7 @@ class FrameManager:
         from data_centre.plugin_collection import AutomationSourcePlugin
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             data[plugin.frame_key] = plugin.get_frame_data()
+            #plugin.clear_recorded_frame()
 
         #print("get_plugin_frame_data looks like %s" % data)
         return data

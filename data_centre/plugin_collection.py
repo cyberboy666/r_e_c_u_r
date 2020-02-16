@@ -48,7 +48,11 @@ class SequencePlugin(Plugin):
         ]
 
     def set_speed(self, speed):
-        self.speed = 2.0 * (2.0*(speed-0.5))
+        #self.speed = 2.0 * (2.0*(speed-0.5))
+        speed = 2.0*(speed-0.5) # adjust to range -1 to +1
+        negative = speed<0.0 # remember negative state cos we'll lose it in next
+        self.speed = (speed * speed) * 2.0
+        if negative: self.speed *= -1
         print ("automation speed is now %s" % self.speed)
 
     """def position(self, now):

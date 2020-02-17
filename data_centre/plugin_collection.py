@@ -247,9 +247,54 @@ class AutomationSourcePlugin(Plugin):
     def recall_frame_data(self, data):
         raise NotImplementedError
 
+    # these frame stubs deal with the simplest case of a frame being a dict of values
+    # if its anything more complicated than that (like lists) then that will need to be
+    # handled in the plugin by overriding these methods
     def get_frame_diff(self, last_frame, current_frame):
-        raise NotImplementedError
+        lf = last_frame.get(self.frame_key)
+        cf = current_frame.get(self.frame_key)
 
+        if cf is None or not cf:
+            return {}
+
+        if lf is None or not lf:
+            return cf.copy()
+
+        diff = {}
+        for queue,message in cf.items():
+            if lf.get(queue) is None or lf.get(queue)!=message:
+                diff[queue] = message
+
+        #print (">>>>>> returning diff\n%s\n<<<<<" % diff)
+        return diff
+
+    def merge_data(self, data1, data2):
+        #print (">>>merge_data passed\n\t%s\nand\n\t%s" % (data1,data2))
+        output = {}
+        if data1 is None:
+            output = data2.copy()
+        else:
+            output = data1.copy()
+            output.update(data2)
+        #print("merge_data returning\n\t%s" % output)
+        #print("<<<<<<")
+        return output
+
+    def get_ignored_data(self, data, ignored):
+        #frame = self.f
+        f = data.copy() #frame.get(self.frame_key,{})
+        for queue,item in f.items(): #frame.get(self.frame_key,{}).items():
+            if ignored.get(queue) is not None:
+                #print ("\tfound that should ignore %s (%s) ?" % (queue, item))
+                f[queue] = None
+        return f
+
+    def is_frame_data_empty(self, data):
+        if len(data)>0:
+            return False
+        return True
+
+### end plugin base classes
 
 # adapted from https://github.com/gdiepen/python_plugin_example
 class PluginCollection(object):

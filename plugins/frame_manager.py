@@ -318,3 +318,72 @@ class FrameManager:
         #print("get_plugin_frame_data looks like %s" % data)
         return data
 
+    def interpolate_clip(self, frames):
+        # loop over every frame
+        #   for each property of each frame
+        #       if its empty, 
+        #           find distance to next value
+        #           interpolate from the last to the next value
+        #       else,
+        #           store as last value
+
+        print("got pre-interpolated clip: %s" % [ f.f for f in frames if f is not None])
+
+        last = [ [None]*4, [None]*4, [None]*4 ]
+
+        """for findex,frame in enumerate(frames):
+            if frame is None:
+                continue"""
+
+        reproc_to = 0
+
+        def process(self, findex, frame):
+              for layer,params in enumerate(frame.f.get('shader_params',[])):
+                for param,value in enumerate(params):
+                    if value is None and last[layer][param] is not None:
+                        # find distance to when this value changes again
+                        gap,future_value = self.get_distance_value_layer_param(frames,findex,layer,param)
+                        if gap==0 or future_value==value: # if doesnt change again, do nothing
+                            continue
+                        newvalue = self.interpolate(last[layer][param], future_value, gap)
+                        params[param] = newvalue
+                        print("findex %s: updating interpolated value to %s - should be between %s and %s over gap %s" % (findex, newvalue, last[layer][param], future_value, gap))
+                        last[layer][param] = newvalue
+                    #elif last[layer][param] is None:
+                    #    reproc_to = findex
+                    elif value is not None:
+                        last[layer][param] = value
+                    
+        for i in range(2):
+          for findex,frame in enumerate(frames):
+            if frame is None:
+                continue
+
+            process(self,findex,frame)
+
+        """for findex in range(reproc_to):
+            if frames[findex] is None:
+                continue
+
+            process(self,findex,frames[findex])"""
+
+        print("got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
+
+    def get_distance_value_layer_param(self, frames, findex, layer, param):
+        for i in range(1,len(frames)):
+            search_findex = i + findex
+            search_findex %= len(frames)
+            if frames[search_findex] is not None and frames[search_findex].f.get('shader_params',[ [None]*4, [None]*4, [None]*4 ])[layer][param] is not None:
+                return i, frames[search_findex].f.get('shader_params')[layer][param]
+        return 0, None
+
+    def interpolate(self, value1, value2, total_steps):
+        diff = max(value1,value2)-min(value1,value2)
+        sl = diff / total_steps
+        if value1>value2:
+            v = value1-sl
+        else:
+            v = value1+sl
+
+        print("interpolate between\t%s and\t%s over\t%s steps, got sl\t%s and value\t%s" % (value1,value2,total_steps, sl, v))
+        return v

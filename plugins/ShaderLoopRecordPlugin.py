@@ -102,8 +102,14 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                 ( r"toggle_overdub_automation", self.toggle_overdub_automation ),
                 ( r"clear_automation", self.clear_clip ),
                 ( r"select_automation_clip_([0-7])", self.select_clip ),
-                ( r"toggle_automation_clip_([0-7])", self.toggle_clip )
+                ( r"toggle_automation_clip_([0-7])", self.toggle_clip ),
+                #( r"smooth_clip_(0-7])", self.smooth_clip ),
+                ( r"smooth_selected_clip", self.smooth_selected_clip )
         ]
+
+    def smooth_selected_clip(self):
+        self.pc.fm.interpolate_clip(self.frames[self.selected_clip])
+
 
     def toggle_overdub_automation(self):
         self.overdub = not self.overdub
@@ -224,11 +230,11 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
             if self.DEBUG_FRAMES: print("||||saving frame \t%s" % (diff['shader_params']))
             self.frames[selected_clip][current_frame_index] = diff #self.get_frame_diff(self.last_frame,current_frame)
             #backfill frames
-            if self.last_saved_index is not None:
+            """if self.last_saved_index is not None:
                 if self.DEBUG_FRAMES: print ("last_saved_index is %s, current_frame_index is %s" % (self.last_saved_index, current_frame_index))
                 for i in range(current_frame_index - (self.last_saved_index) ):
                     if self.DEBUG_FRAMES: print("backfilling frame %s" % ((self.last_saved_index+i+1)%len(self.frames[selected_clip])))
-                    self.frames[selected_clip][(self.last_saved_index+i+1)%len(self.frames[selected_clip])] = diff
+                    self.frames[selected_clip][(self.last_saved_index+i+1)%len(self.frames[selected_clip])] = diff"""
             self.last_saved_index = current_frame_index
             self.last_frame = self.pc.fm.get_live_frame() #diff
         if self.DEBUG_FRAMES:  print("<<<<<<<<<<<<<< frame at %s" % current_frame_index)

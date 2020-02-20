@@ -60,7 +60,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         # print(">>>>recall from data:\n\t%s\n" %data)
         for queue, item in data.items():
             if item is not None:
-                self.send_buffered(queue, item, record = False)
+                self.send_buffered(queue, item[0], item[1], record = False)
 
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
@@ -97,6 +97,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
             self.ser.close()
+        if self.disabled:
+            return
         try:
             self.ser = serial.Serial(
                 port=port,
@@ -114,6 +116,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             #self.pc.midi_input.root.after(500, self.refresh)
         except Exception as e:
             print ("open_serial failed: " + str(type(e)))
+            self.disabled = True
             import traceback
             traceback.print_exc()
 
@@ -136,7 +139,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
         try:
             for queue, command in self.queue.items():
-                self.send_buffered(queue, command)
+                self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
         except Exception:
             print ("!!! CAUGHT EXCEPTION running queue !!!")
@@ -148,33 +151,35 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if self.ser is not None:
             self.pc.shaders.root.after(self.THROTTLE, self.refresh)
 
-    def send(self, queue, output):
+    def send(self, queue, form, args):
         #self.send_buffered(queue,output)
-        self.queue[queue] = output
+        self.queue[queue] = (form, args) #output
 
     last = {}
-    def send_buffered(self, queue, output, record = True):
-        # TODO: remove this crap when i'm sure the bug has been fixed
+    def send_buffered(self, queue, form, args, record = True):
+        """# TODO: remove this crap when i'm sure the bug has been fixed
         if output is not None and (type(output) is dict or 'WJSendPlugin' in output):
             print ("\n\n\ncaught fucker?")
             import traceback
             traceback.print_stack()
-            quit()
+            quit()"""
 
-        if self.last.get(queue)!=output:
+        if self.last.get(queue)!=(form,args):
+            print("send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
+            output = form.format(*args)
             self.send_serial_string(output)
-            self.last[queue] = output
+            self.last[queue] = (form,args) #output
             if record:
                 print("### send_buffered is setting last_record[%s] to %s" % (queue,output))
-                self.last_record[queue] = output
+                self.last_record[queue] = (form,args)#output
 
     def send_append(self, command, value):
         # append value to the command as a hex value
-        self.send(command.split(':')[0], "{}{:02X}".format(command,int(255*value)))
+        self.send(command.split(':')[0], "{}{:02X}", [ command,int(255*value) ])
 
     def send_append_pad(self, pad, command, value):
         # append value, padded to length
-        self.send(command.split(':')[0], ("{}{:0%iX}"%pad).format(command,int(255*value)))
+        self.send(command.split(':')[0], "{}{:0%iX}"%pad, [ command,int(255*value) ])
 
 
     # methods for ActionPlugin
@@ -205,8 +210,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='y':
             self.colour_y = int(255*value)
 
-        output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x,self.colour_y) 
-        self.send('VCC', output)
+        #output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x, self.colour_y) 
+        # could store format string + values, then interpolate over those values
+        self.send('VCC', "VCC:{}{:02X}{:02X}", [chan, self.colour_x, self.colour_y]) #output)
 
     # RGB control of matte colour!
     back_colour_x = 127
@@ -221,10 +227,11 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='z':
             self.back_colour_z = int(255*value)
 
-        output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z)
-        self.send('VBM', output)
+        #output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z)
+        self.send('VBM', "VBM:{:02X}{:02X}{:02X}", [ self.back_colour_x,self.back_colour_y,self.back_colour_z ]) 
 
     # this doesnt seem to work on WJ-MX30 at least, or maybe i dont know how to get it into the right mode?
+    # todo: replace with downstream key control
     back_wash_colour_x = 127
     back_wash_colour_y = 127
     back_wash_colour_z = 127
@@ -237,8 +244,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='z':
             self.back_wash_colour_z = int(255*value)
 
-        output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) 
-        self.send('VBW', output)
+        #output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) 
+        self.send('VBW', "VBW:{:02X}{:02X}{:02X}", [ self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z ] )
 
     # positioner joystick
     position_x = 127
@@ -249,11 +256,11 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='x': # yes, x is really y!
             self.position_y = int(255*value)
 
-        output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
-        self.send('VPS:{}'.format(mode), output)
+        #output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
+        self.send('VPS:{}'.format(mode), "VPS:{}{:02X}{:02X}", [ mode,self.position_x,self.position_y ])#output)
 
     # wipe / mix level
     def set_mix(self, value):
-        output = "VMM:{:04X}".format(int(255*255*value))
-        self.send('VMM', output)
+        #output = "VMM:{:04X}".format(int(255*255*value))
+        self.send('VMM', "VMM:{:04X}", [ int(255*255*value) ])#output)
 

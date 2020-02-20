@@ -275,7 +275,7 @@
 		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["send_serial_string_hellO","send_random_settings"]
+		"DEFAULT": ["smooth_selected_clip","send_random_settings"]
 	}
 }
 

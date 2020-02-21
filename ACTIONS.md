@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sun 16 Feb 17:13:17 UTC 2020
+Fri 21 Feb 00:56:39 UTC 2020
 
 for branch=feature_plugins_shader_gadgets
 
@@ -193,6 +193,8 @@ for branch=feature_plugins_shader_gadgets
   * clear_automation	(from ShaderLoopRecordPlugin)
   * select_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
   * toggle_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
+  * smooth_clip_(0-7])	(from ShaderLoopRecordPlugin)
+  * smooth_selected_clip	(from ShaderLoopRecordPlugin)
   * load_presets	(from ShaderQuickPresetPlugin)
   * save_presets	(from ShaderQuickPresetPlugin)
   * store_next_preset	(from ShaderQuickPresetPlugin)

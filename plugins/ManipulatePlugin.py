@@ -44,6 +44,8 @@ TODO: >> ??    invert|set_the_shader_param_0_layer_>>print_arguments>>set_variab
 class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
     disabled = False
 
+    DEBUG = False
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -74,7 +76,7 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
 
     # Actions
     def run_multi(self, action1, action2, value):
-        print("ManipulatePlugin>> multi-running '%s' and '%s' with value %s" % (action1, action2, value))
+        if self.DEBUG: print("ManipulatePlugin>> multi-running '%s' and '%s' with value %s" % (action1, action2, value))
         self.pc.actions.call_method_name(action1, value)
         self.pc.actions.call_method_name(action2, value)
 
@@ -90,20 +92,20 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
 
     def formula(self, formula, action, value):
         self.variables['x'] = value
-        print("ManipulatePlugin>> evaluating formula `%s` with value `%s`" % (formula, value))
+        if self.DEBUG: print("ManipulatePlugin>> evaluating formula `%s` with value `%s`" % (formula, value))
         value = eval(formula, globals(), self.variables)
-        print("ManipulatePlugin>> got evaluated value `%s`" % value)
+        if self.DEBUG: print("ManipulatePlugin>> got evaluated value `%s`" % value)
 
         self.pc.actions.call_method_name(
                 action, value
         )
 
     def set_variable(self, var_name, value):
-        print("ManipulatePlugin>> set_variable     (%s) to %s" % (var_name, value))
+        if self.DEBUG: print("ManipulatePlugin>> set_variable     (%s) to %s" % (var_name, value))
         self.variables[var_name] = value
 
     def recall_variable(self, var_name, action, *args):
-        print ("ManipulatePlugin>> recall_variable (%s) as %s" % (var_name,args))
+        if self.DEBUG: print ("ManipulatePlugin>> recall_variable (%s) as %s" % (var_name,args))
         self.pc.actions.call_method_name(
                 action, self.variables.get(var_name)# + list(args)
         )
@@ -113,6 +115,6 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
     #    methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     def set_modulation_value(self, param, value):
         # take modulation value and throw it to local parameter
-        print("||||| ManipulatePlugin received set_modulation_value for param %s with value %s!" % (param, value))
+        if self.DEBUG: print("||||| ManipulatePlugin received set_modulation_value for param %s with value %s!" % (param, value))
         self.set_variable("MODVALUE%s" % ('ABCD'[param]), value)
 

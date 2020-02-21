@@ -338,7 +338,7 @@ class FrameManager:
         reproc_to = 0
 
         def process(self, findex, frame):
-              for layer,params in enumerate(frame.f.get('shader_params',[])):
+            for layer,params in enumerate(frame.f.get('shader_params',[])):
                 for param,value in enumerate(params):
                     if value is None and last[layer][param] is not None:
                         # find distance to when this value changes again
@@ -353,6 +353,10 @@ class FrameManager:
                     #    reproc_to = findex
                     elif value is not None:
                         last[layer][param] = value
+
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            plugin.process_interpolate_clip(frames)
                     
         for i in range(2):
           for findex,frame in enumerate(frames):

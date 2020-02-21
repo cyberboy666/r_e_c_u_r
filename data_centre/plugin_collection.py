@@ -295,6 +295,139 @@ class AutomationSourcePlugin(Plugin):
             return False
         return True
 
+    """def process_interpoloate_clip(self, frames):
+        raise NotImplementedError"""
+
+    ### TODO: experimental value interpolation -- doesn't work, and is slow!
+    cmd_size = {}
+    def process_interpolate_clip(self, frames):
+        # loop over every frame
+        #   for each property of each frame
+        #       if its empty,
+        #           find distance to next value
+        #           interpolate from the last to the next value
+        #       else,
+        #           store as last value
+
+        print("WJSEND got pre-interpolated clip: %s" % [ f.f for f in frames if f is not None])
+
+        #last = [ [None]*4, [None]*4, [None]*4 ]
+        last = {}
+
+        """for findex,frame in enumerate(frames):
+            if frame is None:
+                continue"""
+
+        reproc_to = 0
+        queues = []# queue for queue in list(frame.f.get(self.frame_key,{}).keys()) for frame in frames ] # get all queues in all frames in clip
+        for frame in frames:
+            if frame is not None:
+                for queue,command in frame.f.get(self.frame_key,{}).items():
+                    queues.append(queue)
+                    if command is not None and len(command)==2:
+                        self.cmd_size[queue] = len(command[1])
+                    if command is not None and command[1] is not None:
+                        last[queue] = command
+        queues = list(set(queues))
+        print ("got queues %s" % queues)
+
+        """distance_cache = [{}]*len(frames) # list [ dict { queue: list [ distance to next arg args ] } ]
+        bob = {}
+        for i in range(len(frames),0,-1):
+            frame = frames[i-1]
+            f = frame.f
+            data = f.get(self.frame_key,None)
+            if data is None:
+                distance_cache[i-1] = bob"""
+
+        def process(self, findex, frame):
+            #for queue,command in enumerate(frame.f.get(self.frame_key,[])):
+            data = frame.f.get(self.frame_key,None)
+            #if data is None:
+            #    return
+            for queue in queues:
+                if last.get(queue) is not None:
+                  """if data.get(queue) is not None:
+                    last[queue] = data.get(queue)
+                    continue"""
+                  for argindex,value in enumerate(last.get(queue)[1]):
+                    #print ("findex %s: for argindex %s got last value %s" % (findex, argindex, value))
+                    #if data is not None: print ("data queue is %s" % data.get(queue,None))
+                    if data is not None and data.get(queue,None) is not None and len(data.get(queue))>0 and len(data.get(queue)[1])>argindex and data.get(queue)[1][argindex] is not None:
+                        last[queue][1][argindex] = data.get(queue)[1][argindex]
+                        continue
+                    gap,future_value = self.get_distance_value_command(frames,findex,queue,argindex)
+                    if gap==0 or future_value==value:
+                        continue
+                    #print("\tpassing %s and %s to interpolate" % (last[queue][argindex], future_value))
+                    newvalue = self.pc.fm.interpolate(last[queue][1][argindex], future_value, gap)
+                    if data is None:
+                        frame.f[self.frame_key] = {}
+                        data = frame.f[self.frame_key]
+                    if data.get(queue) is None:
+                        data[queue] = [last[queue][0], last[queue][1]]# [None]*self.cmd_size[queue]]
+                    #while len(data.get(queue)[1])<argindex:
+                    #    data.get(queue)[1] += [] #.append(None)
+                    data.get(queue)[1][argindex] = int(newvalue)
+                    last[queue][1][argindex] = int(newvalue)
+                elif data is not None and data.get(queue) is not None:
+                    #print("no last[%s] already set, setting to %s" % (queue, data.get(queue)))
+                    last[queue] = data.get(queue)
+
+        for i in range(1):
+          for findex,frame in enumerate(frames):
+            if frame is None:
+                continue
+
+            process(self,findex,frame)
+
+        print("\nWJSEND got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
+
+        self.distance_cache = {}
+
+    distance_cache = {}
+    def get_distance_value_command(self, frames, findex, queue, argindex):
+
+        distance_cache = self.distance_cache
+
+        # check if we have a cached value that is lower than the findex
+        if distance_cache.get(queue) is not None and len(distance_cache.get(queue))>=(argindex+1) and distance_cache.get(queue)[argindex] is not None and distance_cache.get(queue)[argindex]['position'] >= findex:
+            position = distance_cache.get(queue)[argindex]['position']
+            #return len(frames)-
+            return abs(position-findex), distance_cache.get(queue)[argindex]['value']
+
+        #print("\t\tget_distance_value_command(findex %s, queue %s, argindex %s)" %(findex,queue,argindex))
+        for i in range(1,len(frames)):
+            search_findex = i + findex
+            search_findex %= len(frames)
+            if frames[search_findex] is None:
+                continue
+            #print("\t\t\tgetting frame index %s" % search_findex)
+            frame = frames[search_findex]
+            data = frame.f.get(self.frame_key,None)
+            #print("\t\t\tgot frame data %s" % data)
+            if data is None:
+                continue
+            command = data.get(queue,None)
+            if command is None:
+                continue
+            print("\t\t\tget_distance_value_command testing %s argindex %s - command looks like %s" % (queue, argindex, command))
+            if len(command[1])>argindex:
+                if command[1][argindex] is not None and findex!=i:
+                    print("\t\t\t\t\tgot distance %s to value for argindex %s: %s" % (i, argindex, command[1][argindex]))
+                    if distance_cache.get(queue) is None:
+                        distance_cache[queue] = [None]*(self.cmd_size[queue])
+                    #while len(distance_cache[queue])<(argindex+1):
+                    #    distance_cache[queue] += [None]
+                    distance_cache[queue][argindex] = { 'position': i, 'value': command[1][argindex] }
+                    return i, command[1][argindex]
+
+
+            """if frames[search_findex] is not None and frames[search_findex].f.get(self.frame_key,{}).get(queue,[])[argindex] is not None:
+                return i, frames[search_findex].f.get(self.frame_key,{}).get(queue,[])[argindex]"""
+        return 0, None
+
+
 ### end plugin base classes
 
 # adapted from https://github.com/gdiepen/python_plugin_example

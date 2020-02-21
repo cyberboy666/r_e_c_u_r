@@ -1,5 +1,5 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin#, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin, ModulationReceiverPlugin#, SequencePlugin
 #import math
 from math import sin, cos, tan, log, exp, pi
 
@@ -41,12 +41,13 @@ TODO: >> ??    invert|set_the_shader_param_0_layer_>>print_arguments>>set_variab
 
 """
 
-class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
+class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
     disabled = False
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
+    # ActionsPlugin methods
     @property
     def parserlist(self):
         return [ 
@@ -58,6 +59,7 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
                 ( r"^(.*)>\&(.*)$", self.run_multi ), # pick up piped commands that duplicate a chain of values last
         ]
 
+    # DisplayPlugin methods
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END
         #super(DisplayPlugin).show_plugin(display, display_mode)
@@ -67,10 +69,10 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
         for key,value in self.variables.items():
             display.display_text.insert(END, "\t" + key + "\t{:03.2f}\n".format(value))
 
-
     def get_display_modes(self):
         return ["MANIPULA","NAV_MANI"] #"NAV_MANIPULATE"]
 
+    # Actions
     def run_multi(self, action1, action2, value):
         print("ManipulatePlugin>> multi-running '%s' and '%s' with value %s" % (action1, action2, value))
         self.pc.actions.call_method_name(action1, value)
@@ -106,25 +108,11 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin):
                 action, self.variables.get(var_name)# + list(args)
         )
 
-    """def pipe2(self, left, right1, separator, right2, tail, value):
-        self.pc.actions.call_method_name(
-                left + separator + right1, value
-        )
-        self.pc.actions.call_method_name(
-                left + separator + right2, value
-        )
-        self.pc.actions.call_method_name(
-                tail, value
-        )"""
 
-    """def pipe(self, left, right, value):
-        # ??
-        print("ManipulatePlugin>> pipe calling left '%s' and right '%s', both with value '%s'" % (left, right, value))
-        self.pc.actions.call_method_name(
-                left, value
-        )
-
-        self.pc.actions.call_method_name(
-                right, value
-        )"""
+    # ModulationReceiverPlugin methods
+    #    methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
+    def set_modulation_value(self, param, value):
+        # take modulation value and throw it to local parameter
+        print("||||| ManipulatePlugin received set_modulation_value for param %s with value %s!" % (param, value))
+        self.set_variable("MODVALUE%s" % ('ABCD'[param]), value)
 

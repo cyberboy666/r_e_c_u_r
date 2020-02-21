@@ -37,10 +37,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             print ("WJSendPlugin is disabled, not opening serial")
             return
 
-        #self.open_serial()
-        #print ("starting refresh?")
         self.pc.actions.tk.after(500, self.refresh)
-        #tk.after(500, self.refresh)
 
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
@@ -67,7 +64,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     # experimental & hardcoded !
     def set_modulation_value(self, param, value):
         # take modulation value and throw it to local parameter
-        print("||||| wjsend received set_modulation_value for param %s with value %s!" % (param, value))
+        print("||||| WJSendPlugin received set_modulation_value for param %s with value %s!" % (param, value))
         if param==0:
             self.set_mix((0.5+value)/2)
         elif param==1:
@@ -77,7 +74,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif param==3:
             self.set_back_colour('x', 0.5+value)
         else:
-            print("unknown param %s!" % param)
+            print("\tunknown param %s!" % param)
 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
@@ -85,15 +82,15 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         #super(DisplayPlugin).show_plugin(display, display_mode)
         #print("show plugin?")
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "test from WJSendPlugin!\n\n")
+        display.display_text.insert(END, "WJSendPlugin status!\n\n")
 
         for queue, last in self.last.items():
-            display.display_text.insert(END, "last %s:\t%s\n" % (queue,self.last.get(queue)))
+            display.display_text.insert(END, "%s:\t%s\n" % (queue,self.last.get(queue)[1]))
 
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
 
-    # methods for SerialPlugin (todo!)
+    # methods for SerialPlugin (todo!) and serial command queueing
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
             self.ser.close()
@@ -111,25 +108,22 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 timeout=None #timeout
             )
 
-            print ("starting refresh?")
-
-            #self.pc.midi_input.root.after(500, self.refresh)
         except Exception as e:
-            print ("open_serial failed: " + str(type(e)))
+            print ("WJSendPlugin>> open_serial failed: " + str(type(e)))
             self.disabled = True
             import traceback
             traceback.print_exc()
 
     def send_serial_string(self, string):
         try:
-            print("sending string %s " % string)
+            print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3'
             self.ser.write(output) #.encode())
             #print("sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
-            print("%s: send_serial_string failed for '%s'" % (e,string)) #.encode()
+            print("\t%s: send_serial_string failed for '%s'" % (e,string)) #.encode()
 
     queue = {}
     def refresh(self):
@@ -142,7 +136,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
         except Exception:
-            print ("!!! CAUGHT EXCEPTION running queue !!!")
+            print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
             print(traceback.format_exc())
         finally:
@@ -157,20 +151,12 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     last = {}
     def send_buffered(self, queue, form, args, record = True):
-        """# TODO: remove this crap when i'm sure the bug has been fixed
-        if output is not None and (type(output) is dict or 'WJSendPlugin' in output):
-            print ("\n\n\ncaught fucker?")
-            import traceback
-            traceback.print_stack()
-            quit()"""
-
         if self.last.get(queue)!=(form,args):
-            print("send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
+            #print("WJSendPlugin>> send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
             output = form.format(*args)
             self.send_serial_string(output)
             self.last[queue] = (form,args) #output
             if record:
-                print("### send_buffered is setting last_record[%s] to %s" % (queue,output))
                 self.last_record[queue] = (form,args)#output
 
     def send_append(self, command, value):
@@ -210,9 +196,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='y':
             self.colour_y = int(255*value)
 
-        #output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x, self.colour_y) 
-        # could store format string + values, then interpolate over those values
-        self.send('VCC', "VCC:{}{:02X}{:02X}", [chan, self.colour_x, self.colour_y]) #output)
+        self.send('VCC', "VCC:{}{:02X}{:02X}", [chan, self.colour_x, self.colour_y])
 
     # RGB control of matte colour!
     back_colour_x = 127
@@ -227,7 +211,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='z':
             self.back_colour_z = int(255*value)
 
-        #output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z)
         self.send('VBM', "VBM:{:02X}{:02X}{:02X}", [ self.back_colour_x,self.back_colour_y,self.back_colour_z ]) 
 
     # this doesnt seem to work on WJ-MX30 at least, or maybe i dont know how to get it into the right mode?
@@ -244,7 +227,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='z':
             self.back_wash_colour_z = int(255*value)
 
-        #output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) 
         self.send('VBW', "VBW:{:02X}{:02X}{:02X}", [ self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z ] )
 
     # positioner joystick
@@ -256,11 +238,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         elif dim=='x': # yes, x is really y!
             self.position_y = int(255*value)
 
-        #output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
-        self.send('VPS:{}'.format(mode), "VPS:{}{:02X}{:02X}", [ mode,self.position_x,self.position_y ])#output)
+        self.send('VPS:{}'.format(mode), "VPS:{}{:02X}{:02X}", [ mode,self.position_x,self.position_y ])
 
     # wipe / mix level
     def set_mix(self, value):
-        #output = "VMM:{:04X}".format(int(255*255*value))
-        self.send('VMM', "VMM:{:02X}", [ int(255*value) ])#output)
+        self.send('VMM', "VMM:{:02X}", [ int(255*value) ])
 

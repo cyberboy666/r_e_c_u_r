@@ -30,7 +30,7 @@
         "CONFIRM": ["perform_confirm_action"],
         "NAV_DETOUR": ["toggle_detour_play"],
         "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"],
-	"LFOMODU": ["toggle_lfo_active"]
+	"NAV_LFO": ["toggle_lfo_active"]
 	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"],

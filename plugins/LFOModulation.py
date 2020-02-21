@@ -33,7 +33,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "LFOModulationPlugin ")
 
-        display.display_text.insert(END, "ACTIVE\n\n" if self.active else "not active\n\n")
+        display.display_text.insert(END, "ACTIVE" if self.active else "not active")
+
+        display.display_text.insert(END, "\tSpeed: {:03.2f}\n\n".format(self.speed))
 
         for lfo,value in enumerate(self.level):
             display.display_text.insert(END, "lfo {} level: {:03.2f}%\t".format(lfo,value))
@@ -46,12 +48,16 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def parserlist(self):
         return [ 
                 ( r"^set_lfo_modulation_([0-3])_level$", self.set_lfo_modulation_level ),
-                ( r"^toggle_lfo_active$", self.toggle_lfo_active )
+                ( r"^toggle_lfo_active$", self.toggle_lfo_active ),
+                ( r"^set_lfo_speed", self.set_lfo_speed )
                 # TODO: changing formulas and LFO modes, speed
         ]
 
     def set_lfo_modulation_level(self, slot, value):
         self.level[slot] = value
+
+    def set_lfo_speed(self, speed):
+        self.speed = -4*(0.5-(speed))
 
     def toggle_lfo_active(self):
         self.active = not self.active
@@ -61,16 +67,17 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     # TODO: save & load this to config file, make editable
     formula = [
             "f_sin",
-            "f_inverted_sin",
+            "f_double_sin",
             "f_sin",
-            "f_inverted_sin"
+            "f_double_sin"
     ]
 
     # run the formula for the stored lfo configuration
     last_lfo_status = [None]*MAX_LFOS # for displaying status
+    #lfo_speed = [1.0]*MAX_LFOS
     def getLFO(self, position, lfo):
         lfo_value = getattr(self,self.formula[lfo])(position, self.level[lfo])
-        self.last_lfo_status[lfo] = " output {:03.2f}\tat T{:03.2f}".format(lfo_value*100.0, position)
+        self.last_lfo_status[lfo] = " sent {:03.1f}%".format(lfo_value*100.0) #, position*self.lfo_speed[lfo])
         return lfo_value
 
     # built-in waveshapes
@@ -78,8 +85,8 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def f_sin(self, position, level):
         return 0.5+(0.5*level * math.sin(position*math.pi))
 
-    def f_inverted_sin(self, position, level):
-        return self.f_sin(1.0-position, 1.0-level)
+    def f_double_sin(self, position, level):
+        return self.f_sin(position, math.sin(level+0.5*math.pi))
 
     # SequencePlugin methods
     def run_sequence(self, position):
@@ -92,5 +99,6 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         if not self.active:
             return
 
-        for i in range(0,4):
-            self.pc.actions.call_method_name("modulate_param_%s_to_amount_continuous"%i, self.getLFO(position, i))
+        for lfo in range(0,4):
+            if self.level[lfo]>0.0:
+                self.pc.actions.call_method_name("modulate_param_%s_to_amount_continuous"%lfo, self.getLFO(position, lfo))

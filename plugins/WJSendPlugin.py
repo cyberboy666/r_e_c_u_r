@@ -262,5 +262,5 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     # wipe / mix level
     def set_mix(self, value):
         #output = "VMM:{:04X}".format(int(255*255*value))
-        self.send('VMM', "VMM:{:04X}", [ int(255*255*value) ])#output)
+        self.send('VMM', "VMM:{:02X}", [ int(255*value) ])#output)
 

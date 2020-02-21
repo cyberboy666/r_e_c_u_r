@@ -33,7 +33,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "LFOModulationPlugin ")
 
-        display.display_text.insert(END, "ACTIVE\n" if self.active else "not active\n\n")
+        display.display_text.insert(END, "ACTIVE\n\n" if self.active else "not active\n\n")
 
         for lfo,value in enumerate(self.level):
             display.display_text.insert(END, "lfo {} level: {:03.2f}%\t".format(lfo,value))

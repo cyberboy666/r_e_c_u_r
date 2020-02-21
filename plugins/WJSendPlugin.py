@@ -6,6 +6,7 @@ import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
     disabled = False#True
+    DEBUG = False#True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
     """serial.Serial(device, baudrate=9600,
@@ -62,27 +63,26 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     # experimental & hardcoded !
+    # TODO: make this not hardcoded and configurable mapping modulation to parameters, preferably on-the-fly..
     def set_modulation_value(self, param, value):
         # take modulation value and throw it to local parameter
-        print("||||| WJSendPlugin received set_modulation_value for param %s with value %s!" % (param, value))
+        if self.DEBUG: print("||||| WJSendPlugin received set_modulation_value for param %s with value %s!" % (param, value))
         if param==0:
             self.set_mix((0.5+value)/2)
         elif param==1:
-            self.set_colour('T', 'x', 0.5+value)
+            self.set_colour('T', 'x', (0.5+value)/2)
         elif param==2:
-            self.set_colour('T', 'y', 0.5+value)
+            self.set_colour('T', 'y', (0.5+value)/2)
         elif param==3:
-            self.set_back_colour('x', 0.5+value)
+            self.set_back_colour('x', (0.5+value)/2)
         else:
-            print("\tunknown param %s!" % param)
+            if self.DEBUG: print("\tunknown param %s!" % param)
 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END
-        #super(DisplayPlugin).show_plugin(display, display_mode)
-        #print("show plugin?")
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "WJSendPlugin status!\n\n")
+        display.display_text.insert(END, "WJSendPlugin status\n\n")
 
         for queue, last in self.last.items():
             display.display_text.insert(END, "%s:\t%s\n" % (queue,self.last.get(queue)[1]))
@@ -90,7 +90,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
 
-    # methods for SerialPlugin (todo!) and serial command queueing
+
+    # methods for SerialPlugin (TODO: if this needs generalising out!) and serial command queueing
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
             self.ser.close()
@@ -116,23 +117,24 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def send_serial_string(self, string):
         try:
-            print("WJSendPlugin>> sending string %s " % string)
+            if self.DEBUG: print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3'
             self.ser.write(output) #.encode())
             #print("sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
-            print("\t%s: send_serial_string failed for '%s'" % (e,string)) #.encode()
+            print("\t%s: send_serial_string failed for '%s'" % (e,string)) 
 
     queue = {}
+    # send the queued commands to WJMX
     def refresh(self):
-        #print("refresh called!")
         if not self.ser or self.ser is None:
             self.open_serial()
 
         try:
-            for queue, command in self.queue.items():
+            # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
+            for queue, command in sorted(self.queue.items()):
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
         except Exception:
@@ -151,24 +153,25 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     last = {}
     def send_buffered(self, queue, form, args, record = True):
+        # only send if new command is different to the last one we sent
         if self.last.get(queue)!=(form,args):
             #print("WJSendPlugin>> send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
             output = form.format(*args)
             self.send_serial_string(output)
-            self.last[queue] = (form,args) #output
+            self.last[queue] = (form,args)
             if record:
-                self.last_record[queue] = (form,args)#output
+                self.last_record[queue] = (form,args)
 
     def send_append(self, command, value):
-        # append value to the command as a hex value
-        self.send(command.split(':')[0], "{}{:02X}", [ command,int(255*value) ])
+        # append value to the command as a hex value - for sending commands that aren't preprogrammed
+        self.send(command.split(':')[0], "{}{:02X}", [ command, int(255*value) ])
 
     def send_append_pad(self, pad, command, value):
-        # append value, padded to length
-        self.send(command.split(':')[0], "{}{:0%iX}"%pad, [ command,int(255*value) ])
+        # append value, padded to length - for sending commands that aren't preprogrammed
+        self.send(command.split(':')[0], "{}{:0%iX}"%pad, [ command, int(255*value) ])
 
 
-    # methods for ActionPlugin
+    # methods for ActionPlugin - preprogrammed parameters
     @property
     def parserlist(self):
         return [
@@ -183,9 +186,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 ( r"^wj_send_append_([:0-9a-zA-Z]*)$", self.send_append ),
         ]
 
-    # methods for handling some Panasonic control settings
-    #   todo: come up with a way to represent this programmatically
-    #   todo: add more!
+    # methods for handling some Panasonic control settings as parameters
+    #   TODO: come up with a way to represent this programmatically
+    #   TODO: add more!
 
     colour_x = 127
     colour_y = 127
@@ -214,7 +217,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         self.send('VBM', "VBM:{:02X}{:02X}{:02X}", [ self.back_colour_x,self.back_colour_y,self.back_colour_z ]) 
 
     # this doesnt seem to work on WJ-MX30 at least, or maybe i dont know how to get it into the right mode?
-    # todo: replace with downstream key control
+    # TODO: replace with downstream key control
     back_wash_colour_x = 127
     back_wash_colour_y = 127
     back_wash_colour_z = 127

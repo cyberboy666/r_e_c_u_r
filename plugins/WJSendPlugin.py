@@ -6,7 +6,7 @@ import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
     disabled = False#True
-    DEBUG = True
+    DEBUG = False#True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
     """serial.Serial(device, baudrate=9600,
@@ -58,7 +58,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     modulation_value = [0.0]*4
     def set_modulation_value(self, param, value):
 
-        self.modulation_value[param] = 1.0-value    ## invert so that no signal always gives a value ..
+        self.modulation_value[param] = value    ## invert so that no signal always gives a value ..
+        #print("storing modulation slot %s as %s" % (param,value))
 
         # take modulation value and throw it to local parameter
         if self.DEBUG: print("||||| WJSendPlugin received set_modulation_value for param %s with value %s!" % (param, value))
@@ -75,10 +76,10 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         # so that they update with the new modulation value
         for queue,cmd in sorted(self.command_by_queue.items()):
             if cmd.get('modulation') is not None:
-                if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
+                #if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
                 if len(cmd.get('modulation')[param])>0:
-                    if self.DEBUG: print("\tyes! sending update of values? %s" % [x for x in cmd['arguments'].values() ])
-                    self.send_buffered(cmd['queue'], cmd['form'], [x for x in cmd['arguments'].values() ])
+                    if self.DEBUG: print("\tParam %s has modulation! sending update of values? %s" % (param, [x for x in cmd['arguments'].values() ]))
+                    self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
                     continue
                 
     #methods for DisplayPlugin
@@ -87,8 +88,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "WJSendPlugin status\n\n")
 
-        for queue, last in self.last.items():
-            display.display_text.insert(END, "%s:\t%s\n" % (queue,self.last.get(queue)[1]))
+        for queue, last in sorted(self.last_modulated.items()):
+            display.display_text.insert(END, "%s:\t%s\t%s\n" % (queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
 
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
@@ -123,7 +124,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             if self.DEBUG: print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3'
             self.ser.write(output) #.encode())
-            #print("sent string '%s'" % output) #.encode('ascii'))
+            if self.DEBUG: print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
@@ -156,17 +157,22 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         self.queue[queue] = (form, args) #output
 
     last = {}
+    last_modulated = {}
     def send_buffered(self, queue, form, args, record = True):
         # only send if new command is different to the last one we sent
         mod_args = self.modulate_arguments(self.command_by_queue.get(queue), args)
-        if self.last.get(queue)!=(form,mod_args):
+        if self.last_modulated.get(queue)!=(form,mod_args):
             #print("WJSendPlugin>> send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
             # TODO: actually output modulated version of args
             output = form.format(*mod_args)
             self.send_serial_string(output)
             self.last[queue] = (form,args)
+            self.last_modulated[queue] = (form,mod_args)
             if record:
                 self.last_record[queue] = (form,args)
+        else:
+            pass
+            #print("WJSendPlugin>> found no difference between:\n\t%s\n\t%s\n?" % (self.last_modulated.get(queue), (form,mod_args)))
 
     def send_append(self, command, value):
         # append value to the command as a hex value - for sending commands that aren't preprogrammed
@@ -203,21 +209,21 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def modulate_arguments(self, command, args):
         args = args.copy()
-        if self.DEBUG: print("modulate_arguments passed %s and %s" % (command,args))
+        #if self.DEBUG: print("modulate_arguments passed %s and\n\t%s" % (command,args))
         for slot in range(0,4):
             modlevels = command.get('modulation',[{}]*4)[slot]
-            if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
-            #if len(command.get('modulation',[{}]*4)[slot])>0:
+            #if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
             for i,m in enumerate(modlevels.values()):
                 if m>0.0:
-                    if self.DEBUG: print("\t\tupdating modulation slot %s  with  %s * %s" % (i, m, self.modulation_value[slot]))
-                    newvalue = int(args[i] * m * self.modulation_value[slot])
+                    if self.DEBUG: print("\t\tupdating modulation slot %s, arg is %s\n\t with modlevel '%s' * modvalue '%s'" % (i, args[i], m, self.modulation_value[slot]))
+                    newvalue = self.pc.shaders.get_modulation_value(
+                            args[i]/255.0, 
+                            self.modulation_value[slot], 
+                            m
+                    )
                     if self.DEBUG: print("\t\tnewvalue is %s" %newvalue)
-                    args[i] = newvalue #int(args[i] * (int(255 * m * self.modulation_value[slot])))
-
-        """    if command.get('modulation',{}).get(arg_name,None) is not None:
-                args[argindex] = args[argindex] * command.get('modulation',{}).get(arg_name,[0.0]*4)[argindex]
-        #for slot in range(0,4): # for each modulation slot"""
+                    args[i] = int(255*newvalue)
+        if self.DEBUG: print("modulate_arguments returning:\n\t%s" % args)
         return args
 
     commands = {
@@ -240,7 +246,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             'mix': {
                 'name': 'Mix/wipe',
                 'queue': 'VMM',
-                'form': 'VMM:{:02X}',
+                'form': 'VMM:{:02X}0000',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 },
                 'modulation': [ { 'v':  1.0 }, {}, {}, {} ]

@@ -42,7 +42,7 @@
     "control_change 48": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-            "NAV_WJMX": ["wj_set_position_N_x"],
+            "NAV_WJMX": ["wj_set_position_N:x"],
 	    "NAV_MANI": ["set_variable_A"],
 	    "NAV_LPRC": ["set_automation_speed"],
 	    "NAV_LFO": ["set_lfo_modulation_0_level"]
@@ -50,41 +50,42 @@
     "control_change 49": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
 	    "NAV_DETOUR": ["set_detour_start_continuous"],
-	    "NAV_WJMX": ["wj_set_position_N_y"],
+	    "NAV_WJMX": ["wj_set_position_N:y"],
 	    "NAV_MANI": ["f:sin(x*pi):|set_variable_SIN"],
 	    "NAV_LFO": ["set_lfo_modulation_1_level"]
     },
     "control_change 50": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-            "NAV_WJMX": ["wj_set_colour_T_x"],
+            "NAV_WJMX": ["wj_set_colour_T:x"],
 	    "NAV_LFO": ["set_lfo_modulation_2_level"]
     },
     "control_change 51": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "NAV_WJMX": ["wj_set_colour_T_y"],
+	    "NAV_WJMX": ["wj_set_colour_T:y"],
 	    "NAV_LFO": ["set_lfo_modulation_3_level"]
     },
     "control_change 52": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous","set_param_0_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
-	    "NAV_WJMX": ["wj_set_mix","wj_send_append_pad_2_VCG:T"]
+	    "NAV_WJMX": ["wj_set_mix","wj_send_append_pad_2_VCG:T"],
+	    "NAV_LFO": ["set_lfo_speed"]
     },
     "control_change 53": {
             "DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous","set_param_1_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_start_continuous"],
-	    "NAV_WJMX": ["wj_set_back_colour_x","wj_set_back_wash_colour_x"]
+	    "NAV_WJMX": ["wj_set_back_colour:h","wj_set_dsk_level"]
     },
     "control_change 54": {
             "DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous","set_param_2_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "NAV_WJMX": ["wj_set_back_colour_y","wj_set_back_wash_colour_y"]
+	    "NAV_WJMX": ["wj_set_back_colour:s","wj_set_colour_gain_T:y"]
     },
     "control_change 55": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous","set_param_3_layer_offset_0_modulation_level_continuous"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
-	    "NAV_WJMX": ["wj_set_back_colour_z","wj_set_back_wash_colour_z"]
+	    "NAV_WJMX": ["wj_set_back_colour:v","wj_set_back_wash_colour:z"]
     },
     "control_change 56": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_2_continuous"],

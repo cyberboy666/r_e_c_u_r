@@ -6,6 +6,7 @@ import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
     disabled = False#True
+    DEBUG = False #True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
     """serial.Serial(device, baudrate=9600,
@@ -16,18 +17,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                                           rtscts=True, # TODO : test without this one
                                           timeout=timeout)"""
 
-    """self.commands = {
-            'VCG:': {
-                'name': 'Colour Corrector Gain',
-                'cmd': 'VCG:',
-            },
-            'VCC:': {
-                'name': 'Colour Corrector XY',
-                'cmd': 'VCC',
-                'callback': self.set_colour
-            }
-    }"""
-
     THROTTLE = 1 # milliseconds to wait between refreshing parameters
 
     def __init__(self, plugin_collection):
@@ -37,10 +26,10 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             print ("WJSendPlugin is disabled, not opening serial")
             return
 
-        #self.open_serial()
-        #print ("starting refresh?")
+        for cmd,struct in self.commands.items():
+            self.command_by_queue[struct['queue']] = struct
+
         self.pc.actions.tk.after(500, self.refresh)
-        #tk.after(500, self.refresh)
 
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
@@ -65,35 +54,47 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     # experimental & hardcoded !
+    # TODO: make this not hardcoded and configurable mapping modulation to parameters, preferably on-the-fly..
+    modulation_value = [0.0]*4
     def set_modulation_value(self, param, value):
-        # take modulation value and throw it to local parameter
-        print("||||| wjsend received set_modulation_value for param %s with value %s!" % (param, value))
-        if param==0:
-            self.set_mix((0.5+value)/2)
-        elif param==1:
-            self.set_colour('T', 'x', 0.5+value)
-        elif param==2:
-            self.set_colour('T', 'y', 0.5+value)
-        elif param==3:
-            self.set_back_colour('x', 0.5+value)
-        else:
-            print("unknown param %s!" % param)
 
+        self.modulation_value[param] = 1.0-value    ## invert so that no signal always gives a value ..
+
+        # take modulation value and throw it to local parameter
+        if self.DEBUG: print("||||| WJSendPlugin received set_modulation_value for param %s with value %s!" % (param, value))
+        #v = (0.5+value)/2
+        """mapped = [
+                'mix',
+                'colour_T',
+                #'colour_T',
+                'back_colour:x'
+        ]"""
+        #self.catch_all(*mapped[param].split(":")+[v])
+        #self.commands[
+        # find which commands are mapped to this modulation, and trigger a send of them 
+        # so that they update with the new modulation value
+        for queue,cmd in sorted(self.command_by_queue.items()):
+            if cmd.get('modulation') is not None:
+                if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
+                if len(cmd.get('modulation')[param])>0:
+                    self.DEBUG: print("\tyes! sending update of values? %s" % [x for x in cmd['arguments'].values() ])
+                    self.send_buffered(cmd['queue'], cmd['form'], [x for x in cmd['arguments'].values() ])
+                    continue
+                
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END
-        #super(DisplayPlugin).show_plugin(display, display_mode)
-        #print("show plugin?")
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "test from WJSendPlugin!\n\n")
+        display.display_text.insert(END, "WJSendPlugin status\n\n")
 
         for queue, last in self.last.items():
-            display.display_text.insert(END, "last %s:\t%s\n" % (queue,self.last.get(queue)))
+            display.display_text.insert(END, "%s:\t%s\n" % (queue,self.last.get(queue)[1]))
 
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
 
-    # methods for SerialPlugin (todo!)
+
+    # methods for SerialPlugin (TODO: if this needs generalising out!) and serial command queueing
     def open_serial(self, port='/dev/ttyUSB0', baudrate=9600):
         if self.ser is not None:
             self.ser.close()
@@ -111,38 +112,37 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 timeout=None #timeout
             )
 
-            print ("starting refresh?")
-
-            #self.pc.midi_input.root.after(500, self.refresh)
         except Exception as e:
-            print ("open_serial failed: " + str(type(e)))
+            print ("WJSendPlugin>> open_serial failed: " + str(type(e)))
             self.disabled = True
             import traceback
             traceback.print_exc()
 
     def send_serial_string(self, string):
         try:
-            print("sending string %s " % string)
+            if self.DEBUG: print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3'
             self.ser.write(output) #.encode())
             #print("sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
-            print("%s: send_serial_string failed for '%s'" % (e,string)) #.encode()
+            print("\t%s: send_serial_string failed for '%s'" % (e,string)) 
 
     queue = {}
+    # send the queued commands to WJMX
     def refresh(self):
-        #print("refresh called!")
         if not self.ser or self.ser is None:
             self.open_serial()
 
         try:
-            for queue, command in self.queue.items():
+            # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
+            for queue, command in sorted(self.queue.items()):
+                # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
         except Exception:
-            print ("!!! CAUGHT EXCEPTION running queue !!!")
+            print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
             print(traceback.format_exc())
         finally:
@@ -157,110 +157,116 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     last = {}
     def send_buffered(self, queue, form, args, record = True):
-        """# TODO: remove this crap when i'm sure the bug has been fixed
-        if output is not None and (type(output) is dict or 'WJSendPlugin' in output):
-            print ("\n\n\ncaught fucker?")
-            import traceback
-            traceback.print_stack()
-            quit()"""
-
-        if self.last.get(queue)!=(form,args):
-            print("send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
-            output = form.format(*args)
+        # only send if new command is different to the last one we sent
+        mod_args = self.modulate_arguments(self.command_by_queue.get(queue), args)
+        if self.last.get(queue)!=(form,mod_args):
+            #print("WJSendPlugin>> send_buffered attempting to parse queue\t%s with form\t'%s' and args\t%s" % (queue, form, args))
+            # TODO: actually output modulated version of args
+            output = form.format(*mod_args)
             self.send_serial_string(output)
-            self.last[queue] = (form,args) #output
+            self.last[queue] = (form,args)
             if record:
-                print("### send_buffered is setting last_record[%s] to %s" % (queue,output))
-                self.last_record[queue] = (form,args)#output
+                self.last_record[queue] = (form,args)
 
     def send_append(self, command, value):
-        # append value to the command as a hex value
-        self.send(command.split(':')[0], "{}{:02X}", [ command,int(255*value) ])
+        # append value to the command as a hex value - for sending commands that aren't preprogrammed
+        self.send(command.split(':')[0], "{}{:02X}", [ command, int(255*value) ])
 
     def send_append_pad(self, pad, command, value):
-        # append value, padded to length
-        self.send(command.split(':')[0], "{}{:0%iX}"%pad, [ command,int(255*value) ])
+        # append value, padded to length - for sending commands that aren't preprogrammed
+        self.send(command.split(':')[0], "{}{:0%iX}"%pad, [ command, int(255*value) ])
 
 
-    # methods for ActionPlugin
+    # methods for ActionPlugin - preprogrammed parameters
     @property
     def parserlist(self):
         return [
                 ( r"^open_serial$", self.open_serial ),
-                ( r"^wj_send_serial_([0-9a-zA-Z:]*)$", self.send_serial_string ),
-                ( r"^wj_set_colour_([A|B|T])_([x|y])$", self.set_colour ),
-                ( r"^wj_set_back_colour_([x|y|z])$", self.set_back_colour ),
-                ( r"^wj_set_back_wash_colour_([x|y|z])$", self.set_back_wash_colour ),
-                ( r"^wj_set_position_([N|L])_([x|y])$", self.set_position ),
-                ( r"^wj_set_mix$", self.set_mix ),
-                ( r"^wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)$", self.send_append_pad ),
-                ( r"^wj_send_append_([:0-9a-zA-Z]*)$", self.send_append ),
+                ( r"^wj_send_serial:([0-9a-zA-Z:]*)$", self.send_serial_string ),
+                #( r"^wj_set_colour:([A|B|T])_([x|y])$", self.set_colour ),
+                #( r"^wj_set_back_colour:([x|y|z])$", self.set_back_colour ),
+                #( r"^wj_set_position:([N|L])_([x|y])$", self.set_position ),
+                #( r"^wj_set_mix$", self.set_mix ),
+                ( r"^wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)$", self.send_append_pad ),
+                ( r"^wj_send_append:([:0-9a-zA-Z]*)$", self.send_append ),
+                ( r"^wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)$", self.catch_all )
         ]
 
-    # methods for handling some Panasonic control settings
-    #   todo: come up with a way to represent this programmatically
-    #   todo: add more!
+    def catch_all(self, param, argument_name, value):
+        #print ("got catch-all %s, %s, %s" % (param, argument_name, value))
+        #arguments = packed_arguments.split("_") + [ value ]
+        #print("commands looks like %s" % self.commands)
+        msg = self.commands[param]
+        if len(msg['arg_names'])==1: argument_name = msg['arg_names'][0]
+        msg['arguments'][argument_name] = int(value*255) # = arguments
+        self.send(msg['queue'], msg['form'], [ msg['arguments'][p] for p in msg['arg_names'] ] )
 
-    colour_x = 127
-    colour_y = 127
-    def set_colour(self, chan, dim, value):
-        # chan can be A, B or T (both)
-        if dim=='x':
-            self.colour_x = int(255*value)
-        elif dim=='y':
-            self.colour_y = int(255*value)
+    def modulate_arguments(self, command, args):
+        args = args.copy()
+        if self.DEBUG: print("modulate_arguments passed %s and %s" % (command,args))
+        for slot in range(0,4):
+            modlevels = command.get('modulation',[{}]*4)[slot]
+            if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
+            #if len(command.get('modulation',[{}]*4)[slot])>0:
+            for i,m in enumerate(modlevels.values()):
+                if m>0.0:
+                    if self.DEBUG: print("\t\tupdating modulation slot %s  with  %s * %s" % (i, m, self.modulation_value[slot]))
+                    newvalue = int(args[i] * m * self.modulation_value[slot])
+                    if self.DEBUG: print("\t\tnewvalue is %s" %newvalue)
+                    args[i] = newvalue #int(args[i] * (int(255 * m * self.modulation_value[slot])))
 
-        #output = "VCC:{}{:02X}{:02X}".format(chan, self.colour_x, self.colour_y) 
-        # could store format string + values, then interpolate over those values
-        self.send('VCC', "VCC:{}{:02X}{:02X}", [chan, self.colour_x, self.colour_y]) #output)
+        """    if command.get('modulation',{}).get(arg_name,None) is not None:
+                args[argindex] = args[argindex] * command.get('modulation',{}).get(arg_name,[0.0]*4)[argindex]
+        #for slot in range(0,4): # for each modulation slot"""
+        return args
 
-    # RGB control of matte colour!
-    back_colour_x = 127
-    back_colour_y = 127
-    back_colour_z = 127
-    def set_back_colour(self, dim, value):
-        # chan can be A, B or T (both)
-        if dim=='x':
-            self.back_colour_x = int(255*value)
-        elif dim=='y':
-            self.back_colour_y = int(255*value)
-        elif dim=='z':
-            self.back_colour_z = int(255*value)
-
-        #output = "VBM:{:02X}{:02X}{:02X}".format(self.back_colour_x,self.back_colour_y,self.back_colour_z)
-        self.send('VBM', "VBM:{:02X}{:02X}{:02X}", [ self.back_colour_x,self.back_colour_y,self.back_colour_z ]) 
-
-    # this doesnt seem to work on WJ-MX30 at least, or maybe i dont know how to get it into the right mode?
-    # todo: replace with downstream key control
-    back_wash_colour_x = 127
-    back_wash_colour_y = 127
-    back_wash_colour_z = 127
-    def set_back_wash_colour(self, dim, value):
-        # chan can be A, B or T (both)
-        if dim=='x':
-            self.back_wash_colour_x = int(255*value)
-        elif dim=='y':
-            self.back_wash_colour_y = int(255*value)
-        elif dim=='z':
-            self.back_wash_colour_z = int(255*value)
-
-        #output = "VBW:{:02X}{:02X}{:02X}".format(self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z) 
-        self.send('VBW', "VBW:{:02X}{:02X}{:02X}", [ self.back_wash_colour_x,self.back_wash_colour_y,self.back_wash_colour_z ] )
-
-    # positioner joystick
-    position_x = 127
-    position_y = 127
-    def set_position(self, mode, dim, value):
-        if dim=='y': # yes, y is really x!
-            self.position_x = int(255*value)
-        elif dim=='x': # yes, x is really y!
-            self.position_y = int(255*value)
-
-        #output = "VPS:{}{:02X}{:02X}".format(mode,self.position_x,self.position_y)
-        self.send('VPS:{}'.format(mode), "VPS:{}{:02X}{:02X}", [ mode,self.position_x,self.position_y ])#output)
-
-    # wipe / mix level
-    def set_mix(self, value):
-        #output = "VMM:{:04X}".format(int(255*255*value))
-        self.send('VMM', "VMM:{:02X}", [ int(255*value) ])#output)
+    commands = {
+            'colour_gain_T': {
+                'name': 'Colour Corrector gain - both',
+                'queue': 'VCG',
+                'form': 'VCG:T{:02X}',
+                'arg_names': [ 'v' ],
+                'arguments': { 'v': 127 }
+            },
+            'colour_T': {
+                'name': 'Colour Corrector - both',
+                'queue': 'VCC',
+                'form': 'VCC:T{:02X}{:02X}',
+                'arg_names': [ 'x', 'y' ],
+                'arguments': { 'x': 127, 'y': 127 },
+                'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
+                #'callback': self.set_colour
+            },
+            'mix': {
+                'name': 'Mix/wipe',
+                'queue': 'VMM',
+                'form': 'VMM:{:02X}',
+                'arg_names': [ 'v' ],
+                'arguments': { 'v': 127 },
+                'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
+            },
+            'back_colour': {
+                'name': 'Back colour/matte HSV',
+                'queue': 'VBM',
+                'form': 'VBM:{:02X}{:02X}{:02X}',
+                'arg_names': [ 'h', 's', 'v' ],
+                'arguments': { 'h': 127, 's': 127, 'v': 127 },
+                'modulation': [ {}, { 'h': 1.0 }, {}, {} ]
+            },
+            'position_N': {
+                'name': 'Positioner joystick',
+                'queue': 'VPS',
+                'form': 'VPS:N{:02X}{:02X}',
+                'arg_names': [ 'y', 'x' ],
+                'arguments': { 'y': 127, 'x': 127 }
+            },
+            'dsk_level': {
+                'name': 'Downstream Key level',
+                'queue': 'VDL',
+                'form': 'VDL:{:02X}',
+                'arg_names': [ 'v' ],
+                'arguments': { 'v': 127 }
+            }
+    }
+    command_by_queue = {}
 

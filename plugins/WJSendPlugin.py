@@ -6,7 +6,7 @@ import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
     disabled = False#True
-    DEBUG = False #True
+    DEBUG = True
     ser = None
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
     """serial.Serial(device, baudrate=9600,
@@ -77,7 +77,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             if cmd.get('modulation') is not None:
                 if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
                 if len(cmd.get('modulation')[param])>0:
-                    self.DEBUG: print("\tyes! sending update of values? %s" % [x for x in cmd['arguments'].values() ])
+                    if self.DEBUG: print("\tyes! sending update of values? %s" % [x for x in cmd['arguments'].values() ])
                     self.send_buffered(cmd['queue'], cmd['form'], [x for x in cmd['arguments'].values() ])
                     continue
                 

@@ -17,7 +17,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                                           rtscts=True, # TODO : test without this one
                                           timeout=timeout)"""
 
-    THROTTLE = 1 # milliseconds to wait between refreshing parameters
+    THROTTLE = 10 # milliseconds to wait between refreshing parameters
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -58,7 +58,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     modulation_value = [0.0]*4
     def set_modulation_value(self, param, value):
 
-        self.modulation_value[param] = value    ## invert so that no signal always gives a value ..
+        self.modulation_value[param] = -0.5+(value)    ## invert so that no signal always gives a value ..
         #print("storing modulation slot %s as %s" % (param,value))
 
         # take modulation value and throw it to local parameter
@@ -74,13 +74,19 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         #self.commands[
         # find which commands are mapped to this modulation, and trigger a send of them 
         # so that they update with the new modulation value
+        to_send = {}
         for queue,cmd in sorted(self.command_by_queue.items()):
             if cmd.get('modulation') is not None:
                 #if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
                 if len(cmd.get('modulation')[param])>0:
-                    if self.DEBUG: print("\tParam %s has modulation! sending update of values? %s" % (param, [x for x in cmd['arguments'].values() ]))
-                    self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
+                    if self.DEBUG: print("\tParam %s has modulation! sending update of values? %s" % 
+                            (param, [cmd['arguments'][y] for y in cmd['arg_names'] ]))
+                    #self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
+                    to_send[cmd['queue']] = cmd
                     continue
+
+        for queue,cmd in sorted(to_send.items()):
+            self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
                 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
@@ -119,18 +125,25 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             import traceback
             traceback.print_exc()
 
+    import threading
+    serial_lock = threading.Lock()
     def send_serial_string(self, string):
         try:
             if self.DEBUG: print("WJSendPlugin>> sending string %s " % string)
-            output = b'\2' + string.encode('ascii') + b'\3'
-            self.ser.write(output) #.encode())
-            if self.DEBUG: print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
+            output = b'\2' + string.encode('ascii') + b'\3' 
+            #with self.ser:
+            with self.serial_lock:
+                self.ser.write(output) #.encode())
+            #if self.DEBUG: 
+            print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
             print("\t%s: send_serial_string failed for '%s'" % (e,string)) 
 
     queue = {}
+    import threading
+    queue_lock = threading.Lock()
     # send the queued commands to WJMX
     def refresh(self):
         if not self.ser or self.ser is None:
@@ -138,7 +151,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
         try:
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
-            for queue, command in sorted(self.queue.items()):
+            with self.queue_lock:
+              for queue, command in sorted(self.queue.items()):
                 # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
@@ -147,14 +161,16 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             import traceback
             print(traceback.format_exc())
         finally:
-            self.queue.clear()
+            with self.queue_lock:
+                self.queue.clear()
 
         if self.ser is not None:
             self.pc.shaders.root.after(self.THROTTLE, self.refresh)
 
     def send(self, queue, form, args):
         #self.send_buffered(queue,output)
-        self.queue[queue] = (form, args) #output
+        with self.queue_lock:
+            self.queue[queue] = (form, args) #output
 
     last = {}
     last_modulated = {}
@@ -213,16 +229,18 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         for slot in range(0,4):
             modlevels = command.get('modulation',[{}]*4)[slot]
             #if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
-            for i,m in enumerate(modlevels.values()):
+            #for i,m in enumerate(modlevels.values()):
+            for arg_name,m in modlevels.items():
                 if m>0.0:
-                    if self.DEBUG: print("\t\tupdating modulation slot %s, arg is %s\n\t with modlevel '%s' * modvalue '%s'" % (i, args[i], m, self.modulation_value[slot]))
+                    arg_index = command.get('arg_names').index(arg_name)
+                    if self.DEBUG: print("\t\tupdating modulation slot %s, arg is %s\n\t with modlevel '%s' * modvalue '%s'" % (arg_index, args[arg_index], m, self.modulation_value[slot]))
                     newvalue = self.pc.shaders.get_modulation_value(
-                            args[i]/255.0, 
+                            args[arg_index]/255.0, 
                             self.modulation_value[slot], 
                             m
                     )
                     if self.DEBUG: print("\t\tnewvalue is %s" %newvalue)
-                    args[i] = int(255*newvalue)
+                    args[arg_index] = int(255*newvalue)
         if self.DEBUG: print("modulate_arguments returning:\n\t%s" % args)
         return args
 
@@ -237,7 +255,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             'colour_T': {
                 'name': 'Colour Corrector - both',
                 'queue': 'VCC',
-                'form': 'VCC:T{:02X}{:02X}',
+                'form': 'VCC:T{:02X}{:02X}00',
                 'arg_names': [ 'x', 'y' ],
                 'arguments': { 'x': 127, 'y': 127 },
                 'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
@@ -246,7 +264,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             'mix': {
                 'name': 'Mix/wipe',
                 'queue': 'VMM',
-                'form': 'VMM:{:02X}0000',
+                'form': 'VMM:{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 },
                 'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
@@ -257,7 +275,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'form': 'VBM:{:02X}{:02X}{:02X}',
                 'arg_names': [ 'h', 's', 'v' ],
                 'arguments': { 'h': 127, 's': 127, 'v': 127 },
-                'modulation': [ {}, { 'h': 1.0 }, {}, {} ]
+                #'modulation': [ {}, { 'h': 1.0 }, {}, {} ]
             },
             'position_N': {
                 'name': 'Positioner joystick',
@@ -266,13 +284,14 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'arg_names': [ 'y', 'x' ],
                 'arguments': { 'y': 127, 'x': 127 }
             },
-            'dsk_level': {
-                'name': 'Downstream Key level',
-                'queue': 'VDL',
-                'form': 'VDL:{:02X}',
-                'arg_names': [ 'v' ],
-                'arguments': { 'v': 127 }
-            }
+            #'dsk_slice': {
+            #    'name': 'Downstream Key Slice,Slope',
+            #    'queue': 'VDS',
+            #    'form': 'VDS:{:02X}{:01X}',
+            #    'arg_names': [ 'slice','slope' ],
+            #    'arguments': { 'slice': 127, 'slope': 8 },
+            #    'modulation': [ {}, { 'slice': 1.0 }, {}, {} ]
+            #}
     }
     command_by_queue = {}
 

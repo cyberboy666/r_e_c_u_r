@@ -19,6 +19,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     THROTTLE = 10 # milliseconds to wait between refreshing parameters
 
+    selected_command_name = None
+    selected_argument_index = 0
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -30,6 +33,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             self.command_by_queue[struct['queue']] = struct
 
         self.pc.actions.tk.after(500, self.refresh)
+
+        self.selected_command_name = list(self.commands.keys())[0]
 
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
@@ -55,7 +60,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     # experimental & hardcoded !
     # TODO: make this not hardcoded and configurable mapping modulation to parameters, preferably on-the-fly..
-    modulation_value = [0.0]*4
+    modulation_value = [0.0,0.0,0.0,0.0]
     def set_modulation_value(self, param, value):
 
         self.modulation_value[param] = -0.5+(value)    ## invert so that no signal always gives a value ..
@@ -97,6 +102,24 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         for queue, last in sorted(self.last_modulated.items()):
             display.display_text.insert(END, "%s:\t%s\t%s\n" % (queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
 
+        #display.display_text.insert(END, "%s\n" % (self.selected_command_name))
+        cmd = self.commands[self.selected_command_name]
+        display.display_text.insert(END, "%s : %s\n" % (self.selected_command_name, cmd['name']))
+        output = "\nModulation:\n"
+        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
+        #for arg_name,value in [ cmd['arg_names'][y] for y in cmd['arg_names'] ]:
+        for arg_name in cmd['arg_names']:
+            indicator = " " if cmd['arg_names'].index(arg_name)!=self.selected_argument_index else ">"
+            output += "%s%s: "%(indicator,arg_name)
+            for slot,mods in enumerate(cmd.get('modulation',[{},{},{},{}])):
+                #if arg_name in mods:
+                v = mods.get(arg_name,0.0)
+                g = '%s'%bar[int(v*(len(bar)-1))]
+                output += "{}:{}|".format('ABCD'[slot],g)
+            output += "\n"
+        display.display_text.insert(END, output+"\n")
+
+
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
 
@@ -134,8 +157,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             #with self.ser:
             with self.serial_lock:
                 self.ser.write(output) #.encode())
-            #if self.DEBUG: 
-            print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
+            if self.DEBUG: 
+                print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
             #if 'S' in string:
             #    self.get_device_status()
         except Exception as e:
@@ -209,10 +232,39 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 #( r"^wj_set_back_colour:([x|y|z])$", self.set_back_colour ),
                 #( r"^wj_set_position:([N|L])_([x|y])$", self.set_position ),
                 #( r"^wj_set_mix$", self.set_mix ),
+                ( r"^wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level$", self.set_modulation_command_argument_level),
+                ( r"^wj_set_current_modulation_slot_([0-3])_level$", self.set_current_modulation_level ),
                 ( r"^wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)$", self.send_append_pad ),
                 ( r"^wj_send_append:([:0-9a-zA-Z]*)$", self.send_append ),
-                ( r"^wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)$", self.catch_all )
+                ( r"^wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)$", self.catch_all ),
+                ( r"^wj_select_next_command$", self.select_next_command ),
+                ( r"^wj_select_next_argument$", self.select_next_argument )
         ]
+
+    def set_modulation_command_argument_level(self, command_name, argument_name, slot, level):
+        print("set_modulation_command_argument_level(%s, %s, %s, %s)" % (command_name, argument_name, slot, level))
+        if not argument_name: argument_name = 'v'
+
+        if self.commands[command_name].get('modulation') is None:
+            self.commands[command_name]['modulation'] = [{},{},{},{}]
+        self.commands[command_name]['modulation'][slot][argument_name] = level
+
+    def set_current_modulation_level(self, slot, level):
+        self.set_modulation_command_argument_level(self.selected_command_name, self.commands[self.selected_command_name]['arg_names'][self.selected_argument_index], slot, level)
+
+    def select_next_command(self):
+        selected_command_index = list(sorted(self.commands.keys())).index(self.selected_command_name)+1
+        print("selected %s" % selected_command_index)
+        if selected_command_index>=len(self.commands.keys()):
+            selected_command_index = 0#self.commands.keys()[0]
+        self.selected_command_name = sorted(list(self.commands.keys()))[selected_command_index]
+
+        self.selected_argument_index = 0
+
+    def select_next_argument(self):
+        self.selected_argument_index += 1
+        if self.selected_argument_index>=len(self.commands[self.selected_command_name]['arg_names']):
+            self.selected_argument_index = 0
 
     def catch_all(self, param, argument_name, value):
         #print ("got catch-all %s, %s, %s" % (param, argument_name, value))
@@ -227,7 +279,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         args = args.copy()
         #if self.DEBUG: print("modulate_arguments passed %s and\n\t%s" % (command,args))
         for slot in range(0,4):
-            modlevels = command.get('modulation',[{}]*4)[slot]
+            modlevels = command.get('modulation',[{},{},{},{}])[slot]
             #if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
             #for i,m in enumerate(modlevels.values()):
             for arg_name,m in modlevels.items():

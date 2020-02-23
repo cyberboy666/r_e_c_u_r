@@ -7,7 +7,8 @@
         "LENGTH_SET": ["return_to_default_control_mode"],
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"],
-        "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"]
+        "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"],
+	"NAV_WJMX": ["wj_select_previous_command"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down"],
@@ -19,7 +20,6 @@
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"],
         "PLAY_SHADER": ["increase_this_param", "increase_shader_param"],
 	"NAV_WJMX": ["wj_select_next_command"]
-
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
@@ -41,7 +41,8 @@
 		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"],
         "SHADER_PARAM": ["decrease_param_focus"],
         "PLAY_SHADER": ["decrease_param_focus"],
-        "NAV_DETOUR": ["decrease_mix_shader"]   
+        "NAV_DETOUR": ["decrease_mix_shader"],
+	"NAV_WJMX": ["wj_select_previous_argument"]
 	},
 	"f": {
 		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"],

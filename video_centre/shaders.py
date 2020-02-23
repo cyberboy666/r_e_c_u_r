@@ -230,7 +230,8 @@ class Shaders(object):
         self.osc_client.send_message("/shader/{}/param".format(str(layer)), [param, amount] )
 
     def modulate_param_to_amount(self, param, value):
-        self.modulation_value[param] = (value-0.5)*2
+        # incoming data here should be in format 0 to 1; needs changing to -1 to +1
+        self.modulation_value[param] = (value-0.5)*2 # normalise to -1 to +1
         for plugin in self.data.plugins.get_plugins(ModulationReceiverPlugin):
             plugin.set_modulation_value(param, self.modulation_value[param])
         for layer,params in enumerate(self.selected_param_list):

@@ -44,6 +44,7 @@
             "NAV_DETOUR": ["set_detour_speed_position_continuous"],
             "NAV_WJMX": ["wj_set_position_N:x"],
 	    "NAV_MANI": ["set_variable_A"],
+	    "NAV_LPRC": ["set_automation_speed"],
 	    "NAV_LFO": ["set_lfo_modulation_0_level"]
     },
     "control_change 49": {
@@ -275,7 +276,7 @@
 		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["send_serial_string_hellO","send_random_settings"]
+		"DEFAULT": ["smooth_selected_clip","send_random_settings"]
 	}
 }
 

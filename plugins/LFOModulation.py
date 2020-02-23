@@ -67,9 +67,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     # TODO: save & load this to config file, make editable
     formula = [
             "f_sin",
-            "f_double_sin",
+            "f_double_cos",
             "f_sin",
-            "f_double_sin"
+            "f_double_cos"
     ]
 
     # run the formula for the stored lfo configuration
@@ -83,10 +83,17 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     # built-in waveshapes
     # todo: more of the these, and better!
     def f_sin(self, position, level):
-        return 0.5+(0.5*level * math.sin(position*math.pi))
+        #return level * (( math.sin(position*math.pi)))
+        value = (
+                (math.sin(position * math.pi*2) / 2)
+                -0.5
+                ) + 0.5
+        value *= level
 
-    def f_double_sin(self, position, level):
-        return self.f_sin(position, math.sin(level+0.5*math.pi))
+        return value
+
+    def f_double_cos(self, position, level):
+        return self.f_sin(math.cos(position*math.pi), level)
 
     # SequencePlugin methods
     def run_sequence(self, position):

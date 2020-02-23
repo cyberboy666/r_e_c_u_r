@@ -10,8 +10,10 @@ class MidiInput(object):
         self.display = display
         self.actions = actions
         self.data = data
+        self.data.midi_input = self
         self.midi_mappings = data.midi_mappings
         self.midi_device = None
+        self.midi_feedback_device = None
         self.midi_setting = None
         self.port_index = 0
         self.midi_delay = 40
@@ -41,7 +43,13 @@ class MidiInput(object):
                 subport_index = self.port_index % len(midi_device_on_port) 
                 self.midi_device = mido.open_input(midi_device_on_port[subport_index])
                 self.data.midi_status = 'connected'
+                self.data.midi_device_name = self.midi_device.name
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
+                self.midi_mappings = self.data.load_midi_mapping_for_device(self.midi_device.name.split(":")[0])
+                self.midi_output = self.find_output_plugin(midi_device_on_port[subport_index])
+                if self.midi_output:
+                    #self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
+                    self.root.after(self.midi_delay, self.refresh_midi_feedback)
                 self.poll_midi_input()
         elif self.data.midi_status == 'connected':
             self.data.midi_status = 'disconnected'
@@ -98,7 +106,7 @@ class MidiInput(object):
         if 'control' in message_dict:
             mapped_message_name = '{} {}'.format(mapped_message_name,message_dict['control'])
             mapped_message_value = message_dict['value']
-        
+
         if mapped_message_name in self.midi_mappings.keys():
             self.run_action_for_mapped_message(mapped_message_name, mapped_message_value)
         else:
@@ -113,11 +121,12 @@ class MidiInput(object):
 
         if self.data.function_on and len(this_mapping[mode]) > 1:
             method_name = this_mapping[mode][1]
-            self.data.function_on = False
+            #self.data.function_on = False
         else:
             method_name = this_mapping[mode][0]
 
-        print('the action being called is {}'.format(method_name))
+        #print('[][][][][ in mode {}, the action being called is {} from message_name {} in control_mode {}'
+        #        .format(mode, method_name, message_name, self.data.control_mode))
         if mapped_message_value is not None:
             norm_message_value = mapped_message_value/127 
             
@@ -127,4 +136,39 @@ class MidiInput(object):
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()
+            #self.refresh_midi_feedback()
+
+    # Plugins to support MIDI feedback
+
+    def find_output_plugin(self, midi_device):
+        # loop over the plugins
+        # find one that self.supports_midi_feedback(self.midi_device.name):
+        # open the midi device self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
+        print ("Looking for a MIDI Feedback plugin that supports %s..." % midi_device)
+        from data_centre.plugin_collection import MidiFeedbackPlugin
+
+        for p in self.data.plugins.get_plugins(MidiFeedbackPlugin):
+            if p.supports_midi_feedback(midi_device):
+                print ("Found one!  Opening device")
+                p.set_midi_device(mido.open_output(midi_device))
+                return p
+
+        print ("Didn't find one!")
+
+    def refresh_midi_feedback(self):
+
+        self.midi_output.refresh_midi_feedback()
+
+        if self.midi_output and self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
+          if self.midi_output.supports_midi_feedback(self.data.midi_device_name):
+            self.root.after(self.midi_delay*5, self.refresh_midi_feedback)
+
+
+    def find_binding_for_action(self, action):
+        for bind,a in self.midi_mappings.items():
+            #print("looped over %s : %s " % (bind,a))
+            for (b,c) in a.items():
+                if action in c:
+                    #print ("find_binding_for_action(%s) got %s" % (action, bind))
+                    return bind
 

@@ -1,6 +1,7 @@
 import display_centre.menu as menu
 import os
-
+from statistics import mean
+from data_centre.plugin_collection import ModulationReceiverPlugin
 
 class Shaders(object):
     MENU_HEIGHT = 10
@@ -9,13 +10,18 @@ class Shaders(object):
         self.root = root
         self.osc_client = osc_client
         self.message_handler = message_handler
+        self.message_handler.shaders = self
         self.data = data
         self.shaders_menu = menu.ShadersMenu(self.data, self.message_handler, self.MENU_HEIGHT )
         self.selected_shader_list = [self.EMPTY_SHADER for i in range(3)]
         self.focused_param = 0
         self.shaders_menu_list = self.generate_shaders_list()
+
+        self.selected_modulation_slot = 0
                  
         self.selected_status_list = ['-','-','-'] ## going to try using symbols for this : '-' means empty, '▶' means running, '■' means not running, '!' means error
+        self.selected_modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
+        self.modulation_value = [0.0,0.0,0.0,0.0]
         self.selected_param_list = [[0.0,0.0,0.0,0.0] for i in range(3)]
         self.selected_speed_list = [1.0, 1.0, 1.0]
 
@@ -87,11 +93,13 @@ class Shaders(object):
 
     def start_shader(self, layer):
         self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), True)
-        self.selected_status_list[layer] = '▶'
+        if self.selected_status_list[layer] != '-':
+            self.selected_status_list[layer] = '▶'
 
     def stop_shader(self, layer):
         self.osc_client.send_message("/shader/{}/is_active".format(str(layer)), False)
-        self.selected_status_list[layer] = '■'
+        if self.selected_status_list[layer] != '-':
+            self.selected_status_list[layer] = '■'
 
     def start_selected_shader(self):
         self.start_shader(self.data.shader_layer)
@@ -128,9 +136,10 @@ class Shaders(object):
 
     def play_that_shader(self, layer, slot):
         if self.data.shader_bank_data[layer][slot]['path']:
-            self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
-            self.selected_shader_list[layer]['slot'] = slot
-            self.load_shader_layer(layer)
+            if self.selected_shader_list[layer].get('slot') is None or self.selected_shader_list[layer]['slot'] != slot:
+                self.selected_shader_list[layer] = self.data.shader_bank_data[layer][slot]
+                self.selected_shader_list[layer]['slot'] = slot
+                self.load_shader_layer(layer)
         else:
             self.message_handler.set_message('INFO', "shader slot %s:%s is empty"%(layer,slot))
 
@@ -202,7 +211,6 @@ class Shaders(object):
         for i,v in enumerate(values):
             l.append(self.get_modulation_value(amount, v, levels[i]))
 
-        from statistics import mean
         #print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
         return mean(l)
 
@@ -223,6 +231,8 @@ class Shaders(object):
 
     def modulate_param_to_amount(self, param, value):
         self.modulation_value[param] = (value-0.5)*2
+        for plugin in self.data.plugins.get_plugins(ModulationReceiverPlugin):
+            plugin.set_modulation_value(param, self.modulation_value[param])
         for layer,params in enumerate(self.selected_param_list):
           for ip,p in enumerate(params):
               for p2,v in enumerate(self.selected_modulation_level[layer][ip]):
@@ -260,4 +270,3 @@ class Shaders(object):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )
         self.selected_speed_list[layer] = amount
    
-

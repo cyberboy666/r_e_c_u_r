@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Fri 3 Jan 22:08:36 UTC 2020
+Sun 16 Feb 17:12:34 UTC 2020
 
-for branch=feature_shader_midi
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -58,6 +58,7 @@ for branch=feature_shader_midi
   *   load_this_detour_shader
   *   _load_this_slot_into_next_player(slot)
   *   map_on_shaders_selection
+  *   modulate_param_layer_offset_to_amount(param, layer, amount)
   *   move_browser_selection_down
   *   move_browser_selection_up
   *   move_settings_selection_down
@@ -156,7 +157,7 @@ for branch=feature_shader_midi
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
 
-# Dynamic routes
+## Dynamic routes
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])
   * start_shader_layer_([0-2])
@@ -170,6 +171,34 @@ for branch=feature_shader_midi
   * select_shader_modulation_slot_([0-3])
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
+
+### Plugin routes
+  * set_lfo_modulation_([0-3])_level	(from LFOModulation)
+  * toggle_lfo_active	(from LFOModulation)
+  * (.*)&&(.*)	(from ManipulatePlugin)
+  * invert|(.*)	(from ManipulatePlugin)
+  * f:(.*):|(.*)	(from ManipulatePlugin)
+  * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
+  * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
+  * (.*)>&(.*)	(from ManipulatePlugin)
+  * (.*)&&(.*)	(from MultiActionsPlugin)
+  * test_plugin	(from TestPlugin)
+  * cycle_shaders	(from TestPlugin)
+  * run_automation	(from TestPlugin)
+  * stop_automation	(from TestPlugin)
+  * toggle_pause_automation	(from TestPlugin)
+  * pause_automation	(from TestPlugin)
+  * toggle_loop_automation	(from TestPlugin)
+  * print_arguments	(from TestPlugin)
+  * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
+  * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
+  * wj_set_back_wash_colour_([x|y|z])	(from WJSendPlugin)
+  * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_set_mix	(from WJSendPlugin)
+  * wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_send_append_([:0-9a-zA-Z]*)	(from WJSendPlugin)
 
 ----
 

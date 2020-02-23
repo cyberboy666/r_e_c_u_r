@@ -92,9 +92,16 @@ class Display(object):
             self._load_shader_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
+        else:
+            from data_centre.plugin_collection import DisplayPlugin
+            for plugin in self.data.plugins.get_plugins(DisplayPlugin):
+                if plugin.is_handled(self.data.display_mode):
+                    self._load_plugin_page(self.data.display_mode, plugin)
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
         
+    def _load_plugin_page(self, display_mode, plugin):
+        plugin.show_plugin(self, display_mode)
 
     def _load_sampler(self):
         bank_data = self.data.bank_data[self.data.bank_number]
@@ -215,10 +222,18 @@ class Display(object):
 
         for index, slot in enumerate(shader_bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
-            self.display_text.insert(END, '{:^6} {:<17} {:<5} \n'.format(index, name_without_extension[0:17], slot['shad_type']))
-            if index % 2:
+            #self.display_text.insert(END, '{:^6} {:<17} {:<5} '.format(index, name_without_extension[0:17], slot['shad_type']))
+            self.display_text.insert(END, '{:^2} {:<14} {:<3} '.format(index, name_without_extension[0:14], slot['shad_type']))
+                #self.display_text.insert(END, '\t')
+            if (index) % 2:
                 self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
                                   self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
+                self.display_text.insert(END, '\n')
+            else:
+                self.display_text.insert(END, ' | ')
+
+        self.display_text.insert(END, '\n')
+
         # highlight the slot of the selected player
         current_slot = self.shaders.selected_shader_list[self.data.shader_layer].get('slot', None)
         not_playing_tag = self.shaders.selected_status_list[self.data.shader_layer] != '▶'
@@ -226,6 +241,40 @@ class Display(object):
             self._highlight_this_row(current_slot, gray=not_playing_tag)
 
         self._highlight_this_param(self.shaders.focused_param)
+
+        # show info about the modulation configuration
+        #self.display_text.insert(END, "Lyr|1a b c d|2a b c d|3a b c d|4a b c d\n")
+        self.display_text.insert(END, "Lyr")
+        for i in range(4):
+            self.display_text.insert(END, "|%s"%i)
+            for i in range(4):
+                a = 'abcd'[i]
+                if i==self.shaders.selected_modulation_slot:
+                    a = a.upper()
+                self.display_text.insert(END, "%s "%a)
+        self.display_text.insert(END,  "\n")
+        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
+        for layer, modulations in enumerate(self.shaders.selected_modulation_level):
+            if (layer==self.data.shader_layer):
+                self.display_text.insert(END, '*')
+            else:
+                self.display_text.insert(END, ' ')
+            self.display_text.insert(END, '%s:' % layer)
+            for param, levels in enumerate(modulations):
+                self.display_text.insert(END, '|')
+                for slot,level in enumerate(levels):
+                    self.display_text.insert(END, ' %s'%bar[int(level*(len(bar)-1))]) #(int(level*100)))
+                self.display_text.insert(END, ' ')
+            self.display_text.insert(END, '\n')
+
+
+        # todo: this doesnt work but would be a better way to highlight the selected modulation slot/layer
+        """self._highlight_this_param(
+                self.shaders.selected_modulation_slot, 
+                param_row = 10+self.data.shader_layer, 
+                param_length = 0.05, 
+                column_offset = 0.1
+            )"""
 
 
     def _load_detour(self):
@@ -276,13 +325,13 @@ class Display(object):
         self.display_text.tag_remove("SELECT", self.ROW_OFFSET + row,
                                      self.ROW_OFFSET + self.SELECTOR_WIDTH + row)
 
-    def _highlight_this_param(self, param_num):
-        param_row = self.ROW_OFFSET - 1
-        column_offset = 0.26
-        param_length = 0.05
-        self.display_text.tag_add("SHADER_PARAM", round(param_row + column_offset + param_num*param_length,2),
-round(param_row + column_offset + (param_num+1)*param_length, 2))
-
+    def _highlight_this_param(self, param_num, column_offset = 0.26, param_length = 0.05, param_row = None):
+        if param_row is None:
+            param_row = self.ROW_OFFSET - 1
+        self.display_text.tag_add("SHADER_PARAM", 
+                round(param_row + column_offset + param_num*param_length,2),
+                round(param_row + column_offset + (param_num+1)*param_length, 2)
+            )
 
     def _get_status_for_player(self):
         now_slot, now_status, now_alpha, next_slot, next_status, next_alpha = self.video_driver.get_player_info_for_status()
@@ -419,9 +468,18 @@ round(param_row + column_offset + (param_num+1)*param_length, 2))
             else:
                 selected_list.append('<{}>'.format(v[:2].lower()))                
         # 18 char to PURPLE : 18 - 29 ,18 after 
+        if selected_list_index>4:
+            selected_list = selected_list[selected_list_index-4:len(selected_list)]
+            selected_list = ['--'] + selected_list
         selected_string = ''.join(selected_list)
-        output = ('-' * (19 - (selected_list_index * 4))) + selected_string + ('-' * (18 - ((len(display_modes) - selected_list_index - 1) * 4)))
-        
+        #if len(selected_string)<19:
+        #    selected_string += '-'*(21-len(selected_string))
+        #selected_string = selected_string[:30]
+        #wid = 19 #int(2+((len(display_modes)/2)*4))
+        output =    ('-' * ((19) - (selected_list_index * 4))) + \
+                    selected_string + \
+                    ('-' * (18 - ((len(display_modes) - selected_list_index - 1) * 4)))
+        output = output[0:46]
         return output
 
     @staticmethod

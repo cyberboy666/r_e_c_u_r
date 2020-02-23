@@ -21,7 +21,7 @@ class OscInput(object):
 
     def setup_osc_server(self):
         server_parser = argparse.ArgumentParser()
-        server_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
+        server_parser.add_argument("--ip", default="0.0.0.0", help="the ip")
         server_parser.add_argument("--port", type=int, default=5433, help="the port")
 
         server_args = server_parser.parse_args()
@@ -34,6 +34,7 @@ class OscInput(object):
         this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
+        this_dispatcher.map("/*", self.on_param_osc_input)
         
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)

@@ -328,7 +328,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             'colour_T': {
                 'name': 'Colour Corrector - both',
                 'queue': 'VCC',
-                'form': 'VCC:T{:02X}{:02X}00',
+                'form': 'VCC:T{:02X}{:02X}',
                 'arg_names': [ 'x', 'y' ],
                 'arguments': { 'x': 127, 'y': 127 },
                 'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]

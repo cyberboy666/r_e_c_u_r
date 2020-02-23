@@ -67,9 +67,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     # TODO: save & load this to config file, make editable
     formula = [
             "f_sin",
-            "f_double_sin",
+            "f_double_cos",
             "f_sin",
-            "f_double_sin"
+            "f_double_cos"
     ]
 
     # run the formula for the stored lfo configuration
@@ -77,16 +77,23 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     #lfo_speed = [1.0]*MAX_LFOS
     def getLFO(self, position, lfo):
         lfo_value = getattr(self,self.formula[lfo])(position, self.level[lfo])
-        self.last_lfo_status[lfo] = " sent {:03.1f}%".format(lfo_value*100.0) #, position*self.lfo_speed[lfo])
+        self.last_lfo_status[lfo] = " sent {:03.1f}%".format(lfo_value*100.0)
         return lfo_value
 
     # built-in waveshapes
+    # outgoing values should be between 0 and 1!!
     # todo: more of the these, and better!
     def f_sin(self, position, level):
-        return 0.5+(0.5*level * math.sin(position*math.pi))
+        #return level * (( math.sin(position*math.pi)))
+        value = math.sin(position * math.pi * 2) / 2
+        value *= level
+        value += 0.5 # normalise to range 0 - 1
 
-    def f_double_sin(self, position, level):
-        return self.f_sin(position, math.sin(level+0.5*math.pi))
+        return value
+
+    def f_double_cos(self, position, level):
+        return self.f_sin(math.cos(position*math.pi), level)
+        #return self.f_sin(math.acos(position), level)
 
     # SequencePlugin methods
     def run_sequence(self, position):
@@ -99,6 +106,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         if not self.active:
             return
 
-        for lfo in range(0,4):
+        for lfo in range(0,self.MAX_LFOS):
             if self.level[lfo]>0.0:
-                self.pc.actions.call_method_name("modulate_param_%s_to_amount_continuous"%lfo, self.getLFO(position, lfo))
+                self.pc.actions.call_method_name(
+                        "modulate_param_%s_to_amount_continuous"%lfo, 
+                        self.getLFO(position, lfo)
+                )

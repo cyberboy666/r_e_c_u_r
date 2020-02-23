@@ -63,7 +63,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     modulation_value = [0.0,0.0,0.0,0.0]
     def set_modulation_value(self, param, value):
 
-        self.modulation_value[param] = -0.5+(value)    ## invert so that no signal always gives a value ..
+        self.modulation_value[param] = value    ## invert so that no signal always gives a value ..
         #print("storing modulation slot %s as %s" % (param,value))
 
         # take modulation value and throw it to local parameter

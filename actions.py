@@ -47,6 +47,13 @@ class Actions(object):
     def move_browser_selection_up(self):
         self.display.browser_menu.navigate_menu_up()
 
+    def move_browser_selection_page_down(self):
+        self.display.browser_menu.navigate_menu_page_down()
+
+    def move_browser_selection_page_up(self):
+        self.display.browser_menu.navigate_menu_page_up()
+
+
     def enter_on_browser_selection(self):
         self.display.browser_menu.enter_on_browser_selection()
 
@@ -55,6 +62,13 @@ class Actions(object):
 
     def move_settings_selection_up(self):
         self.display.settings_menu.navigate_menu_up()
+
+    def move_settings_selection_page_down(self):
+        self.display.settings_menu.navigate_menu_page_down()
+
+    def move_settings_selection_page_up(self):
+        self.display.settings_menu.navigate_menu_page_up()
+
 
     def enter_on_settings_selection(self):
         is_setting, setting = self.display.settings_menu.enter_on_setting_selection()
@@ -70,6 +84,13 @@ class Actions(object):
 
     def move_shaders_selection_up(self):
         self.shaders.shaders_menu.navigate_menu_up()
+
+    def move_shaders_selection_page_down(self):
+        self.shaders.shaders_menu.navigate_menu_page_down()
+
+    def move_shaders_selection_page_up(self):
+        self.shaders.shaders_menu.navigate_menu_page_up()
+
 
     def enter_on_shaders_selection(self):
         ##want to select shader if its not selected, and want to enter 'param' mode if it already is

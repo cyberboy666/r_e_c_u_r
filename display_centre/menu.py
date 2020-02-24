@@ -23,6 +23,15 @@ class Menu(object):
             if self.top_menu_index < 0:
                 self.top_menu_index = 0
 
+    def navigate_menu_page_up(self):
+        if self.top_menu_index < self.menu_height:
+            self.top_menu_index = 0
+            self.selected_list_index = 0
+        else: 
+            self.top_menu_index -= self.menu_height
+            self.selected_list_index -= self.menu_height
+        print('self.top_menu_index ', self.top_menu_index)
+
     def navigate_menu_down(self):
         last_list_index = len(self.menu_list) - 1
         if self.selected_list_index != last_list_index:
@@ -33,6 +42,14 @@ class Menu(object):
         else:
             self.top_menu_index = 0
             self.selected_list_index = self.top_menu_index
+
+    def navigate_menu_page_down(self):
+        if self.top_menu_index >= len(self.menu_list) - self.menu_height:
+            self.selected_list_index = (len(self.menu_list) - 1)
+        else:
+            self.top_menu_index += self.menu_height
+            self.selected_list_index = min(self.menu_height + self.selected_list_index, len(self.menu_list) - 1)
+
         
     def update_open_folders(self, folder_name):
         if folder_name not in self.open_folders:

@@ -101,5 +101,13 @@
 	"s": {
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
         "PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
-    }
+    },
+    "x_m": {
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_mix_continuous"]
+	},
+    "y_m": {
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
+        "NAV_DETOUR": ["set_detour_speed_position_continuous"]
+	}
 }

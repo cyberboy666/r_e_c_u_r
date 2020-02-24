@@ -141,6 +141,14 @@
             "options": [],
             "value": null
         },
+        "MOUSE_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "ANALOG_INPUT": {
             "action": null,
             "options": [

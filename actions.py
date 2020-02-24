@@ -28,6 +28,7 @@ class Actions(object):
         self.capture = None
         self.serial_port_process = None
         self.openframeworks_process = None
+        self.remote_process = None
         self.set_capture_object('value')
         self.server = self.setup_osc_server()
         
@@ -706,8 +707,10 @@ class Actions(object):
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
         self.exit_osc_server('','')
+        self.create_client_and_shutdown_osc_server()
         self.stop_serial_port_process()
         self.stop_openframeworks_process()
+        self.stop_remote_process()
         self.toggle_x_autorepeat()
         self.tk.destroy()
 
@@ -805,13 +808,58 @@ class Actions(object):
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         #this_dispatcher.map("/player/a/status", self.set_status)
 
+        osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)
         server_thread.start()
         return server
 
     def exit_osc_server(self, unused_addr, args):
+        print('shutting down of osc server')
         self.server.shutdown()
+
+    def create_client_and_shutdown_osc_server(self):
+        from pythonosc import udp_client
+        client_parser = argparse.ArgumentParser()
+        client_parser.add_argument("--ip", default=self.data.get_ip_for_osc_client(), help="the ip")
+        client_parser.add_argument("--port", type=int, default=8080, help="the port")
+
+        client_args = client_parser.parse_args()
+
+        client = udp_client.SimpleUDPClient(client_args.ip, client_args.port)
+        client.send_message("/shutdown", True)
+
+    def toggle_access_point(self, setting_value):
+        osc_setting_state = self.data.settings['user_input']['OSC_INPUT']['value']
+        self.data.settings['user_input']['OSC_INPUT']['value'] = 'disabled'
+        self.tk.after(2000, self.toggle_access_point_delay, setting_value, osc_setting_state)
+
+    def toggle_access_point_delay(self, setting_value, osc_setting_state ):
+        if setting_value == 'enabled':
+            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts-master/switchToAP.sh'])
+        else:
+            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts-master/switchToWlan.sh'])
+        self.tk.after(6000, self.enable_osc, osc_setting_state)
+
+    def toggle_remote_server(self, setting_value):
+        osc_setting_state = self.data.settings['user_input']['OSC_INPUT']['value']
+        self.data.settings['user_input']['OSC_INPUT']['value'] = 'disabled'
+        self.tk.after(2000, self.toggle_remote_server_delay, setting_value, osc_setting_state)
+
+    def toggle_remote_server_delay(self, setting_value, osc_setting_state):
+        if setting_value == 'enabled':
+            self.remote_process = subprocess.Popen(['node', '/home/pi/connecting-websockets-to-osc-for-rpi/webserver.js'])
+        else:
+            self.stop_remote_process()
+        self.data.settings['user_input']['OSC_INPUT']['value'] = osc_setting_state
+
+    def enable_osc(self, osc_setting_state):
+        self.data.settings['user_input']['OSC_INPUT']['value'] = osc_setting_state
+
+
+    def show_ip(self, *args):
+        address = self.data.get_ip_address()
+        self.message_handler.set_message('INFO', 'ip is {}:8080'.format(address))
 
     def create_serial_port_process(self):
         if self.serial_port_process == None:
@@ -822,6 +870,12 @@ class Actions(object):
         if self.serial_port_process is not None:
             self.serial_port_process.kill()
             self.serial_port_process = None
+
+
+    def stop_remote_process(self):
+        if self.remote_process is not None:
+            self.remote_process.kill()
+            self.remote_process = None
 
     def restart_openframeworks(self):
         self.reset_players()

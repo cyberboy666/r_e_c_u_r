@@ -112,6 +112,35 @@
             "options": [],
             "value": null
         },
+        "OSC_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "ACCESS_POINT": {
+            "action": "toggle_access_point",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "REMOTE_SERVER": {
+            "action": "toggle_remote_server",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "SHOW_IP": {
+            "action": "show_ip",
+            "options": [],
+            "value": null
+        },
         "ANALOG_INPUT": {
             "action": null,
             "options": [

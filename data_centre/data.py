@@ -1,3 +1,4 @@
+import subprocess
 import json
 import xml.etree.ElementTree as ET
 import os
@@ -72,6 +73,7 @@ class Data(object):
 
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)
+            self.settings['user_input']['REMOTE_SERVER']['value'] = 'disabled' # remote server off at boot
 
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.osc_mappings = self._read_json(self.OSC_MAPPING_JSON)
@@ -79,7 +81,15 @@ class Data(object):
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
         
+    def get_ip_address(self):
+        ip = subprocess.check_output(['hostname', '-I']).decode('utf-8').split()[0]
+        return ip
 
+    def get_ip_for_osc_client(self):
+        if self.settings['user_input']['REMOTE_SERVER']['value'] == 'enabled':
+            return '127.0.0.1'
+        else:
+            return self.get_ip_address()
         
     @staticmethod
     def create_empty_bank():
@@ -411,3 +421,5 @@ class Data(object):
     def try_remove_file(path):
         if os.path.exists(path):
             os.remove(path)
+
+

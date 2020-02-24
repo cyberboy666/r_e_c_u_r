@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Fri 21 Feb 00:56:39 UTC 2020
+Mon 24 Feb 15:22:24 UTC 2020
 
-for branch=feature_plugins_shader_gadgets
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -175,6 +175,7 @@ for branch=feature_plugins_shader_gadgets
 ### Plugin routes
   * set_lfo_modulation_([0-3])_level	(from LFOModulation)
   * toggle_lfo_active	(from LFOModulation)
+  * set_lfo_speed	(from LFOModulation)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
@@ -211,14 +212,20 @@ for branch=feature_plugins_shader_gadgets
   * toggle_loop_automation	(from TestPlugin)
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
-  * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
-  * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
-  * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
-  * wj_set_back_wash_colour_([x|y|z])	(from WJSendPlugin)
-  * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_send_serial:([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour:([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour:([x|y|z])	(from WJSendPlugin)
+  * wj_set_position:([N|L])_([x|y])	(from WJSendPlugin)
   * wj_set_mix	(from WJSendPlugin)
-  * wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
-  * wj_send_append_([:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_set_current_modulation_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_send_append:([:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)	(from WJSendPlugin)
+  * wj_select_next_command	(from WJSendPlugin)
+  * wj_select_previous_command	(from WJSendPlugin)
+  * wj_select_next_argument	(from WJSendPlugin)
+  * wj_select_previous_argument	(from WJSendPlugin)
 
 ----
 

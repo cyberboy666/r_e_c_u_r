@@ -82,8 +82,11 @@ class Data(object):
 
         
     def get_ip_address(self):
-        ip = subprocess.check_output(['hostname', '-I']).decode('utf-8').split()[0]
-        return ip
+        ip_list = subprocess.check_output(['hostname', '-I']).decode('utf-8').split()
+        if len(ip_list) > 0:
+            return ip_list[0]
+        else:
+            return 'none'
 
     def get_ip_for_osc_client(self):
         if self.settings['user_input']['REMOTE_SERVER']['value'] == 'enabled':

@@ -973,6 +973,11 @@ class Actions(object):
         if os.path.exists(path):
             os.remove(path)
 
+    def eject_all_usb_drives(self):
+        for i in range(1, 4):
+            if os.path.exists('/dev/sda{}'.format(i)):
+                subprocess.call(['sudo', 'eject', '/dev/sda{}'.format(i)])                
+
     # TODO: make this interrogate the various components for available routes to parse
     # this would include eg a custom script module..
     @property

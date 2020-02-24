@@ -183,6 +183,11 @@
             "action": "shutdown_pi",
             "options": [],
             "value": null
+        },
+        "EJECT_USB_DRIVES": {
+            "action": "eject_all_usb_drives",
+            "options": [],
+            "value": null
         },   
         "RESTART_OPENFRAMEWORKS": {
             "action": "restart_openframeworks",

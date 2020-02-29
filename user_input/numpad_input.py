@@ -16,6 +16,7 @@ class NumpadInput(object):
     def bind_actions(self):
         self.display.display_text.bind("<KeyPress>", self.on_key_press)
         self.display.display_text.bind("<KeyRelease>", self.on_key_release)
+        self.display.display_text.bind("<Motion>", self.on_mouse_move)
 
     def on_key_press(self, event):
         numpad = list(string.ascii_lowercase[0:19])
@@ -34,7 +35,19 @@ class NumpadInput(object):
             if event.char in numpad:
                 self.check_key_release_settings(event.char)
 
-    def run_action_for_mapped_key(self, key):
+    def on_mouse_move(self, event):
+        if self.data.settings['user_input']['MOUSE_INPUT']['value'] != 'enabled':
+            return
+        if event.x > 480 or event.y > 320:
+            return
+        width = 480
+        height = 320 # hard coded since display is fixed , and reading screen is more work
+
+        self.root.after(0, self.run_action_for_mapped_key, 'x_m', event.x / width)
+        self.root.after(0, self.run_action_for_mapped_key, 'y_m', event.y / height)
+        #self.run_action_for_mapped_key(event.char)
+
+    def run_action_for_mapped_key(self, key, value=-1):
         this_mapping = self.key_mappings[key]
         if self.data.control_mode in this_mapping:
             mode = self.data.control_mode
@@ -42,15 +55,21 @@ class NumpadInput(object):
             mode = 'DEFAULT'
 
         if self.data.function_on and len(this_mapping[mode]) > 1:
-            print('the action being called is {}'.format(this_mapping[mode][1]))
-            getattr(self.actions, this_mapping[mode][1])()
-            if self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
-                self.data.function_on = False
+            is_function = 1
         else:
-            print('the action being called is {}'.format(this_mapping[mode][0]))
-            getattr(self.actions, this_mapping[mode][0])()
-      
-        self.display.refresh_display()
+            is_function = 0
+            
+        print('the action being called is {}'.format(this_mapping[mode][is_function]))
+        if value != -1:
+            getattr(self.actions, this_mapping[mode][is_function])(value)
+        else:
+            getattr(self.actions, this_mapping[mode][is_function])()
+
+        if is_function and self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
+            self.data.function_on = False
+
+        if not value:
+            self.display.refresh_display()
 
 
 

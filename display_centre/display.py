@@ -139,7 +139,7 @@ class Display(object):
                 self.display_text.insert(END, '{:40} {:5} \n'.format(path['name'][0:38], path['slot']))
                 number_of_lines_displayed = number_of_lines_displayed + 1
 
-        for index in range(self.MENU_HEIGHT - number_of_browser_items):
+        for index in range(self.browser_menu.top_menu_index + self.browser_menu.menu_height - number_of_browser_items):
             self.display_text.insert(END, '\n')
 
         self._highlight_this_row(self.browser_menu.selected_list_index - self.browser_menu.top_menu_index)
@@ -159,7 +159,7 @@ class Display(object):
                 self.display_text.insert(END, '{:<23} {:<22} \n'.format(setting['name'][0:22], setting['value']))
                 line_count = line_count + 1
 
-        for index in range(self.MENU_HEIGHT - number_of_settings_items):
+        for index in range(self.settings_menu.top_menu_index + self.settings_menu.menu_height - number_of_settings_items):
             self.display_text.insert(END, '\n')
 
         self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
@@ -190,8 +190,10 @@ class Display(object):
                 shader_line = shaders_list[index]
                 self.display_text.insert(END, '{:<40} {:<5} \n'.format(shader_line['name'][0:30], shader_line['shad_type']))
                 line_count = line_count + 1
-        for index in range(self.MENU_HEIGHT - number_of_shader_items):
+
+        for index in range(self.shaders.shaders_menu.top_menu_index + self.shaders.shaders_menu.menu_height - number_of_shader_items):
             self.display_text.insert(END, '\n')        
+
         self._highlight_this_row(self.shaders.shaders_menu.selected_list_index - self.shaders.shaders_menu.top_menu_index)
         if self.data.control_mode == "SHADER_PARAM":
             self._highlight_this_param(self.shaders.focused_param)

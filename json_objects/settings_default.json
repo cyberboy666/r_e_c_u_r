@@ -112,6 +112,43 @@
             "options": [],
             "value": null
         },
+        "OSC_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "ACCESS_POINT": {
+            "action": "toggle_access_point",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "REMOTE_SERVER": {
+            "action": "toggle_remote_server",
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "SHOW_IP": {
+            "action": "show_ip",
+            "options": [],
+            "value": null
+        },
+        "MOUSE_INPUT": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "ANALOG_INPUT": {
             "action": null,
             "options": [
@@ -152,6 +189,11 @@
         },
         "SHUTDOWN_PI": {
             "action": "shutdown_pi",
+            "options": [],
+            "value": null
+        },
+        "EJECT_USB_DRIVES": {
+            "action": "eject_all_usb_drives",
             "options": [],
             "value": null
         },   

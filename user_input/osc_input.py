@@ -17,17 +17,33 @@ class OscInput(object):
         self.actions = actions
         self.data = data
         self.osc_mappings = data.osc_mappings
-        self.osc_server = self.setup_osc_server()
+        
+        self.osc_enabled = False
+        self.osc_server = None
+        self.poll_settings_for_osc_info()
+
+    def poll_settings_for_osc_info(self):
+        osc_setting_enabled = self.data.settings['user_input']['OSC_INPUT']['value'] == 'enabled'
+        if osc_setting_enabled and not self.osc_enabled:
+            self.setup_osc_server()
+            self.osc_enabled = True
+        elif not osc_setting_enabled and self.osc_enabled:
+            self.actions.create_client_and_shutdown_osc_server()
+            self.osc_enabled = False
+        self.root.after(1000, self.poll_settings_for_osc_info)
 
     def setup_osc_server(self):
+        ip_address = self.data.get_ip_for_osc_client()
+
+        print('%%%%%%%%%%%%%%%%%%%%% setting up external_osc on ', ip_address)
         server_parser = argparse.ArgumentParser()
-        server_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
-        server_parser.add_argument("--port", type=int, default=5433, help="the port")
+        server_parser.add_argument("--ip", default=ip_address, help="the ip")
+        server_parser.add_argument("--port", type=int, default=8080, help="the port")
 
         server_args = server_parser.parse_args()
 
         this_dispatcher = dispatcher.Dispatcher()
-
+        
         this_dispatcher.map("/keyboard/*", self.on_osc_input)
         this_dispatcher.map("/shaderparam0", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam1", self.on_param_osc_input)
@@ -36,12 +52,14 @@ class OscInput(object):
         this_dispatcher.map("/shutdown", self.exit_osc_server)
         this_dispatcher.map("/*", self.on_param_osc_input)
         
+        osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)
         server_thread.start()
-        return server
+        self.osc_server = server
 
     def exit_osc_server(self, unused_addr, args):
+        print('%%%%%%%%%%%%%%%%%%%%% exiting external_osc')
         self.osc_server.shutdown()
 
     def on_osc_input(self, addr, args):

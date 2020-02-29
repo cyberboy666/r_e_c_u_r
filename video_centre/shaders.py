@@ -253,7 +253,7 @@ class Shaders(object):
 
     def set_speed_to_amount(self, amount, layer_offset=0):
         layer = (self.data.shader_layer + layer_offset) % 3
-        self.set_speed_to_amount_layer(layer)
+        self.set_speed_layer_to_amount(layer, amount)
    
     def set_speed_layer_to_amount(self, layer, amount):
         self.osc_client.send_message("/shader/{}/speed".format(str(layer)), amount )

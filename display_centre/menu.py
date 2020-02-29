@@ -23,6 +23,15 @@ class Menu(object):
             if self.top_menu_index < 0:
                 self.top_menu_index = 0
 
+    def navigate_menu_page_up(self):
+        if self.top_menu_index < self.menu_height:
+            self.top_menu_index = 0
+            self.selected_list_index = 0
+        else: 
+            self.top_menu_index -= self.menu_height
+            self.selected_list_index -= self.menu_height
+        print('self.top_menu_index ', self.top_menu_index)
+
     def navigate_menu_down(self):
         last_list_index = len(self.menu_list) - 1
         if self.selected_list_index != last_list_index:
@@ -33,6 +42,14 @@ class Menu(object):
         else:
             self.top_menu_index = 0
             self.selected_list_index = self.top_menu_index
+
+    def navigate_menu_page_down(self):
+        if self.top_menu_index >= len(self.menu_list) - self.menu_height:
+            self.selected_list_index = (len(self.menu_list) - 1)
+        else:
+            self.top_menu_index += self.menu_height
+            self.selected_list_index = min(self.menu_height + self.selected_list_index, len(self.menu_list) - 1)
+
         
     def update_open_folders(self, folder_name):
         if folder_name not in self.open_folders:
@@ -119,7 +136,7 @@ class SettingsMenu(Menu):
     FOLDER_ORDER = ['video', 'sampler', 'user_input', 'capture', 'shader', 'detour', 'system' ]
     SAMPLER_ORDER = ['LOOP_TYPE', 'LOAD_NEXT', 'RAND_START_MODE', 'RESET_PLAYERS', 'FIXED_LENGTH_MODE', 'FIXED_LENGTH', 'FIXED_LENGTH_MULTIPLY' ]
     VIDEO_ORDER = ['VIDEOPLAYER_BACKEND']
-    USER_INPUT_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT']
+    USER_INPUT_ORDER = ['MIDI_INPUT', 'MIDI_STATUS', 'CYCLE_MIDI_PORT', 'OSC_INPUT', 'ACCESS_POINT', 'REMOTE_SERVER', 'SHOW_IP' ]
     CAPTURE_ORDER = ['DEVICE', 'TYPE']
     SHADER_ORDER = ['USER_SHADER']
     DETOUR_ORDER = ['TRY_DEMO']

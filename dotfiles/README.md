@@ -183,7 +183,33 @@ dtoverlay=pi3-miniuart-bt
 dtoverlay=midi-uart0
 ```
 
+## updates for v2.2 :
 
+### install AccessPoint switching repo :
+
+- `git clone https://github.com/Autodrop3d/raspiApWlanScripts.git`
+- then run the setup script with correct wlan name / password , and the setup for access-point :
+`sudo bash raspiApWlanScripts/setup_wlan_and_AP_modes.sh -s <your wifi name> -p <your wifi password> -a r_e_c_u_r -r cyberboy666`
+- remove wifi and password from wpa_supplicant.conf since now it reads from wpa_supplicant-wlan.conf ,,
+
+### install and setup node server for remote access/control
+
+- `git clone https://github.com/guergana/r_e_m_o_t_e.git`
+- download node `wget https://nodejs.org/dist/latest-v10.x/node-v10.17.0-linux-armv6l.tar.gz`
+- extract files `tar -xzf node-v10.17.0-linux-armv6l.tar.gz`
+
+Finally copy node to its final location and expose it as a global command:
+
+```
+cd node-v6.11.1-linux-armv6l/
+sudo cp -R * /usr/local/
+```
+- noe `cd r_e_m_o_t_e/`
+- now install sockets `npm install socket.io --save`
+- install node-osc `npm install node-osc --save` (do we need this ?)
+- install osc-js `npm install node-osc --save`
+
+install serial package : `pip3 install pyserial`
 
 # wjhat follows is info, not instructions for setup:
 

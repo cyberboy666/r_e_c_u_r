@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Mon 24 Feb 15:22:24 UTC 2020
+Sat 29 Feb 13:17:13 UTC 2020
 
 for branch=feature_plugins
 
@@ -30,6 +30,7 @@ for branch=feature_plugins
   *   decrease_speed
   *   decrease_this_param
   *   disable_feedback
+  *   eject_all_usb_drives
   *   enable_feedback
   *   enter_on_browser_selection
   *   enter_on_settings_selection
@@ -58,12 +59,17 @@ for branch=feature_plugins
   *   load_this_detour_shader
   *   _load_this_slot_into_next_player(slot)
   *   map_on_shaders_selection
-  *   modulate_param_layer_offset_to_amount(param, layer, amount)
   *   move_browser_selection_down
+  *   move_browser_selection_page_down
+  *   move_browser_selection_page_up
   *   move_browser_selection_up
   *   move_settings_selection_down
+  *   move_settings_selection_page_down
+  *   move_settings_selection_page_up
   *   move_settings_selection_up
   *   move_shaders_selection_down
+  *   move_shaders_selection_page_down
+  *   move_shaders_selection_page_up
   *   move_shaders_selection_up
   *   next_bank
   *   next_shader_layer
@@ -125,6 +131,7 @@ for branch=feature_plugins
   *   set_the_shader_param_3_layer_offset_2_continuous(amount)
   *   set_the_shader_param_3_layer_offset_3_continuous(amount)
   *   shutdown_pi
+  *   stop_remote_process
   *   switch_conjur_player_type(value)
   *   switch_dev_mode(state)
   *   switch_display_to_hdmi
@@ -136,6 +143,8 @@ for branch=feature_plugins
   *   switch_to_next_player
   *   switch_to_this_detour(number)
   *   switch_video_backend(state)
+  *   toggle_access_point_delay(setting_value, osc_setting_state )
+  *   toggle_access_point(setting_value)
   *   toggle_action_on_player
   *   toggle_capture_preview
   *   toggle_capture_recording

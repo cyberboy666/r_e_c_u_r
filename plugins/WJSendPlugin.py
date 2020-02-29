@@ -8,6 +8,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     disabled = False#True
     DEBUG = False #True
     ser = None
+
+    PRESET_FILE_NAME = "WJSendPlugin/presets.json"
+    presets = {}
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
     """serial.Serial(device, baudrate=9600,
                                           bytesize=serial.SEVENBITS,
@@ -29,12 +32,34 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             print ("WJSendPlugin is disabled, not opening serial")
             return
 
+        self.presets = self.load_presets()
+        print("read presets:\n%s\n" % self.presets)
+        # load the stored modulation levels into the current config
+        for cmd,levels in self.presets['modulation_levels'].items(): #.setdefault(cmd,[{},{},{},{}]):
+            print("setting commands[%s]['modulation'] to %s" % (cmd, levels))
+            self.commands[cmd]['modulation'] = levels
+
+        # build a reverse map for later use
         for cmd,struct in self.commands.items():
             self.command_by_queue[struct['queue']] = struct
 
         self.pc.actions.tk.after(500, self.refresh)
 
-        self.selected_command_name = list(self.commands.keys())[0]
+        self.selected_command_name = list(sorted(self.commands.keys()))[0]
+
+    def load_presets(self):
+        print("trying load presets? %s " % self.PRESET_FILE_NAME)
+        return self.pc.read_json(self.PRESET_FILE_NAME) or { 'modulation_levels': {} }
+
+    def save_presets(self):
+        for cmd,struct in self.commands.items():
+            self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[])
+        self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
+
+    def quit_plugin(self):
+        super().quit_plugin()
+        self.save_presets()
+
 
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
@@ -159,6 +184,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             output = b'\2' + string.encode('ascii') + b'\3' 
             #with self.serial_lock:
             self.ser.write(output) #.encode())
+            # TODO: sleeping here seems to help serial response lag problem?
+            #import time
+            #time.sleep(0.02)
             #yield from self.ser.drain()
             if self.DEBUG: 
                 print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
@@ -251,11 +279,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def set_modulation_command_argument_level(self, command_name, argument_name, slot, level):
         if self.DEBUG: print("set_modulation_command_argument_level(%s, %s, %s, %s)" % (command_name, argument_name, slot, level))
-        if not argument_name: argument_name = 'v'
+        if not argument_name: self.commands[command_name]['arg_names'][0] #argument_name = 'v'
 
-        if self.commands[command_name].get('modulation') is None:
-            self.commands[command_name]['modulation'] = [{},{},{},{}]
-        self.commands[command_name]['modulation'][slot][argument_name] = level
+        self.commands[command_name].setdefault('modulation',[{},{},{},{}])[slot][argument_name] = level
 
     def set_current_modulation_level(self, slot, level):
         self.set_modulation_command_argument_level(self.selected_command_name, self.commands[self.selected_command_name]['arg_names'][self.selected_argument_index], slot, level)
@@ -331,7 +357,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'form': 'VCC:T{:02X}{:02X}',
                 'arg_names': [ 'x', 'y' ],
                 'arguments': { 'x': 127, 'y': 127 },
-                'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
+                #'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
                 #'callback': self.set_colour
             },
             'mix': {

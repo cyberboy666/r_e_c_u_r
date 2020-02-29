@@ -37,16 +37,18 @@ class MidiInput(object):
 
     def open_this_port_and_start_listening(self, port_phrase):
         midi_ports = mido.get_input_names()
-        midi_device_on_port = [s for s in midi_ports if port_phrase in s]
-        if midi_device_on_port:
+        midi_devices = [s for s in midi_ports if not ('Midi Through' in s)]
+        if port_phrase == 'serial':
+            midi_devices = [s for s in midi_devices if port_phrase in s]
+        if midi_devices:
             if self.data.midi_status == 'disconnected':
-                subport_index = self.port_index % len(midi_device_on_port) 
-                self.midi_device = mido.open_input(midi_device_on_port[subport_index])
+                subport_index = self.port_index % len(midi_devices) 
+                self.midi_device = mido.open_input(midi_devices[subport_index])
                 self.data.midi_status = 'connected'
                 self.data.midi_device_name = self.midi_device.name
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
                 self.midi_mappings = self.data.load_midi_mapping_for_device(self.midi_device.name.split(":")[0])
-                self.midi_output = self.find_output_plugin(midi_device_on_port[subport_index])
+                self.midi_output = self.find_output_plugin(midi_devices[subport_index])
                 if self.midi_output:
                     #self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
                     self.root.after(self.midi_delay, self.refresh_midi_feedback)

@@ -52,6 +52,9 @@ class OscInput(object):
         this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
+
+        # this is for accepting any old osc message to allow binding of modulation to osc messages
+        # TODO: make configurable?
         this_dispatcher.map("/*", self.on_param_osc_input)
         
         osc_server.ThreadingOSCUDPServer.allow_reuse_address = True

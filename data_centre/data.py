@@ -111,7 +111,6 @@ class Data(object):
     def initialise_plugins(self):
         #initialise plugin manager
         self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
-        self.plugins.apply_all_plugins_on_value(5)
 
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name

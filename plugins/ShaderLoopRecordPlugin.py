@@ -45,6 +45,11 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.frames)
 
+    def quit_plugin(self):
+        super().quit_plugin()
+        self.save_presets()
+
+    # DisplayPlugin methods
     def get_display_modes(self):
         return ['LOOPREC','NAV_LPRC']
 

@@ -142,8 +142,8 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         freqPeak = freq[np.where(fft==np.max(fft))[0][0]]+1
         if freqPeak<400:
             return False
-        value = freqPeak/16000
-        value = value**16/16
+        value = freqPeak/2000 # ?
+        #value = (value**16)
         if self.DEBUG: print("peak frequency:\t%d\tHz\t(converted to %s)"%(freqPeak,value))
         self.display_values['peakfreq'] = ("%d Hz\t"%freqPeak) + "{:03.2f}".format(value)
 

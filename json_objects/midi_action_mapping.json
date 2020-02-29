@@ -43,26 +43,25 @@
 		"DEFAULT": ["set_strobe_amount_continuous"]
 	},
 	"note_on 72": {
-		"NAV_BROWSER": ["move_browser_selection_up"],
+		"NAV_BROWSER": ["move_browser_selection_up", "move_browser_selection_page_up"],
 		"DEFAULT": ["seek_back_on_player", "decrease_seek_time"],
-		"NAV_SETTINGS": ["move_settings_selection_up"],
-		"NAV_SHADERS": ["move_shaders_selection_up"],
+		"NAV_SETTINGS": ["move_settings_selection_up", "move_settings_selection_page_up"],
+		"NAV_SHADERS": ["move_shaders_selection_up", "move_shaders_selection_page_up"],
         "LENGTH_SET": ["return_to_default_control_mode"],
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"],
         "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"]
 	},
 	"note_on 73": {
-		"NAV_BROWSER": ["move_browser_selection_down"],
+		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
 		"DEFAULT": ["seek_forward_on_player", "increase_seek_time"],
-		"NAV_SETTINGS": ["move_settings_selection_down"],
-		"NAV_SHADERS": ["move_shaders_selection_down"],
+		"NAV_SETTINGS": ["move_settings_selection_down", "move_settings_selection_page_down"],
+		"NAV_SHADERS": ["move_shaders_selection_down", "move_shaders_selection_page_down"],
         "LENGTH_SET": ["return_to_default_control_mode"],
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"],
         "PLAY_SHADER": ["increase_this_param", "increase_shader_param"]
-
-	},
+    },
 	"note_on 74": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
 		"DEFAULT": ["toggle_action_on_player","toggle_show_on_player"],

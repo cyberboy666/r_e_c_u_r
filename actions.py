@@ -857,9 +857,9 @@ class Actions(object):
 
     def toggle_access_point_delay(self, setting_value, osc_setting_state ):
         if setting_value == 'enabled':
-            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts-master/switchToAP.sh'])
+            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts/switchToAP.sh'])
         else:
-            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts-master/switchToWlan.sh'])
+            subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts/switchToWlan.sh'])
         self.tk.after(6000, self.enable_osc, osc_setting_state)
 
     def toggle_remote_server(self, setting_value):
@@ -869,7 +869,7 @@ class Actions(object):
 
     def toggle_remote_server_delay(self, setting_value, osc_setting_state):
         if setting_value == 'enabled':
-            self.remote_process = subprocess.Popen(['node', '/home/pi/connecting-websockets-to-osc-for-rpi/webserver.js'])
+            self.remote_process = subprocess.Popen(['node', '/home/pi/r_e_m_o_t_e/webserver.js'])
         else:
             self.stop_remote_process()
         self.data.settings['user_input']['OSC_INPUT']['value'] = osc_setting_state

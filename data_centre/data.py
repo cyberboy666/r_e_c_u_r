@@ -57,6 +57,7 @@ class Data(object):
         ### state data
         self.auto_repeat_on = True
         self.function_on = False
+        self.is_display_held = False
         self.display_mode = "SAMPLER"
         self.control_mode = 'PLAYER'
         self.bank_number = 0

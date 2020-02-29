@@ -21,10 +21,17 @@ class NumpadInput(object):
     def on_key_press(self, event):
         numpad = list(string.ascii_lowercase[0:19])
 
+        if event.char is 'h': # DISP button
+            self.data.is_display_held = True
+
         if event.char is '.' or event.char is 'z':
             self.actions.quit_the_program()
         if event.char is 's':
             event.char = self.on_0_key_press()
+
+        numbers = "jklmnopqrs"
+        if self.data.is_display_held and event.char in numbers:
+            self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(event.char)])
         elif event.char in numpad:
             self.run_action_for_mapped_key(event.char)
         else:
@@ -34,6 +41,9 @@ class NumpadInput(object):
             numpad = list(string.ascii_lowercase[0:19])
             if event.char in numpad:
                 self.check_key_release_settings(event.char)
+
+            if event.char is 'h':
+                self.data.is_display_held = False
 
     def on_mouse_move(self, event):
         if self.data.settings['user_input']['MOUSE_INPUT']['value'] != 'enabled':

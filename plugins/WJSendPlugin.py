@@ -275,8 +275,13 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 ( r"^wj_select_next_command$", self.select_next_command ),
                 ( r"^wj_select_previous_command$", self.select_previous_command ),
                 ( r"^wj_select_next_argument$", self.select_next_argument ),
-                ( r"^wj_select_previous_argument$", self.select_previous_argument )
+                ( r"^wj_select_previous_argument$", self.select_previous_argument ),
+                ( r"^wj_reset_modulation$", self.reset_modulation_levels )
         ]
+
+    def reset_modulation_levels(self):
+        for cmd,struct in self.commands.items():
+            struct['modulation'] = [{},{},{},{}]
 
     def set_modulation_command_argument_level(self, command_name, argument_name, slot, level):
         if self.DEBUG: print("set_modulation_command_argument_level(%s, %s, %s, %s)" % (command_name, argument_name, slot, level))
@@ -325,6 +330,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def modulate_arguments(self, command, args):
         args = args.copy()
         #if self.DEBUG: print("modulate_arguments passed %s and\n\t%s" % (command,args))
+        # TODO: rewrite this so that it combines multiple inputs and averages them
         for slot in range(0,4):
             modlevels = command.get('modulation',[{},{},{},{}])[slot]
             #if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))

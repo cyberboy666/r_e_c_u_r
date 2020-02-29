@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Fri 21 Feb 00:56:39 UTC 2020
+Sat 29 Feb 16:00:23 UTC 2020
 
-for branch=feature_plugins_shader_gadgets
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -30,6 +30,7 @@ for branch=feature_plugins_shader_gadgets
   *   decrease_speed
   *   decrease_this_param
   *   disable_feedback
+  *   eject_all_usb_drives
   *   enable_feedback
   *   enter_on_browser_selection
   *   enter_on_settings_selection
@@ -58,12 +59,17 @@ for branch=feature_plugins_shader_gadgets
   *   load_this_detour_shader
   *   _load_this_slot_into_next_player(slot)
   *   map_on_shaders_selection
-  *   modulate_param_layer_offset_to_amount(param, layer, amount)
   *   move_browser_selection_down
+  *   move_browser_selection_page_down
+  *   move_browser_selection_page_up
   *   move_browser_selection_up
   *   move_settings_selection_down
+  *   move_settings_selection_page_down
+  *   move_settings_selection_page_up
   *   move_settings_selection_up
   *   move_shaders_selection_down
+  *   move_shaders_selection_page_down
+  *   move_shaders_selection_page_up
   *   move_shaders_selection_up
   *   next_bank
   *   next_shader_layer
@@ -125,6 +131,7 @@ for branch=feature_plugins_shader_gadgets
   *   set_the_shader_param_3_layer_offset_2_continuous(amount)
   *   set_the_shader_param_3_layer_offset_3_continuous(amount)
   *   shutdown_pi
+  *   stop_remote_process
   *   switch_conjur_player_type(value)
   *   switch_dev_mode(state)
   *   switch_display_to_hdmi
@@ -136,6 +143,8 @@ for branch=feature_plugins_shader_gadgets
   *   switch_to_next_player
   *   switch_to_this_detour(number)
   *   switch_video_backend(state)
+  *   toggle_access_point_delay(setting_value, osc_setting_state )
+  *   toggle_access_point(setting_value)
   *   toggle_action_on_player
   *   toggle_capture_preview
   *   toggle_capture_recording
@@ -175,6 +184,7 @@ for branch=feature_plugins_shader_gadgets
 ### Plugin routes
   * set_lfo_modulation_([0-3])_level	(from LFOModulation)
   * toggle_lfo_active	(from LFOModulation)
+  * set_lfo_speed	(from LFOModulation)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
@@ -202,6 +212,9 @@ for branch=feature_plugins_shader_gadgets
   * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * toggle_sound_react_active	(from SoundReactPlugin)
+  * sound_set_config_([a-z]*)_([a-z]*)	(from SoundReactPlugin)
+  * sound_set_modulation_([a-z]*)_slot_([0-3])_level	(from SoundReactPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)
   * run_automation	(from TestPlugin)
@@ -211,14 +224,20 @@ for branch=feature_plugins_shader_gadgets
   * toggle_loop_automation	(from TestPlugin)
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
-  * wj_send_serial_([0-9a-zA-Z:]*)	(from WJSendPlugin)
-  * wj_set_colour_([A|B|T])_([x|y])	(from WJSendPlugin)
-  * wj_set_back_colour_([x|y|z])	(from WJSendPlugin)
-  * wj_set_back_wash_colour_([x|y|z])	(from WJSendPlugin)
-  * wj_set_position_([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_send_serial:([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour:([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour:([x|y|z])	(from WJSendPlugin)
+  * wj_set_position:([N|L])_([x|y])	(from WJSendPlugin)
   * wj_set_mix	(from WJSendPlugin)
-  * wj_send_append_pad_([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
-  * wj_send_append_([:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_set_current_modulation_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_send_append:([:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)	(from WJSendPlugin)
+  * wj_select_next_command	(from WJSendPlugin)
+  * wj_select_previous_command	(from WJSendPlugin)
+  * wj_select_next_argument	(from WJSendPlugin)
+  * wj_select_previous_argument	(from WJSendPlugin)
 
 ----
 

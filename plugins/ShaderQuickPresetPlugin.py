@@ -25,6 +25,10 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
+    def quit_plugin(self):
+        super().quit_plugin()
+        self.save_presets()
+
     @property
     def parserlist(self):
         return [ 

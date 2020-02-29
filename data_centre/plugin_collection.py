@@ -15,6 +15,9 @@ class Plugin(object):
         self.description = 'UNKNOWN'
         self.pc = plugin_collection
 
+    def quit_plugin(self):
+        print("quitting " + type(self).__name__)
+
 class MidiFeedbackPlugin(Plugin):
     """Base class for MIDI feedback plugins
     """
@@ -476,22 +479,16 @@ class PluginCollection(object):
         print("Looking for plugins under package %s" % self.plugin_package)
         self.walk_package(self.plugin_package)
 
+    def quit_plugins(self):
+        # tell each plugin to quit
+        for plugin in self.get_plugins():
+            plugin.quit_plugin()
 
     def get_plugins(self, clazz = None):
         if clazz:
             return [c for c in self.plugins if (isinstance(c, clazz) and not c.disabled)]
         else:
             return [c for c in self.plugins if not c.disabled]
-
-    def apply_all_plugins_on_value(self, argument):
-        """Apply all of the plugins on the argument supplied to this function
-        """
-        print()
-        print('Applying all plugins on value %s:' %argument)
-        for plugin in self.plugins:
-            #print(" Applying %s on value %s yields value %s" % (plugin.description, argument, plugin.perform_operation(argument)))
-            pass
-
 
     def walk_package(self, package):
         """Recursively walk the supplied package to retrieve all plugins

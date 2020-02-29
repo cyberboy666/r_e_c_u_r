@@ -256,7 +256,7 @@ class Display(object):
                 self.display_text.insert(END, "%s "%a)
         self.display_text.insert(END,  "\n")
         bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        for layer, modulations in enumerate(self.shaders.selected_modulation_level):
+        for layer, modulations in enumerate(self.shaders.modulation_level):
             if (layer==self.data.shader_layer):
                 self.display_text.insert(END, '*')
             else:

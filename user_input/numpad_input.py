@@ -61,7 +61,7 @@ class NumpadInput(object):
             
         print('the numpad action being called is {} (mode is {})'.format(this_mapping[mode][is_function], mode))
         if value != -1:
-            self.actions.call_method_name(this_mapping[mode][is_function], value)
+            self.actions.call_method_name(this_mapping[mode][is_function],value)
         else:
             self.actions.call_method_name(this_mapping[mode][is_function])
 

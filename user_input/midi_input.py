@@ -48,7 +48,7 @@ class MidiInput(object):
                 self.data.midi_device_name = self.midi_device.name
                 self.message_handler.set_message('INFO', 'connected to midi device {}'.format(self.midi_device.name))
                 self.midi_mappings = self.data.load_midi_mapping_for_device(self.midi_device.name.split(":")[0])
-                self.midi_output = self.find_output_plugin(midi_device_on_port[subport_index])
+                self.midi_output = self.find_output_plugin(midi_devices[subport_index])
                 if self.midi_output:
                     #self.midi_feedback_device = mido.open_output(midi_device_on_port[subport_index])
                     self.root.after(self.midi_delay, self.refresh_midi_feedback)

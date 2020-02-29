@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Sat 29 Feb 13:17:13 UTC 2020
+Sat 29 Feb 13:40:28 UTC 2020
 
-for branch=feature_plugins
+for branch=feature_plugins_sound
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -212,6 +212,9 @@ for branch=feature_plugins
   * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * toggle_sound_react_active	(from SoundReactPlugin)
+  * sound_set_config_([a-z]*)_([a-z]*)	(from SoundReactPlugin)
+  * sound_set_modulation_([a-z]*)_slot_([0-3])_level	(from SoundReactPlugin)
   * test_plugin	(from TestPlugin)
   * cycle_shaders	(from TestPlugin)
   * run_automation	(from TestPlugin)

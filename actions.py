@@ -728,6 +728,7 @@ class Actions(object):
 
 
     def quit_the_program(self):
+        self.data._update_json(self.data.SETTINGS_JSON, self.data.settings)
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
         self.exit_osc_server('','')

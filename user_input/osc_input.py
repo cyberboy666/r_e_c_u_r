@@ -23,6 +23,8 @@ class OscInput(object):
         self.poll_settings_for_osc_info()
 
     def poll_settings_for_osc_info(self):
+        self.data.settings['user_input'].setdefault('OSC_INPUT',
+                self.data.default_settings['user_input'].get('OSC_INPUT'))
         osc_setting_enabled = self.data.settings['user_input']['OSC_INPUT']['value'] == 'enabled'
         if osc_setting_enabled and not self.osc_enabled:
             self.setup_osc_server()

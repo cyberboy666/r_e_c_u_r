@@ -69,11 +69,12 @@ class Data(object):
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
             self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
-        self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+        self.settings = self.default_settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
 
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)
-            self.settings['user_input']['REMOTE_SERVER']['value'] = 'disabled' # remote server off at boot
+            self.settings['user_input'].setdefault('REMOTE_SERVER',
+                    self.default_settings['user_input']['REMOTE_SERVER'])['value'] = 'disabled' # remote server off at boot
 
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.osc_mappings = self._read_json(self.OSC_MAPPING_JSON)

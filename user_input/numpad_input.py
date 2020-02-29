@@ -61,9 +61,9 @@ class NumpadInput(object):
             
         print('the action being called is {}'.format(this_mapping[mode][is_function]))
         if value != -1:
-            self.actions.call_method_name(this_mapping[mode][is_function])(value)
+            self.actions.call_method_name(this_mapping[mode][is_function],value)
         else:
-            self.actions.call_method_name(this_mapping[mode][is_function])()
+            self.actions.call_method_name(this_mapping[mode][is_function])
 
         if is_function and self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
             self.data.function_on = False

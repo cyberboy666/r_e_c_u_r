@@ -88,17 +88,20 @@ class Data(object):
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
             self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
-        self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+        self.settings = self.default_settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
 
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)
-            self.settings['user_input']['REMOTE_SERVER']['value'] = 'disabled' # remote server off at boot
+            self.settings['user_input'].setdefault('REMOTE_SERVER',
+                    self.default_settings['user_input']['REMOTE_SERVER'])['value'] = 'disabled' # remote server off at boot
 
         self.key_mappings = self._read_json(self.KEYPAD_MAPPING_JSON)
         self.osc_mappings = self._read_json(self.OSC_MAPPING_JSON)
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
+        # TODO: move this to a triggerable command/menu item that will spit out files in a place viewable in browser by the 'remote' system
+        # TODO eventually: have config configurable via remote browser
         from utils import docs
         docs.generate_mappings_doc("MIDI mappings", self.midi_mappings)
         docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
@@ -108,7 +111,6 @@ class Data(object):
     def initialise_plugins(self):
         #initialise plugin manager
         self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
-        self.plugins.apply_all_plugins_on_value(5)
 
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name

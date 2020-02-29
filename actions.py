@@ -728,6 +728,8 @@ class Actions(object):
 
 
     def quit_the_program(self):
+        self.data._update_json(self.data.SETTINGS_JSON, self.data.settings)
+        self.data.plugins.quit_plugins()
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
         self.exit_osc_server('','')
@@ -971,8 +973,8 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
-    def modulate_param_layer_offset_to_amount(self, param, layer, amount):
-        self.shaders.modulate_param_layer_offset_to_amount(param, amount, layer_offset=layer)
+    #"""def modulate_param_layer_offset_to_amount(self, param, layer, amount):
+    #    self.shaders.modulate_param_layer_offset_to_amount(param, amount, layer_offset=layer)"""
 
     @staticmethod
     def try_remove_file(path):

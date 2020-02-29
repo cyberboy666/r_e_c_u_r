@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 29 Feb 16:00:23 UTC 2020
+Sat 29 Feb 17:41:32 UTC 2020
 
 for branch=feature_plugins
 
@@ -238,6 +238,7 @@ for branch=feature_plugins
   * wj_select_previous_command	(from WJSendPlugin)
   * wj_select_next_argument	(from WJSendPlugin)
   * wj_select_previous_argument	(from WJSendPlugin)
+  * wj_reset_modulation	(from WJSendPlugin)
 
 ----
 

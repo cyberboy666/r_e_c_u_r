@@ -55,7 +55,7 @@ class OscInput(object):
 
         # this is for accepting any old osc message to allow binding of modulation to osc messages
         # TODO: make configurable?
-        this_dispatcher.map("/*", self.on_param_osc_input)
+        #this_dispatcher.map("/*", self.on_param_osc_input)
         
         osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)

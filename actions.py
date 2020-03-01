@@ -102,6 +102,21 @@ class Actions(object):
     def map_on_shaders_selection(self):
         self.shaders.map_on_shaders_selection()
 
+    def move_plugins_selection_down(self):
+        self.display.plugins_menu.navigate_menu_down()
+
+    def move_plugins_selection_up(self):
+        self.display.plugins_menu.navigate_menu_up()
+
+    def move_plugins_selection_page_down(self):
+        self.display.plugins_menu.navigate_menu_page_down()
+
+    def move_plugins_selection_page_up(self):
+        self.display.plugins_menu.navigate_menu_page_up()
+
+    def enter_on_plugins_selection(self):
+        self.display.plugins_menu.enter_on_plugins_selection()
+
     def clear_all_slots(self):
         self.data.clear_all_slots()
         self.display.browser_menu.generate_browser_list()

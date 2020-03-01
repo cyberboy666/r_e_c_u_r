@@ -199,6 +199,16 @@ class SettingsMenu(Menu):
                 ordered_tuple_list.append((other_key, dictionary[other_key]))
         return ordered_tuple_list
 
+
+class PluginsMenu(Menu):
+    def __init__(self, data, message_handler, menu_height):
+        Menu.__init__(self, data, message_handler, menu_height)
+
+    def enter_on_plugins_selection(self):
+        selected_item = sorted(self.data.active_plugins)[self.selected_list_index]
+        self.data.active_plugins[selected_item] = not self.data.active_plugins[selected_item]
+
+
 class ShadersMenu(Menu):
 
     def __init__(self, data, message_handler, menu_height):

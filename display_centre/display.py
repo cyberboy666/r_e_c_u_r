@@ -18,6 +18,7 @@ class Display(object):
         self.data = data
         self.browser_menu = menu.BrowserMenu(self.data, self.message_handler, self.MENU_HEIGHT)      
         self.settings_menu = menu.SettingsMenu(self.data, self.message_handler, self.MENU_HEIGHT)
+        self.plugins_menu = menu.PluginsMenu(self.data, self.message_handler, self.MENU_HEIGHT)
         self.shaders_menu = self.shaders.shaders_menu
 
         self.body_title = ''
@@ -92,6 +93,8 @@ class Display(object):
             self._load_shader_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
+        elif self.data.display_mode == 'PLUGINS':
+            self._load_plugins()
         else:
             from data_centre.plugin_collection import DisplayPlugin
             for plugin in self.data.plugins.get_plugins(DisplayPlugin):
@@ -99,7 +102,8 @@ class Display(object):
                     self._load_plugin_page(self.data.display_mode, plugin)
         self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
-        
+       
+
     def _load_plugin_page(self, display_mode, plugin):
         plugin.show_plugin(self, display_mode)
 
@@ -170,6 +174,29 @@ class Display(object):
             self.display_text.insert(END, '\n')
 
         self._highlight_this_row(self.settings_menu.selected_list_index - self.settings_menu.top_menu_index)
+
+    def _load_plugins(self):
+        line_count = 0
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+        self.display_text.insert(END, '{:<40} {:<5} \n'.format('plugin', 'is_active'))        
+        ## showing list of plugins:
+        plugins_list = sorted(self.data.active_plugins.items())
+        self.plugins_menu.menu_list = plugins_list
+
+        number_of_plugins = len(plugins_list)
+        for index in range(number_of_plugins):
+            if line_count >= self.MENU_HEIGHT :
+                break
+            if index >= self.plugins_menu.top_menu_index:
+                plugin_line = plugins_list[index]
+                self.display_text.insert(END, '{:<40} {:<5} \n'.format(plugin_line[0], str(plugin_line[1])))
+                line_count = line_count + 1
+
+        for index in range(self.plugins_menu.top_menu_index + self.plugins_menu.menu_height - number_of_plugins):
+            self.display_text.insert(END, '\n')        
+
+        self._highlight_this_row(self.plugins_menu.selected_list_index - self.plugins_menu.top_menu_index)
+
 
     def _load_shaders(self):
         line_count = 0

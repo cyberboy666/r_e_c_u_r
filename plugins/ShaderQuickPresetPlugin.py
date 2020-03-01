@@ -4,7 +4,6 @@ import copy
 from plugins.frame_manager import Frame
 
 class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
-    disabled = False
 
     MAX_PRESETS = 8
 
@@ -25,8 +24,8 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
-    def quit_plugin(self):
-        super().quit_plugin()
+    def stop_plugin(self):
+        super().stop_plugin()
         self.save_presets()
 
     @property

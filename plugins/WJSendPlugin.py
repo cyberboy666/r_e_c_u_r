@@ -5,7 +5,6 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, Display
 import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
-    disabled = False#True
     DEBUG = False #True
     ser = None
 
@@ -28,24 +27,23 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        if self.disabled:
+        """if self.disabled:
             print ("WJSendPlugin is disabled, not opening serial")
-            return
+            return"""
 
         self.presets = self.load_presets()
         print("read presets:\n%s\n" % self.presets)
         # load the stored modulation levels into the current config
-        for cmd,levels in self.presets['modulation_levels'].items(): #.setdefault(cmd,[{},{},{},{}]):
-            print("setting commands[%s]['modulation'] to %s" % (cmd, levels))
+        for cmd,levels in self.presets['modulation_levels'].items():
             self.commands[cmd]['modulation'] = levels
 
-        # build a reverse map for later use
+        # build a reverse map of friendly name -> command struct for later use
         for cmd,struct in self.commands.items():
             self.command_by_queue[struct['queue']] = struct
 
-        self.pc.actions.tk.after(500, self.refresh)
+        self.pc.actions.tk.after(500, self.start_plugin)
 
-        self.selected_command_name = list(sorted(self.commands.keys()))[0]
+        self.selected_command_name = list(sorted(self.commands.keys()))[0] # select first command
 
     def load_presets(self):
         print("trying load presets? %s " % self.PRESET_FILE_NAME)
@@ -56,8 +54,11 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
-    def quit_plugin(self):
-        super().quit_plugin()
+    def start_plugin(self):
+        self.pc.actions.tk.after(0, self.refresh)
+
+    def stop_plugin(self):
+        super().stop_plugin()
         self.save_presets()
 
 
@@ -69,9 +70,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         #self.last_record = {}
         #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
-
-    """def clear_recorded_frame(self):
-        self.last_record = {}"""
 
     def recall_frame_data(self, data):
         if data is None:
@@ -219,7 +217,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             with self.queue_lock:
                 self.queue.clear()
 
-        if self.ser is not None:
+        if self.ser is not None and not self.disabled:
             self.pc.shaders.root.after(self.THROTTLE, self.refresh)
 
     def send(self, queue, form, args):

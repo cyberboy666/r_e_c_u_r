@@ -9,14 +9,20 @@ class Plugin(object):
     """Base class that each plugin must inherit from. within this class
     you must define the methods that all of your plugins must implement
     """
-    disabled = False
+    #disabled = False
+    @property
+    def disabled(self):
+        return type(self).__name__ not in self.pc.data.get_active_plugin_class_names()
 
     def __init__(self, plugin_collection):
         self.description = 'UNKNOWN'
         self.pc = plugin_collection
 
-    def quit_plugin(self):
-        print("quitting " + type(self).__name__)
+    def stop_plugin(self):
+        print(">>Stopping plugin " + type(self).__name__)
+
+    def start_plugin(self):
+        print(">>Starting plugin " + type(self).__name__)
 
 class MidiFeedbackPlugin(Plugin):
     """Base class for MIDI feedback plugins
@@ -100,16 +106,18 @@ class SequencePlugin(Plugin):
     speed = 0.25 #1.0
     def move_delta(self, delta, speed):
         self.position += delta * speed
-        if self.looping and self.position>1.0:
-            self.position = 0.0
-        elif self.looping and self.position<0:
-            self.position = 1.0
+        if self.position>1.0:
+            self.position = self.position-1.0
+            self.iterations_count += 1
+        elif self.position<0.0:
+            self.position = self.position+1.0
+            self.iterations_count += 1
 
     store_passed = None
     pause_flag = True
     stop_flag = False
     looping = True
-    automation_start = None
+    #automation_start = None
     iterations_count = 0
     duration = 2000
     frequency = 100
@@ -146,12 +154,12 @@ class SequencePlugin(Plugin):
             #print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
             #return"""
 
-        if not self.stop_flag: # and (now - self.automation_start < self.duration/1000):
+        if not self.stop_flag and not self.disabled: # and (now - self.automation_start < self.duration/1000):
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
-            print("%s: stopping ! (stop_flag %s)" % ((now - self.automation_start),self.stop_flag) )
+            #print("%s: stopping ! (stop_flag %s)" % ((now - self.automation_start),self.stop_flag) )
             self.stop_flag = False
-            self.automation_start = None
+            #self.automation_start = None
             self.iterations_count = 0
 
     def is_paused(self):
@@ -482,13 +490,29 @@ class PluginCollection(object):
     def quit_plugins(self):
         # tell each plugin to quit
         for plugin in self.get_plugins():
-            plugin.quit_plugin()
+            if not plugin.disabled: plugin.stop_plugin()
 
-    def get_plugins(self, clazz = None):
+    def stop_plugin_name(self, name):
+        for plugin in self.get_plugins(include_disabled=True):
+            if type(plugin).__name__ == name:
+                plugin.stop_plugin()
+
+    def start_plugin_name(self, name):
+        #print("start_plugin_name got %s"%name)
+        for plugin in self.get_plugins(include_disabled=True):
+            #print("looking for %s vs %s" % (type(plugin).__name__, name))
+            if type(plugin).__name__ == name:
+                #print("starting %s" %name)
+                plugin.start_plugin()
+
+
+    def get_plugins(self, clazz = None, include_disabled = False):
+        # is_active = self.active_plugins[type(plugin).__name__]
         if clazz:
-            return [c for c in self.plugins if (isinstance(c, clazz) and not c.disabled)]
+            return [c for c in self.plugins if isinstance(c, clazz) and (include_disabled or not c.disabled)]
+                    #and type(c).__name__ in self.data.get_active_plugin_class_names())
         else:
-            return [c for c in self.plugins if not c.disabled]
+            return [c for c in self.plugins if include_disabled or not c.disabled]
 
     def walk_package(self, package):
         """Recursively walk the supplied package to retrieve all plugins
@@ -510,7 +534,7 @@ class PluginCollection(object):
 
         # Now that we have looked at all the modules in the current package, start looking
         # recursively for additional modules in sub packages
-        all_current_paths = []
+        """all_current_paths = []
         if isinstance(imported_package.__path__, str):
             all_current_paths.append(imported_package.__path__)
         else:
@@ -525,4 +549,4 @@ class PluginCollection(object):
 
                 # For each sub directory, apply the walk_package method recursively
                 for child_pkg in child_pkgs:
-                    self.walk_package(package + '.' + child_pkg)
+                    self.walk_package(package + '.' + child_pkg)"""

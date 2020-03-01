@@ -119,8 +119,11 @@ class Data(object):
         self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
         self.compare_plugins_list()
 
+    def get_active_plugin_class_names(self):
+        return [k for k,v in self.active_plugins.items() if v is True]
+
     def compare_plugins_list(self):
-        current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(plugin_collection.Plugin)]
+        current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(include_disabled=True)]
         plugins_to_add = set(current_plugins) - set(self.active_plugins.keys())
         plugins_to_remove = set(self.active_plugins) - set(current_plugins)
         for k in plugins_to_remove:
@@ -466,15 +469,13 @@ class Data(object):
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
-            if self.settings['system']['USE_PLUGINS']['value'] == 'enabled':
+            if self.settings['system'].setdefault('USE_PLUGINS',self.default_settings.setdefault('USE_PLUGINS',{'value': 'enabled'})).get('value') == 'enabled':
                 display_modes.append(["PLUGINS",'NAV_PLUGINS'])
 
         if hasattr(self, 'plugins') and self.plugins is not None:
             from data_centre.plugin_collection import DisplayPlugin
             for plugin in self.plugins.get_plugins(DisplayPlugin):
-                is_active = self.active_plugins[type(plugin).__name__]
-                if is_active:
-                    display_modes.append(plugin.get_display_modes())
+                display_modes.append(plugin.get_display_modes())
 
         if not with_nav_mode:
             return [mode[0] for mode in display_modes]

@@ -208,7 +208,11 @@ class PluginsMenu(Menu):
     def enter_on_plugins_selection(self):
         selected_item = sorted(self.data.active_plugins)[self.selected_list_index]
         state = self.data.active_plugins[selected_item]
-        self.data.update_active_plugins(selected_item, not state) 
+        self.data.update_active_plugins(selected_item, not state)
+        if state:
+            self.data.plugins.stop_plugin_name(selected_item)
+        else:
+            self.data.plugins.start_plugin_name(selected_item)
 
 
 class ShadersMenu(Menu):

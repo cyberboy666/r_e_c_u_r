@@ -12,13 +12,14 @@ from statistics import mean
 np.set_printoptions(suppress=True) # don't use scientific notationn
 
 class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
-    disabled = False
 
     DEBUG = False
 
     active = True
     stop_flag = False
     pause_flag = False
+
+    stream = None
 
     CHUNK = 4096 # number of data points to read at a time
     RATE = 48000 #44100 # time resolution of the recording device (Hz)
@@ -30,7 +31,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
+        """#self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
         if self.active and not self.disabled:
             try:
                 p=pyaudio.PyAudio()
@@ -43,7 +44,37 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         print ("now setting to run automation..")
 
-        self.pc.shaders.root.after(500, self.run_automation)
+        self.pc.shaders.root.after(500, self.run_automation)"""
+        if not self.disabled:
+            self.start_plugin()
+
+    def stop_plugin(self):
+        self.close_sound_device()
+        super().stop_plugin()
+
+    def start_plugin(self):
+        super().start_plugin()
+        self.open_sound_device()
+
+    def open_sound_device(self):
+        try:
+            self.p=pyaudio.PyAudio()
+            self.stream=self.p.open(format=pyaudio.paInt16,channels=1,rate=self.RATE,input=True,
+                frames_per_buffer=self.CHUNK)
+        except:
+            print("Failed to open sound device - disabling SoundReactPlugin!")
+            self.active = False
+            return
+
+        self.pc.shaders.root.after(250, self.run_automation)
+
+    def close_sound_device(self):
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
+            self.stream = None
+        if self.p:
+            self.p.terminate()
 
     @property
     def sources(self):
@@ -97,7 +128,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     energy_history = []
     def run_sequence(self, position):
         # position is irrelvant for this plugin, we just want to run continuously
-        if not self.active:
+        if not self.active or self.stream is None:
             return
 
         data = np.fromstring(self.stream.read(self.CHUNK, exception_on_overflow = False),dtype=np.int16)

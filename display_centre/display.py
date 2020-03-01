@@ -180,7 +180,10 @@ class Display(object):
         self.display_text.insert(END, '{} \n'.format(self.body_title))
         self.display_text.insert(END, '{:<40} {:<5} \n'.format('plugin', 'is_active'))        
         ## showing list of plugins:
-        plugins_list = sorted(self.data.active_plugins.items())
+        plugins_list = sorted([ 
+                (type(plugin).__name__, type(plugin).__name__ in self.data.get_active_plugin_class_names())\
+                for plugin in self.data.plugins.get_plugins(include_disabled=True) 
+        ])
         self.plugins_menu.menu_list = plugins_list
 
         number_of_plugins = len(plugins_list)

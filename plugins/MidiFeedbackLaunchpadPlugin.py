@@ -1,10 +1,10 @@
 from data_centre import plugin_collection
 from data_centre.plugin_collection import MidiFeedbackPlugin
 import mido
-from plugins.MidiFeedbackAPCKey25Plugin import MidiFeedbackAPCKey25Plugin
+import plugins
+#from plugins.MidiFeedbackAPCKey25Plugin import MidiFeedbackAPCKey25Plugin
 
-class MidiFeedbackLaunchpadPlugin(MidiFeedbackAPCKey25Plugin):
-    disabled = False
+class MidiFeedbackLaunchpadPlugin(plugins.MidiFeedbackAPCKey25Plugin.MidiFeedbackAPCKey25Plugin):
 
     status = {}
 

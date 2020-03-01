@@ -3,7 +3,7 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, Display
 from plugins.frame_manager import Frame
 
 class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
-    disabled = False
+    
     MAX_CLIPS = 8
     frames = [] 
 
@@ -45,8 +45,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.frames)
 
-    def quit_plugin(self):
-        super().quit_plugin()
+    def stop_plugin(self):
+        super().stop_plugin()
         self.save_presets()
 
     # DisplayPlugin methods

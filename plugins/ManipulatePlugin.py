@@ -42,7 +42,6 @@ TODO: >> ??    invert|set_the_shader_param_0_layer_>>print_arguments>>set_variab
 """
 
 class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
-    disabled = False
 
     DEBUG = False
 

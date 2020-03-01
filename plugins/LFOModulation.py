@@ -3,7 +3,6 @@ import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
 
 class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
-    disabled = False
 
     MAX_LFOS = 4
 
@@ -20,8 +19,10 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
 
-        self.pc.shaders.root.after(1000, self.run_automation)
-
+        self.pc.shaders.root.after(1000, self.start_plugin)
+        
+    def start_plugin(self):
+        self.pc.shaders.root.after(0, self.run_automation)
 
     # DisplayPlugin methods
     def get_display_modes(self):
@@ -100,10 +101,10 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         import time
         now = time.time()
 
-        if self.pc.data.plugins is None:
+        if self.pc.data.plugins is None: # not initialised yet
             return
 
-        if not self.active:
+        if not self.active: # output is disabled
             return
 
         for lfo in range(0,self.MAX_LFOS):

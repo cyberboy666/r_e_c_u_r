@@ -114,6 +114,7 @@ class BrowserMenu(Menu):
         ######## used for displaying the mappings in browser view ########
         for bank_index, bank in enumerate(self.data.bank_data):
             for slot_index, slot in enumerate(bank):
+                print('&&&&&&&&&&&&', slot)
                 if file_name == slot['name']:
                     return True, '{}-{}'.format(bank_index,slot_index)
         return False, ''
@@ -206,7 +207,8 @@ class PluginsMenu(Menu):
 
     def enter_on_plugins_selection(self):
         selected_item = sorted(self.data.active_plugins)[self.selected_list_index]
-        self.data.active_plugins[selected_item] = not self.data.active_plugins[selected_item]
+        state = self.data.active_plugins[selected_item]
+        self.data.update_active_plugins(selected_item, not state) 
 
 
 class ShadersMenu(Menu):

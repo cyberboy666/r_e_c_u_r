@@ -33,7 +33,7 @@ class Data(object):
     BANK_DATA_JSON = 'display_data.json'
     SHADER_BANK_DATA_JSON = 'shader_bank_data.json'
     SETTINGS_JSON = 'settings.json'
-    ACTIVE_PLUGINS = 'active_plugins.json'
+    ACTIVE_PLUGINS_JSON = 'active_plugins.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
     OSC_MAPPING_JSON = 'osc_action_mapping.json'
@@ -87,8 +87,8 @@ class Data(object):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
         self.active_plugins = {}
-        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.ACTIVE_PLUGINS):
-            self.bank_data = self._read_json(self.ACTIVE_PLUGINS)
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.ACTIVE_PLUGINS_JSON):
+            self.active_plugins = self._read_json(self.ACTIVE_PLUGINS_JSON)
 
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
@@ -131,6 +131,9 @@ class Data(object):
         if self.settings['system']['USE_PLUGINS']['value'] == 'disabled':
             self.active_plugins = {x:False for x in self.active_plugins}
 
+    def update_active_plugins(self, key, value):
+        self.active_plugins[key] = value
+        self._update_json(self.ACTIVE_PLUGINS_JSON, self.active_plugins)
 
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name

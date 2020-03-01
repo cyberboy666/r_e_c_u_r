@@ -4,6 +4,9 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, Display
 
 import pyaudio
 import numpy as np
+from random import randint
+from statistics import mean
+
 #import matplotlib.pyplot as plt
 
 np.set_printoptions(suppress=True) # don't use scientific notationn
@@ -112,7 +115,6 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                     self.last_values[sourcename] = self.values[sourcename]
 
             if sourcename is 'energy' and self.last_values.get('energy') is not None:
-                from statistics import mean
                 diff = abs(self.last_values.get('energy',value)-previous_value.get(sourcename,value)) #mean(self.energy_history))
                 if len(self.energy_history)>5: #self.duration:
                     meandiff = abs(diff-mean(self.energy_history[:int(len(self.energy_history)/2)]))
@@ -120,6 +122,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                     if meandiff>=self.config['energy'].get('triggerthreshold',0.15):
                         self.energy_history = []
                         print ("\n>>>>>>Triggering dynamic change for meandiff %s?\n" % meandiff)
+                        #self.pc.actions.call_method_name("load_slot_%s_into_next_player"%randint(0,9))
                 self.energy_history.append(diff) #self.values.get(sourcename,0.0))
                 #print("logging %s" % diff) #self.values.get(sourcename,0.0))
 

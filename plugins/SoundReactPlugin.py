@@ -91,13 +91,14 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         #display.display_text.insert(END, "\nLevels:%s\n\n" % self.levels)
         display.display_text.insert(END, "\n\n\n")
 
-
+    energy_history = []
     def run_sequence(self, position):
         # position is irrelvant for this plugin, we just want to run continuously
         if not self.active:
             return
 
         data = np.fromstring(self.stream.read(self.CHUNK, exception_on_overflow = False),dtype=np.int16)
+        previous_value = {}
 
         for sourcename in self.sources:
             value = self.sources[sourcename](data)
@@ -107,7 +108,23 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
             for slot,level in enumerate(self.levels.get(sourcename,[])):
                 if level>0.0 and self.values.get(sourcename)!=self.last_values.get(sourcename):
                     self.pc.actions.call_method_name("modulate_param_%s_to_amount_continuous"%slot, self.values[sourcename])
+                    previous_value[sourcename] = self.last_values.get(sourcename) or value
                     self.last_values[sourcename] = self.values[sourcename]
+
+            if sourcename is 'energy' and self.last_values.get('energy') is not None:
+                from statistics import mean
+                diff = abs(self.last_values.get('energy',value)-previous_value.get(sourcename,value)) #mean(self.energy_history))
+                if len(self.energy_history)>5: #self.duration:
+                    meandiff = abs(diff-mean(self.energy_history[:int(len(self.energy_history)/2)]))
+                    #print ("    diff is %s, meandiff %s" % (diff, meandiff))
+                    if meandiff>=self.config['energy'].get('triggerthreshold',0.15):
+                        self.energy_history = []
+                        print ("\n>>>>>>Triggering dynamic change for meandiff %s?\n" % meandiff)
+                self.energy_history.append(diff) #self.values.get(sourcename,0.0))
+                #print("logging %s" % diff) #self.values.get(sourcename,0.0))
+
+
+
 
     config.setdefault('energy',{})['gain'] = 0.5 # how much to multiply signal by
     config.setdefault('energy',{})['threshold'] = 0.5 # subtract from post-gain signal (hence ignore all values below)
@@ -128,7 +145,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         if self.DEBUG: print("energy:\t\t%05d %s\t(converted to %s)"%(peak,bars,value))
         bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
         g = '%s'%bar[int(value*(len(bar)-1))]
-        self.display_values['energy'] = "{} g{:03.2f} t{:03.2f}".format(g, self.config['energy']['gain'], self.config['energy']['threshold'])
+        self.display_values['energy'] = "{} g{:03.2f} t{:03.2f} d{:03.2f}".format(g, self.config['energy']['gain'], self.config['energy']['threshold'], self.config['energy'].setdefault('triggerthreshold',0.15))
 
         return value 
 

@@ -69,7 +69,8 @@ class Data(object):
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
             self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
-        self.settings = self.default_settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+        self.settings = self._read_json(self.DEFAULT_SETTINGS_JSON)
+        self.default_settings = self.settings.copy()
 
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SETTINGS_JSON):
             self.settings = self._read_json(self.SETTINGS_JSON)

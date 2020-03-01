@@ -43,7 +43,9 @@ class NumpadInput(object):
                 self.data.is_display_held = False
 
     def on_mouse_move(self, event):
-        if self.data.settings['user_input']['MOUSE_INPUT']['value'] != 'enabled':
+        if self.data.settings['user_input'].setdefault(
+                'MOUSE_INPUT',
+                self.data.default_settings.get('MOUSE_INPUT',{'value': 'enabled'})).get('value') != 'enabled':
             return
         if event.x > 480 or event.y > 320:
             return

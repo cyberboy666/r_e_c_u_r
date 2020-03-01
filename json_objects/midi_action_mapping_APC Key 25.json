@@ -60,7 +60,8 @@
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
             "NAV_WJMX": ["wj_set_colour_T:x"],
-	    "NAV_LFO": ["set_lfo_modulation_2_level"]
+	    "NAV_LFO": ["set_lfo_modulation_2_level"],
+	    "NAV_SND": ["sound_set_config_energy_triggerthreshold"]
     },
     "control_change 51": {
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
@@ -152,7 +153,8 @@
             "DEFAULT": ["switch_to_preset_7","select_preset_7"]
     },
     "note_on 81": {
-	    "DEFAULT": ["","reset_selected_modulation"]
+	    "DEFAULT": ["","reset_selected_modulation"],
+	    "NAV_WJMX": ["","wj_reset_modulation"]
     },
     "note_on 82": {
 	    "DEFAULT": ["toggle_shader_layer_0","select_shader_modulation_slot_0"]
@@ -282,7 +284,7 @@
 		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["smooth_selected_clip","send_random_settings"]
+		"DEFAULT": ["set_display_mode_settings","set_display_mode_shader"]
 	}
 }
 

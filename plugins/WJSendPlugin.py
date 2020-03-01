@@ -53,7 +53,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def save_presets(self):
         for cmd,struct in self.commands.items():
-            self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[])
+            self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
     def quit_plugin(self):
@@ -106,9 +106,10 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         # so that they update with the new modulation value
         to_send = {}
         for queue,cmd in sorted(self.command_by_queue.items(),reverse=True):
-            if cmd.get('modulation') is not None:
-                #if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
-                if len(cmd.get('modulation')[param])>0:
+                cmd.setdefault('modulation',[{},{},{},{}])
+
+                if self.DEBUG: print("\tparam %s, checking modulation %s" % (param, cmd.get('modulation')))
+                if len(cmd['modulation'][param])>0:
                     if self.DEBUG: print("\tParam %s has modulation! sending update of values? %s" % 
                             (param, [cmd['arguments'][y] for y in cmd['arg_names'] ]))
                     #self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
@@ -138,7 +139,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         for arg_name in cmd['arg_names']:
             indicator = " " if cmd['arg_names'].index(arg_name)!=self.selected_argument_index else ">"
             output += "%s%s: "%(indicator,arg_name)
-            for slot,mods in enumerate(cmd.get('modulation',[{},{},{},{}])):
+            for slot,mods in enumerate(cmd.setdefault('modulation',[{},{},{},{}])):
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
                 g = '%s'%bar[int(v*(len(bar)-1))]
@@ -274,8 +275,13 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 ( r"^wj_select_next_command$", self.select_next_command ),
                 ( r"^wj_select_previous_command$", self.select_previous_command ),
                 ( r"^wj_select_next_argument$", self.select_next_argument ),
-                ( r"^wj_select_previous_argument$", self.select_previous_argument )
+                ( r"^wj_select_previous_argument$", self.select_previous_argument ),
+                ( r"^wj_reset_modulation$", self.reset_modulation_levels )
         ]
+
+    def reset_modulation_levels(self):
+        for cmd,struct in self.commands.items():
+            struct['modulation'] = [{},{},{},{}]
 
     def set_modulation_command_argument_level(self, command_name, argument_name, slot, level):
         if self.DEBUG: print("set_modulation_command_argument_level(%s, %s, %s, %s)" % (command_name, argument_name, slot, level))
@@ -324,6 +330,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def modulate_arguments(self, command, args):
         args = args.copy()
         #if self.DEBUG: print("modulate_arguments passed %s and\n\t%s" % (command,args))
+        # TODO: rewrite this so that it combines multiple inputs and averages them
         for slot in range(0,4):
             modlevels = command.get('modulation',[{},{},{},{}])[slot]
             #if self.DEBUG: print("\tfor modulate_arguments for slot %s got modlevels: %s" % (slot, modlevels))
@@ -366,7 +373,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'form': 'VMM:{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 },
-                'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
+                #'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
             },
             'back_colour': {
                 'name': 'Back colour/matte HSV',

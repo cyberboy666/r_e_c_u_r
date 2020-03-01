@@ -21,11 +21,15 @@ class NumpadInput(object):
     def on_key_press(self, event):
         numpad = list(string.ascii_lowercase[0:19])
 
+        if event.char is 'h': # DISP button
+            self.data.is_display_held = True
+
         if event.char is '.' or event.char is 'z':
             self.actions.quit_the_program()
         if event.char is 's':
             event.char = self.on_0_key_press()
-        elif event.char in numpad:
+
+        if event.char in numpad:
             self.run_action_for_mapped_key(event.char)
         else:
             print('{} is not in keypad map'.format(event.char))
@@ -35,8 +39,13 @@ class NumpadInput(object):
             if event.char in numpad:
                 self.check_key_release_settings(event.char)
 
+            if event.char is 'h':
+                self.data.is_display_held = False
+
     def on_mouse_move(self, event):
-        if self.data.settings['user_input']['MOUSE_INPUT']['value'] != 'enabled':
+        if self.data.settings['user_input'].setdefault(
+                'MOUSE_INPUT',
+                self.data.default_settings.get('MOUSE_INPUT',{'value': 'enabled'})).get('value') != 'enabled':
             return
         if event.x > 480 or event.y > 320:
             return
@@ -58,6 +67,10 @@ class NumpadInput(object):
             is_function = 1
         else:
             is_function = 0
+
+        numbers = "jklmnopqrs"
+        if self.data.is_display_held and key in numbers:
+             return self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(key)])
             
         print('the numpad action being called is {} (mode is {})'.format(this_mapping[mode][is_function], mode))
         if value != -1:
@@ -91,7 +104,7 @@ class NumpadInput(object):
         if(not self.in_0_event ):
             self.in_0_event  = True
             self.additional_0_in_event = 0
-            self.root.after(600, self.check_event_outcome)
+            self.root.after(60, self.check_event_outcome)
         else:
             self.additional_0_in_event = self.additional_0_in_event + 1 
 
@@ -104,7 +117,7 @@ class NumpadInput(object):
             self.run_action_for_mapped_key('n')
         elif(self.additional_0_in_event == 1):
             print('this doesnt happen - may not be needed')
-            self.root.after(600, self.second_check_event_outcome)
+            self.root.after(60, self.second_check_event_outcome)
 
     def second_check_event_outcome(self):
         if(self.additional_0_in_event == 1 ):

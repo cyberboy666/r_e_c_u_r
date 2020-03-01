@@ -175,6 +175,21 @@ class Actions(object):
             if self.video_driver.current_player.show_toggle_on == self.video_driver.next_player.show_toggle_on:
                 self.video_driver.next_player.toggle_show()
 
+    def set_display_mode(self, display_mode):
+        mapmodes = {
+                'shader': 'SHADERS',
+                'shader_bank': 'SHDR_BNK'
+        }
+        if display_mode in mapmodes:
+            display_mode = mapmodes[display_mode]
+
+        display_mode = display_mode.upper()
+
+        display_modes = self.data.get_display_modes_list(with_nav_mode=True)
+        for i,dm in enumerate(display_modes):
+            if display_mode in dm:
+                self.data.display_mode = display_modes[i][0]
+                self.data.control_mode = display_modes[i][1]
 
     def cycle_display_mode(self):
         display_modes = self.data.get_display_modes_list(with_nav_mode=True)
@@ -1019,6 +1034,7 @@ class Actions(object):
                 ( r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot ),
                 ( r"^set_shader_speed_layer_offset_([0-2])_amount$",               self.shaders.set_speed_offset_to_amount ),
                 ( r"^set_shader_speed_layer_([0-2])_amount$",                      self.shaders.set_speed_layer_to_amount ),
+                ( r"^set_display_mode_([a-zA-Z_]*)$",  self.set_display_mode )
         }
 
     def detect_types(self, args):

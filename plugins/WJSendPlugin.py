@@ -126,25 +126,29 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         display.display_text.insert(END, "WJSendPlugin status\n\n")
 
         for queue, last in sorted(self.last_modulated.items()):
-            display.display_text.insert(END, "%s:\t%s\t%s\n" % (queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
+            is_selected = queue == self.commands[self.selected_command_name].get('queue')
+            indicator = " " if not is_selected else "<"
+            display.display_text.insert(END, "%s%s:\t%s\t%s" % (indicator,queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
+            if is_selected:
+                display.display_text.insert(END, ">") # add indicator of the selected queue for param jobbies
+            display.display_text.insert(END, "\n")
 
-        #display.display_text.insert(END, "%s\n" % (self.selected_command_name))
         cmd = self.commands[self.selected_command_name]
-        display.display_text.insert(END, "%s : %s\n" % (self.selected_command_name, cmd['name']))
-        output = "\nModulation:\n"
+        output = "\nModulation for " +  "%s : %s\n" % (self.selected_command_name, cmd['name'])
         bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        #for arg_name,value in [ cmd['arg_names'][y] for y in cmd['arg_names'] ]:
         for arg_name in cmd['arg_names']:
-            indicator = " " if cmd['arg_names'].index(arg_name)!=self.selected_argument_index else ">"
+            is_selected = cmd['arg_names'].index(arg_name)==self.selected_argument_index
+            indicator = " " if not is_selected else "["
             output += "%s%s: "%(indicator,arg_name)
             for slot,mods in enumerate(cmd.setdefault('modulation',[{},{},{},{}])):
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
                 g = '%s'%bar[int(v*(len(bar)-1))]
                 output += "{}:{}|".format('ABCD'[slot],g)
+            if is_selected:
+                output+="]"
             output += "\n"
         display.display_text.insert(END, output+"\n")
-
 
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
@@ -184,8 +188,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             #with self.serial_lock:
             self.ser.write(output) #.encode())
             # TODO: sleeping here seems to help serial response lag problem?
-            #import time
-            #time.sleep(0.02)
+            import time
+            time.sleep(0.02)
             #yield from self.ser.drain()
             if self.DEBUG: 
                 print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))

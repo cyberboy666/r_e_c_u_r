@@ -412,6 +412,9 @@ class PluginCollection(object):
     """Upon creation, this class will read the plugins package for modules
     that contain a class definition that is inheriting from the Plugin class
     """
+    @property
+    def display(self):
+        return self.actions.display
 
     @property
     def shaders(self):
@@ -436,6 +439,7 @@ class PluginCollection(object):
         #self.actions = message_handler.actions
         self.reload_plugins()
 
+        # set up a FrameManager too so that plugins can use it
         self.fm = FrameManager(self)
 
     def read_json(self, file_name):

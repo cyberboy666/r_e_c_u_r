@@ -25,6 +25,9 @@ class Frame:
     def to_json(self):
         return self.f #{ 'f': self.f }
 
+    def get(self, key, default=None):
+        return self.f.get(key,default)
+
     def store_live(self):
         frame = {
                 'selected_shader_slots': [ shader.get('slot',None) for shader in self.pc.shaders.selected_shader_list ],
@@ -89,6 +92,71 @@ class Frame:
         for plugin in self.pc.get_plugins(AutomationSourcePlugin):
             #print("recalling for plugin %s with data %s" % (plugin, self.f.get(plugin.frame_key)))
             plugin.recall_frame_data(self.f.get(plugin.frame_key))
+
+    def get_active_shader_names(self):
+        if self.get('selected_shader_slots') is None:
+            return ['-']*3
+        return [ self.pc.data.shader_bank_data[layer][x].get('name') if x is not None else '-'\
+                 for layer,x in enumerate(self.f.get('selected_shader_slots',[None]*3)) 
+               ]
+
+    def get_frame_summary(self):
+        summary = []
+        not_shown = []
+
+        names = self.get_active_shader_names()
+        for layer in range(0,3):
+            s = "%s " % layer
+            if self.get('selected_shader_slots'):
+                s += "["
+                for i in range(10):
+                    selected = self.get('selected_shader_slots')[layer]
+                    if selected==i:
+                        s += "#"
+                    else:
+                        s += "-"
+                s += "]"
+            if self.get('layer_active_status') is not None:
+                s += " %s " % (self.f.get('layer_active_status',['-']*3)[layer])
+            if self.get('shader_speeds') is not None:
+                s += self.pc.display.get_bar(self.f.get('shader_speeds',[0.0]*3)[layer])
+            print("layer is %s" % layer)
+            s += " " + self.get_shader_param_summary(layer) + " "
+            s += "{:10s}".format(names[layer])
+            summary.append(s)
+            
+
+        count = 0
+        line = ""
+        for key,d in sorted(self.f.items()):
+            if key in ["layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
+                # skip this as dealt with above
+                pass
+            elif key in ["WJSendPlugin"]:
+                not_shown.append(key)
+            else:
+                line += "%s: %s" % (key, d)
+                count += 1
+                if count%2==1:
+                    line += "\t"
+                elif count>0 and count%2==0:
+                    summary.append(line)
+                    line = ""
+        if line != "":
+            summary.append(line)
+
+        if len(not_shown)>0:
+            summary.append(','.join(not_shown))
+
+        return summary
+
+    def get_shader_param_summary(self, layer):
+        if self.f.get('shader_params') is None:
+            return ""
+        s = ""
+        for i in range(4):
+            s += self.pc.display.get_bar(self.f.get('shader_params')[layer][i])
+        return s
 
     def recall_frame(self):
         preset = self

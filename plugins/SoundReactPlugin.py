@@ -114,9 +114,8 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         for sourcename in sorted(self.sources):
             value = self.display_values.get(sourcename) or "{:03.2f}%".format(self.values.get(sourcename,0)*100) or "None"
             value += "\t"
-            for i,l in enumerate(self.levels[sourcename]):
-                bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-                g = "ABCD"[i]+'%s '%bar[int(l*(len(bar)-1))]
+            for i,level in enumerate(self.levels[sourcename]):
+                g = "ABCD"[i]+'%s '%self.get_bar(level)
                 value += g
             display.display_text.insert(END, "{}:\t{}\n".format(sourcename,value))
             """display.display_text.insert(END, "%s\n" %self.last_lfo_status[lfo])
@@ -177,8 +176,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         bars="#"*int(50*value)
         if self.DEBUG: print("energy:\t\t%05d %s\t(converted to %s)"%(peak,bars,value))
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        g = '%s'%bar[int(value*(len(bar)-1))]
+        g = self.pc.display.get_bar(value)
         self.display_values['energy'] = "{} g{:03.2f} t{:03.2f} d{:03.2f}".format(g, self.config['energy']['gain'], self.config['energy']['threshold'], self.config['energy'].setdefault('triggerthreshold',0.15))
 
         return value 

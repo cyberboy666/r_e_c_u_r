@@ -318,7 +318,6 @@ class Display(object):
                     a = a.upper()
                 self.display_text.insert(END, "%s "%a)
         self.display_text.insert(END,  "\n")
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
         for layer, modulations in enumerate(self.shaders.modulation_level):
             if (layer==self.data.shader_layer):
                 self.display_text.insert(END, '*')
@@ -328,7 +327,7 @@ class Display(object):
             for param, levels in enumerate(modulations):
                 self.display_text.insert(END, '|')
                 for slot,level in enumerate(levels):
-                    self.display_text.insert(END, ' %s'%bar[int(level*(len(bar)-1))]) #(int(level*100)))
+                    self.display_text.insert(END, ' %s'%self.get_bar(level))
                 self.display_text.insert(END, ' ')
             self.display_text.insert(END, '\n')
 
@@ -448,6 +447,12 @@ class Display(object):
             capture_status = ''
 
         return capture_status
+
+    def get_bar(self, value, max_value = 1.0):
+        value = value / max_value
+        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
+        g = '%s'%bar[int(value*(len(bar)-1))]
+        return g
 
     @staticmethod
     def create_video_display_banner(start, end, position):

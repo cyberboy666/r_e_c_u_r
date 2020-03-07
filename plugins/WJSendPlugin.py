@@ -135,7 +135,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
         cmd = self.commands[self.selected_command_name]
         output = "\nModulation for " +  "%s : %s\n" % (self.selected_command_name, cmd['name'])
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
         for arg_name in cmd['arg_names']:
             is_selected = cmd['arg_names'].index(arg_name)==self.selected_argument_index
             indicator = " " if not is_selected else "["
@@ -143,7 +142,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             for slot,mods in enumerate(cmd.setdefault('modulation',[{},{},{},{}])):
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
-                g = '%s'%bar[int(v*(len(bar)-1))]
+                g = '%s'%self.pc.display.get_bar(v)
                 output += "{}:{}|".format('ABCD'[slot],g)
             if is_selected:
                 output+="]"

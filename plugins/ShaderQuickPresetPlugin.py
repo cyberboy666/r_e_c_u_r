@@ -1,9 +1,9 @@
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
 import copy
 from plugins.frame_manager import Frame
 
-class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
+class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
 
     MAX_PRESETS = 8
 
@@ -39,6 +39,39 @@ class ShaderQuickPresetPlugin(ActionsPlugin): #,SequencePlugin):
             ( r"select_preset_([0-%i])"%self.MAX_PRESETS, self.select_preset ),
             ( r"clear_current_preset", self.clear_current_preset ),
         ]
+
+    # DisplayPlugin methods
+    def get_display_modes(self):
+        return ['QUIKSHDR','NAV_QKSH']
+
+    def show_plugin(self, display, display_mode):
+        from tkinter import Text, END
+        #super(DisplayPlugin).show_plugin(display, display_mode)
+        display.display_text.insert(END, '{} \n'.format(display.body_title))
+        display.display_text.insert(END, "ShaderQuickPresetPlugin!")
+
+        #display.display_text.insert(END, "
+        status = "\t Selected:"
+        for i,preset in enumerate(self.presets):
+            if i == self.selected_preset:
+                status += "#"
+            elif i == self.last_recalled:
+                status += "/"
+            elif preset is None or not preset:
+                status += "_"
+            else:
+                status += "="
+        display.display_text.insert(END, "\t[" + status + "]\n\n")
+
+        # display a basic summary of each preset
+        """for i,preset in enumerate(self.presets):
+            display.display_text.insert(END, "%s\n" % preset.get_active_shader_names())
+            #display.display_text.insert(END, "%s: %s %s %s" % """
+
+        ## show a summary of the selected preset
+        if self.selected_preset is not None:
+            for line in self.presets[self.selected_preset].get_frame_summary():
+                display.display_text.insert(END, "%s\n" % line)
 
     def store_next_preset(self):
         # find an empty slot

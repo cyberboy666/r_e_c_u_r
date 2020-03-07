@@ -51,7 +51,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
         display.display_text.insert(END, "ShaderQuickPresetPlugin!")
 
         #display.display_text.insert(END, "
-        status = "\t Selected:"
+        status = "Selected:"
         for i,preset in enumerate(self.presets):
             if i == self.selected_preset:
                 status += "#"
@@ -61,7 +61,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
                 status += "_"
             else:
                 status += "="
-        display.display_text.insert(END, "\t[" + status + "]\n\n")
+        display.display_text.insert(END, " [" + status + "]\n\n")
 
         # display a basic summary of each preset
         """for i,preset in enumerate(self.presets):

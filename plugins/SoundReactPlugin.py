@@ -115,7 +115,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
             value = self.display_values.get(sourcename) or "{:03.2f}%".format(self.values.get(sourcename,0)*100) or "None"
             value += "\t"
             for i,level in enumerate(self.levels[sourcename]):
-                g = "ABCD"[i]+'%s '%self.get_bar(level)
+                g = "ABCD"[i]+'%s '%self.pc.display.get_bar(level)
                 value += g
             display.display_text.insert(END, "{}:\t{}\n".format(sourcename,value))
             """display.display_text.insert(END, "%s\n" %self.last_lfo_status[lfo])

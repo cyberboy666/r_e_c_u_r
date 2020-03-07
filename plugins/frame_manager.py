@@ -120,7 +120,6 @@ class Frame:
                 s += " %s " % (self.f.get('layer_active_status',['-']*3)[layer])
             if self.get('shader_speeds') is not None:
                 s += self.pc.display.get_bar(self.f.get('shader_speeds',[0.0]*3)[layer])
-            print("layer is %s" % layer)
             s += " " + self.get_shader_param_summary(layer) + " "
             s += "{:10s}".format(names[layer])
             summary.append(s)

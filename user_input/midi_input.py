@@ -116,7 +116,13 @@ class MidiInput(object):
 
     def run_action_for_mapped_message(self, message_name, mapped_message_value):
         this_mapping = self.midi_mappings[message_name]
-        if self.data.control_mode in this_mapping:
+        if type(self.data.control_mode) is list:
+            mode = 'DEFAULT'
+            for cm in self.data.control_mode:
+                if cm in this_mapping:
+                    mode = cm
+                    break
+        elif self.data.control_mode in this_mapping:
             mode = self.data.control_mode
         elif 'DEFAULT' in this_mapping:
             mode = 'DEFAULT'

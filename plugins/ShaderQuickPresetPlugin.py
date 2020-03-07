@@ -42,7 +42,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
 
     # DisplayPlugin methods
     def get_display_modes(self):
-        return ['QUIKSHDR','NAV_QKSH']
+        return ['QUIKSHDR',['NAV_QKSH','PLAY_SHADER']]
 
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END

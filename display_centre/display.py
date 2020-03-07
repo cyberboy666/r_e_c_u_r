@@ -91,6 +91,8 @@ class Display(object):
             self._load_shaders()
         elif self.data.display_mode == 'SHDR_BNK':
             self._load_shader_bank()
+        elif self.data.display_mode == 'MOD_BNK':
+            self._load_modulation_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
         elif self.data.display_mode == 'PLUGINS':
@@ -236,6 +238,37 @@ class Display(object):
             self._highlight_this_param(self.shaders.focused_param)
 
     def _load_shader_bank(self):
+        shader_bank_data = self.data.shader_bank_data[self.data.shader_layer]
+        
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+
+        self.display_text.insert(END, '{:>6} {:<11} {:<5} '.format(
+            '{}-layer'.format(self.data.shader_layer), 'name', 'type'))
+        
+        shader = self.shaders.selected_shader_list[self.data.shader_layer]
+        
+        for i in range(min(4,shader['param_number'])):
+            display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
+            if display_param == 100:
+                display_param == 99
+            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
+        self.display_text.insert(END, '\n')
+
+        for index, slot in enumerate(shader_bank_data):
+            name_without_extension =  slot['name'].rsplit('.',1)[0]
+            self.display_text.insert(END, '{:^6} {:<17} {:<5} \n'.format(index, name_without_extension[0:17], slot['shad_type']))
+            if index % 2:
+                self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
+        # highlight the slot of the selected player
+        current_slot = self.shaders.selected_shader_list[self.data.shader_layer].get('slot', None)
+        not_playing_tag = self.shaders.selected_status_list[self.data.shader_layer] != '▶'
+        if current_slot is not None:
+            self._highlight_this_row(current_slot, gray=not_playing_tag)
+
+        self._highlight_this_param(self.shaders.focused_param)
+
+    def _load_modulation_bank(self):
         shader_bank_data = self.data.shader_bank_data[self.data.shader_layer]
         
         self.display_text.insert(END, '{} \n'.format(self.body_title))

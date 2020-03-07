@@ -469,7 +469,8 @@ class Data(object):
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
-            if self.settings['system'].setdefault('USE_PLUGINS',self.default_settings.setdefault('USE_PLUGINS',{'value': 'enabled'})).get('value') == 'enabled':
+            if self.settings['system'].setdefault('USE_PLUGINS',
+                    self.default_settings.setdefault('USE_PLUGINS',{'value': 'enabled'})).get('value') == 'enabled':
                 display_modes.append(["PLUGINS",'NAV_PLUGINS'])
 
         if hasattr(self, 'plugins') and self.plugins is not None:

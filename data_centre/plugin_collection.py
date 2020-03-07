@@ -9,7 +9,6 @@ class Plugin(object):
     """Base class that each plugin must inherit from. within this class
     you must define the methods that all of your plugins must implement
     """
-    #disabled = False
     @property
     def disabled(self):
         return type(self).__name__ not in self.pc.data.get_active_plugin_class_names()
@@ -40,9 +39,8 @@ class MidiFeedbackPlugin(Plugin):
     def refresh_midi_feedback(self):
         raise NotImplementedError
 
-
-
 class SequencePlugin(Plugin):
+    """Base class for plugins that run constantly or on demand for eg automation"""
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -64,14 +62,6 @@ class SequencePlugin(Plugin):
         self.speed = (speed * speed) * 2.0
         if negative: self.speed *= -1
         print ("automation speed is now %s" % self.speed)
-
-    """def position(self, now):
-        import time
-        passed = now - self.automation_start
-        if self.duration>0:
-            position = passed / self.duration*1000
-        return position"""
-    position = 0.0
 
     def toggle_automation(self):
         if not self.is_playing():
@@ -113,11 +103,11 @@ class SequencePlugin(Plugin):
             self.position = self.position+1.0
             self.iterations_count += 1
 
+    position = 0.0
     store_passed = None
     pause_flag = True
     stop_flag = False
     looping = True
-    #automation_start = None
     iterations_count = 0
     duration = 2000
     frequency = 100
@@ -126,35 +116,14 @@ class SequencePlugin(Plugin):
 
         now = time.time()
 
-        """if self.looping and self.automation_start is not None and (now - self.automation_start >= self.duration/1000):
-            print("restarting as start reached %s" % self.automation_start)
-            self.iterations_count += 1
-            self.automation_start = None"""
-
-        """if not self.automation_start:
-            self.automation_start = now
-            print ("%s: starting automation" % self.automation_start)
-            self.pause_flag = False"""
-
         #print("running automation at %s!" % self.position)
         if not self.is_paused():
             self.store_passed = None
             delta = self.delta(now)
             self.move_delta(delta, self.speed)
             self.run_sequence(self.position)
-            #print("position is now %s" % self.position)
-            #self.run_sequence(self.position(now))
-            #print ("%s: automation_start is %s" % (time.time()-self.automation_start,self.automation_start))
-        """else:
-            #print ("%s: about to reset automation_start" % self.automation_start)
-            #print ("    got passed %s" % (time.time() - self.automation_start))
-            if not self.store_passed:
-                self.store_passed = (now - self.automation_start)
-            self.automation_start = now - self.store_passed
-            #print ("%s: reset automation_start to %s" % (time.time()-self.automation_start,self.automation_start))
-            #return"""
 
-        if not self.stop_flag and not self.disabled: # and (now - self.automation_start < self.duration/1000):
+        if not self.stop_flag and not self.disabled:
             self.pc.midi_input.root.after(self.frequency, self.run_automation)
         else:
             #print("%s: stopping ! (stop_flag %s)" % ((now - self.automation_start),self.stop_flag) )
@@ -172,7 +141,6 @@ class SequencePlugin(Plugin):
     def run_sequence(self, position):
         raise NotImplementedError
 
-from typing import Pattern
 class ActionsPlugin(Plugin):
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
@@ -180,11 +148,11 @@ class ActionsPlugin(Plugin):
     @property
     def parserlist(self):
         return [
-                #( r"test_plugin", self.test_plugin )
+                #( r"^test_plugin$", self.test_plugin )
         ]
 
+    # test if this plugin should handle the method name -- also covers if we're a DisplayPlugin
     def is_handled(self, method_name):
-
         if isinstance(self, DisplayPlugin):
             if method_name in self.get_display_modes():
                 return True
@@ -194,21 +162,16 @@ class ActionsPlugin(Plugin):
                 return True
             regex = a[0]
             me = a[1]
-            #if not isinstance(regex, Pattern):
-            #    continue
 
             matches = re.match(regex, method_name)
 
             if matches:
                 return True
 
-
     def get_callback_for_method(self, method_name, argument):
         for a in self.parserlist:
             regex = a[0]
             me = a[1]
-            #if not isinstance(regex, Pattern):
-            #    continue
 
             matches = re.search(regex, method_name)
 
@@ -223,6 +186,7 @@ class ActionsPlugin(Plugin):
                 return (found_method, args)
 
 class DisplayPlugin(Plugin):
+    """Base class for plugins that want to show a user interface on the recur screen"""
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -238,6 +202,7 @@ class DisplayPlugin(Plugin):
         display.display_text.insert(END, '{} \n'.format(display.body_title))
 
 class ModulationReceiverPlugin(Plugin):
+    """Base class for plugins that want to be notified of a change to modulation values"""
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
@@ -246,6 +211,7 @@ class ModulationReceiverPlugin(Plugin):
         raise NotImplementedError
 
 class AutomationSourcePlugin(Plugin):
+    """Base class for plugins that offer things to save&playback to&from automation"""
     @property
     def frame_key(self):
         return self.__class__.__name__
@@ -525,7 +491,7 @@ class PluginCollection(object):
                 clsmembers = inspect.getmembers(plugin_module, inspect.isclass)
                 for (_, c) in clsmembers:
                     # Only add classes that are a sub class of Plugin, but NOT Plugin itself
-                    # or one of the base classes
+                    # or one of the base classes defined in this file
                     ignore_list = [ Plugin, ActionsPlugin, SequencePlugin, MidiFeedbackPlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin ] 
                     if issubclass(c, Plugin) & (c not in ignore_list):
                         print('    Found plugin class: %s.%s' % (c.__module__,c.__name__))
@@ -534,6 +500,8 @@ class PluginCollection(object):
 
         # Now that we have looked at all the modules in the current package, start looking
         # recursively for additional modules in sub packages
+        # disabled 03-2020 to try and avoid problem with subclasses-of-subclasses being listed twice.. 
+        # no adverse effects yet but may need to rethink this if plugins start getting their own subdirectories
         """all_current_paths = []
         if isinstance(imported_package.__path__, str):
             all_current_paths.append(imported_package.__path__)

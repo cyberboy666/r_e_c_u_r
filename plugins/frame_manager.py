@@ -30,7 +30,8 @@ class Frame:
 
     def store_live(self):
         frame = {
-                'selected_shader_slots': [ shader.get('slot',None) for shader in self.pc.shaders.selected_shader_list ],
+                #'selected_shader_slots': [ shader.get('slot',None) for shader in self.pc.shaders.selected_shader_list ],
+                'selected_shader': copy.deepcopy(self.pc.shaders.selected_shader_list),
                 'shader_params': copy.deepcopy(self.pc.shaders.selected_param_list),
                 'layer_active_status': copy.deepcopy(self.pc.shaders.selected_status_list),
                 'feedback_active': self.pc.shaders.data.feedback_active,
@@ -94,8 +95,11 @@ class Frame:
             plugin.recall_frame_data(self.f.get(plugin.frame_key))
 
     def get_active_shader_names(self):
+        s = ""
         if self.get('selected_shader_slots') is None:
             return ['-']*3
+        if self.get('selected_shader') is not None:
+            return [ shader['name'] for shader in self.get('selected_shader') ]
         return [ self.pc.data.shader_bank_data[layer][x].get('name') if x is not None else '-'\
                  for layer,x in enumerate(self.f.get('selected_shader_slots',[None]*3)) 
                ]
@@ -105,17 +109,20 @@ class Frame:
         not_shown = []
 
         names = self.get_active_shader_names()
-        for layer in range(0,3):
+        for layer in range(0,3): # number of shader layers
             s = "%s " % layer
-            if self.get('selected_shader_slots'):
-                s += "["
-                for i in range(10):
-                    selected = self.get('selected_shader_slots')[layer]
-                    if selected==i:
-                        s += "#"
-                    else:
-                        s += "-"
-                s += "]"
+            s += "["
+            for i in range(10): # number of shader slots per layer
+                selected = (i==self.get('selected_shader_slots',[-1]*3)[layer]) or\
+                        (self.get('selected_shader') is not None and self.pc.data.shader_bank_data[layer][i]['name'] == self.get('selected_shader')[layer]['name'])
+
+                if selected:
+                    s += "#"
+                else:
+                    s += "-"
+            s += "]"
+            if self.get('selected_shader'):
+                s += self.get('selected_shader')[layer].get('name')
             if self.get('layer_active_status') is not None:
                 s += " %s " % (self.f.get('layer_active_status',['-']*3)[layer])
             if self.get('shader_speeds') is not None:
@@ -168,10 +175,25 @@ class Frame:
         # x3_as_speed affects preset recall, so do that first
         self.recall_frame_params()
 
-        for (layer, slot) in enumerate(preset.f.get('selected_shader_slots',[])):
+        for layer in range(3):
+            if preset.f.get('selected_shader_slots') is not None: # deprecated/compatibility
+                self.pc.actions.call_method_name('play_shader_%s_%s' % (layer, preset.f.get('selected_shader_slots')[layer]))
+            elif preset.f.get('selected_shader') is not None and preset.f.get('selected_shader')[layer] is not None:
+                # match selected shader to a slot and call that back if it exists
+                found = False
+                for slot,shader in enumerate(self.pc.data.shader_bank_data[layer]):
+                    if shader['name'] == preset.f.get('selected_shader')[layer]['name']:
+                        self.pc.actions.call_method_name('play_shader_%s_%s' % (layer, slot))
+                        found = True
+                        break
+                if not found: # otherwise fall back to loading it separately
+                    self.pc.shaders.selected_shader_list[self.pc.data.shader_layer] = preset.f.get('selected_shader')[layer].copy()
+                    self.pc.shaders.load_selected_shader()
+
+        """for layer, slot in enumerate(preset.f.get('selected_shader',[])):
             if slot is not None:
-                #print("setting layer %s to slot %s" % (layer, slot))
-                self.pc.actions.call_method_name('play_shader_%s_%s' % (layer, slot))
+                self.pc.shaders.selected_shader_list[self.pc.data.shader_layer] = slot
+                self.pc.shaders.load_selected_shader()"""
 
         for (layer, active) in enumerate(preset.f.get('layer_active_status',[])):
             # print ("got %s layer with status %s " % (layer,active))

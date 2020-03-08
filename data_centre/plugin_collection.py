@@ -11,7 +11,7 @@ class Plugin(object):
     """
     @property
     def disabled(self):
-        return type(self).__name__ not in self.pc.data.get_active_plugin_class_names()
+        return type(self).__name__ not in self.pc.data.get_enabled_plugin_class_names()
 
     def __init__(self, plugin_collection):
         self.description = 'UNKNOWN'
@@ -477,10 +477,8 @@ class PluginCollection(object):
 
 
     def get_plugins(self, clazz = None, include_disabled = False):
-        # is_active = self.active_plugins[type(plugin).__name__]
         if clazz:
             return [c for c in self.plugins if isinstance(c, clazz) and (include_disabled or not c.disabled)]
-                    #and type(c).__name__ in self.data.get_active_plugin_class_names())
         else:
             return [c for c in self.plugins if include_disabled or not c.disabled]
 

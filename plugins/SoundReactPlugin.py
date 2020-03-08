@@ -153,6 +153,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                     if meandiff>=self.config['energy'].get('triggerthreshold',0.15):
                         self.energy_history = []
                         print ("\n>>>>>>Triggering dynamic change for meandiff %s?\n" % meandiff)
+                        # TODO: add configurable triggering - eg trigger next preset, next shader, next video..
                         #self.pc.actions.call_method_name("load_slot_%s_into_next_player"%randint(0,9))
                 self.energy_history.append(diff) #self.values.get(sourcename,0.0))
                 #print("logging %s" % diff) #self.values.get(sourcename,0.0))

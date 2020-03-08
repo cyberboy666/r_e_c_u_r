@@ -8,6 +8,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     DEBUG = False #True
     ser = None
 
+    active = True
+
     PRESET_FILE_NAME = "WJSendPlugin/presets.json"
     presets = {}
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
@@ -123,7 +125,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "WJSendPlugin status\n\n")
+        display.display_text.insert(END, "WJSendPlugin {}\n\n".format('ACTIVE' if self.active else 'not active'))
 
         for queue, last in sorted(self.last_modulated.items()):
             is_selected = queue == self.commands[self.selected_command_name].get('queue')
@@ -134,7 +136,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             display.display_text.insert(END, "\n")
 
         cmd = self.commands[self.selected_command_name]
-        output = "\nModulation for " +  "%s : %s\n" % (self.selected_command_name, cmd['name'])
+        output = "\nMod " +  "%s %s : %s\n" % (self.commands[self.selected_command_name].get('queue'), self.selected_command_name, cmd['name'])
         for arg_name in cmd['arg_names']:
             is_selected = cmd['arg_names'].index(arg_name)==self.selected_argument_index
             indicator = " " if not is_selected else "["
@@ -205,18 +207,19 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if not self.ser or self.ser is None:
             self.open_serial()
 
-        try:
+        if self.active:
+          try:
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
             with self.queue_lock:
               for queue, command in sorted(self.queue.items()):
                 # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
-        except Exception:
+          except Exception:
             print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
             print(traceback.format_exc())
-        finally:
+          finally:
             with self.queue_lock:
                 self.queue.clear()
 
@@ -277,8 +280,12 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 ( r"^wj_select_previous_command$", self.select_previous_command ),
                 ( r"^wj_select_next_argument$", self.select_next_argument ),
                 ( r"^wj_select_previous_argument$", self.select_previous_argument ),
-                ( r"^wj_reset_modulation$", self.reset_modulation_levels )
+                ( r"^wj_reset_modulation$", self.reset_modulation_levels ),
+                ( r"^wj_toggle_active$", self.toggle_active )
         ]
+
+    def toggle_active(self):
+        self.active = not self.active
 
     def reset_modulation_levels(self):
         for cmd,struct in self.commands.items():
@@ -351,22 +358,21 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if self.DEBUG: print("modulate_arguments returning:\n\t%s" % args)
         return args
 
+    # panasonic parameters are 8 bit so go 0-255, so 127 is default of centre value
     commands = {
             'colour_gain_T': {
-                'name': 'Colour Corrector gain - both',
+                'name': 'Colour Corrector gain (both)',
                 'queue': 'VCG',
                 'form': 'VCG:T{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 }
             },
             'colour_T': {
-                'name': 'Colour Corrector - both',
+                'name': 'Colour Corrector (both)',
                 'queue': 'VCC',
                 'form': 'VCC:T{:02X}{:02X}',
                 'arg_names': [ 'x', 'y' ],
                 'arguments': { 'x': 127, 'y': 127 },
-                #'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
-                #'callback': self.set_colour
             },
             'mix': {
                 'name': 'Mix/wipe',
@@ -374,24 +380,22 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'form': 'VMM:{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 },
-                #'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
             },
             'back_colour': {
-                'name': 'Back colour/matte HSV',
+                'name': 'Matte colour HSV',
                 'queue': 'VBM',
                 'form': 'VBM:{:02X}{:02X}{:02X}',
                 'arg_names': [ 'h', 's', 'v' ],
                 'arguments': { 'h': 127, 's': 127, 'v': 127 },
-                #'modulation': [ {}, { 'h': 1.0 }, {}, {} ]
             },
             'position_N': {
-                'name': 'Positioner joystick',
+                'name': 'Positioner joystick XY',
                 'queue': 'VPS',
                 'form': 'VPS:N{:02X}{:02X}',
                 'arg_names': [ 'y', 'x' ],
                 'arguments': { 'y': 127, 'x': 127 }
             },
-            #'dsk_slice': {
+            #'dsk_slice': { ## cant seem to find the right control code for this?!
             #    'name': 'Downstream Key Slice,Slope',
             #    'queue': 'VDS',
             #    'form': 'VDS:{:02X}{:01X}',

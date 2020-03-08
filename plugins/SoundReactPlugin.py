@@ -110,14 +110,15 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         display.display_text.insert(END, "ACTIVE\n" if self.active else "not active\n")
 
         #display.display_text.insert(END, "\tSpeed: {:03.2f}\n\n".format(self.speed))
-
+        
         for sourcename in sorted(self.sources):
-            value = self.display_values.get(sourcename) or "{:03.2f}%".format(self.values.get(sourcename,0)*100) or "None"
-            value += "\t"
+            value = "{:8}:\t".format(sourcename)
             for i,level in enumerate(self.levels[sourcename]):
                 g = "ABCD"[i]+'%s '%self.pc.display.get_bar(level)
                 value += g
-            display.display_text.insert(END, "{}:\t{}\n".format(sourcename,value))
+            value += "\t"
+            value += self.display_values.get(sourcename) or "{:4.2f}%".format(self.values.get(sourcename,0)*100) or "None"
+            display.display_text.insert(END,value + "\n")
             """display.display_text.insert(END, "%s\n" %self.last_lfo_status[lfo])
             display.display_text.insert(END, "\t%s\n" % self.formula[lfo])"""
 
@@ -176,8 +177,12 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         bars="#"*int(50*value)
         if self.DEBUG: print("energy:\t\t%05d %s\t(converted to %s)"%(peak,bars,value))
-        g = self.pc.display.get_bar(value)
-        self.display_values['energy'] = "{} g{:03.2f} t{:03.2f} d{:03.2f}".format(g, self.config['energy']['gain'], self.config['energy']['threshold'], self.config['energy'].setdefault('triggerthreshold',0.15))
+        self.display_values['energy'] = "{} gn:{} trsh:{} trg:{}".format(
+                self.pc.display.get_bar(value), 
+                self.pc.display.get_bar(self.config['energy']['gain']), 
+                self.pc.display.get_bar(self.config['energy']['threshold']), 
+                self.pc.display.get_bar(self.config['energy'].setdefault('triggerthreshold',0.15))
+            )
 
         return value 
 

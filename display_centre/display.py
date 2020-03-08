@@ -91,7 +91,7 @@ class Display(object):
             self._load_shaders()
         elif self.data.display_mode == 'SHDR_BNK':
             self._load_shader_bank()
-        elif self.data.display_mode == 'MOD_BNK':
+        elif self.data.display_mode == 'SHDR_MOD':
             self._load_modulation_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
@@ -102,7 +102,7 @@ class Display(object):
             for plugin in self.data.plugins.get_plugins(DisplayPlugin):
                 if plugin.is_handled(self.data.display_mode):
                     self._load_plugin_page(self.data.display_mode, plugin)
-        self.display_text.tag_add("DISPLAY_MODE", 4.18, 4.28)
+        self.display_text.tag_add("DISPLAY_MODE", 4.19, 4.29)
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
        
 
@@ -464,7 +464,7 @@ class Display(object):
         if convert:
             value = (value * 2.0) - 1.0 # convert 0 to 1 to -1 to +1
         output = u""
-        if value==0.0:
+        if value==0.0 or (value>=-0.02 and value<=0.02):
             output+=u"\u23f9" # stopped
         elif value<=-0.5:
             output+=u"\u00AB" # fast reverse

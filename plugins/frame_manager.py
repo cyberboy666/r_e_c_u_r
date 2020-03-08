@@ -99,47 +99,51 @@ class Frame:
         if self.get('selected_shader_slots') is None:
             return ['-']*3
         if self.get('selected_shader') is not None:
-            return [ shader['name'] for shader in self.get('selected_shader') ]
-        return [ self.pc.data.shader_bank_data[layer][x].get('name') if x is not None else '-'\
+            return [ shader['name'].strip() for shader in self.get('selected_shader') ]
+        return [ self.pc.data.shader_bank_data[layer][x].get('name').strip() if x is not None else '-'\
                  for layer,x in enumerate(self.f.get('selected_shader_slots',[None]*3)) 
                ]
 
     def get_frame_summary(self):
         summary = []
-        not_shown = []
+        not_shown = {}
 
+        # list the recorded shader info in compact format
         names = self.get_active_shader_names()
         for layer in range(0,3): # number of shader layers
             s = "%s " % layer
             s += "["
-            for i in range(10): # number of shader slots per layer
-                selected = (i==self.get('selected_shader_slots',[-1]*3)[layer]) or\
-                        (self.get('selected_shader') is not None and self.pc.data.shader_bank_data[layer][i]['name'] == self.get('selected_shader')[layer]['name'])
-
-                if selected:
-                    s += "#"
-                else:
-                    s += "-"
+            s += self.pc.display.get_compact_indicators([\
+                    (i==self.get('selected_shader_slots',[-1]*3)[layer]) or\
+                    (self.get('selected_shader') is not None and self.pc.data.shader_bank_data[layer][i]['name'] == self.get('selected_shader')[layer]['name'])\
+                    for i in range(10)\
+                ])
             s += "]"
-            if self.get('selected_shader'):
-                s += self.get('selected_shader')[layer].get('name')
+
             if self.get('layer_active_status') is not None:
                 s += " %s " % (self.f.get('layer_active_status',['-']*3)[layer])
-            if self.get('shader_speeds') is not None:
-                s += self.pc.display.get_bar(self.f.get('shader_speeds',[0.0]*3)[layer])
+
+            if self.get('selected_shader'):
+                s += "{:14.14}".format(self.get('selected_shader')[layer].get('name').replace('.frag','').strip())
+
             s += " " + self.get_shader_param_summary(layer) + " "
-            s += "{:10s}".format(names[layer])
+
+            if self.get('shader_speeds') is not None:
+                s += self.pc.display.get_speed_indicator(self.get('shader_speeds',[0.0]*3)[layer])
+ 
             summary.append(s)
             
-
+        # handle summarising the rest of the recorded shader info, two-to-a-line where possible
         count = 0
         line = ""
         for key,d in sorted(self.f.items()):
-            if key in ["layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
-                # skip this as dealt with above
+            if key in ["selected_shader","layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
+                # skip these as dealt with above
                 pass
             elif key in ["WJSendPlugin"]:
-                not_shown.append(key)
+                # tends to be heavy so save it for later
+                # TODO: ask plugin to format the data for summary?
+                not_shown[key] = d
             else:
                 line += "%s: %s" % (key, d)
                 count += 1
@@ -151,8 +155,9 @@ class Frame:
         if line != "":
             summary.append(line)
 
+        # add 'not shown' items
         if len(not_shown)>0:
-            summary.append(','.join(not_shown))
+            summary.append(','.join(not_shown.keys()))
 
         return summary
 
@@ -189,11 +194,6 @@ class Frame:
                 if not found: # otherwise fall back to loading it separately
                     self.pc.shaders.selected_shader_list[self.pc.data.shader_layer] = preset.f.get('selected_shader')[layer].copy()
                     self.pc.shaders.load_selected_shader()
-
-        """for layer, slot in enumerate(preset.f.get('selected_shader',[])):
-            if slot is not None:
-                self.pc.shaders.selected_shader_list[self.pc.data.shader_layer] = slot
-                self.pc.shaders.load_selected_shader()"""
 
         for (layer, active) in enumerate(preset.f.get('layer_active_status',[])):
             # print ("got %s layer with status %s " % (layer,active))

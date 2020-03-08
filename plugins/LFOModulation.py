@@ -36,11 +36,11 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         display.display_text.insert(END, "ACTIVE" if self.active else "not active")
 
-        display.display_text.insert(END, "\tSpeed: {:03.2f}\n\n".format(self.speed))
+        display.display_text.insert(END, "\tSpeed: {:4.2f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
 
         for lfo,value in enumerate(self.level):
-            display.display_text.insert(END, "lfo {} level: {:03.2f}%\t".format(lfo,value))
-            display.display_text.insert(END, "%s\n" %self.last_lfo_status[lfo])
+            display.display_text.insert(END, "lfo {} level: {:4.2f}% {}\t".format(lfo,value*100,display.get_bar(value)))
+            display.display_text.insert(END, "{}\t{}\n".format(self.last_lfo_status[lfo], display.get_bar(self.last_lfo_value[lfo])))
             display.display_text.insert(END, "\t%s\n" % self.formula[lfo])
 
 
@@ -69,16 +69,19 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     formula = [
             "f_sin",
             "f_double_cos",
-            "f_sin",
-            "f_double_cos"
+            "f_invert_sin",
+            #"f_invert_double_cos",
+            "f_linear"
     ]
 
     # run the formula for the stored lfo configuration
     last_lfo_status = [None]*MAX_LFOS # for displaying status
+    last_lfo_value = [None]*MAX_LFOS
     #lfo_speed = [1.0]*MAX_LFOS
     def getLFO(self, position, lfo):
         lfo_value = getattr(self,self.formula[lfo])(position, self.level[lfo])
-        self.last_lfo_status[lfo] = " sent {:03.1f}%".format(lfo_value*100.0)
+        self.last_lfo_value[lfo] = lfo_value
+        self.last_lfo_status[lfo] = "sent {:03.1f}%".format(lfo_value*100.0)
         return lfo_value
 
     # built-in waveshapes
@@ -92,9 +95,17 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         return value
 
+    def f_invert_sin(self, position, level):
+        return 1.0 - self.f_sin(position, level)
+
     def f_double_cos(self, position, level):
         return self.f_sin(math.cos(position*math.pi), level)
-        #return self.f_sin(math.acos(position), level)
+
+    def f_invert_double_cos(self, position, level):
+        return 1.0 - self.f_double_cos(position, level)
+
+    def f_linear(self, position, level):
+        return position * level
 
     # SequencePlugin methods
     def run_sequence(self, position):

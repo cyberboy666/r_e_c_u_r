@@ -35,7 +35,8 @@
         "NAV_DETOUR": ["toggle_detour_play"],
         "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"],
 	"NAV_LFO": ["toggle_lfo_active"],
-	"NAV_SND": ["toggle_sound_react_active"]
+	"NAV_SND": ["toggle_sound_react_active"],
+	"NAV_QKSH": ["qksh_toggle_display_live"]
 	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"],

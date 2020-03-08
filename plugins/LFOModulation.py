@@ -1,8 +1,8 @@
 import math
 import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
+from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, AutomationSourcePlugin
 
-class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
+class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, AutomationSourcePlugin):
 
     MAX_LFOS = 4
 
@@ -43,6 +43,27 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
             display.display_text.insert(END, "{}\t{}\n".format(self.last_lfo_status[lfo], display.get_bar(self.last_lfo_value[lfo])))
             display.display_text.insert(END, "\t%s\n" % self.formula[lfo])
 
+    # AutomationSourcePlugin methods
+    # methods/vars for AutomationSourcePlugin
+    # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
+    def get_frame_data(self):
+        diff = { 'levels': self.level, 'speed': self.speed }
+        #self.last_record = {}
+        #print(">>> reporting frame data for rec\n\t%s" % diff)
+        return diff
+
+    def recall_frame_data(self, data):
+        if data is None:
+            return
+        # print(">>>>recall from data:\n\t%s\n" %data)
+        """for queue, item in data.items():
+            if item is not None:
+                self.send_buffered(queue, item[0], item[1], record = False)"""
+        if data.get('levels') is not None:
+            for slot,level in enumerate(data.get('levels')):
+                self.set_lfo_modulation_level(slot, level)
+        if data.get('speed') is not None:
+            self.set_lfo_speed_direct(data.get('speed'))
 
     # ActionsPlugin methods
     @property
@@ -58,7 +79,10 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         self.level[slot] = value
 
     def set_lfo_speed(self, speed):
-        self.speed = -4*(0.5-(speed))
+        self.set_lfo_speed_direct(-4*(0.5-(speed)))
+
+    def set_lfo_speed_direct(self, speed):
+        self.speed = speed
 
     def toggle_lfo_active(self):
         self.active = not self.active

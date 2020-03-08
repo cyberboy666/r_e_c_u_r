@@ -27,6 +27,8 @@ class Frame:
 
     def get(self, key, default=None):
         return self.f.get(key,default)
+    def has(self, key):
+        return self.get(key) is not None
 
     def store_live(self):
         frame = {
@@ -37,7 +39,8 @@ class Frame:
                 'feedback_active': self.pc.shaders.data.feedback_active,
                 'x3_as_speed': self.pc.shaders.data.settings['shader']['X3_AS_SPEED']['value'],
                 'shader_speeds': copy.deepcopy(self.pc.shaders.selected_speed_list),
-                'strobe_amount': self.pc.shaders.data.settings['shader']['STROBE_AMOUNT']['value'] / 10.0
+                'strobe_amount': self.pc.shaders.data.settings['shader']['STROBE_AMOUNT']['value'] / 10.0,
+                'shader_modulation_levels': copy.deepcopy(self.pc.shaders.modulation_level)
         }
         #print("about to call get_plugin_frame_data")
         frame.update(self.pc.fm.get_plugin_frame_data())
@@ -56,49 +59,11 @@ class Frame:
             self.f = {}
         return self
 
-    def recall_frame_params(self):
-        #print("recall_frame_params got: %s" % preset.get('shader_params'))
-        for (layer, param_list) in enumerate(self.get('shader_params',[])):
-            if param_list:
-                for param,value in enumerate(param_list):
-                    #if (ignored is not None and ignored['shader_params'][layer][param] is not None):
-                    #    print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
-                    #    continue
-                    if (value is not None):
-                      #print("recalling layer %s param %s: value %s" % (layer,param,value))
-                      self.pc.actions.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
-
-        if self.get('feedback_active') is not None:
-            self.pc.data.feedback_active = self.get('feedback_active',self.pc.data.feedback_active)
-            if self.pc.data.feedback_active:
-                self.pc.actions.call_method_name('enable_feedback')
-            else:
-                self.pc.actions.call_method_name('disable_feedback')
-
-        if self.get('x3_as_speed') is not None:
-            self.pc.data.settings['shader']['X3_AS_SPEED']['value'] = self.get('x3_as_speed',self.pc.data.settings['shader']['X3_AS_SPEED']['value'])
-            """if self.data.settings['shader']['X3_AS_SPEED']['value']:
-                self.data.plugins.actions.call_method_name('enable_x3_as_speed')
-            else:
-                self.data.plugins.actions.call_method_name('disable_x3_as_speed')"""
-
-        for (layer, speed) in enumerate(self.get('shader_speeds',[])):
-            if speed is not None:
-                self.pc.actions.call_method_name('set_shader_speed_layer_%s_amount' % layer, speed)
-
-        if self.get('strobe_amount') is not None:
-            self.pc.actions.set_strobe_amount_continuous(self.get('strobe_amount'))
-
-        from data_centre.plugin_collection import AutomationSourcePlugin
-        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
-            #print("recalling for plugin %s with data %s" % (plugin, self.get(plugin.frame_key)))
-            plugin.recall_frame_data(self.get(plugin.frame_key))
-
     def get_active_shader_names(self):
         s = ""
-        if self.get('selected_shader_slots') is None:
+        if self.has('selected_shader_slots'):
             return ['-']*3
-        if self.get('selected_shader') is not None:
+        if self.has('selected_shader'):
             return [ shader['name'].strip() for shader in self.get('selected_shader') ]
         return [ self.pc.data.shader_bank_data[layer][x].get('name').strip() if x is not None else '-'\
                  for layer,x in enumerate(self.get('selected_shader_slots',[None]*3)) 
@@ -111,26 +76,7 @@ class Frame:
         # list the recorded shader info in compact format
         names = self.get_active_shader_names()
         for layer in range(0,3): # number of shader layers
-            s = "%s " % layer
-            s += "["
-            s += self.pc.display.get_compact_indicators([\
-                    (i==self.get('selected_shader_slots',[-1]*3)[layer]) or\
-                    (self.get('selected_shader') is not None and self.pc.data.shader_bank_data[layer][i]['name'] == self.get('selected_shader')[layer]['name'])\
-                    for i in range(10)\
-                ])
-            s += "]"
-
-            if self.get('layer_active_status') is not None:
-                s += " %s " % (self.get('layer_active_status',['-']*3)[layer])
-
-            if self.get('selected_shader'):
-                s += "{:14.14}".format(self.get('selected_shader')[layer].get('name').replace('.frag','').strip())
-
-            s += " " + self.get_shader_param_summary(layer) + " "
-
-            if self.get('shader_speeds') is not None:
-                s += self.pc.display.get_speed_indicator(self.get('shader_speeds',[0.0]*3)[layer])
- 
+            s = self.get_shader_layer_summary(layer)
             summary.append(s)
             
         # handle summarising the rest of the recorded shader info, two-to-a-line where possible
@@ -140,6 +86,18 @@ class Frame:
             if key in ["selected_shader","layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
                 # skip these as dealt with above
                 pass
+            elif key in ['shader_modulation_levels']:
+                for layer in range(3):
+                  o = ""
+                  for slot in range(4):
+                    sl = 'ABCD'[slot]
+                    if slot != self.pc.shaders.selected_modulation_slot:
+                        sl = sl.lower()
+                    o+= sl + "["
+                    for param in range(4):
+                        o += self.pc.display.get_bar(d[layer][param][slot])
+                    o+= "] "
+                  summary.append("Shader layer %s: %s"%(layer,o))
             elif key in ["WJSendPlugin"]:
                 # tends to be heavy so save it for later
                 # TODO: ask plugin to format the data for summary?
@@ -161,6 +119,31 @@ class Frame:
 
         return summary
 
+    def get_shader_layer_summary(self, layer):
+            s = "%s%s" % (layer, " " if layer != self.pc.data.shader_layer else ">")
+            s += "["
+            s += self.pc.display.get_compact_indicators([\
+                    (i==self.get('selected_shader_slots',[-1]*3)[layer]) or\
+                    (self.has('selected_shader') and self.pc.data.shader_bank_data[layer][i]['name'] == self.get('selected_shader')[layer]['name'])\
+                    for i in range(10)\
+                ])
+            s += "]"
+
+            if self.has('layer_active_status'):
+                s += " %s " % (self.get('layer_active_status',['-']*3)[layer])
+
+            if self.get('selected_shader'):
+                s += "{:14.14}".format(self.get('selected_shader')[layer].get('name').replace('.frag','').strip())
+
+            s += " " + self.get_shader_param_summary(layer) + " "
+
+            if self.has('shader_speeds'):
+                s += self.pc.display.get_speed_indicator(self.get('shader_speeds',[0.0]*3)[layer])
+
+            return s
+
+
+
     def get_shader_param_summary(self, layer):
         if self.get('shader_params') is None:
             return ""
@@ -181,9 +164,9 @@ class Frame:
         self.recall_frame_params()
 
         for layer in range(3):
-            if preset.get('selected_shader_slots') is not None: # deprecated/compatibility
+            if preset.has('selected_shader_slots'): # deprecated/compatibility
                 self.pc.actions.call_method_name('play_shader_%s_%s' % (layer, preset.get('selected_shader_slots')[layer]))
-            elif preset.get('selected_shader') is not None and preset.get('selected_shader')[layer] is not None:
+            elif preset.has('selected_shader') and preset.get('selected_shader')[layer] is not None:
                 # match selected shader to a slot and call that back if it exists
                 found = False
                 for slot,shader in enumerate(self.pc.data.shader_bank_data[layer]):
@@ -195,12 +178,57 @@ class Frame:
                     self.pc.shaders.selected_shader_list[self.pc.data.shader_layer] = preset.get('selected_shader')[layer].copy()
                     self.pc.shaders.load_selected_shader()
 
+        if preset.has('shader_modulation_levels'):
+            for layer in range(3):
+                for param in range(4):
+                    for slot in range(4):
+                        level = preset.get('shader_modulation_levels')[layer][param][slot]
+                        self.pc.shaders.set_param_layer_slot_modulation_level(param, layer, slot, level)
+
         for (layer, active) in enumerate(preset.get('layer_active_status',[])):
             # print ("got %s layer with status %s " % (layer,active))
             if active=='▶':
                 self.pc.actions.call_method_name('start_shader_layer_%s' % layer)
             else:
                 self.pc.actions.call_method_name('stop_shader_layer_%s' % layer)
+
+    def recall_frame_params(self):
+        #print("recall_frame_params got: %s" % preset.get('shader_params'))
+        for (layer, param_list) in enumerate(self.get('shader_params',[])):
+            if param_list:
+                for param,value in enumerate(param_list):
+                    #if (ignored is not None and ignored['shader_params'][layer][param] is not None):
+                    #    print ("ignoring %s,%s because value is %s" % (layer,param,ignored['shader_params'][layer][param]))
+                    #    continue
+                    if (value is not None):
+                      #print("recalling layer %s param %s: value %s" % (layer,param,value))
+                      self.pc.actions.call_method_name('set_the_shader_param_%s_layer_%s_continuous' % (param,layer), value)
+
+        if self.has('feedback_active'):
+            self.pc.data.feedback_active = self.get('feedback_active',self.pc.data.feedback_active)
+            if self.pc.data.feedback_active:
+                self.pc.actions.call_method_name('enable_feedback')
+            else:
+                self.pc.actions.call_method_name('disable_feedback')
+
+        if self.has('x3_as_speed'):
+            self.pc.data.settings['shader']['X3_AS_SPEED']['value'] = self.get('x3_as_speed',self.pc.data.settings['shader']['X3_AS_SPEED']['value'])
+            """if self.data.settings['shader']['X3_AS_SPEED']['value']:
+                self.data.plugins.actions.call_method_name('enable_x3_as_speed')
+            else:
+                self.data.plugins.actions.call_method_name('disable_x3_as_speed')"""
+
+        for (layer, speed) in enumerate(self.get('shader_speeds',[])):
+            if speed is not None:
+                self.pc.actions.call_method_name('set_shader_speed_layer_%s_amount' % layer, speed)
+
+        if self.has('strobe_amount'):
+            self.pc.actions.set_strobe_amount_continuous(self.get('strobe_amount'))
+
+        from data_centre.plugin_collection import AutomationSourcePlugin
+        for plugin in self.pc.get_plugins(AutomationSourcePlugin):
+            #print("recalling for plugin %s with data %s" % (plugin, self.get(plugin.frame_key)))
+            plugin.recall_frame_data(self.get(plugin.frame_key))
 
     def merge(self, frame2):
         from copy import deepcopy
@@ -214,10 +242,10 @@ class Frame:
                         f['shader_params'] = [[None]*4,[None]*4,[None]*4]
                     f['shader_params'][i][i2] = p
 
-        if frame2.get('feedback_active') is not None:
+        if frame2.has('feedback_active'):
             f['feedback_active'] = frame2['feedback_active']
 
-        if frame2.get('x3_as_speed') is not None:
+        if frame2.has('x3_as_speed'):
             f['x3_as_speed'] = frame2.get('x3_as_speed')
 
         if f.get('shader_speeds') is None:
@@ -248,15 +276,15 @@ class Frame:
             for i2,p in enumerate(f2):
                 if ignored['shader_params'][i][i2] is not None:
                     f['shader_params'][i][i2] = None
-        if ignored.get('feedback_active') is not None:
+        if ignored.has('feedback_active'):
             f['feedback_active'] = None
-        if ignored.get('x3_as_speed') is not None:
+        if ignored.has('x3_as_speed'):
             f['x3_as_speed'] = None
-        if ignored.get('shader_speeds') is not None and frame.get('shader_speeds') is not None:
+        if ignored.has('shader_speeds') and frame.has('shader_speeds'):
           for i,s in enumerate(frame.get('shader_speeds')):
             if ignored['shader_speeds'][i] is not None:
                 f['shader_speeds'][i] = None
-        if ignored.get('strobe_amount') is not None:
+        if ignored.has('strobe_amount'):
             f['strobe_amount'] = None
 
         from data_centre.plugin_collection import AutomationSourcePlugin
@@ -274,11 +302,11 @@ class Frame:
         frame = self.f
         if self.DEBUG_FRAMES:  print("is_frame_empty: got frame\t%s" % frame)
 
-        if frame.get('feedback_active') is not None:
+        if self.has('feedback_active'):
             return False
-        if frame.get('x3_as_speed') is not None:
+        if self.has('x3_as_speed'):
             return False
-        if frame.get('strobe_amount') is not None:
+        if self.has('strobe_amount'):
             return False
 
         for i,f in enumerate(frame['shader_params']):
@@ -286,7 +314,7 @@ class Frame:
                 if p is not None: #ignored['shader_params'][i][i2] is not None:
                     return False
 
-        if frame.get('shader_speeds') is not None:
+        if self.has('shader_speeds'):
           for i,f in enumerate(frame['shader_speeds']):
             if f is not None:
                 return False

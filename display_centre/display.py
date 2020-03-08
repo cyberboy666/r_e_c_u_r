@@ -282,14 +282,14 @@ class Display(object):
 
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
         
-        for i in range(min(4,shader['param_number'])):
+        """for i in range(min(4,shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
                 display_param == 99
-            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
+            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))"""
         self.display_text.insert(END, '\n')
 
-        for index, slot in enumerate(shader_bank_data):
+        """for index, slot in enumerate(shader_bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
             #self.display_text.insert(END, '{:^6} {:<17} {:<5} '.format(index, name_without_extension[0:17], slot['shad_type']))
             self.display_text.insert(END, '{:^2} {:<14} {:<3} '.format(index, name_without_extension[0:14], slot['shad_type']))
@@ -309,20 +309,20 @@ class Display(object):
         if current_slot is not None:
             self._highlight_this_row(current_slot, gray=not_playing_tag)
 
-        self._highlight_this_param(self.shaders.focused_param)
+        self._highlight_this_param(self.shaders.focused_param) """
 
         # show info about the modulation configuration
         #self.display_text.insert(END, "Lyr|1a b c d|2a b c d|3a b c d|4a b c d\n")
-        self.display_text.insert(END, "Lyr")
-        for i in range(4):
+        #self.display_text.insert(END, "Lyr")
+        """for i in range(4):
             self.display_text.insert(END, "|%s"%i)
             for i in range(4):
                 a = 'abcd'[i]
                 if i==self.shaders.selected_modulation_slot:
                     a = a.upper()
-                self.display_text.insert(END, "%s "%a)
-        self.display_text.insert(END,  "\n")
-        for layer, modulations in enumerate(self.shaders.modulation_level):
+                self.display_text.insert(END, "%s "%a)"""
+        #self.display_text.insert(END,  "\n")
+        """for layer, modulations in enumerate(self.shaders.modulation_level):
             if (layer==self.data.shader_layer):
                 self.display_text.insert(END, '*')
             else:
@@ -333,7 +333,24 @@ class Display(object):
                 for slot,level in enumerate(levels):
                     self.display_text.insert(END, ' %s'%self.get_bar(level))
                 self.display_text.insert(END, ' ')
-            self.display_text.insert(END, '\n')
+            self.display_text.insert(END, '\n')"""
+
+        for layer in range(3):
+            o = ""
+            o += self.data.plugins.fm.get_live_frame().get_shader_layer_summary(layer)
+            o += "\n  Modmatrix:\t"
+
+            name = self.shaders.selected_shader_list[layer].get('name').strip()
+            #o = ""
+            for slot in range(4):
+                sl = 'ABCD'[slot]
+                if slot != self.shaders.selected_modulation_slot:
+                    sl = sl.lower()
+                o+= sl + "["
+                for param in range(4):
+                    o += self.get_bar(self.shaders.modulation_level[layer][param][slot])
+                o+= "] "
+            self.display_text.insert(END, "%s %s:\t%s\n\n"%(">" if layer==self.data.shader_layer else " ", layer, o))
 
 
         # todo: this doesnt work but would be a better way to highlight the selected modulation slot/layer

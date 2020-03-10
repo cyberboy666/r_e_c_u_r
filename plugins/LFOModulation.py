@@ -6,6 +6,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
     MAX_LFOS = 4
 
+    PRESET_FILE_NAME = "LFOModulationPlugin/config.json"
+    presets = {}
+
     # active = True (toggle_lfo_active) to enable sending of modulation
     active = False
 
@@ -18,11 +21,28 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         super().__init__(plugin_collection)
 
         #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
+        self.presets = self.load_presets()
+        self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS)
+        self.active = self.presets.get('active', False)
 
         self.pc.shaders.root.after(1000, self.start_plugin)
         
     def start_plugin(self):
+        super().start_plugin()
         self.pc.shaders.root.after(0, self.run_automation)
+
+    def stop_plugin(self):
+        super().stop_plugin()
+        self.save_presets()
+
+    def load_presets(self):
+        print("trying load presets? %s " % self.PRESET_FILE_NAME)
+        return self.pc.read_json(self.PRESET_FILE_NAME) or { 'levels': [0.0]*self.MAX_LFOS, 'active': self.active }
+
+    def save_presets(self):
+        #for cmd,struct in self.commands.items():
+        #    self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
+        self.pc.update_json(self.PRESET_FILE_NAME, { 'levels': self.level.copy(), 'active': self.active } )
 
     # DisplayPlugin methods
     def get_display_modes(self):

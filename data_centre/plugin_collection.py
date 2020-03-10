@@ -520,3 +520,11 @@ class PluginCollection(object):
                 # For each sub directory, apply the walk_package method recursively
                 for child_pkg in child_pkgs:
                     self.walk_package(package + '.' + child_pkg)"""
+
+
+    ## helpers
+    def get_variable(self, varname, default=0.0):
+        from plugins.ManipulatePlugin import ManipulatePlugin
+        plugin = self.get_plugins(ManipulatePlugin)
+        if plugin is not None:
+            return plugin[0].get_variable(varname, default)

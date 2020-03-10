@@ -10,6 +10,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     active = True
 
+    sleep = 0.0
+
     PRESET_FILE_NAME = "WJSendPlugin/presets.json"
     presets = {}
     # from http://depot.univ-nc.nc/sources/boxtream-0.9999/boxtream/switchers/panasonic.py
@@ -117,9 +119,9 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                     continue
 
         for queue,cmd in sorted(to_send.items(),reverse=True):
-            #self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
+            self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
             #with self.queue_lock:
-            self.send(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ])
+            #self.send(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ])
                 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
@@ -187,10 +189,15 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3' 
             #with self.serial_lock:
+            #self.ser.write(b'\2\2\2\2\3\3\3\3')
             self.ser.write(output) #.encode())
             # TODO: sleeping here seems to help serial response lag problem?
-            import time
-            time.sleep(0.02)
+            self.sleep = 0.25 #self.pc.get_variable('A')
+            print ("got sleep %s" % self.sleep)
+            if self.sleep>=0.1:
+                print("using sleep %s" % self.sleep)
+                import time
+                time.sleep(self.sleep/10.0)
             #yield from self.ser.drain()
             if self.DEBUG: 
                 print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))

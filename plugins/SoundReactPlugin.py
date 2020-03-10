@@ -28,6 +28,8 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
     config = {}
 
+    # TODO: save + reload current config
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 

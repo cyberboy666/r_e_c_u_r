@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 29 Feb 17:41:32 UTC 2020
+Tue 10 Mar 23:48:45 UTC 2020
 
 for branch=feature_plugins
 
@@ -33,6 +33,7 @@ for branch=feature_plugins
   *   eject_all_usb_drives
   *   enable_feedback
   *   enter_on_browser_selection
+  *   enter_on_plugins_selection
   *   enter_on_settings_selection
   *   enter_on_shaders_selection
   *   exit_openframeworks
@@ -63,6 +64,10 @@ for branch=feature_plugins
   *   move_browser_selection_page_down
   *   move_browser_selection_page_up
   *   move_browser_selection_up
+  *   move_plugins_selection_down
+  *   move_plugins_selection_page_down
+  *   move_plugins_selection_page_up
+  *   move_plugins_selection_up
   *   move_settings_selection_down
   *   move_settings_selection_page_down
   *   move_settings_selection_page_up
@@ -101,6 +106,7 @@ for branch=feature_plugins
   *   set_detour_mix_continuous(amount)
   *   set_detour_speed_position_continuous(amount)
   *   set_detour_start_continuous(amount)
+  *   set_display_mode(display_mode)
   *   set_feedback_state(state)
   *   set_fixed_length(value)
   *   set_playing_sample_end_to_current_duration
@@ -180,11 +186,12 @@ for branch=feature_plugins
   * select_shader_modulation_slot_([0-3])
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
+  * set_display_mode_([a-zA-Z_]*)
 
 ### Plugin routes
-  * set_lfo_modulation_([0-3])_level	(from LFOModulation)
-  * toggle_lfo_active	(from LFOModulation)
-  * set_lfo_speed	(from LFOModulation)
+  * set_lfo_modulation_([0-3])_level	(from LFOModulationPlugin)
+  * toggle_lfo_active	(from LFOModulationPlugin)
+  * set_lfo_speed	(from LFOModulationPlugin)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
@@ -212,6 +219,7 @@ for branch=feature_plugins
   * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * qksh_toggle_display_live	(from ShaderQuickPresetPlugin)
   * toggle_sound_react_active	(from SoundReactPlugin)
   * sound_set_config_([a-z]*)_([a-z]*)	(from SoundReactPlugin)
   * sound_set_modulation_([a-z]*)_slot_([0-3])_level	(from SoundReactPlugin)
@@ -239,6 +247,7 @@ for branch=feature_plugins
   * wj_select_next_argument	(from WJSendPlugin)
   * wj_select_previous_argument	(from WJSendPlugin)
   * wj_reset_modulation	(from WJSendPlugin)
+  * wj_toggle_active	(from WJSendPlugin)
 
 ----
 

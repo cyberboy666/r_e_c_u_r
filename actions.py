@@ -200,14 +200,14 @@ class Actions(object):
     def increase_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index + 1) % len(options) ]
+        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index + 1) % len(options) ])
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
 
 
     def decrease_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.settings['sampler']['SEEK_TIME']['value'] = options[(current_index - 1)  % len(options) ]
+        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index - 1) % len(options) ])
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
         
 
@@ -549,7 +549,7 @@ class Actions(object):
         if self.data.settings['shader']['STROBE_AMOUNT']['value'] != scaled_amount:
             print(scaled_amount)
             self.video_driver.osc_client.send_message("/set_strobe", scaled_amount)
-            self.data.settings['shader']['STROBE_AMOUNT']['value'] = scaled_amount
+            self.data.update_setting_value('shader', 'STROBE_AMOUNT', scaled_amount)
 
     def get_midi_status(self):
         self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
@@ -760,13 +760,13 @@ class Actions(object):
     def increase_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
-        self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index + 1) % len(options) ]
+        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index + 1) % len(options) ])
         self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
-        self.data.settings['shader']['SHADER_PARAM']['value'] = options[(current_index - 1) % len(options) ]
+        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index - 1) % len(options) ])
         self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
 
@@ -841,19 +841,22 @@ class Actions(object):
         self.server.shutdown()
 
     def create_client_and_shutdown_osc_server(self):
-        from pythonosc import udp_client
-        client_parser = argparse.ArgumentParser()
-        client_parser.add_argument("--ip", default=self.data.get_ip_for_osc_client(), help="the ip")
-        client_parser.add_argument("--port", type=int, default=8080, help="the port")
+        try:
+            from pythonosc import udp_client
+            client_parser = argparse.ArgumentParser()
+            client_parser.add_argument("--ip", default=self.data.get_ip_for_osc_client(), help="the ip")
+            client_parser.add_argument("--port", type=int, default=8080, help="the port")
 
-        client_args = client_parser.parse_args()
+            client_args = client_parser.parse_args()
 
-        client = udp_client.SimpleUDPClient(client_args.ip, client_args.port)
-        client.send_message("/shutdown", True)
+            client = udp_client.SimpleUDPClient(client_args.ip, client_args.port)
+            client.send_message("/shutdown", True)
+        except:
+            pass
 
     def toggle_access_point(self, setting_value):
         osc_setting_state = self.data.settings['user_input']['OSC_INPUT']['value']
-        self.data.settings['user_input']['OSC_INPUT']['value'] = 'disabled'
+        self.data.update_setting_value('user_input', 'OSC_INPUT', 'disabled') 
         self.tk.after(2000, self.toggle_access_point_delay, setting_value, osc_setting_state)
 
     def toggle_access_point_delay(self, setting_value, osc_setting_state ):
@@ -865,7 +868,7 @@ class Actions(object):
 
     def toggle_remote_server(self, setting_value):
         osc_setting_state = self.data.settings['user_input']['OSC_INPUT']['value']
-        self.data.settings['user_input']['OSC_INPUT']['value'] = 'disabled'
+        self.data.update_setting_value('user_input', 'OSC_INPUT', 'disabled')
         self.tk.after(2000, self.toggle_remote_server_delay, setting_value, osc_setting_state)
 
     def toggle_remote_server_delay(self, setting_value, osc_setting_state):
@@ -873,10 +876,10 @@ class Actions(object):
             self.remote_process = subprocess.Popen(['node', '/home/pi/r_e_m_o_t_e/webserver.js'])
         else:
             self.stop_remote_process()
-        self.data.settings['user_input']['OSC_INPUT']['value'] = osc_setting_state
+        self.data.update_setting_value('user_input', 'OSC_INPUT', osc_setting_state)
 
     def enable_osc(self, osc_setting_state):
-        self.data.settings['user_input']['OSC_INPUT']['value'] = osc_setting_state
+        self.data.update_setting_value('user_input', 'OSC_INPUT', osc_setting_state)
 
 
     def show_ip(self, *args):

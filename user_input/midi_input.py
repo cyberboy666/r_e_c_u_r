@@ -59,38 +59,30 @@ class MidiInput(object):
     def poll_midi_input(self):
         i = 0
         cc_dict = dict()
-        for message in self.midi_device.iter_pending():
-            i = i + 1
-            message_dict = message.dict()
-            midi_channel = midi_setting = self.data.settings['user_input']['MIDI_CHANNEL']['value'] - 1
+        midi_channel = self.data.settings['user_input']['MIDI_CHANNEL']['value'] - 1
 
-            if not message_dict.get('channel', None) == midi_channel:
-                pass
-            ## turning off noisey clock messages for now - may want to use them at some point
-            elif message_dict['type'] == 'clock':
-                pass
-            ## trying to only let through step cc messages to increase response time
-            elif message_dict['type'] == 'control_change':
-                control_number = message_dict['control']
-                print('control number is {} , cc_dict.keys is {}'.format(control_number, cc_dict.keys() ))
-                if not control_number in cc_dict.keys():
-                    cc_dict[control_number] = message_dict['value']
-                    self.on_midi_message(message_dict)
-                else:
-                    step_size = 3
-                    ignore_range = range(cc_dict[control_number] - step_size,cc_dict[control_number] + step_size)
-                    #print('value is {} and ignore range is {}'.format(message_dict['value'], ignore_range ))
-                    if not message_dict['value'] in ignore_range:
-                        cc_dict[control_number] = message_dict['value']
-                        #print(message_dict)
-                        self.on_midi_message(message_dict)
-                    #print(cc_dict)
+        current_message_buffer = [i.dict() for i in self.midi_device.iter_pending()]
 
-            else:
-                print(message_dict)       
-                self.on_midi_message(message_dict)
-        if i > 0:
-            pass
+        refined_buffer = []
+        #refine buffer from lastest messages first
+        current_message_buffer.reverse()
+        for message in current_message_buffer:
+            # discard notes from wrong channel
+            if message.get('channel') != midi_channel:
+                pass
+            # process all note messages (in order)
+            if 'note' in message['type']:
+                refined_buffer.append(message)
+            # only take the latest cc message per cc_channel
+            elif message['type'] == 'control_change':
+                if not message['control'] in [i.get('control') for i in refined_buffer]:
+                    refined_buffer.append(message)
+        # process buffer from oldest messages first
+        refined_buffer.reverse()
+
+        for message in refined_buffer:
+            self.on_midi_message(message)
+
             #print('the number processed {}'.format(i))
         if self.data.settings['user_input']['MIDI_INPUT']['value'] == self.midi_setting and self.data.midi_port_index == self.port_index:
             self.root.after(self.midi_delay, self.poll_midi_input)
@@ -140,7 +132,12 @@ class MidiInput(object):
             
         else:
             norm_message_value = None
-        self.actions.call_method_name(method_name, norm_message_value)
+        try:
+            self.actions.call_method_name(method_name, norm_message_value)
+        except TypeError:
+            ## to support using cc-0 as button presses
+            if norm_message_value == 0:
+                self.actions.call_method_name(method_name, None)
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()

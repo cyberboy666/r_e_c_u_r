@@ -473,6 +473,8 @@ class Display(object):
         if value is None:
             return " "
         value = abs(value / max_value) # abs() so negative values make some sense
+        if value>1.0: value = 1.0
+        elif value<0.0: value = 0.0
         bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
         g = '%s'%bar[int(value*(len(bar)-1))]
         return g

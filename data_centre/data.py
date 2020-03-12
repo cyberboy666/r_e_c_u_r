@@ -217,7 +217,7 @@ class Data(object):
         tag = tree.find("delayMode")
         tag.text = str(int(value))
         tree.write(self.PATH_TO_CONJUR_DATA)
-    
+
     def get_setting_and_folder_from_name(self, setting_name):
         for folder_key , folder_item in self.settings.items():
             for setting_key, setting_item in folder_item.items():

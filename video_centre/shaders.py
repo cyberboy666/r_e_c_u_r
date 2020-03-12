@@ -1,6 +1,6 @@
 import display_centre.menu as menu
 import os
-
+from statistics import mean
 
 class Shaders(object):
     MENU_HEIGHT = 10
@@ -20,10 +20,15 @@ class Shaders(object):
         self.selected_speed_list = [1.0, 1.0, 1.0]
 
         self.selected_modulation_slot = 0
-        self.selected_modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
+        #self.modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
         self.modulation_value = [0.0,0.0,0.0,0.0]
 
         #self.load_selected_shader()
+
+    @property
+    def modulation_level(self):
+        return self.data.settings['shader'].setdefault('modulation_level', 
+                [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)])
 
     def generate_shaders_list(self):
         shaders_menu_list = []
@@ -163,7 +168,7 @@ class Shaders(object):
         self.selected_modulation_slot = slot
 
     def reset_modulation(self, slot):
-        for layer in self.selected_modulation_level:
+        for layer in self.modulation_level:
             for layer,levels in enumerate(layer):
                 levels[slot] = 0.0
 
@@ -202,7 +207,6 @@ class Shaders(object):
         for i,v in enumerate(values):
             l.append(self.get_modulation_value(amount, v, levels[i]))
 
-        from statistics import mean
         #print ("got mean %s from amount %s with %s*%s" % (mean(l), amount, values, levels))
         return mean(l)
 
@@ -225,7 +229,7 @@ class Shaders(object):
         self.modulation_value[param] = (value-0.5)*2
         for layer,params in enumerate(self.selected_param_list):
           for ip,p in enumerate(params):
-              for p2,v in enumerate(self.selected_modulation_level[layer][ip]):
+              for p2,v in enumerate(self.modulation_level[layer][ip]):
                   if v!=0:
                       self.update_param_layer(ip,layer)
                       break
@@ -235,7 +239,7 @@ class Shaders(object):
         self.set_param_layer_modulation_level(param, layer, level)
 
     def set_param_layer_modulation_level(self, param, layer, level):
-        self.selected_modulation_level[layer][param][self.selected_modulation_slot] = level
+        self.modulation_level[layer][param][self.selected_modulation_slot] = level
         self.update_param_layer(param, layer)
 
     def update_param_layer(self, param, layer):
@@ -245,7 +249,7 @@ class Shaders(object):
                 self.get_modulation_value_list(
                     self.selected_param_list[layer][param],
                     self.modulation_value,#[0], #param],
-                    self.selected_modulation_level[layer][param]
+                    self.modulation_level[layer][param]
                 )
         )
 

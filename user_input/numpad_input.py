@@ -36,7 +36,9 @@ class NumpadInput(object):
                 self.check_key_release_settings(event.char)
 
     def on_mouse_move(self, event):
-        if self.data.settings['user_input']['MOUSE_INPUT']['value'] != 'enabled':
+        if self.data.settings['user_input'].setdefault(
+                'MOUSE_INPUT',
+                self.data.default_settings.get('MOUSE_INPUT',{'value': 'enabled'})).get('value') != 'enabled':
             return
         if event.x > 480 or event.y > 320:
             return
@@ -61,9 +63,9 @@ class NumpadInput(object):
             
         print('the action being called is {}'.format(this_mapping[mode][is_function]))
         if value != -1:
-            getattr(self.actions, this_mapping[mode][is_function])(value)
+            self.actions.call_method_name(this_mapping[mode][is_function],value)
         else:
-            getattr(self.actions, this_mapping[mode][is_function])()
+            self.actions.call_method_name(this_mapping[mode][is_function])
 
         if is_function and self.data.settings['sampler']['FUNC_GATED']['value'] == 'off':
             self.data.function_on = False

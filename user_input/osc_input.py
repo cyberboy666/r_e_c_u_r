@@ -23,6 +23,8 @@ class OscInput(object):
         self.poll_settings_for_osc_info()
 
     def poll_settings_for_osc_info(self):
+        self.data.settings['user_input'].setdefault('OSC_INPUT',
+                self.data.default_settings['user_input'].get('OSC_INPUT'))
         osc_setting_enabled = self.data.settings['user_input']['OSC_INPUT']['value'] == 'enabled'
         if osc_setting_enabled and not self.osc_enabled:
             self.setup_osc_server()
@@ -50,8 +52,8 @@ class OscInput(object):
         this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
         this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
-        #this_dispatcher.map("/*", print)        
-
+        this_dispatcher.map("/*", self.on_param_osc_input)
+        
         osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)

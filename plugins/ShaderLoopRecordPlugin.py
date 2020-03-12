@@ -3,7 +3,7 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, Display
 from plugins.frame_manager import Frame
 
 class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
-    disabled = False
+    
     MAX_CLIPS = 8
     frames = [] 
 
@@ -45,8 +45,8 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     def save_presets(self):
         self.pc.update_json(self.PRESET_FILE_NAME, self.frames)
 
-    def quit_plugin(self):
-        super().quit_plugin()
+    def stop_plugin(self):
+        super().stop_plugin()
         self.save_presets()
 
     # DisplayPlugin methods
@@ -72,8 +72,9 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         status+="\n"
 
         display.display_text.insert(END, status)
-        display.display_text.insert(END, ("Position:\t{:03.2f}%\t[{:15s}]".format(self.position,("#"*int(self.position*15)))))
-        display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed*100)))
+        display.display_text.insert(END, ("Position:\t{:3.0f}%\t[{:12s}]".format(self.position*100.0,("#"*int(self.position*12)))))
+        #display.display_text.insert(END, (" Speed: {:03.2f}%\n".format(self.speed*100)))
+        display.display_text.insert(END, (" Speed:{} {:3.0f}%\n".format(display.get_speed_indicator(self.speed/2,convert=False),self.speed*100)))
         if self.speed==0.0:
             display.display_text.insert(END, ("Duration:\tinfinity!\n"))
         else:

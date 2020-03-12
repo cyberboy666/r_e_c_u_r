@@ -5,9 +5,12 @@ from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, Display
 import threading
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
-    disabled = False#True
     DEBUG = False #True
     ser = None
+
+    active = True
+
+    sleep = 0.0
 
     PRESET_FILE_NAME = "WJSendPlugin/presets.json"
     presets = {}
@@ -28,24 +31,23 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        if self.disabled:
+        """if self.disabled:
             print ("WJSendPlugin is disabled, not opening serial")
-            return
+            return"""
 
         self.presets = self.load_presets()
         print("read presets:\n%s\n" % self.presets)
         # load the stored modulation levels into the current config
-        for cmd,levels in self.presets['modulation_levels'].items(): #.setdefault(cmd,[{},{},{},{}]):
-            print("setting commands[%s]['modulation'] to %s" % (cmd, levels))
+        for cmd,levels in self.presets['modulation_levels'].items():
             self.commands[cmd]['modulation'] = levels
 
-        # build a reverse map for later use
+        # build a reverse map of friendly name -> command struct for later use
         for cmd,struct in self.commands.items():
             self.command_by_queue[struct['queue']] = struct
 
-        self.pc.actions.tk.after(500, self.refresh)
+        self.pc.actions.tk.after(500, self.start_plugin)
 
-        self.selected_command_name = list(sorted(self.commands.keys()))[0]
+        self.selected_command_name = list(sorted(self.commands.keys()))[0] # select first command
 
     def load_presets(self):
         print("trying load presets? %s " % self.PRESET_FILE_NAME)
@@ -56,8 +58,11 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
         self.pc.update_json(self.PRESET_FILE_NAME, self.presets)
 
-    def quit_plugin(self):
-        super().quit_plugin()
+    def start_plugin(self):
+        self.pc.actions.tk.after(0, self.refresh)
+
+    def stop_plugin(self):
+        super().stop_plugin()
         self.save_presets()
 
 
@@ -69,9 +74,6 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         #self.last_record = {}
         #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
-
-    """def clear_recorded_frame(self):
-        self.last_record = {}"""
 
     def recall_frame_data(self, data):
         if data is None:
@@ -117,36 +119,39 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                     continue
 
         for queue,cmd in sorted(to_send.items(),reverse=True):
-            #self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
+            self.send_buffered(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ], record=False)
             #with self.queue_lock:
-            self.send(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ])
+            #self.send(cmd['queue'], cmd['form'], [x for x in [ cmd['arguments'][y] for y in cmd['arg_names'] ] ])
                 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
         from tkinter import Text, END
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "WJSendPlugin status\n\n")
+        display.display_text.insert(END, "WJSendPlugin {}\n\n".format('ACTIVE' if self.active else 'not active'))
 
         for queue, last in sorted(self.last_modulated.items()):
-            display.display_text.insert(END, "%s:\t%s\t%s\n" % (queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
+            is_selected = queue == self.commands[self.selected_command_name].get('queue')
+            indicator = " " if not is_selected else "<"
+            display.display_text.insert(END, "%s%s:\t%s\t%s" % (indicator,queue,self.last.get(queue)[1],self.last_modulated.get(queue)[1]))
+            if is_selected:
+                display.display_text.insert(END, ">") # add indicator of the selected queue for param jobbies
+            display.display_text.insert(END, "\n")
 
-        #display.display_text.insert(END, "%s\n" % (self.selected_command_name))
         cmd = self.commands[self.selected_command_name]
-        display.display_text.insert(END, "%s : %s\n" % (self.selected_command_name, cmd['name']))
-        output = "\nModulation:\n"
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        #for arg_name,value in [ cmd['arg_names'][y] for y in cmd['arg_names'] ]:
+        output = "\nMod " +  "%s %s : %s\n" % (self.commands[self.selected_command_name].get('queue'), self.selected_command_name, cmd['name'])
         for arg_name in cmd['arg_names']:
-            indicator = " " if cmd['arg_names'].index(arg_name)!=self.selected_argument_index else ">"
+            is_selected = cmd['arg_names'].index(arg_name)==self.selected_argument_index
+            indicator = " " if not is_selected else "["
             output += "%s%s: "%(indicator,arg_name)
             for slot,mods in enumerate(cmd.setdefault('modulation',[{},{},{},{}])):
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
-                g = '%s'%bar[int(v*(len(bar)-1))]
+                g = '%s'%self.pc.display.get_bar(v)
                 output += "{}:{}|".format('ABCD'[slot],g)
+            if is_selected:
+                output+="]"
             output += "\n"
         display.display_text.insert(END, output+"\n")
-
 
     def get_display_modes(self):
         return ["WJMXSEND","NAV_WJMX"]
@@ -184,10 +189,15 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 print("WJSendPlugin>> sending string %s " % string)
             output = b'\2' + string.encode('ascii') + b'\3' 
             #with self.serial_lock:
+            #self.ser.write(b'\2\2\2\2\3\3\3\3')
             self.ser.write(output) #.encode())
             # TODO: sleeping here seems to help serial response lag problem?
-            #import time
-            #time.sleep(0.02)
+            self.sleep = 0.25 #self.pc.get_variable('A')
+            print ("got sleep %s" % self.sleep)
+            if self.sleep>=0.1:
+                print("using sleep %s" % self.sleep)
+                import time
+                time.sleep(self.sleep/10.0)
             #yield from self.ser.drain()
             if self.DEBUG: 
                 print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
@@ -204,22 +214,23 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if not self.ser or self.ser is None:
             self.open_serial()
 
-        try:
+        if self.active:
+          try:
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
             with self.queue_lock:
               for queue, command in sorted(self.queue.items()):
                 # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
-        except Exception:
+          except Exception:
             print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
             print(traceback.format_exc())
-        finally:
+          finally:
             with self.queue_lock:
                 self.queue.clear()
 
-        if self.ser is not None:
+        if self.ser is not None and not self.disabled:
             self.pc.shaders.root.after(self.THROTTLE, self.refresh)
 
     def send(self, queue, form, args):
@@ -276,8 +287,12 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 ( r"^wj_select_previous_command$", self.select_previous_command ),
                 ( r"^wj_select_next_argument$", self.select_next_argument ),
                 ( r"^wj_select_previous_argument$", self.select_previous_argument ),
-                ( r"^wj_reset_modulation$", self.reset_modulation_levels )
+                ( r"^wj_reset_modulation$", self.reset_modulation_levels ),
+                ( r"^wj_toggle_active$", self.toggle_active )
         ]
+
+    def toggle_active(self):
+        self.active = not self.active
 
     def reset_modulation_levels(self):
         for cmd,struct in self.commands.items():
@@ -350,22 +365,21 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if self.DEBUG: print("modulate_arguments returning:\n\t%s" % args)
         return args
 
+    # panasonic parameters are 8 bit so go 0-255, so 127 is default of centre value
     commands = {
             'colour_gain_T': {
-                'name': 'Colour Corrector gain - both',
+                'name': 'Colour Corrector gain (both)',
                 'queue': 'VCG',
                 'form': 'VCG:T{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 }
             },
             'colour_T': {
-                'name': 'Colour Corrector - both',
+                'name': 'Colour Corrector (both)',
                 'queue': 'VCC',
                 'form': 'VCC:T{:02X}{:02X}',
                 'arg_names': [ 'x', 'y' ],
                 'arguments': { 'x': 127, 'y': 127 },
-                #'modulation': [ {}, {}, { 'x': 1.0 }, { 'y': 1.0 } ]
-                #'callback': self.set_colour
             },
             'mix': {
                 'name': 'Mix/wipe',
@@ -373,24 +387,22 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 'form': 'VMM:{:02X}',
                 'arg_names': [ 'v' ],
                 'arguments': { 'v': 127 },
-                #'modulation': [ { 'v':  1.0 }, {}, {}, {} ]
             },
             'back_colour': {
-                'name': 'Back colour/matte HSV',
+                'name': 'Matte colour HSV',
                 'queue': 'VBM',
                 'form': 'VBM:{:02X}{:02X}{:02X}',
                 'arg_names': [ 'h', 's', 'v' ],
                 'arguments': { 'h': 127, 's': 127, 'v': 127 },
-                #'modulation': [ {}, { 'h': 1.0 }, {}, {} ]
             },
             'position_N': {
-                'name': 'Positioner joystick',
+                'name': 'Positioner joystick XY',
                 'queue': 'VPS',
                 'form': 'VPS:N{:02X}{:02X}',
                 'arg_names': [ 'y', 'x' ],
                 'arguments': { 'y': 127, 'x': 127 }
             },
-            #'dsk_slice': {
+            #'dsk_slice': { ## cant seem to find the right control code for this?!
             #    'name': 'Downstream Key Slice,Slope',
             #    'queue': 'VDS',
             #    'form': 'VDS:{:02X}{:01X}',

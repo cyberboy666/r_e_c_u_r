@@ -91,6 +91,8 @@ class Display(object):
             self._load_shaders()
         elif self.data.display_mode == 'SHDR_BNK':
             self._load_shader_bank()
+        elif self.data.display_mode == 'SHDR_MOD':
+            self._load_modulation_bank()
         elif self.data.display_mode == 'FRAMES':
             self._load_detour()
         elif self.data.display_mode == 'PLUGINS':
@@ -178,9 +180,12 @@ class Display(object):
     def _load_plugins(self):
         line_count = 0
         self.display_text.insert(END, '{} \n'.format(self.body_title))
-        self.display_text.insert(END, '{:<40} {:<5} \n'.format('plugin', 'is_active'))        
+        self.display_text.insert(END, '{:<35} {:<8} \n'.format('plugin', 'status'))        
         ## showing list of plugins:
-        plugins_list = sorted(self.data.active_plugins.items())
+        plugins_list = sorted([ 
+                (type(plugin).__name__, type(plugin).__name__ in self.data.get_enabled_plugin_class_names())\
+                for plugin in self.data.plugins.get_plugins(include_disabled=True) 
+        ])
         self.plugins_menu.menu_list = plugins_list
 
         number_of_plugins = len(plugins_list)
@@ -189,7 +194,7 @@ class Display(object):
                 break
             if index >= self.plugins_menu.top_menu_index:
                 plugin_line = plugins_list[index]
-                self.display_text.insert(END, '{:<40} {:<5} \n'.format(plugin_line[0], str(plugin_line[1])))
+                self.display_text.insert(END, '{:<35} {:<8} \n'.format(plugin_line[0], 'Enabled' if plugin_line[1] else 'Disabled'))
                 line_count = line_count + 1
 
         for index in range(self.plugins_menu.top_menu_index + self.plugins_menu.menu_height - number_of_plugins):
@@ -204,9 +209,11 @@ class Display(object):
         
         ## showing current shader info:
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
-        self.display_text.insert(END, '{:<1}lay{:<1}:{:<2} {:<16} '.format \
-            (self.data.shader_layer,self.shaders.selected_status_list[self.data.shader_layer],shader['shad_type'][0], \
-            shader['name'].lstrip()[0:16] ))
+        self.display_text.insert(END, '{:<1}{}{:<1}:{:<2} {:<16} '.format \
+            (self.data.shader_layer,
+                self.get_speed_indicator(self.shaders.selected_speed_list[self.data.shader_layer]),
+                self.shaders.selected_status_list[self.data.shader_layer],shader['shad_type'][0],
+                shader['name'].lstrip()[0:16] ))
         for i in range(min(4,shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
@@ -238,7 +245,8 @@ class Display(object):
         self.display_text.insert(END, '{} \n'.format(self.body_title))
 
         self.display_text.insert(END, '{:>6} {:<11} {:<5} '.format(
-            '{}-layer'.format(self.data.shader_layer), 'name', 'type'))
+            '{} {}'.format(self.data.shader_layer, self.get_speed_indicator(self.shaders.selected_speed_list[self.data.shader_layer])), 
+            'name', 'type'))
         
         shader = self.shaders.selected_shader_list[self.data.shader_layer]
         
@@ -250,6 +258,38 @@ class Display(object):
         self.display_text.insert(END, '\n')
 
         for index, slot in enumerate(shader_bank_data):
+            name_without_extension =  slot['name'].rsplit('.',1)[0]
+            self.display_text.insert(END, '{:^6} {:<17} {:<5} \n'.format(index, name_without_extension[0:17], slot['shad_type']))
+            if index % 2:
+                self.display_text.tag_add("ZEBRA_STRIPE", self.ROW_OFFSET + index,
+                                  self.ROW_OFFSET + self.SELECTOR_WIDTH + index)
+        # highlight the slot of the selected player
+        current_slot = self.shaders.selected_shader_list[self.data.shader_layer].get('slot', None)
+        not_playing_tag = self.shaders.selected_status_list[self.data.shader_layer] != '▶'
+        if current_slot is not None:
+            self._highlight_this_row(current_slot, gray=not_playing_tag)
+
+        self._highlight_this_param(self.shaders.focused_param)
+
+    def _load_modulation_bank(self):
+        shader_bank_data = self.data.shader_bank_data[self.data.shader_layer]
+        
+        self.display_text.insert(END, '{} \n'.format(self.body_title))
+
+        self.display_text.insert(END, '{:>6} {:<11} {:<5} '.format(
+            '{} {}'.format(self.data.shader_layer, self.get_speed_indicator(self.shaders.selected_speed_list[self.data.shader_layer])),
+            'name', 'type'))
+
+        shader = self.shaders.selected_shader_list[self.data.shader_layer]
+        
+        """for i in range(min(4,shader['param_number'])):
+            display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
+            if display_param == 100:
+                display_param == 99
+            self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))"""
+        self.display_text.insert(END, '\n')
+
+        """for index, slot in enumerate(shader_bank_data):
             name_without_extension =  slot['name'].rsplit('.',1)[0]
             #self.display_text.insert(END, '{:^6} {:<17} {:<5} '.format(index, name_without_extension[0:17], slot['shad_type']))
             self.display_text.insert(END, '{:^2} {:<14} {:<3} '.format(index, name_without_extension[0:14], slot['shad_type']))
@@ -269,21 +309,20 @@ class Display(object):
         if current_slot is not None:
             self._highlight_this_row(current_slot, gray=not_playing_tag)
 
-        self._highlight_this_param(self.shaders.focused_param)
+        self._highlight_this_param(self.shaders.focused_param) """
 
         # show info about the modulation configuration
         #self.display_text.insert(END, "Lyr|1a b c d|2a b c d|3a b c d|4a b c d\n")
-        self.display_text.insert(END, "Lyr")
-        for i in range(4):
+        #self.display_text.insert(END, "Lyr")
+        """for i in range(4):
             self.display_text.insert(END, "|%s"%i)
             for i in range(4):
                 a = 'abcd'[i]
                 if i==self.shaders.selected_modulation_slot:
                     a = a.upper()
-                self.display_text.insert(END, "%s "%a)
-        self.display_text.insert(END,  "\n")
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        for layer, modulations in enumerate(self.shaders.modulation_level):
+                self.display_text.insert(END, "%s "%a)"""
+        #self.display_text.insert(END,  "\n")
+        """for layer, modulations in enumerate(self.shaders.modulation_level):
             if (layer==self.data.shader_layer):
                 self.display_text.insert(END, '*')
             else:
@@ -292,9 +331,26 @@ class Display(object):
             for param, levels in enumerate(modulations):
                 self.display_text.insert(END, '|')
                 for slot,level in enumerate(levels):
-                    self.display_text.insert(END, ' %s'%bar[int(level*(len(bar)-1))]) #(int(level*100)))
+                    self.display_text.insert(END, ' %s'%self.get_bar(level))
                 self.display_text.insert(END, ' ')
-            self.display_text.insert(END, '\n')
+            self.display_text.insert(END, '\n')"""
+
+        for layer in range(3):
+            o = ""
+            o += self.data.plugins.fm.get_live_frame().get_shader_layer_summary(layer)
+            o += "\n  Modmatrix:\t"
+
+            name = self.shaders.selected_shader_list[layer].get('name').strip()
+            #o = ""
+            for slot in range(4):
+                sl = 'ABCD'[slot]
+                if slot != self.shaders.selected_modulation_slot:
+                    sl = sl.lower()
+                o+= sl + "["
+                for param in range(4):
+                    o += self.get_bar(self.shaders.modulation_level[layer][param][slot])
+                o+= "] "
+            self.display_text.insert(END, "%s %s:\t%s\n\n"%(">" if layer==self.data.shader_layer else " ", layer, o))
 
 
         # todo: this doesnt work but would be a better way to highlight the selected modulation slot/layer
@@ -412,6 +468,62 @@ class Display(object):
             capture_status = ''
 
         return capture_status
+
+    def get_bar(self, value, max_value = 1.0):
+        if value is None:
+            return " "
+        value = abs(value / max_value) # abs() so negative values make some sense
+        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
+        g = '%s'%bar[int(value*(len(bar)-1))]
+        return g
+
+    def get_speed_indicator(self, value, convert = True):
+        if convert:
+            value = (value * 2.0) - 1.0 # convert 0 to 1 to -1 to +1
+        output = u""
+        if value==0.0 or (value>=-0.02 and value<=0.02):
+            output+=u"\u23f9" # stopped
+        elif value<=-0.5:
+            output+=u"\u00AB" # fast reverse
+        elif value<0.0:
+            output+=u"\u2039" # reverse
+        elif value>=0.5:
+            output+=u"\u00BB" # fast forward
+        elif value>0.0:
+            output+=u"\u203A" # forward
+
+        #output += " {:03f}".format(value)
+        output += self.get_bar(value)
+
+        return output
+
+    def get_compact_indicators(self, inp):
+        step = 2 
+        s = ""
+        for i in range(0,len(inp),step): # number of shader slots per layer
+            selected1 = inp[i]
+            if i+1 > len(inp):    # catch if odd number of elements passed to us?
+                selected2 = False
+            else:
+                selected2 = inp[i+1]
+
+            if selected1 and selected2:
+                # full block
+                s += u"\u2588"
+            elif selected1 and not selected2:
+                # left block
+                s += u"\u258C"
+            elif selected2 and not selected1:
+                # right block
+                s += u"\u2590"
+            else:
+                # empty
+                s += "_"
+
+            #s += "#" if selected else "-"
+        return s
+
+
 
     @staticmethod
     def create_video_display_banner(start, end, position):

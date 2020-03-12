@@ -1,9 +1,0 @@
-{
-    "LFOModulationPlugin": false,
-    "ManipulatePlugin": true,
-    "MidiFeedbackAPCKey25Plugin": true,
-    "MidiFeedbackLaunchpadPlugin": false,
-    "ShaderLoopRecordPlugin": false,
-    "ShaderQuickPresetPlugin": true,
-    "WJSendPlugin": false
-}

@@ -33,7 +33,7 @@ class Data(object):
     BANK_DATA_JSON = 'display_data.json'
     SHADER_BANK_DATA_JSON = 'shader_bank_data.json'
     SETTINGS_JSON = 'settings.json'
-    ACTIVE_PLUGINS_JSON = 'active_plugins.json'
+    ENABLED_PLUGINS_JSON = 'enabled_plugins.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
     OSC_MAPPING_JSON = 'osc_action_mapping.json'
@@ -86,9 +86,9 @@ class Data(object):
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
-        self.active_plugins = {}
-        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.ACTIVE_PLUGINS_JSON):
-            self.active_plugins = self._read_json(self.ACTIVE_PLUGINS_JSON)
+        self.enabled_plugins = {}
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.ENABLED_PLUGINS_JSON):
+            self.enabled_plugins = self._read_json(self.ENABLED_PLUGINS_JSON)
 
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
@@ -119,21 +119,24 @@ class Data(object):
         self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
         self.compare_plugins_list()
 
+    def get_enabled_plugin_class_names(self):
+        return [k for k,v in self.enabled_plugins.items() if v is True]
+
     def compare_plugins_list(self):
-        current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(plugin_collection.Plugin)]
-        plugins_to_add = set(current_plugins) - set(self.active_plugins.keys())
-        plugins_to_remove = set(self.active_plugins) - set(current_plugins)
+        current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(include_disabled=True)]
+        plugins_to_add = set(current_plugins) - set(self.enabled_plugins.keys())
+        plugins_to_remove = set(self.enabled_plugins) - set(current_plugins)
         for k in plugins_to_remove:
-            self.active_plugins.pop(k, None)
+            self.enabled_plugins.pop(k, None)
         for k in plugins_to_add:
-            self.active_plugins[k] = False
+            self.enabled_plugins[k] = False
         #switch off all plugins if disabled ...
         if self.settings['system']['USE_PLUGINS']['value'] == 'disabled':
-            self.active_plugins = {x:False for x in self.active_plugins}
+            self.enabled_plugins = {x:False for x in self.enabled_plugins}
 
-    def update_active_plugins(self, key, value):
-        self.active_plugins[key] = value
-        self._update_json(self.ACTIVE_PLUGINS_JSON, self.active_plugins)
+    def update_enabled_plugins(self, key, value):
+        self.enabled_plugins[key] = value
+        self._update_json(self.ENABLED_PLUGINS_JSON, self.enabled_plugins)
 
     def load_midi_mapping_for_device(self, device_name):
         # check if custom config file exists on disk for this device name
@@ -464,17 +467,17 @@ class Data(object):
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
+                display_modes.append(["SHDR_MOD",["NAV_MOD","PLAY_SHADER"]]) ## allow override, but fall back to PLAY_SHADER controls
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
-            if self.settings['system']['USE_PLUGINS']['value'] == 'enabled':
+            if self.settings['system'].setdefault('USE_PLUGINS',
+                    self.default_settings.setdefault('USE_PLUGINS',{'value': 'enabled'})).get('value') == 'enabled':
                 display_modes.append(["PLUGINS",'NAV_PLUGINS'])
 
         if hasattr(self, 'plugins') and self.plugins is not None:
             from data_centre.plugin_collection import DisplayPlugin
             for plugin in self.plugins.get_plugins(DisplayPlugin):
-                is_active = self.active_plugins[type(plugin).__name__]
-                if is_active:
-                    display_modes.append(plugin.get_display_modes())
+                display_modes.append(plugin.get_display_modes())
 
         if not with_nav_mode:
             return [mode[0] for mode in display_modes]

@@ -1,20 +1,11 @@
 This is doctea's experimental 'plugins' branch, including 'shader gadget' plugins.
 
-Started adding some documentation for some of these features on the wiki here:
-* https://github.com/langolierz/r_e_c_u_r/wiki/Sound-reactivity
+Documentation for some of these features on the wiki here:
 * https://github.com/langolierz/r_e_c_u_r/wiki/using-the-modulation-parameters
 * https://github.com/langolierz/r_e_c_u_r/wiki/Plugins
 
 Some quick notes, including about how the modulation features work:-
 
-* Plugins are python classes... With adaptations to recur main code to look up actions in plugins of ActionPlugin class, so plugins can provide extra actions that can be mapped to midi/keyboard/osc
-* Here's the really primitive soundreact app: https://github.com/doctea/r_e_c_u_r/blob/feature_midi_feedback_plugin/helpers/soundreact.py
-* All it does is send OSC messages based on the volume (the threshold stuff doesn't work and isn't actually activated)
-* So then if you look in https://github.com/doctea/r_e_c_u_r/blob/feature_midi_feedback_plugin/json_objects/osc_action_mapping.json you'll see that the "/volume" osc address is bound to the set_modulation_...._value action
-* So that way the modulation value is set for 'mod slot 1' to the volume value
-* Then when recur is sending paramwter values to the conjur side, it calculates the value to send based on the mod slot level (changed using set_modulation..._level actions mapped in midi APC key25 JSON) and mod slot values
-* So you there's 4 modulation parameters and you can assign them, with level, to any of the shader parameters as desired, and feed in params from any source into each mod slot
-* At moment there's 3 types of plugin which can also be combined: midifeedback for showing leds etc on controllers that support it like APC Key 25 and Launchpad to indicate recur status, actions for adding new actions, and sequences for running short or looped sequences and adjusting speed etc
 * Demo useful plugins are here in this shader gadgets branch, demonstrating shader presets and automation recording
 
 Any questions ask me doctea@gmail.com, find me on facebook or open an issue or something :)

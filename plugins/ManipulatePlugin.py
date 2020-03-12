@@ -42,7 +42,6 @@ TODO: >> ??    invert|set_the_shader_param_0_layer_>>print_arguments>>set_variab
 """
 
 class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
-    disabled = False
 
     DEBUG = False
 
@@ -103,6 +102,12 @@ class ManipulatePlugin(ActionsPlugin,DisplayPlugin,ModulationReceiverPlugin):
     def set_variable(self, var_name, value):
         if self.DEBUG: print("ManipulatePlugin>> set_variable     (%s) to %s" % (var_name, value))
         self.variables[var_name] = value
+
+    def get_variable(self, var_name, default):
+        if var_name in self.variables:
+            return self.variables[var_name]
+        else:
+            return default
 
     def recall_variable(self, var_name, action, *args):
         if self.DEBUG: print ("ManipulatePlugin>> recall_variable (%s) as %s" % (var_name,args))

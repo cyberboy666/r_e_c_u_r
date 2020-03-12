@@ -12,13 +12,14 @@ from statistics import mean
 np.set_printoptions(suppress=True) # don't use scientific notationn
 
 class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
-    disabled = False
 
     DEBUG = False
 
     active = True
     stop_flag = False
     pause_flag = False
+
+    stream = None
 
     CHUNK = 4096 # number of data points to read at a time
     RATE = 48000 #44100 # time resolution of the recording device (Hz)
@@ -27,10 +28,12 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
     config = {}
 
+    # TODO: save + reload current config
+
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
+        """#self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
         if self.active and not self.disabled:
             try:
                 p=pyaudio.PyAudio()
@@ -43,7 +46,37 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         print ("now setting to run automation..")
 
-        self.pc.shaders.root.after(500, self.run_automation)
+        self.pc.shaders.root.after(500, self.run_automation)"""
+        if not self.disabled:
+            self.start_plugin()
+
+    def stop_plugin(self):
+        self.close_sound_device()
+        super().stop_plugin()
+
+    def start_plugin(self):
+        super().start_plugin()
+        self.open_sound_device()
+
+    def open_sound_device(self):
+        try:
+            self.p=pyaudio.PyAudio()
+            self.stream=self.p.open(format=pyaudio.paInt16,channels=1,rate=self.RATE,input=True,
+                frames_per_buffer=self.CHUNK)
+        except:
+            print("Failed to open sound device - disabling SoundReactPlugin!")
+            self.active = False
+            return
+
+        self.pc.shaders.root.after(250, self.run_automation)
+
+    def close_sound_device(self):
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
+            self.stream = None
+        if self.p:
+            self.p.terminate()
 
     @property
     def sources(self):
@@ -79,15 +112,15 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         display.display_text.insert(END, "ACTIVE\n" if self.active else "not active\n")
 
         #display.display_text.insert(END, "\tSpeed: {:03.2f}\n\n".format(self.speed))
-
+        
         for sourcename in sorted(self.sources):
-            value = self.display_values.get(sourcename) or "{:03.2f}%".format(self.values.get(sourcename,0)*100) or "None"
-            value += "\t"
-            for i,l in enumerate(self.levels[sourcename]):
-                bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-                g = "ABCD"[i]+'%s '%bar[int(l*(len(bar)-1))]
+            value = "{:8}:\t".format(sourcename)
+            for i,level in enumerate(self.levels[sourcename]):
+                g = "ABCD"[i]+'%s '%self.pc.display.get_bar(level)
                 value += g
-            display.display_text.insert(END, "{}:\t{}\n".format(sourcename,value))
+            value += "\t"
+            value += self.display_values.get(sourcename) or "{:4.2f}%".format(self.values.get(sourcename,0)*100) or "None"
+            display.display_text.insert(END,value + "\n")
             """display.display_text.insert(END, "%s\n" %self.last_lfo_status[lfo])
             display.display_text.insert(END, "\t%s\n" % self.formula[lfo])"""
 
@@ -97,7 +130,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     energy_history = []
     def run_sequence(self, position):
         # position is irrelvant for this plugin, we just want to run continuously
-        if not self.active:
+        if not self.active or self.stream is None:
             return
 
         data = np.fromstring(self.stream.read(self.CHUNK, exception_on_overflow = False),dtype=np.int16)
@@ -122,6 +155,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
                     if meandiff>=self.config['energy'].get('triggerthreshold',0.15):
                         self.energy_history = []
                         print ("\n>>>>>>Triggering dynamic change for meandiff %s?\n" % meandiff)
+                        # TODO: add configurable triggering - eg trigger next preset, next shader, next video..
                         #self.pc.actions.call_method_name("load_slot_%s_into_next_player"%randint(0,9))
                 self.energy_history.append(diff) #self.values.get(sourcename,0.0))
                 #print("logging %s" % diff) #self.values.get(sourcename,0.0))
@@ -146,9 +180,12 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
         bars="#"*int(50*value)
         if self.DEBUG: print("energy:\t\t%05d %s\t(converted to %s)"%(peak,bars,value))
-        bar = u"_\u2581\u2582\u2583\u2584\u2585\u2586\u2587\u2588"
-        g = '%s'%bar[int(value*(len(bar)-1))]
-        self.display_values['energy'] = "{} g{:03.2f} t{:03.2f} d{:03.2f}".format(g, self.config['energy']['gain'], self.config['energy']['threshold'], self.config['energy'].setdefault('triggerthreshold',0.15))
+        self.display_values['energy'] = "{} gn:{} trsh:{} trg:{}".format(
+                self.pc.display.get_bar(value), 
+                self.pc.display.get_bar(self.config['energy']['gain']), 
+                self.pc.display.get_bar(self.config['energy']['threshold']), 
+                self.pc.display.get_bar(self.config['energy'].setdefault('triggerthreshold',0.15))
+            )
 
         return value 
 

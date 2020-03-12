@@ -34,6 +34,9 @@ class Shaders(object):
         return self.data.settings['shader'].setdefault('modulation_level', 
                 [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)])
 
+    def set_modulation_levels(self, levels):
+        self.data.settings['shader']['modulation_level'] = levels
+
     def generate_shaders_list(self):
         shaders_menu_list = []
         raw_list = self.shaders_menu.generate_raw_shaders_list()
@@ -249,7 +252,10 @@ class Shaders(object):
         self.set_param_layer_modulation_level(param, layer, level)
 
     def set_param_layer_modulation_level(self, param, layer, level):
-        self.modulation_level[layer][param][self.selected_modulation_slot] = level
+        self.set_param_layer_slot_modulation_level(param, layer, self.selected_modulation_slot, level)
+
+    def set_param_layer_slot_modulation_level(self, param, layer, slot, level):
+        self.modulation_level[layer][param][slot] = level
         self.update_param_layer(param, layer)
 
     def update_param_layer(self, param, layer):

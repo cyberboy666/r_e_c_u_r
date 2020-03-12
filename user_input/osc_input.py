@@ -36,7 +36,9 @@ class OscInput(object):
 
     def setup_osc_server(self):
         ip_address = self.data.get_ip_for_osc_client()
-
+        if ip_address == 'none':
+            self.message_handler.set_message('INFO', 'osc failed - could not find ip')            
+            return
         print('%%%%%%%%%%%%%%%%%%%%% setting up external_osc on ', ip_address)
         server_parser = argparse.ArgumentParser()
         server_parser.add_argument("--ip", default=ip_address, help="the ip")
@@ -46,28 +48,40 @@ class OscInput(object):
 
         this_dispatcher = dispatcher.Dispatcher()
         
-        this_dispatcher.map("/keyboard/*", self.on_osc_input)
-        this_dispatcher.map("/shaderparam0", self.on_param_osc_input)
-        this_dispatcher.map("/shaderparam1", self.on_param_osc_input)
-        this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
-        this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
-        this_dispatcher.map("/shutdown", self.exit_osc_server)
-
-        # this is for accepting any old osc message to allow binding of modulation to osc messages
-        # TODO: make configurable?
-        #this_dispatcher.map("/*", self.on_param_osc_input)
+#        this_dispatcher.map("/keyboard/*", self.on_osc_input)
+#        this_dispatcher.map("/shaderparam0", self.on_param_osc_input)
+#        this_dispatcher.map("/shaderparam1", self.on_param_osc_input)
+#        this_dispatcher.map("/shaderparam2", self.on_param_osc_input)
+#        this_dispatcher.map("/shaderparam3", self.on_param_osc_input)
+#        this_dispatcher.map("/shutdown", self.exit_osc_server)
+        this_dispatcher.map("/*", self.on_osc_input)
         
         osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
         server_thread = threading.Thread(target=server.serve_forever)
         server_thread.start()
         self.osc_server = server
+        self.message_handler.set_message('INFO', 'osc active on ' + ip_address)
 
     def exit_osc_server(self, unused_addr, args):
         print('%%%%%%%%%%%%%%%%%%%%% exiting external_osc')
-        self.osc_server.shutdown()
+        try:
+            self.osc_server.shutdown()
+            self.message_handler.set_message('INFO', 'osc deactive')
+        except:
+            self.message_handler.set_message('INFO', 'osc shutdown failed')
+        
 
     def on_osc_input(self, addr, args):
+        if 'keyboard' in addr:
+            self.on_key_osc_input(addr, args)
+        elif 'shutdown' in addr:
+            self.exit_osc_server(addr, args)
+        else:
+            self.on_param_osc_input(addr,args)
+
+
+    def on_key_osc_input(self, addr, args):
         args = str(args)
         print("!!!!!!!!!!!!!!!!" + args)
         print("the address", addr)

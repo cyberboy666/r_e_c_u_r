@@ -76,7 +76,10 @@ class NumpadInput(object):
 
         numbers = "jklmnopqrs"
         if self.data.is_display_held and key in numbers:
-             return self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(key)])
+            if numbers.index(key) >= len(self.data.get_display_modes_list()):
+                self.message_handler.set_message('ERROR', 'No page %s to display!' % numbers.index(key))
+                return
+            self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(key)])
             
         print('the numpad action being called is {} (mode is {})'.format(this_mapping[mode][is_function], mode))
         if value != -1:

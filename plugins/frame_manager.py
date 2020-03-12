@@ -83,6 +83,9 @@ class Frame:
         count = 0
         line = ""
         for key,d in sorted(self.f.items()):
+            #print ("get_frame_summary: checking %s value %s" % (key,d))
+            if type(d) is dict and len(d)==0: # skip empty dicts
+                continue
             if key in ["selected_shader","layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
                 # skip these as dealt with above
                 pass
@@ -98,10 +101,12 @@ class Frame:
                         o += self.pc.display.get_bar(d[layer][param][slot])
                     o+= "] "
                   summary.append("Shader layer %s: %s"%(layer,o))
-            elif key in ["WJSendPlugin"]:
+            elif self.pc.get_plugin_for_class_name(key) is not None:
+                summary.append(self.pc.get_plugin_for_class_name(key).get_frame_summary(d))
+                """elif key in ["WJSendPlugin"]:
                 # tends to be heavy so save it for later
                 # TODO: ask plugin to format the data for summary?
-                not_shown[key] = d
+                not_shown[key] = d"""
             else:
                 line += "%s: %s" % (key, d)
                 count += 1

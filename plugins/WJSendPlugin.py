@@ -39,7 +39,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         print("read presets:\n%s\n" % self.presets)
         # load the stored modulation levels into the current config
         for cmd,levels in self.presets['modulation_levels'].items():
-            self.commands[cmd]['modulation'] = levels
+            self.commands[cmd]['modulation'] = levels.copy()
 
         # build a reverse map of friendly name -> command struct for later use
         for cmd,struct in self.commands.items():
@@ -83,6 +83,12 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             if item is not None:
                 self.send_buffered(queue, item[0], item[1], record = False)
 
+    def get_frame_summary(self, data):
+        line = "WJMX: "
+        for key, value in data.items():
+            line += key + ", "
+        print("returning line %s" % line)
+        return line
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     # experimental & hardcoded !
@@ -220,9 +226,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
             with self.queue_lock:
               for queue, command in sorted(self.queue.items()):
-                # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
-            #self.queue.clear()
+              #self.queue.clear()
         except Exception:
             print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback

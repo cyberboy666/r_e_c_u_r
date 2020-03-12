@@ -14,6 +14,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
     # for keeping track of LFO levels
     level = [0.0]*MAX_LFOS #, 0.0, 0.0, 0.0]
+    speed = 0.5
 
     stop_flag = False
     pause_flag = False
@@ -22,8 +23,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
         #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
         self.presets = self.load_presets()
-        self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS)
+        self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS).copy()
         self.active = self.presets.get('active', False)
+        self.set_lfo_speed_direct(self.presets.get('speed'), self.speed)
 
         self.pc.shaders.root.after(1000, self.start_plugin)
         
@@ -42,7 +44,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     def save_presets(self):
         #for cmd,struct in self.commands.items():
         #    self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
-        self.pc.update_json(self.PRESET_FILE_NAME, { 'levels': self.level.copy(), 'active': self.active } )
+        self.pc.update_json(self.PRESET_FILE_NAME, { 'levels': self.level.copy(), 'active': self.active, 'speed': self.speed } )
 
     # DisplayPlugin methods
     def get_display_modes(self):
@@ -67,7 +69,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
     def get_frame_data(self):
-        diff = { 'levels': self.level, 'speed': self.speed }
+        diff = { 'levels': self.level, 'speed': self.speed, 'active': self.active }
         #self.last_record = {}
         #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
@@ -76,14 +78,27 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         if data is None:
             return
         # print(">>>>recall from data:\n\t%s\n" %data)
-        """for queue, item in data.items():
-            if item is not None:
-                self.send_buffered(queue, item[0], item[1], record = False)"""
         if data.get('levels') is not None:
             for slot,level in enumerate(data.get('levels')):
                 self.set_lfo_modulation_level(slot, level)
+        if data.get('active') is not None:
+            self.active = self.get('active')
         if data.get('speed') is not None:
             self.set_lfo_speed_direct(data.get('speed'))
+
+    def get_frame_summary(self, data):
+        line = ""
+        if data.get('levels') is not None:
+            line += "LFO levels ["
+            for i in range(4):
+                line += self.pc.display.get_bar(data['levels'][i])
+            line += "] "
+        if data.get('active') is not None:
+            line += "active " if data.get('active') else 'inactive '
+        if data.get('speed') is not None:
+            line += self.pc.display.get_speed_indicator(data.get('speed'))
+        #print ("returning %s from %s" %(line, data))
+        return line
 
     # ActionsPlugin methods
     @property

@@ -184,6 +184,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     import threading
     serial_lock = threading.Lock()
     def send_serial_string(self, string):
+        if not self.active:
+            return
         try:
             if self.DEBUG: 
                 print("WJSendPlugin>> sending string %s " % string)
@@ -192,10 +194,10 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             #self.ser.write(b'\2\2\2\2\3\3\3\3')
             self.ser.write(output) #.encode())
             # TODO: sleeping here seems to help serial response lag problem?
-            self.sleep = 0.25 #self.pc.get_variable('A')
-            print ("got sleep %s" % self.sleep)
+            self.sleep = 0.2 #self.pc.get_variable('A')
+            #print ("got sleep %s" % self.sleep)
             if self.sleep>=0.1:
-                print("using sleep %s" % self.sleep)
+                #print("using sleep %s" % self.sleep)
                 import time
                 time.sleep(self.sleep/10.0)
             #yield from self.ser.drain()
@@ -214,19 +216,18 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         if not self.ser or self.ser is None:
             self.open_serial()
 
-        if self.active:
-          try:
+        try:
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
             with self.queue_lock:
               for queue, command in sorted(self.queue.items()):
                 # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
             #self.queue.clear()
-          except Exception:
+        except Exception:
             print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
             print(traceback.format_exc())
-          finally:
+        finally:
             with self.queue_lock:
                 self.queue.clear()
 

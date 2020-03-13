@@ -25,7 +25,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         self.presets = self.load_presets()
         self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS).copy()
         self.active = self.presets.get('active', False)
-        self.set_lfo_speed_direct(self.presets.get('speed'), self.speed)
+        self.set_lfo_speed_direct(self.presets.get('speed', self.speed))
 
         self.pc.shaders.root.after(1000, self.start_plugin)
         
@@ -54,11 +54,11 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         from tkinter import Text, END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "LFOModulationPlugin ")
+        display.display_text.insert(END, "LFOModulation is ")
 
         display.display_text.insert(END, "ACTIVE" if self.active else "not active")
 
-        display.display_text.insert(END, "\tSpeed: {:4.2f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
+        display.display_text.insert(END, "\tSpeed: {:4.1f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
 
         for lfo,value in enumerate(self.level):
             display.display_text.insert(END, "lfo {} level: {:4.2f}% {}\t".format(lfo,value*100,display.get_bar(value)))
@@ -69,7 +69,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
     def get_frame_data(self):
-        diff = { 'levels': self.level, 'speed': self.speed, 'active': self.active }
+        diff = { 'levels': self.level.copy(), 'speed': self.speed, 'active': self.active }
         #self.last_record = {}
         #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
@@ -82,7 +82,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
             for slot,level in enumerate(data.get('levels')):
                 self.set_lfo_modulation_level(slot, level)
         if data.get('active') is not None:
-            self.active = self.get('active')
+            self.active = data.get('active')
         if data.get('speed') is not None:
             self.set_lfo_speed_direct(data.get('speed'))
 

@@ -1070,9 +1070,13 @@ class Actions(object):
         # first check if we have a native method to handle this for us
         # todo: assess whether it would still be performant/desirable to be able to override core actions with plugins?
         if hasattr(self, method_name):
+            
             method = getattr(self, method_name)
             if argument is not None:
                 arguments = [argument]
+                # for the case where cc is being used as switch, we ignore note_off
+                if len(signature(method).parameters) == 0 and not argument:
+                    return
 
         # if not then check if its handled by one of our parserlist dynamic route methods
         if method is None:

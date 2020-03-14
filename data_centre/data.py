@@ -466,8 +466,9 @@ class Data(object):
         if self.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer' and self.settings['shader']['USE_SHADER']['value'] == 'enabled':
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
-                display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
-                display_modes.append(["SHDR_MOD",["NAV_MOD","PLAY_SHADER"]]) ## allow override, but fall back to PLAY_SHADER controls
+                display_modes.append(["SHDRBNK",'PLAY_SHADER'])
+            if self.settings['shader']['USE_SHADER_MOD']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
+                display_modes.append(["SHDR_MOD","NAV_MOD"]) ## allow override, but fall back to PLAY_SHADER controls
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
             if self.settings['system'].setdefault('USE_PLUGINS',

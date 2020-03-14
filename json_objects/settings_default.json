@@ -228,6 +228,14 @@
             ],
             "value": "disabled"
         },
+        "USE_SHADER_MOD": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "FIX_PARAM_OFFSET_LAYER": {
             "action": null,
             "options": [

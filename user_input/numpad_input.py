@@ -80,6 +80,7 @@ class NumpadInput(object):
                 self.message_handler.set_message('ERROR', 'No page %s to display!' % numbers.index(key))
                 return
             self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(key)])
+            return
             
         print('the numpad action being called is {} (mode is {})'.format(this_mapping[mode][is_function], mode))
         if value != -1:

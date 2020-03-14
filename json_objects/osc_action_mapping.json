@@ -15,6 +15,34 @@
 		"DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous"],
         "NAV_DETOUR": ["set_detour_end_continuous"]
 	},
+    "/shaderparam4": {
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_1_continuous"]
+	},
+    "/shaderparam5": {
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_1_continuous"]
+	},
+    "/shaderparam6": {
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_1_continuous"]
+	},
+    "/shaderparam7": {
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_1_continuous"]
+	},
+    "/shaderparam8": {
+		"DEFAULT": ["set_the_shader_param_0_layer_offset_2_continuous"]
+	},
+    "/shaderparam9": {
+		"DEFAULT": ["set_the_shader_param_1_layer_offset_2_continuous"]
+	},
+    "/shaderparam10": {
+		"DEFAULT": ["set_the_shader_param_2_layer_offset_2_continuous"]
+	},
+    "/shaderparam11": {
+		"DEFAULT": ["set_the_shader_param_3_layer_offset_2_continuous"]
+	},
+    "/shaderparam12": {
+		"DEFAULT": ["set_strobe_amount_continuous"]
+	},
+
 	"a": {
 		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
 		"DEFAULT": ["seek_forward_on_player", "increase_seek_time"],
@@ -121,6 +149,53 @@
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
         	"PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
 	},
+	"toggle_x3": {
+		"DEFAULT": ["toggle_x3_as_speed"]
+    },
+	"feedback": {
+		"DEFAULT": ["toggle_feedback"]
+    },
+	"shader_layer_0": {
+		"DEFAULT": ["toggle_shader_layer_0"]
+    },
+	"shader_layer_1": {
+		"DEFAULT": ["toggle_shader_layer_1"]
+    },
+	"shader_layer_2": {
+		"DEFAULT": ["toggle_shader_layer_2"]
+    },
+	"play_shader_0": {
+		"DEFAULT": ["play_shader_0"]
+    },
+	"play_shader_1": {
+		"DEFAULT": ["play_shader_1"]
+    },
+	"play_shader_2": {
+		"DEFAULT": ["play_shader_2"]
+    },
+	"play_shader_3": {
+		"DEFAULT": ["play_shader_3"]
+    },
+	"play_shader_4": {
+		"DEFAULT": ["play_shader_4"]
+    },
+	"play_shader_5": {
+		"DEFAULT": ["play_shader_5"]
+    },
+	"play_shader_6": {
+		"DEFAULT": ["play_shader_6"]
+    },
+	"play_shader_7": {
+		"DEFAULT": ["play_shader_7"]
+    },
+	"play_shader_8": {
+		"DEFAULT": ["play_shader_8"]
+    },
+	"play_shader_9": {
+		"DEFAULT": ["play_shader_9"]
+    },
+
+
 	"/volume": {
 		"DEFAULT": ["modulate_param_0_to_amount_continuous"]
 	},

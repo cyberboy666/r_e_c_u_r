@@ -564,16 +564,16 @@ class Actions(object):
         self.shaders.set_param_to_amount(3, amount, layer_offset=2)
 
     def set_the_shader_param_0_layer_offset_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(0, amount, layer_offset=2)
+        self.shaders.set_param_to_amount(0, amount, layer_offset=3)
 
     def set_the_shader_param_1_layer_offset_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(1, amount, layer_offset=2)
+        self.shaders.set_param_to_amount(1, amount, layer_offset=3)
 
     def set_the_shader_param_2_layer_offset_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(2, amount, layer_offset=2)
+        self.shaders.set_param_to_amount(2, amount, layer_offset=3)
 
     def set_the_shader_param_3_layer_offset_3_continuous(self, amount):
-        self.shaders.set_param_to_amount(3, amount, layer_offset=2)
+        self.shaders.set_param_to_amount(3, amount, layer_offset=3)
 
     def set_strobe_amount_continuous(self, amount):
         scaled_amount = int(amount * 10)
@@ -1017,6 +1017,8 @@ class Actions(object):
         for i in range(1, 4):
             if os.path.exists('/dev/sda{}'.format(i)):
                 subprocess.call(['sudo', 'eject', '/dev/sda{}'.format(i)])                
+                self.message_handler.set_message('INFO', 'usb ejected')
+                
 
     # TODO: make this interrogate the various components for available routes to parse
     # this would include eg a custom script module..

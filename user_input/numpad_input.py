@@ -2,6 +2,8 @@ import string
 import sys
 
 class NumpadInput(object):
+    KEY_000_DELAY = 100
+
     def __init__(self, root, message_handler, display, actions, data):
         self.root = root
         self.message_handler = message_handler
@@ -36,7 +38,11 @@ class NumpadInput(object):
             event.char = self.on_0_key_press()
 
         if event.char in numpad:
-            self.run_action_for_mapped_key(event.char)
+            numbers = "jklmnopqrs"
+            if self.data.is_display_held and event.char in numbers:
+                self.select_display_mode_index(numbers.index(event.char))
+            else:
+                self.run_action_for_mapped_key(event.char)
         else:
             print('{} is not in keypad map'.format(event.char))
 
@@ -48,7 +54,7 @@ class NumpadInput(object):
             ##print ("--- releasing %s" % event.char)
             # lag for 60ms to check that this is not a 'stream of 000' bullshit job from the keypad
             if event.char is 'h' and not self.in_0_event:
-                self.root.after(50, self.on_key_disp_release_delay)
+                self.root.after(self.KEY_000_DELAY+5, self.on_key_disp_release_delay)
                 #self.data.is_display_held = False
 
     def on_mouse_move(self, event):
@@ -64,6 +70,12 @@ class NumpadInput(object):
         self.root.after(0, self.run_action_for_mapped_key, 'x_m', event.x / width)
         self.root.after(0, self.run_action_for_mapped_key, 'y_m', event.y / height)
         #self.run_action_for_mapped_key(event.char)
+
+    def select_display_mode_index(self, index):
+        if index >= len(self.data.get_display_modes_list()):
+            self.message_handler.set_message('ERROR', 'No page %s to display!' % index)
+        else:
+            self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[index])
 
     def run_action_for_mapped_key(self, key, value=-1):
         this_mapping = self.key_mappings[key]
@@ -85,10 +97,7 @@ class NumpadInput(object):
 
         numbers = "jklmnopqrs"
         if self.data.is_display_held and key in numbers:
-            if numbers.index(key) >= len(self.data.get_display_modes_list()):
-                self.message_handler.set_message('ERROR', 'No page %s to display!' % numbers.index(key))
-            else:
-                self.actions.call_method_name("set_display_mode_%s"%self.data.get_display_modes_list()[numbers.index(key)])
+            self.select_display_mode_index(numbers.index(key))
         else:
             print('the numpad action being called for \'{}\' is {} (mode is {})'.format(key, this_mapping[mode][is_function], mode))
             if value != -1:
@@ -118,18 +127,18 @@ class NumpadInput(object):
                     self.run_action_for_mapped_key(key)
 
     def on_key_disp_release_delay(self):
-        if not self.in_0_event and self.additional_0_in_event==0:
+        if not self.in_0_event:# and self.additional_0_in_event==0:
             print("releasing !")
             self.data.is_display_held = False
         else:
             print("ignoring release !")
 
-    def on_key_disp_press_delay(self):
+    """def on_key_disp_press_delay(self):
         if not self.in_0_event and self.additional_0_in_event==0:
             print("pressing!")
             self.data.is_display_held = True
         else:
-            print("ignoring press!")
+            print("ignoring press!")"""
 
     def on_0_key_press(self) :
         print ("on_0_key_press!")
@@ -137,7 +146,7 @@ class NumpadInput(object):
             print ("    first 0 received!")
             self.in_0_event  = True
             self.additional_0_in_event = 0
-            self.root.after(60, self.check_event_outcome)
+            self.root.after(self.KEY_000_DELAY, self.check_event_outcome)
         else:
             print ("    additional 0 received making %s!" % str(self.additional_0_in_event + 1))
             self.additional_0_in_event = self.additional_0_in_event + 1 
@@ -153,7 +162,7 @@ class NumpadInput(object):
             self.run_action_for_mapped_key('n')
         elif(self.additional_0_in_event == 1):
             print('this doesnt happen - may not be needed')
-            self.root.after(60, self.second_check_event_outcome)
+            self.root.after(self.KEY_000_DELAY, self.second_check_event_outcome)
 
     def second_check_event_outcome(self):
         print("not supposed to happen?")

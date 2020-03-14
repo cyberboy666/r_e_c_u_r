@@ -153,7 +153,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
                 g = '%s'%self.pc.display.get_bar(v)
-                output += "{}:{}|".format('ABCD'[slot],g)
+                output += "{}:{}|".format(self.pc.display.get_mod_slot_label(slot),g)
             if is_selected:
                 output+="]"
             output += "\n"

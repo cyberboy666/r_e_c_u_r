@@ -13,8 +13,13 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     active = False
 
     # for keeping track of LFO levels
-    level = [0.0]*MAX_LFOS #, 0.0, 0.0, 0.0]
+    level = [0.0]*MAX_LFOS
     speed = 0.5
+
+    # TODO: enable assigning of LFOs to mod slots
+    # with combination/averaging...
+    # needs UI to control it and [ [ 0.0 ] * 4 ] * 4 to handle the mappings?
+    # currently each LFO maps directly to mod slot
 
     stop_flag = False
     pause_flag = False
@@ -63,7 +68,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         for lfo,value in enumerate(self.level):
             display.display_text.insert(END, "lfo {} level: {:4.2f}% {}\t".format(lfo,value*100,display.get_bar(value)))
             display.display_text.insert(END, "{}\t{}\n".format(self.last_lfo_status[lfo], display.get_bar(self.last_lfo_value[lfo])))
-            display.display_text.insert(END, "\t%s\n" % self.formula[lfo])
+            display.display_text.insert(END, "\tslot %s\t%s\n" % (display.get_mod_slot_label(lfo), self.formula[lfo]))
+
+        display.display_text.insert(END, "\n")
 
     # AutomationSourcePlugin methods
     # methods/vars for AutomationSourcePlugin
@@ -178,6 +185,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
             return
 
         for lfo in range(0,self.MAX_LFOS):
+            # TODO: this is where would use assignable amounts and average across multiple inputs
             if self.level[lfo]>0.0:
                 self.pc.actions.call_method_name(
                         "modulate_param_%s_to_amount_continuous"%lfo, 

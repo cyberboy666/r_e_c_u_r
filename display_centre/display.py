@@ -479,6 +479,12 @@ class Display(object):
         g = '%s'%bar[int(value*(len(bar)-1))]
         return g
 
+    def get_mod_slot_label(self, slot):
+        sl = 'ABCD'[slot]
+        if slot != self.shaders.selected_modulation_slot:
+            sl = sl.lower()
+        return sl
+
     def get_speed_indicator(self, value, convert = True):
         if convert:
             value = (value * 2.0) - 1.0 # convert 0 to 1 to -1 to +1

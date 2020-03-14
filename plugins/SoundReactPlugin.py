@@ -116,7 +116,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         for sourcename in sorted(self.sources):
             value = "{:8}:\t".format(sourcename)
             for i,level in enumerate(self.levels[sourcename]):
-                g = "ABCD"[i]+'%s '%self.pc.display.get_bar(level)
+                g = self.pc.display.get_mod_slot_label(i)+'%s '%self.pc.display.get_bar(level)
                 value += g
             value += "\t"
             value += self.display_values.get(sourcename) or "{:4.2f}%".format(self.values.get(sourcename,0)*100) or "None"

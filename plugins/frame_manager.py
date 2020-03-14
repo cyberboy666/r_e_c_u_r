@@ -87,15 +87,13 @@ class Frame:
             if type(d) is dict and len(d)==0: # skip empty dicts
                 continue
             if key in ["selected_shader","layer_active_status","shader_params","shader_speeds","selected_shader_slots"]:
-                # skip these as dealt with above
+                # skip these as dealt with below
                 pass
             elif key in ['shader_modulation_levels']:
                 for layer in range(3):
                   o = ""
                   for slot in range(4):
-                    sl = 'ABCD'[slot]
-                    if slot != self.pc.shaders.selected_modulation_slot:
-                        sl = sl.lower()
+                    sl = self.pc.display.get_mod_slot_label(slot)
                     o+= sl + "["
                     for param in range(4):
                         o += self.pc.display.get_bar(d[layer][param][slot])
@@ -104,8 +102,7 @@ class Frame:
             elif self.pc.get_plugin_for_class_name(key) is not None:
                 summary.append(self.pc.get_plugin_for_class_name(key).get_frame_summary(d))
                 """elif key in ["WJSendPlugin"]:
-                # tends to be heavy so save it for later
-                # TODO: ask plugin to format the data for summary?
+                # for things that tend to be heavy so dont show
                 not_shown[key] = d"""
             else:
                 line += "%s: %s" % (key, d)

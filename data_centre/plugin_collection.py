@@ -290,7 +290,7 @@ class AutomationSourcePlugin(Plugin):
         #       else,
         #           store as last value
 
-        print("WJSEND got pre-interpolated clip: %s" % [ f.f for f in frames if f is not None])
+        print("AutomationSourcePlugin[%s] got pre-interpolated clip: %s" % ( type(self), [ f.f for f in frames if f is not None]) )
 
         #last = [ [None]*4, [None]*4, [None]*4 ]
         last = {}
@@ -362,7 +362,7 @@ class AutomationSourcePlugin(Plugin):
 
             process(self,findex,frame)
 
-        print("\nWJSEND got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
+        print("\nAutomationSourcePlugin got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
 
         self.distance_cache = {}
 

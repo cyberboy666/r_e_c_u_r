@@ -1,15 +1,3 @@
-This is doctea's experimental 'plugins' branch, including 'shader gadget' plugins.
-
-Documentation for some of these features on the wiki here:
-* https://github.com/langolierz/r_e_c_u_r/wiki/using-the-modulation-parameters
-* https://github.com/langolierz/r_e_c_u_r/wiki/Plugins
-
-Some quick notes, including about how the modulation features work:-
-
-* Demo useful plugins are here in this shader gadgets branch, demonstrating shader presets and automation recording
-
-Any questions ask me doctea@gmail.com, find me on facebook or open an issue or something :)
-
 # r_e_c_u_r
 
  an open diy video sampler

@@ -113,11 +113,21 @@
         "PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
     },
     "x_m": {
-		"DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous"],
-        "NAV_DETOUR": ["set_detour_mix_continuous"]
-	},
+            "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
+            "NAV_DETOUR": ["set_detour_speed_position_continuous"],
+            "NAV_WJMX": ["wj_set_position_N:x"],
+	    "NAV_MANI": ["set_variable_A"],
+	    "NAV_LPRC": ["set_automation_speed"],
+	    "NAV_LFO": ["set_lfo_modulation_0_level"],
+            "NAV_SND": ["sound_set_config_energy_gain"]
+    },
     "y_m": {
-		"DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous"],
-        "NAV_DETOUR": ["set_detour_speed_position_continuous"]
-	}
+            "DEFAULT": ["set_the_shader_param_1_layer_offset_0_continuous","set_shader_speed_layer_0_amount"],
+	    "NAV_DETOUR": ["set_detour_start_continuous"],
+	    "NAV_WJMX": ["wj_set_position_N:y"],
+	    "NAV_MANI": ["f:sin(x*pi):|set_variable_SIN"],
+	    "NAV_LFO": ["set_lfo_modulation_1_level"],
+	    "NAV_SND": ["sound_set_config_energy_threshold"]
+    }
+
 }

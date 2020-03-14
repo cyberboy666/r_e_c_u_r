@@ -351,8 +351,7 @@ class Display(object):
                     o += self.get_bar(self.shaders.modulation_level[layer][param][slot])
                 o+= "] "
             self.display_text.insert(END, "%s %s:\t%s\n\n"%(">" if layer==self.data.shader_layer else " ", layer, o))
-
-
+        self.display_text.insert(END, '\n')
         # todo: this doesnt work but would be a better way to highlight the selected modulation slot/layer
         """self._highlight_this_param(
                 self.shaders.selected_modulation_slot, 

@@ -132,12 +132,8 @@ class MidiInput(object):
             
         else:
             norm_message_value = None
-        try:
-            self.actions.call_method_name(method_name, norm_message_value)
-        except TypeError:
-            ## to support using cc-0 as button presses
-            if norm_message_value:
-                self.actions.call_method_name(method_name, None)
+        self.actions.call_method_name(method_name, norm_message_value)
+        
         ## only update screen if not continuous - seeing if cc can respond faster if not refreshing screen on every action
         if 'continuous' not in message_name:
             self.display.refresh_display()

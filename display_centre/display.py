@@ -394,6 +394,7 @@ class Display(object):
             feedback = ''
             if self.data.feedback_active:
                 feedback = 'FDBCK'
+            
             self.display_text.insert(END, '{:8} {:<28} {:>5} \n'.format('CONTROL:', self.data.control_mode, feedback))
             self.display_text.tag_add('TITLE', 16.0,16.0 + self.SELECTOR_WIDTH)
 

@@ -153,8 +153,11 @@ class OfCapture(object):
         ### wait for omx to finish creating video ...
         if os.path.exists(self.video_dir + 'raw.h264'):
             recording_path , recording_name = self.generate_recording_path()
+            framerate = 30 # hardcoded in openframeworks code for now
+            if self.capture_type == "piCaptureSd1":
+                framerate = framerate*2 # because picapture is interlaced
             try:
-                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + 'raw.h264', recording_path])
+                mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + 'raw.h264:fps={}'.format(framerate), recording_path])
                 return mp4box_process , recording_name
             except Exception as e:
                 print(e)

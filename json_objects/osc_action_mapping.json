@@ -73,7 +73,8 @@
         "LENGTH_SET": ["return_to_default_control_mode"],
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"],
-        "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"]
+        "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"],
+	"NAV_WJMX": ["wj_select_previous_command"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
@@ -84,8 +85,8 @@
         "LENGTH_SET": ["return_to_default_control_mode"],
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"],
-        "PLAY_SHADER": ["increase_this_param", "increase_shader_param"]
-    },
+        "PLAY_SHADER": ["increase_this_param", "increase_shader_param"],
+	"NAV_WJMX": ["wj_select_next_command"]    },
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
 		"DEFAULT": ["toggle_action_on_player","toggle_show_on_player"],
@@ -96,8 +97,11 @@
         "SHADER_PARAM": ["return_to_default_control_mode"],
         "CONFIRM": ["perform_confirm_action"],
         "NAV_DETOUR": ["toggle_detour_play"],
-        "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"]
-	},
+        "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"],
+	"NAV_LFO": ["toggle_lfo_active"],
+	"NAV_SND": ["toggle_sound_react_active"],
+	"NAV_QKSH": ["qksh_toggle_display_live"],
+	"NAV_WJMX": ["wj_toggle_active"]	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"],
         "NAV_DETOUR": ["toggle_detour_record", "toggle_detour_record_loop"]
@@ -106,13 +110,15 @@
 		"DEFAULT": ["set_playing_sample_start_to_current_duration", "clear_playing_sample_start_time"],
         "SHADER_PARAM": ["decrease_param_focus"],
         "PLAY_SHADER": ["decrease_param_focus"],
-        "NAV_DETOUR": ["decrease_mix_shader"]   
+        "NAV_DETOUR": ["decrease_mix_shader"],
+	"NAV_WJMX": ["wj_select_previous_argument"]
 	},
 	"f": {
 		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"],
         "SHADER_PARAM": ["increase_param_focus"],
         "PLAY_SHADER": ["increase_param_focus"],
-        "NAV_DETOUR": ["increase_mix_shader"]
+        "NAV_DETOUR": ["increase_mix_shader"],
+	"NAV_WJMX": ["wj_select_next_argument"]
 	},
 	"g": {
         "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},

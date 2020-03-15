@@ -9,7 +9,8 @@
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"],
         "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"],
-	"NAV_WJMX": ["wj_select_previous_command"]
+	"NAV_WJMX": ["wj_select_previous_command"],
+	"NAV_MOD": ["previous_shader_layer"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
@@ -21,7 +22,8 @@
         "CONFIRM": ["return_to_default_control_mode"],
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"],
         "PLAY_SHADER": ["increase_this_param", "increase_shader_param"],
-	"NAV_WJMX": ["wj_select_next_command"]
+	"NAV_WJMX": ["wj_select_next_command"],
+	"NAV_MOD": ["next_shader_layer"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],

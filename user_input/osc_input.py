@@ -56,12 +56,16 @@ class OscInput(object):
 #        this_dispatcher.map("/shutdown", self.exit_osc_server)
         this_dispatcher.map("/*", self.on_osc_input)
         
-        osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
-        server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
-        server_thread = threading.Thread(target=server.serve_forever)
-        server_thread.start()
-        self.osc_server = server
-        self.message_handler.set_message('INFO', 'osc active on ' + ip_address)
+        try:
+            osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
+            server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
+            server_thread = threading.Thread(target=server.serve_forever)
+            server_thread.start()
+            self.osc_server = server
+            self.message_handler.set_message('INFO', 'osc active on ' + ip_address)
+        except:
+            self.message_handler.set_message('INFO', 'failed to start osc listener')
+
 
     def exit_osc_server(self, unused_addr, args):
         print('%%%%%%%%%%%%%%%%%%%%% exiting external_osc')

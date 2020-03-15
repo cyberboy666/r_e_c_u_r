@@ -1101,7 +1101,9 @@ class Actions(object):
             #print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
 
                 # for the case where cc is being used as switch, we ignore note_off
-            if len(signature(method).parameters) == 0 and not argument:
+            print(type(argument))
+            if len(signature(method).parameters) == 0 and isinstance(argument, float) and argument == 0:
+                print('cc off ?')
                 return
             if arguments is not None and len(signature(method).parameters)==len(arguments): # only pass arguments if count matches method sig
                 method(*arguments)

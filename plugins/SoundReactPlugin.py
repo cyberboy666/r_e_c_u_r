@@ -164,7 +164,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
 
     config.setdefault('energy',{})['gain'] = 0.5 # how much to multiply signal by
-    config.setdefault('energy',{})['threshold'] = 0.5 # subtract from post-gain signal (hence ignore all values below)
+    config.setdefault('energy',{})['threshold'] = 0.5 # subtract from post-gain signal (hence ignore all values below this value)
     GAIN_MULT = 1.0
     def energy(self,data):
         peak=np.average(np.abs(data))*2

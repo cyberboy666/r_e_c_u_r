@@ -3,12 +3,56 @@ from serial import Serial
 import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin
 import threading
+import time
+
+class AsyncWriter(threading.Thread):
+    queue = []
+    quit_flag = False
+    def __init__(self, plugin):
+        super().__init__()
+        self.plugin = plugin
+
+    def write(self, data):
+        self.queue.append(data)
+
+    def ready(self):
+        return len(self.queue)>0
+
+    def quit(self):
+        self.quit_flag = True
+
+    def run(self):
+        while not self.quit_flag:
+            #print("AsyncWriter looping..")
+            if not self.plugin.active or self.plugin.disabled:
+                #print("plugin active or disabled - exiting!")
+                return
+            if self.plugin.ser is None or not self.plugin.ser:
+                #print("no stream - skipping")
+                time.sleep(0.5)
+                continue
+            if not self.ready():
+                #print("not ready - skipping")
+                time.sleep(0.005)
+                continue
+            item = self.queue.pop(0)
+            if item is not None:
+                #print("sending %s" % item)
+                self.plugin.ser.write(item)
+                time.sleep(len(item)*0.005)
+            else:
+                time.sleep(0.01)
+            if len(self.queue)>4:
+                self.queue = self.queue[-4:4]
+
 
 class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin):
     DEBUG = False #True
     ser = None
 
     active = True
+
+    asyncwriter = None
 
     sleep = 0.0
 
@@ -23,7 +67,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                                           rtscts=True, # TODO : test without this one
                                           timeout=timeout)"""
 
-    THROTTLE = 10 # milliseconds to wait between refreshing parameters
+    THROTTLE = 20 # milliseconds to wait between refreshing parameters
 
     selected_command_name = None
     selected_argument_index = 0
@@ -39,7 +83,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
         print("read presets:\n%s\n" % self.presets)
         # load the stored modulation levels into the current config
         for cmd,levels in self.presets['modulation_levels'].items():
-            self.commands[cmd]['modulation'] = levels
+            self.commands[cmd]['modulation'] = levels.copy()
 
         # build a reverse map of friendly name -> command struct for later use
         for cmd,struct in self.commands.items():
@@ -63,6 +107,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def stop_plugin(self):
         super().stop_plugin()
+        self.asyncwriter.quit()
+        self.asyncwriter = None
         self.save_presets()
 
 
@@ -83,6 +129,12 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             if item is not None:
                 self.send_buffered(queue, item[0], item[1], record = False)
 
+    def get_frame_summary(self, data):
+        line = "WJMX: "
+        for key, value in data.items():
+            line += key + ", "
+        print("returning line %s" % line)
+        return line
 
     # methods for ModulationReceiverPlugin - receives changes to the in-built modulation levels (-1 to +1)
     # experimental & hardcoded !
@@ -147,7 +199,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 #if arg_name in mods:
                 v = mods.get(arg_name,0.0)
                 g = '%s'%self.pc.display.get_bar(v)
-                output += "{}:{}|".format('ABCD'[slot],g)
+                output += "{}:{}|".format(self.pc.display.get_mod_slot_label(slot),g)
             if is_selected:
                 output+="]"
             output += "\n"
@@ -184,6 +236,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     import threading
     serial_lock = threading.Lock()
     def send_serial_string(self, string):
+        # TODO: thread this so can implement throttling and reduce bottleneck...
         if not self.active:
             return
         try:
@@ -192,14 +245,18 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             output = b'\2' + string.encode('ascii') + b'\3' 
             #with self.serial_lock:
             #self.ser.write(b'\2\2\2\2\3\3\3\3')
-            self.ser.write(output) #.encode())
+            if self.asyncwriter is None:
+                self.asyncwriter = AsyncWriter(self)
+                self.asyncwriter.start()
+            self.asyncwriter.write(output)
+            #self.ser.write(output) #.encode())
             # TODO: sleeping here seems to help serial response lag problem?
-            self.sleep = 0.2 #self.pc.get_variable('A')
+            """self.sleep = 0.2 #self.pc.get_variable('A')
             #print ("got sleep %s" % self.sleep)
             if self.sleep>=0.1:
                 #print("using sleep %s" % self.sleep)
                 import time
-                time.sleep(self.sleep/10.0)
+                time.sleep(self.sleep/10.0)"""
             #yield from self.ser.drain()
             if self.DEBUG: 
                 print("send_serial_string: sent string '%s'" % output) #.encode('ascii'))
@@ -220,9 +277,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             # sorting the commands that are sent seems to fix jerk and lag that is otherwise pretty horrendous
             with self.queue_lock:
               for queue, command in sorted(self.queue.items()):
-                # TODO: modulate the parameters
                 self.send_buffered(queue, command[0], command[1])
-            #self.queue.clear()
+              #self.queue.clear()
         except Exception:
             print ("WJSendPlugin>>> !!! CAUGHT EXCEPTION running queue %s!!!" % queue)
             import traceback
@@ -294,6 +350,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def toggle_active(self):
         self.active = not self.active
+        if not self.active:
+            self.asyncwriter = None
 
     def reset_modulation_levels(self):
         for cmd,struct in self.commands.items():

@@ -13,7 +13,13 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     active = False
 
     # for keeping track of LFO levels
-    level = [0.0]*MAX_LFOS #, 0.0, 0.0, 0.0]
+    level = [0.0]*MAX_LFOS
+    speed = 0.5
+
+    # TODO: enable assigning of LFOs to mod slots
+    # with combination/averaging...
+    # needs UI to control it and [ [ 0.0 ] * 4 ] * 4 to handle the mappings?
+    # currently each LFO maps directly to mod slot
 
     stop_flag = False
     pause_flag = False
@@ -22,8 +28,9 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
         #self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
         self.presets = self.load_presets()
-        self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS)
+        self.level = self.presets.get('levels', [0.0]*self.MAX_LFOS).copy()
         self.active = self.presets.get('active', False)
+        self.set_lfo_speed_direct(self.presets.get('speed', self.speed))
 
         self.pc.shaders.root.after(1000, self.start_plugin)
         
@@ -42,7 +49,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     def save_presets(self):
         #for cmd,struct in self.commands.items():
         #    self.presets.setdefault('modulation_levels',{})[cmd] = struct.get('modulation',[{},{},{},{}])
-        self.pc.update_json(self.PRESET_FILE_NAME, { 'levels': self.level.copy(), 'active': self.active } )
+        self.pc.update_json(self.PRESET_FILE_NAME, { 'levels': self.level.copy(), 'active': self.active, 'speed': self.speed } )
 
     # DisplayPlugin methods
     def get_display_modes(self):
@@ -52,22 +59,24 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         from tkinter import Text, END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, "LFOModulationPlugin ")
+        display.display_text.insert(END, "LFOModulation is ")
 
         display.display_text.insert(END, "ACTIVE" if self.active else "not active")
 
-        display.display_text.insert(END, "\tSpeed: {:4.2f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
+        display.display_text.insert(END, "\tSpeed: {:4.1f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
 
         for lfo,value in enumerate(self.level):
             display.display_text.insert(END, "lfo {} level: {:4.2f}% {}\t".format(lfo,value*100,display.get_bar(value)))
             display.display_text.insert(END, "{}\t{}\n".format(self.last_lfo_status[lfo], display.get_bar(self.last_lfo_value[lfo])))
-            display.display_text.insert(END, "\t%s\n" % self.formula[lfo])
+            display.display_text.insert(END, "\tslot %s\t%s\n" % (display.get_mod_slot_label(lfo), self.formula[lfo]))
+
+        display.display_text.insert(END, "\n")
 
     # AutomationSourcePlugin methods
     # methods/vars for AutomationSourcePlugin
     # a lot of the nitty-gritty handled in parent class, these are for interfacing to the plugin
     def get_frame_data(self):
-        diff = { 'levels': self.level, 'speed': self.speed }
+        diff = { 'levels': self.level.copy(), 'speed': self.speed, 'active': self.active }
         #self.last_record = {}
         #print(">>> reporting frame data for rec\n\t%s" % diff)
         return diff
@@ -76,14 +85,27 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         if data is None:
             return
         # print(">>>>recall from data:\n\t%s\n" %data)
-        """for queue, item in data.items():
-            if item is not None:
-                self.send_buffered(queue, item[0], item[1], record = False)"""
         if data.get('levels') is not None:
             for slot,level in enumerate(data.get('levels')):
                 self.set_lfo_modulation_level(slot, level)
+        if data.get('active') is not None:
+            self.active = data.get('active')
         if data.get('speed') is not None:
             self.set_lfo_speed_direct(data.get('speed'))
+
+    def get_frame_summary(self, data):
+        line = ""
+        if data.get('levels') is not None:
+            line += "LFO levels ["
+            for i in range(4):
+                line += self.pc.display.get_bar(data['levels'][i])
+            line += "] "
+        if data.get('active') is not None:
+            line += "active " if data.get('active') else 'inactive '
+        if data.get('speed') is not None:
+            line += self.pc.display.get_speed_indicator(data.get('speed'))
+        #print ("returning %s from %s" %(line, data))
+        return line
 
     # ActionsPlugin methods
     @property
@@ -163,6 +185,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
             return
 
         for lfo in range(0,self.MAX_LFOS):
+            # TODO: this is where would use assignable amounts and average across multiple inputs
             if self.level[lfo]>0.0:
                 self.pc.actions.call_method_name(
                         "modulate_param_%s_to_amount_continuous"%lfo, 

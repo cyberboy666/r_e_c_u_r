@@ -468,7 +468,7 @@ class Data(object):
             if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
             if self.settings['shader']['USE_SHADER_MOD']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
-                display_modes.append(["SHDR_MOD","NAV_MOD"]) ## allow override, but fall back to PLAY_SHADER controls
+                display_modes.append(["SHDR_MOD",["NAV_MOD","PLAY_SHADER"]]) ## allow override, but fall back to PLAY_SHADER controls
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
             if self.settings['system'].setdefault('USE_PLUGINS',

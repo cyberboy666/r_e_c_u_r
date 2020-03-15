@@ -225,6 +225,10 @@ class AutomationSourcePlugin(Plugin):
     def recall_frame_data(self, data):
         raise NotImplementedError
 
+    def get_frame_summary(self, data):
+        line = self.__class__.name + "%s: %s"%(self.__class__.name,data)
+        return line
+
     # these frame stubs deal with the simplest case of a frame being a dict of values
     # if its anything more complicated than that (like lists) then that will need to be
     # handled in the plugin by overriding these methods
@@ -286,7 +290,7 @@ class AutomationSourcePlugin(Plugin):
         #       else,
         #           store as last value
 
-        print("WJSEND got pre-interpolated clip: %s" % [ f.f for f in frames if f is not None])
+        print("AutomationSourcePlugin[%s] got pre-interpolated clip: %s" % ( type(self), [ f.f for f in frames if f is not None]) )
 
         #last = [ [None]*4, [None]*4, [None]*4 ]
         last = {}
@@ -358,7 +362,7 @@ class AutomationSourcePlugin(Plugin):
 
             process(self,findex,frame)
 
-        print("\nWJSEND got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
+        print("\nAutomationSourcePlugin got interpolated clip: %s" % [ f.f for f in frames if f is not None ])
 
         self.distance_cache = {}
 
@@ -481,6 +485,13 @@ class PluginCollection(object):
             return [c for c in self.plugins if isinstance(c, clazz) and (include_disabled or not c.disabled)]
         else:
             return [c for c in self.plugins if include_disabled or not c.disabled]
+
+    def get_plugin_for_class_name(self, class_name):
+        for plugin in self.get_plugins():
+            #print("got class name %s" % type(plugin).__name__==class_name)
+            if type(plugin).__name__==class_name == class_name:
+                return plugin
+        return None
 
     def walk_package(self, package):
         """Recursively walk the supplied package to retrieve all plugins

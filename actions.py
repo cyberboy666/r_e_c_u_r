@@ -1,6 +1,7 @@
 import subprocess
 import tracemalloc
 import data_centre.length_setter as length_setter
+from inspect import signature
 import sys
 import shlex
 import os
@@ -101,6 +102,21 @@ class Actions(object):
     def map_on_shaders_selection(self):
         self.shaders.map_on_shaders_selection()
 
+    def move_plugins_selection_down(self):
+        self.display.plugins_menu.navigate_menu_down()
+
+    def move_plugins_selection_up(self):
+        self.display.plugins_menu.navigate_menu_up()
+
+    def move_plugins_selection_page_down(self):
+        self.display.plugins_menu.navigate_menu_page_down()
+
+    def move_plugins_selection_page_up(self):
+        self.display.plugins_menu.navigate_menu_page_up()
+
+    def enter_on_plugins_selection(self):
+        self.display.plugins_menu.enter_on_plugins_selection()
+
     def clear_all_slots(self):
         self.data.clear_all_slots()
         self.display.browser_menu.generate_browser_list()
@@ -159,6 +175,21 @@ class Actions(object):
             if self.video_driver.current_player.show_toggle_on == self.video_driver.next_player.show_toggle_on:
                 self.video_driver.next_player.toggle_show()
 
+    def set_display_mode(self, display_mode):
+        mapmodes = {
+                'shader': 'SHADERS',
+                'shader_bank': 'SHDR_BNK'
+        }
+        if display_mode in mapmodes:
+            display_mode = mapmodes[display_mode]
+
+        display_mode = display_mode.upper()
+
+        display_modes = self.data.get_display_modes_list(with_nav_mode=True)
+        for i,dm in enumerate(display_modes):
+            if display_mode in dm:
+                self.data.display_mode = display_modes[i][0]
+                self.data.control_mode = display_modes[i][1]
 
     def cycle_display_mode(self):
         display_modes = self.data.get_display_modes_list(with_nav_mode=True)
@@ -552,7 +583,8 @@ class Actions(object):
             self.data.update_setting_value('shader', 'STROBE_AMOUNT', scaled_amount)
 
     def get_midi_status(self):
-        self.message_handler.set_message('INFO', 'midi status is {}'.format(self.data.midi_status))
+        device_name = 'none' if not hasattr(self.data,'midi_device_name') else self.data.midi_device_name
+        self.message_handler.set_message('INFO', ("midi status is {} to %s"%(device_name)).format(self.data.midi_status))
 
     def cycle_midi_port_index(self):
         self.data.midi_port_index = self.data.midi_port_index + 1
@@ -595,13 +627,13 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'composite')
         else:
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
-            
+
             if self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
                 
                 self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
 
                 self.change_hdmi_settings('CEA 4 HDMI')
-                
+
 
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
@@ -613,8 +645,9 @@ class Actions(object):
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'])
-            print('conjur pid is {}'.format(self.openframeworks_process.pid))
+            with open("conjur.log","w+") as out:
+                self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'], stdout=out)
+                print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
     def exit_openframeworks(self):
         self.video_driver.osc_client.send_message("/exit", True)
@@ -726,6 +759,7 @@ class Actions(object):
 
     def quit_the_program(self):
         self.data._update_json(self.data.SETTINGS_JSON, self.data.settings)
+        self.data.plugins.quit_plugins()
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
         self.exit_osc_server('','')
@@ -761,14 +795,13 @@ class Actions(object):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index + 1) % len(options) ])
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
         current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
         self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index - 1) % len(options) ])
-        self.message_handler.set_message('INFO', 'The Param amountis now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
-
+        self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def set_fixed_length(self, value):
         self.data.control_mode = 'LENGTH_SET'
@@ -972,6 +1005,9 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
+    #"""def modulate_param_layer_offset_to_amount(self, param, layer, amount):
+    #    self.shaders.modulate_param_layer_offset_to_amount(param, amount, layer_offset=layer)"""
+
     @staticmethod
     def try_remove_file(path):
         if os.path.exists(path):
@@ -988,20 +1024,21 @@ class Actions(object):
     # this would include eg a custom script module..
     @property
     def parserlist(self):
-        return { 
-                ( r"play_shader_([0-9])_([0-9])", self.shaders.play_that_shader ),
-                ( r"toggle_shader_layer_([0-2])", self.toggle_shader_layer ),
-                ( r"start_shader_layer_([0-2])",  self.shaders.start_shader ),
-                ( r"stop_shader_layer_([0-2])",   self.shaders.stop_shader ),
-                ( r"set_the_shader_param_([0-3])_layer_([0-2])_continuous", self.shaders.set_param_layer_to_amount ),
-                ( r"modulate_param_([0-3])_to_amount_continuous", self.shaders.modulate_param_to_amount ),
-                ( r"set_param_([0-3])_layer_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
-                ( r"set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous", self.shaders.set_param_layer_offset_modulation_level ),
-                ( r"reset_selected_modulation", self.shaders.reset_selected_modulation ),
-                ( r"reset_modulation_([0-3])", self.shaders.reset_modulation ),
-                ( r"select_shader_modulation_slot_([0-3])", self.shaders.select_shader_modulation_slot ),
-                ( r"set_shader_speed_layer_offset_([0-2])_amount",               self.shaders.set_speed_offset_to_amount ),
-                ( r"set_shader_speed_layer_([0-2])_amount", self.shaders.set_speed_layer_to_amount ),
+        return {
+                ( r"^play_shader_([0-9])_([0-9])$", self.shaders.play_that_shader ),
+                ( r"^toggle_shader_layer_([0-2])$", self.toggle_shader_layer ),
+                ( r"^start_shader_layer_([0-2])$",  self.shaders.start_shader ),
+                ( r"^stop_shader_layer_([0-2])$",   self.shaders.stop_shader ),
+                ( r"^set_the_shader_param_([0-3])_layer_([0-2])_continuous$",      self.shaders.set_param_layer_to_amount ),
+                ( r"^modulate_param_([0-3])_to_amount_continuous$", self.shaders.modulate_param_to_amount ),
+                ( r"^set_param_([0-3])_layer_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_modulation_level ),
+                ( r"^set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_offset_modulation_level ),
+                ( r"^reset_selected_modulation$", self.shaders.reset_selected_modulation ),
+                ( r"^reset_modulation_([0-3])$", self.shaders.reset_modulation ),
+                ( r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot ),
+                ( r"^set_shader_speed_layer_offset_([0-2])_amount$",               self.shaders.set_speed_offset_to_amount ),
+                ( r"^set_shader_speed_layer_([0-2])_amount$",                      self.shaders.set_speed_layer_to_amount ),
+                ( r"^set_display_mode_([a-zA-Z_]*)$",  self.set_display_mode )
         }
 
     def detect_types(self, args):
@@ -1024,24 +1061,56 @@ class Actions(object):
                 
                 return (found_method, args)
 
+        return None, None
+
     def call_method_name(self, method_name, argument=None):
-        # if the target method doesnt exist, call the handler
-        if not hasattr(self, method_name):
-            self.call_parse_method_name(method_name, argument)
+        method = None
+        arguments = None
+
+        # first check if we have a native method to handle this for us
+        # todo: assess whether it would still be performant/desirable to be able to override core actions with plugins?
+        if hasattr(self, method_name):
+            
+            method = getattr(self, method_name)
+            if argument is not None:
+                arguments = [argument]
+                # for the case where cc is being used as switch, we ignore note_off
+                if len(signature(method).parameters) == 0 and not argument:
+                    return
+
+        # if not then check if its handled by one of our parserlist dynamic route methods
+        if method is None:
+            method, arguments = self.get_callback_for_method(method_name, argument)
+
+        # if still nothing then test if a registered plugin handles this for us -- perhaps this ought to go first?
+        if method is None:
+            from data_centre.plugin_collection import ActionsPlugin
+            for plugin in self.data.plugins.get_plugins(ActionsPlugin):
+                if plugin.is_handled(method_name):
+                    print ("Plugin %s is handling %s" % (plugin, method_name))
+                    method, arguments = plugin.get_callback_for_method(method_name, argument)
+                    break # only deal with the first plugin
+
+        if method is None:
+            print ("Failed to find a method for '%s'" % method_name)
+            import traceback
+            traceback.print_exc()
             return
 
-        if argument is not None:
-            getattr(self, method_name)(argument)
-        else:
-            getattr(self, method_name)()
-
-
-    def call_parse_method_name(self, method_name, argument):
         try:
-            method, arguments = self.get_callback_for_method(method_name, argument)
-            method(*arguments)
+            #print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
+
+                # for the case where cc is being used as switch, we ignore note_off
+            print(type(argument))
+            if len(signature(method).parameters) == 0 and isinstance(argument, float) and argument == 0:
+                print('cc off ?')
+                return
+            if arguments is not None and len(signature(method).parameters)==len(arguments): # only pass arguments if count matches method sig
+                method(*arguments)
+            else:
+                method()
         except:
-            print ("Failed to find a method for '%s'" % method_name)
+            print ("Exception calling action for '%s' with arguments ( %s ) " % ( method_name, arguments))
             import traceback
             traceback.print_exc()
 

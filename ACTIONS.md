@@ -1,8 +1,8 @@
 # Auto-generated Actions list
 
-Sat 29 Feb 12:43:41 UTC 2020
+Sat 14 Mar 23:19:42 UTC 2020
 
-for branch=dev
+for branch=feature_plugins
 
 # Methods
   *   change_composite_setting(setting_value)
@@ -33,6 +33,7 @@ for branch=dev
   *   eject_all_usb_drives
   *   enable_feedback
   *   enter_on_browser_selection
+  *   enter_on_plugins_selection
   *   enter_on_settings_selection
   *   enter_on_shaders_selection
   *   exit_openframeworks
@@ -63,6 +64,10 @@ for branch=dev
   *   move_browser_selection_page_down
   *   move_browser_selection_page_up
   *   move_browser_selection_up
+  *   move_plugins_selection_down
+  *   move_plugins_selection_page_down
+  *   move_plugins_selection_page_up
+  *   move_plugins_selection_up
   *   move_settings_selection_down
   *   move_settings_selection_page_down
   *   move_settings_selection_page_up
@@ -101,6 +106,7 @@ for branch=dev
   *   set_detour_mix_continuous(amount)
   *   set_detour_speed_position_continuous(amount)
   *   set_detour_start_continuous(amount)
+  *   set_display_mode(display_mode)
   *   set_feedback_state(state)
   *   set_fixed_length(value)
   *   set_playing_sample_end_to_current_duration
@@ -166,7 +172,7 @@ for branch=dev
   *   toggle_x_autorepeat
   *   try_pull_code_and_reset
 
-# Dynamic routes
+## Dynamic routes
   * play_shader_([0-9])_([0-9])
   * toggle_shader_layer_([0-2])
   * start_shader_layer_([0-2])
@@ -180,6 +186,68 @@ for branch=dev
   * select_shader_modulation_slot_([0-3])
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
+  * set_display_mode_([a-zA-Z_]*)
+
+### Plugin routes
+  * set_lfo_modulation_([0-3])_level	(from LFOModulationPlugin)
+  * toggle_lfo_active	(from LFOModulationPlugin)
+  * set_lfo_speed	(from LFOModulationPlugin)
+  * (.*)&&(.*)	(from ManipulatePlugin)
+  * invert|(.*)	(from ManipulatePlugin)
+  * f:(.*):|(.*)	(from ManipulatePlugin)
+  * set_variable_([a-zA-Z0-9]+)	(from ManipulatePlugin)
+  * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
+  * (.*)>&(.*)	(from ManipulatePlugin)
+  * (.*)&&(.*)	(from MultiActionsPlugin)
+  * run_automation	(from ShaderLoopRecordPlugin)
+  * stop_automation	(from ShaderLoopRecordPlugin)
+  * toggle_pause_automation	(from ShaderLoopRecordPlugin)
+  * pause_automation	(from ShaderLoopRecordPlugin)
+  * toggle_loop_automation	(from ShaderLoopRecordPlugin)
+  * set_automation_speed	(from ShaderLoopRecordPlugin)
+  * toggle_record_automation	(from ShaderLoopRecordPlugin)
+  * toggle_overdub_automation	(from ShaderLoopRecordPlugin)
+  * clear_automation	(from ShaderLoopRecordPlugin)
+  * select_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
+  * toggle_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
+  * smooth_clip_(0-7])	(from ShaderLoopRecordPlugin)
+  * smooth_selected_clip	(from ShaderLoopRecordPlugin)
+  * load_presets	(from ShaderQuickPresetPlugin)
+  * save_presets	(from ShaderQuickPresetPlugin)
+  * store_next_preset	(from ShaderQuickPresetPlugin)
+  * store_current_preset	(from ShaderQuickPresetPlugin)
+  * switch_to_preset_([0-%i])	(from ShaderQuickPresetPlugin)
+  * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
+  * clear_current_preset	(from ShaderQuickPresetPlugin)
+  * qksh_toggle_display_live	(from ShaderQuickPresetPlugin)
+  * toggle_sound_react_active	(from SoundReactPlugin)
+  * sound_set_config_([a-z]*)_([a-z]*)	(from SoundReactPlugin)
+  * sound_set_modulation_([a-z]*)_slot_([0-3])_level	(from SoundReactPlugin)
+  * test_plugin	(from TestPlugin)
+  * cycle_shaders	(from TestPlugin)
+  * run_automation	(from TestPlugin)
+  * stop_automation	(from TestPlugin)
+  * toggle_pause_automation	(from TestPlugin)
+  * pause_automation	(from TestPlugin)
+  * toggle_loop_automation	(from TestPlugin)
+  * print_arguments	(from TestPlugin)
+  * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
+  * wj_send_serial:([0-9a-zA-Z:]*)	(from WJSendPlugin)
+  * wj_set_colour:([A|B|T])_([x|y])	(from WJSendPlugin)
+  * wj_set_back_colour:([x|y|z])	(from WJSendPlugin)
+  * wj_set_position:([N|L])_([x|y])	(from WJSendPlugin)
+  * wj_set_mix	(from WJSendPlugin)
+  * wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_set_current_modulation_slot_([0-3])_level	(from WJSendPlugin)
+  * wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_send_append:([:0-9a-zA-Z]*)	(from WJSendPlugin)
+  * wj_set_([a-zA-Z_]*)[:]?([a-zA-Z_]*)	(from WJSendPlugin)
+  * wj_select_next_command	(from WJSendPlugin)
+  * wj_select_previous_command	(from WJSendPlugin)
+  * wj_select_next_argument	(from WJSendPlugin)
+  * wj_select_previous_argument	(from WJSendPlugin)
+  * wj_reset_modulation	(from WJSendPlugin)
+  * wj_toggle_active	(from WJSendPlugin)
 
 ----
 

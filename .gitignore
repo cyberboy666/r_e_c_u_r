@@ -1,6 +1,12 @@
 *.pyc
 *.log
 .vscode
+*.swp
 json_objects/display_data.json
 json_objects/shader_bank_data.json
 json_objects/settings.json
+json_objects/plugins/*/*.json
+json_objects/enabled_plugins.json
+*.patch
+*.orig
+*.rej

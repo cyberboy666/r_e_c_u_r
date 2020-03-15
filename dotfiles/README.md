@@ -209,7 +209,10 @@ sudo cp -R * /usr/local/
 - install node-osc `npm install node-osc --save` (do we need this ?)
 - install osc-js `npm install node-osc --save`
 
-install serial package : `pip3 install pyserial`
+### install some plugin packages:
+
+- install serial package : `pip3 install pyserial`
+- install pyaudio : `sudo apt-get install python3-pyaudio`
 
 # wjhat follows is info, not instructions for setup:
 

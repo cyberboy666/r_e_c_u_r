@@ -164,6 +164,14 @@
             "options": [],
             "value": null
         },
+        "USE_PLUGINS": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
         "CLEAR_MESSAGE_BAR": {
             "action": "clear_message",
             "options": [],
@@ -213,6 +221,14 @@
             "value": "enabled"
         },
         "USE_SHADER_BANK": {
+            "action": null,
+            "options": [
+                "enabled",
+                "disabled"
+            ],
+            "value": "disabled"
+        },
+        "USE_SHADER_MOD": {
             "action": null,
             "options": [
                 "enabled",

@@ -8,7 +8,24 @@ import inspect
 from itertools import cycle
 from omxplayer.player import OMXPlayer
 from shutil import copyfile
+import threading 
 
+from data_centre import plugin_collection
+
+class AsyncWrite(threading.Thread):
+    def __init__(self, filename, data, mode='json'):
+        threading.Thread.__init__(self)
+        self.filename = filename
+        self.data = data
+        self.mode = mode
+
+    def run(self):
+        with open(self.filename, "w+") as data_file:
+            if self.mode=='json':
+                json.dump(self.data, data_file, indent=4, sort_keys=True)
+            else:
+                data_file.write(self.data)
+            data_file.close()
 
 
 class Data(object):
@@ -16,6 +33,7 @@ class Data(object):
     BANK_DATA_JSON = 'display_data.json'
     SHADER_BANK_DATA_JSON = 'shader_bank_data.json'
     SETTINGS_JSON = 'settings.json'
+    ENABLED_PLUGINS_JSON = 'enabled_plugins.json'
     DEFAULT_SETTINGS_JSON = 'settings_default.json'
     KEYPAD_MAPPING_JSON = 'keypad_action_mapping.json'
     OSC_MAPPING_JSON = 'osc_action_mapping.json'
@@ -34,10 +52,12 @@ class Data(object):
         #self.EMPTY_BANK = [self.EMPTY_SLOT for i in range(10)]
         self.PATHS_TO_BROWSER = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/Videos' ]
         self.PATHS_TO_SHADERS = [self.PATH_TO_EXTERNAL_DEVICES, '/home/pi/r_e_c_u_r/Shaders', '/home/pi/Shaders' ]
+        self.PATHS_TO_PLUGIN_DATA = [ '/home/pi/r_e_c_u_r/json_objects/plugins', self.PATH_TO_EXTERNAL_DEVICES ]
 
         ### state data
         self.auto_repeat_on = True
         self.function_on = False
+        self.is_display_held = False
         self.display_mode = "SAMPLER"
         self.control_mode = 'PLAYER'
         self.bank_number = 0
@@ -66,6 +86,10 @@ class Data(object):
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.BANK_DATA_JSON):
             self.bank_data = self._read_json(self.BANK_DATA_JSON)
 
+        self.enabled_plugins = {}
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.ENABLED_PLUGINS_JSON):
+            self.enabled_plugins = self._read_json(self.ENABLED_PLUGINS_JSON)
+
         self.shader_bank_data = [self.create_empty_shader_bank() for i in range(3)]
         if os.path.isfile(self.PATH_TO_DATA_OBJECTS + self.SHADER_BANK_DATA_JSON):
             self.shader_bank_data = self._read_json(self.SHADER_BANK_DATA_JSON)
@@ -82,6 +106,49 @@ class Data(object):
         self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
         self.analog_mappings = self._read_json(self.ANALOG_MAPPING_JSON)
 
+        # TODO: move this to a triggerable command/menu item that will spit out files in a place viewable in browser by the 'remote' system
+        # TODO eventually: have config configurable via remote browser
+        from utils import docs
+        docs.generate_mappings_doc("MIDI mappings", self.midi_mappings)
+        docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
+        docs.generate_mappings_doc("Key mappings", self.analog_mappings, column_one_header="Analogue input")
+        #quit()
+
+    def initialise_plugins(self):
+        #initialise plugin manager
+        self.plugins = plugin_collection.PluginCollection("plugins", self.message_handler, self)
+        self.compare_plugins_list()
+
+    def get_enabled_plugin_class_names(self):
+        return [k for k,v in self.enabled_plugins.items() if v is True]
+
+    def compare_plugins_list(self):
+        current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(include_disabled=True)]
+        plugins_to_add = set(current_plugins) - set(self.enabled_plugins.keys())
+        plugins_to_remove = set(self.enabled_plugins) - set(current_plugins)
+        for k in plugins_to_remove:
+            self.enabled_plugins.pop(k, None)
+        for k in plugins_to_add:
+            self.enabled_plugins[k] = False
+        #switch off all plugins if disabled ...
+        if self.settings['system']['USE_PLUGINS']['value'] == 'disabled':
+            self.enabled_plugins = {x:False for x in self.enabled_plugins}
+
+    def update_enabled_plugins(self, key, value):
+        self.enabled_plugins[key] = value
+        self._update_json(self.ENABLED_PLUGINS_JSON, self.enabled_plugins)
+
+    def load_midi_mapping_for_device(self, device_name):
+        # check if custom config file exists on disk for this device name
+        custom_file = self.MIDI_MAPPING_JSON.replace(".json","_%s.json"%device_name)
+        if os.path.isfile(self.PATH_TO_DATA_OBJECTS + custom_file):
+            self.midi_mappings = self._read_json(custom_file)
+            self.message_handler.set_message('INFO', "Loaded %s for %s" % (custom_file, device_name))
+            print ("loaded custom midi mapping for %s" % custom_file)
+        else:
+            print ("loading default midi mapping for %s" % (device_name))
+            self.midi_mappings = self._read_json(self.MIDI_MAPPING_JSON)
+        return self.midi_mappings
         
     def get_ip_address(self):
         ip_list = subprocess.check_output(['hostname', '-I']).decode('utf-8').split()
@@ -114,6 +181,23 @@ class Data(object):
     def _update_json(self, file_name, data):
         with open('{}{}'.format(self.PATH_TO_DATA_OBJECTS, file_name), 'w') as data_file:
             json.dump(data, data_file, indent=4, sort_keys=True)
+
+    def _read_plugin_json(self, file_name):
+        for path in self.PATHS_TO_PLUGIN_DATA:
+            print("loading plugin data %s" % path)
+            try:
+                with open("%s/%s" % (path,file_name)) as data_file:
+                    data = json.load(data_file)
+                    return data
+            except:
+                pass
+        print ("no plugin data loaded for %s" % file_name)
+
+    def _update_plugin_json(self, file_name, data):
+        #with open("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), "w+") as data_file:
+        #    json.dump(data, data_file, indent=4, sort_keys=True)
+        writer = AsyncWrite("%s/%s" % (self.PATHS_TO_PLUGIN_DATA[0], file_name), data, mode='json')
+        writer.start()
 
     def update_conjur_dev_mode(self, value):
         print(value)
@@ -383,8 +467,19 @@ class Data(object):
             display_modes.append(["SHADERS",'NAV_SHADERS'])
             if self.settings['shader']['USE_SHADER_BANK']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
                 display_modes.append(["SHDR_BNK",'PLAY_SHADER'])
+            if self.settings['shader']['USE_SHADER_MOD']['value'] == 'enabled' and ["SHADERS",'NAV_SHADERS'] in display_modes:
+                display_modes.append(["SHDR_MOD",["NAV_MOD","PLAY_SHADER"]]) ## allow override, but fall back to PLAY_SHADER controls
             if self.settings['detour']['TRY_DEMO']['value'] == 'enabled':
                 display_modes.append(["FRAMES",'NAV_DETOUR'])
+            if self.settings['system'].setdefault('USE_PLUGINS',
+                    self.default_settings.setdefault('USE_PLUGINS',{'value': 'enabled'})).get('value') == 'enabled':
+                display_modes.append(["PLUGINS",'NAV_PLUGINS'])
+
+        if hasattr(self, 'plugins') and self.plugins is not None:
+            from data_centre.plugin_collection import DisplayPlugin
+            for plugin in self.plugins.get_plugins(DisplayPlugin):
+                display_modes.append(plugin.get_display_modes())
+
         if not with_nav_mode:
             return [mode[0] for mode in display_modes]
         return display_modes

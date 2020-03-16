@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Mon 16 Mar 19:54:18 UTC 2020
+Mon 16 Mar 21:47:04 UTC 2020
 
 for branch=dev
 
@@ -184,6 +184,8 @@ for branch=dev
   * reset_selected_modulation
   * reset_modulation_([0-3])
   * select_shader_modulation_slot_([0-3])
+  * select_next_shader_modulation_slot
+  * select_previous_shader_modulation_slot
   * set_shader_speed_layer_offset_([0-2])_amount
   * set_shader_speed_layer_([0-2])_amount
   * set_display_mode_([a-zA-Z_]*)
@@ -220,6 +222,11 @@ for branch=dev
   * select_preset_([0-%i])	(from ShaderQuickPresetPlugin)
   * clear_current_preset	(from ShaderQuickPresetPlugin)
   * qksh_toggle_display_live	(from ShaderQuickPresetPlugin)
+  * switch_to_next_preset	(from ShaderQuickPresetPlugin)
+  * switch_to_previous_preset	(from ShaderQuickPresetPlugin)
+  * switch_to_current_preset	(from ShaderQuickPresetPlugin)
+  * select_previous_preset	(from ShaderQuickPresetPlugin)
+  * select_next_preset	(from ShaderQuickPresetPlugin)
   * toggle_sound_react_active	(from SoundReactPlugin)
   * sound_set_config_([a-z]*)_([a-z]*)	(from SoundReactPlugin)
   * sound_set_modulation_([a-z]*)_slot_([0-3])_level	(from SoundReactPlugin)

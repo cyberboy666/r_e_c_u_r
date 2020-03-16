@@ -39,7 +39,12 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
             ( r"switch_to_preset_([0-%i])"%self.MAX_PRESETS,  self.switch_to_preset ),
             ( r"select_preset_([0-%i])"%self.MAX_PRESETS, self.select_preset ),
             ( r"clear_current_preset", self.clear_current_preset ),
-            ( r"qksh_toggle_display_live", self.toggle_display_live )
+            ( r"qksh_toggle_display_live",  self.toggle_display_live ),
+            ( r"switch_to_next_preset",     self.switch_to_next_preset ),
+            ( r"switch_to_previous_preset", self.switch_to_previous_preset ),
+            ( r"switch_to_current_preset",  self.switch_to_current_preset ),
+            ( r"select_previous_preset",    self.select_previous_preset ),
+            ( r"select_next_preset",    self.select_next_preset ),
         ]
 
     def toggle_display_live(self):
@@ -53,11 +58,12 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
         from tkinter import Text, END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
-        display.display_text.insert(END, u"ShaderQuickPresetPlugin")
+        display.display_text.insert(END, "ShaderQuickPresetPlugin")
 
-        #display.display_text.insert(END, "
-        status = "Selected:"
-        for i,preset in enumerate(self.presets):
+        status = "Selected: ["
+        #for i,preset in enumerate(self.presets):
+        for i in range(self.MAX_PRESETS):
+            preset = self.presets[i]
             if i == self.selected_preset:
                 status += "#"
             elif i == self.last_recalled:
@@ -66,7 +72,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
                 status += "_"
             else:
                 status += "="
-        display.display_text.insert(END, " [" + status + "]\n")
+        display.display_text.insert(END, "" + status + "]\n")
 
         # display a basic summary of each preset
         """for i,preset in enumerate(self.presets):
@@ -74,9 +80,12 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
             #display.display_text.insert(END, "%s: %s %s %s" % """
 
         if self.display_live_on:
-            display.display_text.insert(END, "Showing LIVE\n")
+            display.display_text.insert(END, "Showing LIVE preview\n")
         else:
-            display.display_text.insert(END, "Showing stored preset slot %s\n" % self.selected_preset)
+            display.display_text.insert(END, "Showing stored preset slot %s" % self.selected_preset)
+            if self.selected_preset==self.last_recalled:
+                display.display_text.insert(END, " [last switched]")
+            display.display_text.insert(END, "\n")
 
         ## show a summary of the selected preset
         if self.selected_preset is not None:
@@ -122,7 +131,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
     def switch_to_preset(self, preset):
         #if preset>len(self.presets):
         if self.presets[preset] is None:
-            print ("no quick shader preset in slot %s!" % preset)
+            self.message_handler.set_message('ERROR',"No quick shader preset in slot %s!" % preset)
             self.selected_preset = preset
             return
         print ("switching to preset %s" % preset)
@@ -133,4 +142,34 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
 
         print ("recalled preset %s" % preset)
         self.pc.fm.recall_frame(preset)
+
+    def switch_to_current_preset(self):
+        if self.selected_preset is not None:
+            self.switch_to_preset(self.selected_preset)
+
+    def switch_to_previous_preset(self):
+        self.select_previous_preset()
+        self.switch_to_current_preset()
+
+    def switch_to_next_preset(self):
+        self.select_next_preset()
+        self.switch_to_current_preset()
+
+    def select_next_preset(self):
+        if self.selected_preset is None:
+            self.selected_preset = 0
+            return
+        self.selected_preset += 1
+        if self.selected_preset>=self.MAX_PRESETS:
+            self.selected_preset = 0
+
+    def select_previous_preset(self):
+        if self.selected_preset is None:
+            self.selected_preset = self.MAX_PRESETS
+            return
+        self.selected_preset -= 1
+        if self.selected_preset<0:
+            self.selected_preset = self.MAX_PRESETS-1
+        
+
 

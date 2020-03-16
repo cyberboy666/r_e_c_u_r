@@ -635,10 +635,15 @@ class Display(object):
 
     def _update_screen_every_second(self):
         self.refresh_display()
-        self.tk.after(500, self._update_screen_every_second)
+        self.tk.after(50, self._update_screen_every_second)
 
+    last_refreshed = 0
+    REFRESH_LIMIT = 100
     def refresh_display(self):
         if self.data.update_screen:
+            if time.time()*1000 - self.last_refreshed < self.REFRESH_LIMIT:
+                return
+            self.last_refreshed = time.time()*1000
             self.display_text.configure(state='normal')
             self.display_text.delete(1.0, END)
             self._load_display()

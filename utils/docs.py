@@ -8,7 +8,7 @@ def generate_mappings_doc(title, mappings, column_one_header="Note/CC"):
     output += ("| --- " * 4) + " |\n"
     for message, maps in sorted(mappings.items()):
         #output += "| %s | " % message
-        for mode, actions in maps.items():
+        for mode, actions in sorted(maps.items()):
             output += "| "
             output += "%s\t| " % message
             output += "%s\t| " % mode

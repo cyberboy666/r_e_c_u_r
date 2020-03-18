@@ -2,18 +2,18 @@
 
 | Note/CC | Mode | Action (default) | Action (with FN) |
 | --- | --- | --- | ---  |
-| control_change 0      | NAV_MANI      | set_variable_A | |
-| control_change 0      | NAV_LFO       | set_lfo_modulation_0_level | |
-| control_change 0      | NAV_DETOUR    | set_detour_speed_position_continuous | |
-| control_change 0      | NAV_WJMX      | wj_set_position_N:x | |
-| control_change 0      | NAV_LPRC      | set_automation_speed | |
 | control_change 0      | DEFAULT       | set_the_shader_param_0_layer_offset_0_continuous | set_strobe_amount_continuous | |
+| control_change 0      | NAV_DETOUR    | set_detour_speed_position_continuous | |
+| control_change 0      | NAV_LFO       | set_lfo_modulation_0_level | |
+| control_change 0      | NAV_LPRC      | set_automation_speed | |
+| control_change 0      | NAV_MANI      | set_variable_A | |
 | control_change 0      | NAV_SND       | sound_set_config_energy_gain | |
-| control_change 1      | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
+| control_change 0      | NAV_WJMX      | wj_set_position_N:x | |
+| control_change 1      | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | control_change 1      | NAV_DETOUR    | set_detour_start_continuous | |
 | control_change 1      | NAV_LFO       | set_lfo_modulation_1_level | |
+| control_change 1      | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
 | control_change 1      | NAV_SND       | sound_set_config_energy_threshold | |
-| control_change 1      | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | control_change 1      | NAV_WJMX      | wj_set_position_N:y | |
 | control_change 10     | DEFAULT       | set_the_shader_param_2_layer_offset_2_continuous | |
 | control_change 11     | DEFAULT       | set_the_shader_param_3_layer_offset_2_continuous | |
@@ -23,124 +23,124 @@
 | control_change 18     | DEFAULT       | set_the_shader_param_2_layer_offset_2_continuous | |
 | control_change 19     | DEFAULT       | set_the_shader_param_3_layer_offset_2_continuous | |
 | control_change 2      | DEFAULT       | set_the_shader_param_2_layer_offset_0_continuous | set_shader_speed_layer_1_amount | |
-| control_change 2      | NAV_LFO       | set_lfo_modulation_2_level | |
 | control_change 2      | NAV_DETOUR    | set_detour_end_continuous | |
+| control_change 2      | NAV_LFO       | set_lfo_modulation_2_level | |
 | control_change 2      | NAV_WJMX      | wj_set_colour_T:x | |
 | control_change 20     | DEFAULT       | set_strobe_amount_continuous | |
 | control_change 3      | DEFAULT       | set_the_shader_param_3_layer_offset_0_continuous | set_shader_speed_layer_2_amount | |
 | control_change 3      | NAV_LFO       | set_lfo_modulation_3_level | |
 | control_change 3      | NAV_WJMX      | wj_set_colour_T:y | |
-| control_change 32     | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | control_change 32     | DEFAULT       | load_slot_0_into_next_player | previous_bank | |
-| control_change 32     | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
 | control_change 32     | NAV_DETOUR    | switch_to_detour_0 | set_the_detour_mix_0 | |
-| control_change 33     | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
+| control_change 32     | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
+| control_change 32     | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | control_change 33     | DEFAULT       | load_slot_1_into_next_player | next_bank | |
-| control_change 33     | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
 | control_change 33     | NAV_DETOUR    | switch_to_detour_1 | set_the_detour_mix_1 | |
-| control_change 34     | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
+| control_change 33     | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
+| control_change 33     | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
 | control_change 34     | DEFAULT       | load_slot_2_into_next_player | clear_all_slots | |
-| control_change 34     | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
 | control_change 34     | NAV_DETOUR    | switch_to_detour_2 | clear_this_detour | |
-| control_change 35     | PLAY_SHADER   | play_shader_3 | |
+| control_change 34     | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
+| control_change 34     | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
 | control_change 35     | DEFAULT       | load_slot_3_into_next_player | |
 | control_change 35     | NAV_DETOUR    | switch_to_detour_3 | |
-| control_change 36     | PLAY_SHADER   | play_shader_4 | |
+| control_change 35     | PLAY_SHADER   | play_shader_3 | |
 | control_change 36     | DEFAULT       | load_slot_4_into_next_player | |
-| control_change 37     | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
+| control_change 36     | PLAY_SHADER   | play_shader_4 | |
 | control_change 37     | DEFAULT       | load_slot_5_into_next_player | toggle_screen_mirror | |
-| control_change 38     | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
+| control_change 37     | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
 | control_change 38     | DEFAULT       | load_slot_6_into_next_player | toggle_shaders | |
-| control_change 39     | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
+| control_change 38     | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
 | control_change 39     | DEFAULT       | load_slot_7_into_next_player | toggle_detour_mode | |
+| control_change 39     | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
 | control_change 4      | DEFAULT       | set_the_shader_param_0_layer_offset_1_continuous | set_param_0_layer_offset_0_modulation_level_continuous | |
 | control_change 4      | NAV_LFO       | set_lfo_speed | |
-| control_change 4      | NAV_WJMX      | wj_set_mix | wj_set_current_modulation_slot_0_level | |
 | control_change 4      | NAV_SND       | sound_set_modulation_energy_slot_0_level | |
+| control_change 4      | NAV_WJMX      | wj_set_mix | wj_set_current_modulation_slot_0_level | |
 | control_change 41     | DEFAULT       | switch_to_next_player | toggle_player_mode | |
 | control_change 41     | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
 | control_change 42     | CONFIRM       | perform_confirm_action | |
-| control_change 42     | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
-| control_change 42     | NAV_WJMX      | wj_toggle_active | |
-| control_change 42     | NAV_LFO       | toggle_lfo_active | |
-| control_change 42     | NAV_SND       | toggle_sound_react_active | |
-| control_change 42     | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
 | control_change 42     | DEFAULT       | toggle_action_on_player | toggle_show_on_player | |
-| control_change 42     | NAV_QKSH      | qksh_toggle_display_live | |
-| control_change 42     | NAV_PLUGINS   | enter_on_plugins_selection | |
-| control_change 42     | NAV_BROWSER   | enter_on_browser_selection | |
-| control_change 42     | SHADER_PARAM  | return_to_default_control_mode | |
-| control_change 42     | NAV_DETOUR    | toggle_detour_play | |
-| control_change 42     | NAV_SETTINGS  | enter_on_settings_selection | |
 | control_change 42     | LENGTH_SET    | record_fixed_length | |
+| control_change 42     | NAV_BROWSER   | enter_on_browser_selection | |
+| control_change 42     | NAV_DETOUR    | toggle_detour_play | |
+| control_change 42     | NAV_LFO       | toggle_lfo_active | |
+| control_change 42     | NAV_PLUGINS   | enter_on_plugins_selection | |
+| control_change 42     | NAV_QKSH      | qksh_toggle_display_live | |
+| control_change 42     | NAV_SETTINGS  | enter_on_settings_selection | |
+| control_change 42     | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
+| control_change 42     | NAV_SND       | toggle_sound_react_active | |
+| control_change 42     | NAV_WJMX      | wj_toggle_active | |
+| control_change 42     | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
+| control_change 42     | SHADER_PARAM  | return_to_default_control_mode | |
 | control_change 43     | CONFIRM       | return_to_default_control_mode | |
-| control_change 43     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
-| control_change 43     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
-| control_change 43     | LENGTH_SET    | return_to_default_control_mode | |
-| control_change 43     | NAV_WJMX      | wj_select_previous_command | |
-| control_change 43     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
 | control_change 43     | DEFAULT       | seek_back_on_player | decrease_seek_time | |
-| control_change 43     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| control_change 43     | LENGTH_SET    | return_to_default_control_mode | |
 | control_change 43     | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
 | control_change 43     | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| control_change 43     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| control_change 43     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| control_change 43     | NAV_WJMX      | wj_select_previous_command | |
+| control_change 43     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| control_change 43     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
 | control_change 44     | CONFIRM       | return_to_default_control_mode | |
-| control_change 44     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
-| control_change 44     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
-| control_change 44     | LENGTH_SET    | return_to_default_control_mode | |
-| control_change 44     | NAV_WJMX      | wj_select_next_command | |
-| control_change 44     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
 | control_change 44     | DEFAULT       | seek_forward_on_player | increase_seek_time | |
-| control_change 44     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| control_change 44     | LENGTH_SET    | return_to_default_control_mode | |
 | control_change 44     | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
 | control_change 44     | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| control_change 44     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| control_change 44     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| control_change 44     | NAV_WJMX      | wj_select_next_command | |
+| control_change 44     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| control_change 44     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
 | control_change 45     | DEFAULT       | toggle_capture_preview | toggle_capture_recording | |
 | control_change 46     | DEFAULT       | cycle_display_mode | cycle_display_mode_back | |
-| control_change 48     | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
 | control_change 48     | DEFAULT       | load_slot_8_into_next_player | toggle_feedback | |
-| control_change 49     | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
+| control_change 48     | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
 | control_change 49     | DEFAULT       | load_slot_9_into_next_player | confirm_shutdown | |
+| control_change 49     | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
 | control_change 5      | DEFAULT       | set_the_shader_param_1_layer_offset_1_continuous | set_param_1_layer_offset_0_modulation_level_continuous | |
-| control_change 5      | NAV_WJMX      | wj_set_back_colour:h | wj_set_current_modulation_slot_1_level | |
 | control_change 5      | NAV_SND       | sound_set_modulation_energy_slot_1_level | |
+| control_change 5      | NAV_WJMX      | wj_set_back_colour:h | wj_set_current_modulation_slot_1_level | |
 | control_change 51     | DEFAULT       | toggle_x3_as_speed | |
 | control_change 52     | DEFAULT       | toggle_feedback | |
 | control_change 53     | DEFAULT       | toggle_shader_layer_0 | |
 | control_change 54     | DEFAULT       | toggle_shader_layer_1 | |
 | control_change 55     | DEFAULT       | toggle_shader_layer_2 | |
 | control_change 58     | CONFIRM       | return_to_default_control_mode | |
-| control_change 58     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
-| control_change 58     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
-| control_change 58     | LENGTH_SET    | return_to_default_control_mode | |
-| control_change 58     | NAV_WJMX      | wj_select_previous_command | |
-| control_change 58     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
 | control_change 58     | DEFAULT       | seek_back_on_player | decrease_seek_time | |
-| control_change 58     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| control_change 58     | LENGTH_SET    | return_to_default_control_mode | |
 | control_change 58     | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
 | control_change 58     | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| control_change 58     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| control_change 58     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| control_change 58     | NAV_WJMX      | wj_select_previous_command | |
+| control_change 58     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| control_change 58     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
 | control_change 59     | CONFIRM       | return_to_default_control_mode | |
-| control_change 59     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
-| control_change 59     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
-| control_change 59     | LENGTH_SET    | return_to_default_control_mode | |
-| control_change 59     | NAV_WJMX      | wj_select_next_command | |
-| control_change 59     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
 | control_change 59     | DEFAULT       | seek_forward_on_player | increase_seek_time | |
-| control_change 59     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| control_change 59     | LENGTH_SET    | return_to_default_control_mode | |
 | control_change 59     | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
 | control_change 59     | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| control_change 59     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| control_change 59     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| control_change 59     | NAV_WJMX      | wj_select_next_command | |
+| control_change 59     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| control_change 59     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
 | control_change 6      | DEFAULT       | set_the_shader_param_2_layer_offset_1_continuous | set_param_2_layer_offset_0_modulation_level_continuous | |
-| control_change 6      | NAV_WJMX      | wj_set_back_colour:s | wj_set_current_modulation_slot_2_level | |
 | control_change 6      | NAV_SND       | sound_set_modulation_energy_slot_2_level | |
+| control_change 6      | NAV_WJMX      | wj_set_back_colour:s | wj_set_current_modulation_slot_2_level | |
 | control_change 60     | DEFAULT       | toggle_function | |
-| control_change 61     | PLAY_SHADER   | decrease_param_focus | |
 | control_change 61     | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
-| control_change 61     | SHADER_PARAM  | decrease_param_focus | |
 | control_change 61     | NAV_DETOUR    | decrease_mix_shader | |
 | control_change 61     | NAV_WJMX      | wj_select_previous_argument | |
-| control_change 62     | PLAY_SHADER   | increase_param_focus | |
+| control_change 61     | PLAY_SHADER   | decrease_param_focus | |
+| control_change 61     | SHADER_PARAM  | decrease_param_focus | |
 | control_change 62     | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
-| control_change 62     | SHADER_PARAM  | increase_param_focus | |
 | control_change 62     | NAV_DETOUR    | increase_mix_shader | |
 | control_change 62     | NAV_WJMX      | wj_select_next_argument | |
+| control_change 62     | PLAY_SHADER   | increase_param_focus | |
+| control_change 62     | SHADER_PARAM  | increase_param_focus | |
 | control_change 64     | DEFAULT       | play_shader_0 | |
 | control_change 65     | DEFAULT       | play_shader_1 | |
 | control_change 66     | DEFAULT       | play_shader_2 | |
@@ -148,164 +148,164 @@
 | control_change 68     | DEFAULT       | play_shader_4 | |
 | control_change 69     | DEFAULT       | play_shader_5 | |
 | control_change 7      | DEFAULT       | set_the_shader_param_3_layer_offset_1_continuous | set_param_3_layer_offset_0_modulation_level_continuous | |
-| control_change 7      | NAV_WJMX      | wj_set_back_colour:v | wj_set_current_modulation_slot_3_level | |
 | control_change 7      | NAV_SND       | sound_set_modulation_energy_slot_3_level | |
+| control_change 7      | NAV_WJMX      | wj_set_back_colour:v | wj_set_current_modulation_slot_3_level | |
 | control_change 70     | DEFAULT       | play_shader_6 | |
 | control_change 71     | DEFAULT       | play_shader_7 | |
 | control_change 8      | DEFAULT       | set_the_shader_param_0_layer_offset_2_continuous | |
 | control_change 9      | DEFAULT       | set_the_shader_param_1_layer_offset_2_continuous | |
 | note_on 36    | CONFIRM       | return_to_default_control_mode | |
-| note_on 36    | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
-| note_on 36    | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
-| note_on 36    | LENGTH_SET    | return_to_default_control_mode | |
-| note_on 36    | NAV_WJMX      | wj_select_previous_command | |
-| note_on 36    | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
 | note_on 36    | DEFAULT       | seek_back_on_player | decrease_seek_time | |
-| note_on 36    | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| note_on 36    | LENGTH_SET    | return_to_default_control_mode | |
 | note_on 36    | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
 | note_on 36    | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| note_on 36    | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| note_on 36    | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| note_on 36    | NAV_WJMX      | wj_select_previous_command | |
+| note_on 36    | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| note_on 36    | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
 | note_on 37    | CONFIRM       | return_to_default_control_mode | |
-| note_on 37    | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
-| note_on 37    | SHADER_PARAM  | increase_this_param | increase_shader_param | |
-| note_on 37    | LENGTH_SET    | return_to_default_control_mode | |
-| note_on 37    | NAV_WJMX      | wj_select_next_command | |
-| note_on 37    | PLAY_SHADER   | increase_this_param | increase_shader_param | |
 | note_on 37    | DEFAULT       | seek_forward_on_player | increase_seek_time | |
-| note_on 37    | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| note_on 37    | LENGTH_SET    | return_to_default_control_mode | |
 | note_on 37    | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
 | note_on 37    | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| note_on 37    | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| note_on 37    | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| note_on 37    | NAV_WJMX      | wj_select_next_command | |
+| note_on 37    | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| note_on 37    | SHADER_PARAM  | increase_this_param | increase_shader_param | |
 | note_on 38    | CONFIRM       | perform_confirm_action | |
-| note_on 38    | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
-| note_on 38    | NAV_WJMX      | wj_toggle_active | |
-| note_on 38    | NAV_LFO       | toggle_lfo_active | |
-| note_on 38    | NAV_SND       | toggle_sound_react_active | |
-| note_on 38    | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
 | note_on 38    | DEFAULT       | toggle_action_on_player | toggle_show_on_player | |
-| note_on 38    | NAV_QKSH      | qksh_toggle_display_live | |
-| note_on 38    | NAV_PLUGINS   | enter_on_plugins_selection | |
-| note_on 38    | NAV_BROWSER   | enter_on_browser_selection | |
-| note_on 38    | SHADER_PARAM  | return_to_default_control_mode | |
-| note_on 38    | NAV_DETOUR    | toggle_detour_play | |
-| note_on 38    | NAV_SETTINGS  | enter_on_settings_selection | |
 | note_on 38    | LENGTH_SET    | record_fixed_length | |
+| note_on 38    | NAV_BROWSER   | enter_on_browser_selection | |
+| note_on 38    | NAV_DETOUR    | toggle_detour_play | |
+| note_on 38    | NAV_LFO       | toggle_lfo_active | |
+| note_on 38    | NAV_PLUGINS   | enter_on_plugins_selection | |
+| note_on 38    | NAV_QKSH      | qksh_toggle_display_live | |
+| note_on 38    | NAV_SETTINGS  | enter_on_settings_selection | |
+| note_on 38    | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
+| note_on 38    | NAV_SND       | toggle_sound_react_active | |
+| note_on 38    | NAV_WJMX      | wj_toggle_active | |
+| note_on 38    | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
+| note_on 38    | SHADER_PARAM  | return_to_default_control_mode | |
 | note_on 39    | DEFAULT       | switch_to_next_player | toggle_player_mode | |
 | note_on 39    | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
-| note_on 40    | PLAY_SHADER   | decrease_param_focus | |
 | note_on 40    | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
-| note_on 40    | SHADER_PARAM  | decrease_param_focus | |
 | note_on 40    | NAV_DETOUR    | decrease_mix_shader | |
 | note_on 40    | NAV_WJMX      | wj_select_previous_argument | |
-| note_on 41    | PLAY_SHADER   | increase_param_focus | |
+| note_on 40    | PLAY_SHADER   | decrease_param_focus | |
+| note_on 40    | SHADER_PARAM  | decrease_param_focus | |
 | note_on 41    | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
-| note_on 41    | SHADER_PARAM  | increase_param_focus | |
 | note_on 41    | NAV_DETOUR    | increase_mix_shader | |
 | note_on 41    | NAV_WJMX      | wj_select_next_argument | |
+| note_on 41    | PLAY_SHADER   | increase_param_focus | |
+| note_on 41    | SHADER_PARAM  | increase_param_focus | |
 | note_on 42    | DEFAULT       | toggle_capture_preview | toggle_capture_recording | |
 | note_on 43    | DEFAULT       | cycle_display_mode | cycle_display_mode_back | |
 | note_on 44    | DEFAULT       | toggle_function | |
-| note_on 45    | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | note_on 45    | DEFAULT       | load_slot_0_into_next_player | previous_bank | |
-| note_on 45    | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
 | note_on 45    | NAV_DETOUR    | switch_to_detour_0 | set_the_detour_mix_0 | |
-| note_on 46    | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
+| note_on 45    | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
+| note_on 45    | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | note_on 46    | DEFAULT       | load_slot_1_into_next_player | next_bank | |
-| note_on 46    | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
 | note_on 46    | NAV_DETOUR    | switch_to_detour_1 | set_the_detour_mix_1 | |
-| note_on 47    | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
+| note_on 46    | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
+| note_on 46    | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
 | note_on 47    | DEFAULT       | load_slot_2_into_next_player | clear_all_slots | |
-| note_on 47    | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
 | note_on 47    | NAV_DETOUR    | switch_to_detour_2 | clear_this_detour | |
-| note_on 48    | PLAY_SHADER   | play_shader_3 | |
+| note_on 47    | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
+| note_on 47    | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
 | note_on 48    | DEFAULT       | load_slot_3_into_next_player | |
 | note_on 48    | NAV_DETOUR    | switch_to_detour_3 | |
-| note_on 49    | PLAY_SHADER   | play_shader_4 | |
+| note_on 48    | PLAY_SHADER   | play_shader_3 | |
 | note_on 49    | DEFAULT       | load_slot_4_into_next_player | |
-| note_on 50    | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
+| note_on 49    | PLAY_SHADER   | play_shader_4 | |
 | note_on 50    | DEFAULT       | load_slot_5_into_next_player | toggle_screen_mirror | |
-| note_on 51    | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
+| note_on 50    | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
 | note_on 51    | DEFAULT       | load_slot_6_into_next_player | toggle_shaders | |
-| note_on 52    | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
+| note_on 51    | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
 | note_on 52    | DEFAULT       | load_slot_7_into_next_player | toggle_detour_mode | |
-| note_on 53    | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
+| note_on 52    | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
 | note_on 53    | DEFAULT       | load_slot_8_into_next_player | toggle_feedback | |
-| note_on 54    | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
+| note_on 53    | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
 | note_on 54    | DEFAULT       | load_slot_9_into_next_player | confirm_shutdown | |
+| note_on 54    | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
 | note_on 72    | CONFIRM       | return_to_default_control_mode | |
-| note_on 72    | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
-| note_on 72    | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
-| note_on 72    | LENGTH_SET    | return_to_default_control_mode | |
-| note_on 72    | NAV_WJMX      | wj_select_previous_command | |
-| note_on 72    | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
 | note_on 72    | DEFAULT       | seek_back_on_player | decrease_seek_time | |
-| note_on 72    | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| note_on 72    | LENGTH_SET    | return_to_default_control_mode | |
 | note_on 72    | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
 | note_on 72    | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| note_on 72    | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| note_on 72    | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| note_on 72    | NAV_WJMX      | wj_select_previous_command | |
+| note_on 72    | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| note_on 72    | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
 | note_on 73    | CONFIRM       | return_to_default_control_mode | |
-| note_on 73    | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
-| note_on 73    | SHADER_PARAM  | increase_this_param | increase_shader_param | |
-| note_on 73    | LENGTH_SET    | return_to_default_control_mode | |
-| note_on 73    | NAV_WJMX      | wj_select_next_command | |
-| note_on 73    | PLAY_SHADER   | increase_this_param | increase_shader_param | |
 | note_on 73    | DEFAULT       | seek_forward_on_player | increase_seek_time | |
-| note_on 73    | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| note_on 73    | LENGTH_SET    | return_to_default_control_mode | |
 | note_on 73    | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
 | note_on 73    | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| note_on 73    | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| note_on 73    | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| note_on 73    | NAV_WJMX      | wj_select_next_command | |
+| note_on 73    | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| note_on 73    | SHADER_PARAM  | increase_this_param | increase_shader_param | |
 | note_on 74    | CONFIRM       | perform_confirm_action | |
-| note_on 74    | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
-| note_on 74    | NAV_WJMX      | wj_toggle_active | |
-| note_on 74    | NAV_LFO       | toggle_lfo_active | |
-| note_on 74    | NAV_SND       | toggle_sound_react_active | |
-| note_on 74    | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
 | note_on 74    | DEFAULT       | toggle_action_on_player | toggle_show_on_player | |
-| note_on 74    | NAV_QKSH      | qksh_toggle_display_live | |
-| note_on 74    | NAV_PLUGINS   | enter_on_plugins_selection | |
-| note_on 74    | NAV_BROWSER   | enter_on_browser_selection | |
-| note_on 74    | SHADER_PARAM  | return_to_default_control_mode | |
-| note_on 74    | NAV_DETOUR    | toggle_detour_play | |
-| note_on 74    | NAV_SETTINGS  | enter_on_settings_selection | |
 | note_on 74    | LENGTH_SET    | record_fixed_length | |
+| note_on 74    | NAV_BROWSER   | enter_on_browser_selection | |
+| note_on 74    | NAV_DETOUR    | toggle_detour_play | |
+| note_on 74    | NAV_LFO       | toggle_lfo_active | |
+| note_on 74    | NAV_PLUGINS   | enter_on_plugins_selection | |
+| note_on 74    | NAV_QKSH      | qksh_toggle_display_live | |
+| note_on 74    | NAV_SETTINGS  | enter_on_settings_selection | |
+| note_on 74    | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
+| note_on 74    | NAV_SND       | toggle_sound_react_active | |
+| note_on 74    | NAV_WJMX      | wj_toggle_active | |
+| note_on 74    | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
+| note_on 74    | SHADER_PARAM  | return_to_default_control_mode | |
 | note_on 75    | DEFAULT       | switch_to_next_player | toggle_player_mode | |
 | note_on 75    | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
-| note_on 76    | PLAY_SHADER   | decrease_param_focus | |
 | note_on 76    | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
-| note_on 76    | SHADER_PARAM  | decrease_param_focus | |
 | note_on 76    | NAV_DETOUR    | decrease_mix_shader | |
 | note_on 76    | NAV_WJMX      | wj_select_previous_argument | |
-| note_on 77    | PLAY_SHADER   | increase_param_focus | |
+| note_on 76    | PLAY_SHADER   | decrease_param_focus | |
+| note_on 76    | SHADER_PARAM  | decrease_param_focus | |
 | note_on 77    | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
-| note_on 77    | SHADER_PARAM  | increase_param_focus | |
 | note_on 77    | NAV_DETOUR    | increase_mix_shader | |
 | note_on 77    | NAV_WJMX      | wj_select_next_argument | |
+| note_on 77    | PLAY_SHADER   | increase_param_focus | |
+| note_on 77    | SHADER_PARAM  | increase_param_focus | |
 | note_on 78    | DEFAULT       | toggle_capture_preview | toggle_capture_recording | |
 | note_on 79    | DEFAULT       | cycle_display_mode | cycle_display_mode_back | |
 | note_on 80    | DEFAULT       | toggle_function | |
-| note_on 81    | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | note_on 81    | DEFAULT       | load_slot_0_into_next_player | previous_bank | |
-| note_on 81    | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
 | note_on 81    | NAV_DETOUR    | switch_to_detour_0 | set_the_detour_mix_0 | |
-| note_on 82    | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
+| note_on 81    | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
+| note_on 81    | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | note_on 82    | DEFAULT       | load_slot_1_into_next_player | next_bank | |
-| note_on 82    | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
 | note_on 82    | NAV_DETOUR    | switch_to_detour_1 | set_the_detour_mix_1 | |
-| note_on 83    | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
+| note_on 82    | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
+| note_on 82    | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
 | note_on 83    | DEFAULT       | load_slot_2_into_next_player | clear_all_slots | |
-| note_on 83    | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
 | note_on 83    | NAV_DETOUR    | switch_to_detour_2 | clear_this_detour | |
-| note_on 84    | PLAY_SHADER   | play_shader_3 | |
+| note_on 83    | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
+| note_on 83    | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
 | note_on 84    | DEFAULT       | load_slot_3_into_next_player | |
 | note_on 84    | NAV_DETOUR    | switch_to_detour_3 | |
-| note_on 85    | PLAY_SHADER   | play_shader_4 | |
+| note_on 84    | PLAY_SHADER   | play_shader_3 | |
 | note_on 85    | DEFAULT       | load_slot_4_into_next_player | |
-| note_on 86    | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
+| note_on 85    | PLAY_SHADER   | play_shader_4 | |
 | note_on 86    | DEFAULT       | load_slot_5_into_next_player | toggle_screen_mirror | |
-| note_on 87    | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
+| note_on 86    | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
 | note_on 87    | DEFAULT       | load_slot_6_into_next_player | toggle_shaders | |
-| note_on 88    | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
+| note_on 87    | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
 | note_on 88    | DEFAULT       | load_slot_7_into_next_player | toggle_detour_mode | |
-| note_on 89    | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
+| note_on 88    | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
 | note_on 89    | DEFAULT       | load_slot_8_into_next_player | toggle_feedback | |
-| note_on 90    | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
+| note_on 89    | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
 | note_on 90    | DEFAULT       | load_slot_9_into_next_player | confirm_shutdown | |
+| note_on 90    | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
 
 ----
 
@@ -316,116 +316,116 @@
 | /high | DEFAULT       | modulate_param_3_to_amount_continuous | |
 | /himid        | DEFAULT       | modulate_param_2_to_amount_continuous | |
 | /kick | DEFAULT       | modulate_param_1_to_amount_continuous | |
-| /shaderparam0 | NAV_MANI      | set_variable_A | |
-| /shaderparam0 | NAV_LFO       | set_lfo_modulation_0_level | |
-| /shaderparam0 | NAV_DETOUR    | set_detour_speed_position_continuous | |
-| /shaderparam0 | NAV_WJMX      | wj_set_position_N:x | |
-| /shaderparam0 | NAV_LPRC      | set_automation_speed | |
 | /shaderparam0 | DEFAULT       | set_the_shader_param_0_layer_offset_0_continuous | set_strobe_amount_continuous | |
+| /shaderparam0 | NAV_DETOUR    | set_detour_speed_position_continuous | |
+| /shaderparam0 | NAV_LFO       | set_lfo_modulation_0_level | |
+| /shaderparam0 | NAV_LPRC      | set_automation_speed | |
+| /shaderparam0 | NAV_MANI      | set_variable_A | |
 | /shaderparam0 | NAV_SND       | sound_set_config_energy_gain | |
+| /shaderparam0 | NAV_WJMX      | wj_set_position_N:x | |
 | /shaderparam04        | DEFAULT       | set_the_shader_param_0_layer_offset_1_continuous | set_param_0_layer_offset_0_modulation_level_continuous | |
 | /shaderparam04        | NAV_LFO       | set_lfo_speed | |
-| /shaderparam04        | NAV_WJMX      | wj_set_mix | wj_set_current_modulation_slot_0_level | |
 | /shaderparam04        | NAV_SND       | sound_set_modulation_energy_slot_0_level | |
-| /shaderparam1 | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
+| /shaderparam04        | NAV_WJMX      | wj_set_mix | wj_set_current_modulation_slot_0_level | |
+| /shaderparam1 | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | /shaderparam1 | NAV_DETOUR    | set_detour_start_continuous | |
 | /shaderparam1 | NAV_LFO       | set_lfo_modulation_1_level | |
+| /shaderparam1 | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
 | /shaderparam1 | NAV_SND       | sound_set_config_energy_threshold | |
-| /shaderparam1 | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | /shaderparam1 | NAV_WJMX      | wj_set_position_N:y | |
 | /shaderparam10        | DEFAULT       | set_the_shader_param_2_layer_offset_2_continuous | |
 | /shaderparam11        | DEFAULT       | set_the_shader_param_3_layer_offset_2_continuous | |
 | /shaderparam12        | DEFAULT       | set_strobe_amount_continuous | |
 | /shaderparam2 | DEFAULT       | set_the_shader_param_2_layer_offset_0_continuous | set_shader_speed_layer_1_amount | |
-| /shaderparam2 | NAV_LFO       | set_lfo_modulation_2_level | |
 | /shaderparam2 | NAV_DETOUR    | set_detour_end_continuous | |
+| /shaderparam2 | NAV_LFO       | set_lfo_modulation_2_level | |
 | /shaderparam2 | NAV_WJMX      | wj_set_colour_T:x | |
 | /shaderparam3 | DEFAULT       | set_the_shader_param_3_layer_offset_0_continuous | set_shader_speed_layer_2_amount | |
 | /shaderparam3 | NAV_LFO       | set_lfo_modulation_3_level | |
 | /shaderparam3 | NAV_WJMX      | wj_set_colour_T:y | |
 | /shaderparam5 | DEFAULT       | set_the_shader_param_1_layer_offset_1_continuous | set_param_1_layer_offset_0_modulation_level_continuous | |
-| /shaderparam5 | NAV_WJMX      | wj_set_back_colour:h | wj_set_current_modulation_slot_1_level | |
 | /shaderparam5 | NAV_SND       | sound_set_modulation_energy_slot_1_level | |
+| /shaderparam5 | NAV_WJMX      | wj_set_back_colour:h | wj_set_current_modulation_slot_1_level | |
 | /shaderparam6 | DEFAULT       | set_the_shader_param_2_layer_offset_1_continuous | set_param_2_layer_offset_0_modulation_level_continuous | |
-| /shaderparam6 | NAV_WJMX      | wj_set_back_colour:s | wj_set_current_modulation_slot_2_level | |
 | /shaderparam6 | NAV_SND       | sound_set_modulation_energy_slot_2_level | |
+| /shaderparam6 | NAV_WJMX      | wj_set_back_colour:s | wj_set_current_modulation_slot_2_level | |
 | /shaderparam7 | DEFAULT       | set_the_shader_param_3_layer_offset_1_continuous | set_param_3_layer_offset_0_modulation_level_continuous | |
-| /shaderparam7 | NAV_WJMX      | wj_set_back_colour:v | wj_set_current_modulation_slot_3_level | |
 | /shaderparam7 | NAV_SND       | sound_set_modulation_energy_slot_3_level | |
+| /shaderparam7 | NAV_WJMX      | wj_set_back_colour:v | wj_set_current_modulation_slot_3_level | |
 | /shaderparam8 | DEFAULT       | set_the_shader_param_0_layer_offset_2_continuous | |
 | /shaderparam9 | DEFAULT       | set_the_shader_param_1_layer_offset_2_continuous | |
 | /volume       | DEFAULT       | modulate_param_0_to_amount_continuous | |
 | a     | CONFIRM       | return_to_default_control_mode | |
-| a     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
-| a     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
-| a     | LENGTH_SET    | return_to_default_control_mode | |
-| a     | NAV_WJMX      | wj_select_previous_command | |
-| a     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
 | a     | DEFAULT       | seek_back_on_player | decrease_seek_time | |
-| a     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| a     | LENGTH_SET    | return_to_default_control_mode | |
 | a     | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
 | a     | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| a     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| a     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| a     | NAV_WJMX      | wj_select_previous_command | |
+| a     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| a     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
 | b     | CONFIRM       | return_to_default_control_mode | |
-| b     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
-| b     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
-| b     | LENGTH_SET    | return_to_default_control_mode | |
-| b     | NAV_WJMX      | wj_select_next_command | |
-| b     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
 | b     | DEFAULT       | seek_forward_on_player | increase_seek_time | |
-| b     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| b     | LENGTH_SET    | return_to_default_control_mode | |
 | b     | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
 | b     | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| b     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| b     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| b     | NAV_WJMX      | wj_select_next_command | |
+| b     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| b     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
 | c     | CONFIRM       | perform_confirm_action | |
-| c     | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
-| c     | NAV_WJMX      | wj_toggle_active | |
-| c     | NAV_LFO       | toggle_lfo_active | |
-| c     | NAV_SND       | toggle_sound_react_active | |
-| c     | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
 | c     | DEFAULT       | toggle_action_on_player | toggle_show_on_player | |
-| c     | NAV_QKSH      | qksh_toggle_display_live | |
-| c     | NAV_PLUGINS   | enter_on_plugins_selection | |
-| c     | NAV_BROWSER   | enter_on_browser_selection | |
-| c     | SHADER_PARAM  | return_to_default_control_mode | |
-| c     | NAV_DETOUR    | toggle_detour_play | |
-| c     | NAV_SETTINGS  | enter_on_settings_selection | |
 | c     | LENGTH_SET    | record_fixed_length | |
+| c     | NAV_BROWSER   | enter_on_browser_selection | |
+| c     | NAV_DETOUR    | toggle_detour_play | |
+| c     | NAV_LFO       | toggle_lfo_active | |
+| c     | NAV_PLUGINS   | enter_on_plugins_selection | |
+| c     | NAV_QKSH      | qksh_toggle_display_live | |
+| c     | NAV_SETTINGS  | enter_on_settings_selection | |
+| c     | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
+| c     | NAV_SND       | toggle_sound_react_active | |
+| c     | NAV_WJMX      | wj_toggle_active | |
+| c     | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
+| c     | SHADER_PARAM  | return_to_default_control_mode | |
 | d     | DEFAULT       | switch_to_next_player | toggle_player_mode | |
 | d     | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
-| e     | PLAY_SHADER   | decrease_param_focus | |
 | e     | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
-| e     | SHADER_PARAM  | decrease_param_focus | |
 | e     | NAV_DETOUR    | decrease_mix_shader | |
 | e     | NAV_WJMX      | wj_select_previous_argument | |
-| f     | PLAY_SHADER   | increase_param_focus | |
+| e     | PLAY_SHADER   | decrease_param_focus | |
+| e     | SHADER_PARAM  | decrease_param_focus | |
 | f     | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
-| f     | SHADER_PARAM  | increase_param_focus | |
 | f     | NAV_DETOUR    | increase_mix_shader | |
 | f     | NAV_WJMX      | wj_select_next_argument | |
+| f     | PLAY_SHADER   | increase_param_focus | |
+| f     | SHADER_PARAM  | increase_param_focus | |
 | feedback      | DEFAULT       | toggle_feedback | |
 | g     | DEFAULT       | toggle_capture_preview | toggle_capture_recording | |
 | h     | DEFAULT       | cycle_display_mode | cycle_display_mode_back | |
 | i     | DEFAULT       | toggle_function | |
-| j     | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | j     | DEFAULT       | load_slot_0_into_next_player | previous_bank | |
-| j     | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
 | j     | NAV_DETOUR    | switch_to_detour_0 | set_the_detour_mix_0 | |
-| k     | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
+| j     | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
+| j     | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
 | k     | DEFAULT       | load_slot_1_into_next_player | next_bank | |
-| k     | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
 | k     | NAV_DETOUR    | switch_to_detour_1 | set_the_detour_mix_1 | |
-| l     | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
+| k     | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
+| k     | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
 | l     | DEFAULT       | load_slot_2_into_next_player | clear_all_slots | |
-| l     | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
 | l     | NAV_DETOUR    | switch_to_detour_2 | clear_this_detour | |
-| m     | PLAY_SHADER   | play_shader_3 | |
+| l     | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
+| l     | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
 | m     | DEFAULT       | load_slot_3_into_next_player | |
 | m     | NAV_DETOUR    | switch_to_detour_3 | |
-| n     | PLAY_SHADER   | play_shader_4 | |
+| m     | PLAY_SHADER   | play_shader_3 | |
 | n     | DEFAULT       | load_slot_4_into_next_player | |
-| o     | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
+| n     | PLAY_SHADER   | play_shader_4 | |
 | o     | DEFAULT       | load_slot_5_into_next_player | toggle_screen_mirror | |
-| p     | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
+| o     | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
 | p     | DEFAULT       | load_slot_6_into_next_player | toggle_shaders | |
+| p     | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
 | play_shader_0 | DEFAULT       | play_shader_0 | |
 | play_shader_1 | DEFAULT       | play_shader_1 | |
 | play_shader_2 | DEFAULT       | play_shader_2 | |
@@ -436,12 +436,12 @@
 | play_shader_7 | DEFAULT       | play_shader_7 | |
 | play_shader_8 | DEFAULT       | play_shader_8 | |
 | play_shader_9 | DEFAULT       | play_shader_9 | |
-| q     | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
 | q     | DEFAULT       | load_slot_7_into_next_player | toggle_detour_mode | |
-| r     | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
+| q     | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
 | r     | DEFAULT       | load_slot_8_into_next_player | toggle_feedback | |
-| s     | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
+| r     | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
 | s     | DEFAULT       | load_slot_9_into_next_player | confirm_shutdown | |
+| s     | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
 | shader_layer_0        | DEFAULT       | toggle_shader_layer_0 | |
 | shader_layer_1        | DEFAULT       | toggle_shader_layer_1 | |
 | shader_layer_2        | DEFAULT       | toggle_shader_layer_2 | |
@@ -449,50 +449,162 @@
 
 ----
 
-# Key mappings
+# Analog mappings
 
 | Analogue input | Mode | Action (default) | Action (with FN) |
 | --- | --- | --- | ---  |
-| 0     | NAV_MANI      | set_variable_A | |
-| 0     | NAV_LFO       | set_lfo_modulation_0_level | |
-| 0     | NAV_DETOUR    | set_detour_speed_position_continuous | |
-| 0     | NAV_WJMX      | wj_set_position_N:x | |
-| 0     | NAV_LPRC      | set_automation_speed | |
 | 0     | DEFAULT       | set_the_shader_param_0_layer_offset_0_continuous | set_strobe_amount_continuous | |
+| 0     | NAV_DETOUR    | set_detour_speed_position_continuous | |
+| 0     | NAV_LFO       | set_lfo_modulation_0_level | |
+| 0     | NAV_LPRC      | set_automation_speed | |
+| 0     | NAV_MANI      | set_variable_A | |
 | 0     | NAV_SND       | sound_set_config_energy_gain | |
-| 1     | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
+| 0     | NAV_WJMX      | wj_set_position_N:x | |
+| 1     | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | 1     | NAV_DETOUR    | set_detour_start_continuous | |
 | 1     | NAV_LFO       | set_lfo_modulation_1_level | |
+| 1     | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
 | 1     | NAV_SND       | sound_set_config_energy_threshold | |
-| 1     | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | 1     | NAV_WJMX      | wj_set_position_N:y | |
 | 2     | DEFAULT       | set_the_shader_param_2_layer_offset_0_continuous | set_shader_speed_layer_1_amount | |
-| 2     | NAV_LFO       | set_lfo_modulation_2_level | |
 | 2     | NAV_DETOUR    | set_detour_end_continuous | |
+| 2     | NAV_LFO       | set_lfo_modulation_2_level | |
 | 2     | NAV_WJMX      | wj_set_colour_T:x | |
 | 3     | DEFAULT       | set_the_shader_param_3_layer_offset_0_continuous | set_shader_speed_layer_2_amount | |
 | 3     | NAV_LFO       | set_lfo_modulation_3_level | |
 | 3     | NAV_WJMX      | wj_set_colour_T:y | |
-| 4     | NAV_MANI      | set_variable_A | |
-| 4     | NAV_LFO       | set_lfo_modulation_0_level | |
-| 4     | NAV_DETOUR    | set_detour_speed_position_continuous | |
-| 4     | NAV_WJMX      | wj_set_position_N:x | |
-| 4     | NAV_LPRC      | set_automation_speed | |
 | 4     | DEFAULT       | set_the_shader_param_0_layer_offset_0_continuous | set_strobe_amount_continuous | |
+| 4     | NAV_DETOUR    | set_detour_speed_position_continuous | |
+| 4     | NAV_LFO       | set_lfo_modulation_0_level | |
+| 4     | NAV_LPRC      | set_automation_speed | |
+| 4     | NAV_MANI      | set_variable_A | |
 | 4     | NAV_SND       | sound_set_config_energy_gain | |
-| 5     | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
+| 4     | NAV_WJMX      | wj_set_position_N:x | |
+| 5     | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | 5     | NAV_DETOUR    | set_detour_start_continuous | |
 | 5     | NAV_LFO       | set_lfo_modulation_1_level | |
+| 5     | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
 | 5     | NAV_SND       | sound_set_config_energy_threshold | |
-| 5     | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
 | 5     | NAV_WJMX      | wj_set_position_N:y | |
 | 6     | DEFAULT       | set_the_shader_param_2_layer_offset_0_continuous | set_shader_speed_layer_1_amount | |
-| 6     | NAV_LFO       | set_lfo_modulation_2_level | |
 | 6     | NAV_DETOUR    | set_detour_end_continuous | |
+| 6     | NAV_LFO       | set_lfo_modulation_2_level | |
 | 6     | NAV_WJMX      | wj_set_colour_T:x | |
 | 7     | DEFAULT       | set_the_shader_param_3_layer_offset_0_continuous | set_shader_speed_layer_2_amount | |
 | 7     | NAV_LFO       | set_lfo_modulation_3_level | |
 | 7     | NAV_WJMX      | wj_set_colour_T:y | |
 
 ----
+
+# Key mappings
+
+| Key mappings | Mode | Action (default) | Action (with FN) |
+| --- | --- | --- | ---  |
+| a     | CONFIRM       | return_to_default_control_mode | |
+| a     | DEFAULT       | seek_back_on_player | decrease_seek_time | |
+| a     | LENGTH_SET    | return_to_default_control_mode | |
+| a     | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
+| a     | NAV_MOD       | previous_shader_layer | |
+| a     | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
+| a     | NAV_QKSH      | select_previous_preset | switch_to_previous_preset | |
+| a     | NAV_SETTINGS  | move_settings_selection_up | move_settings_selection_page_up | |
+| a     | NAV_SHADERS   | move_shaders_selection_up | move_shaders_selection_page_up | |
+| a     | NAV_WJMX      | wj_select_previous_command | |
+| a     | PLAY_SHADER   | decrease_this_param | decrease_shader_param | |
+| a     | SHADER_PARAM  | decrease_this_param | decrease_shader_param | |
+| b     | CONFIRM       | return_to_default_control_mode | |
+| b     | DEFAULT       | seek_forward_on_player | increase_seek_time | |
+| b     | LENGTH_SET    | return_to_default_control_mode | |
+| b     | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
+| b     | NAV_MOD       | next_shader_layer | |
+| b     | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
+| b     | NAV_QKSH      | select_next_preset | switch_to_next_preset | |
+| b     | NAV_SETTINGS  | move_settings_selection_down | move_settings_selection_page_down | |
+| b     | NAV_SHADERS   | move_shaders_selection_down | move_shaders_selection_page_down | |
+| b     | NAV_WJMX      | wj_select_next_command | |
+| b     | PLAY_SHADER   | increase_this_param | increase_shader_param | |
+| b     | SHADER_PARAM  | increase_this_param | increase_shader_param | |
+| c     | CONFIRM       | perform_confirm_action | |
+| c     | DEFAULT       | toggle_action_on_player | toggle_show_on_player | |
+| c     | LENGTH_SET    | record_fixed_length | |
+| c     | NAV_BROWSER   | enter_on_browser_selection | |
+| c     | NAV_DETOUR    | toggle_detour_play | |
+| c     | NAV_LFO       | toggle_lfo_active | |
+| c     | NAV_PLUGINS   | enter_on_plugins_selection | |
+| c     | NAV_QKSH      | switch_to_current_preset | store_current_preset | |
+| c     | NAV_SETTINGS  | enter_on_settings_selection | |
+| c     | NAV_SHADERS   | enter_on_shaders_selection | map_on_shaders_selection | |
+| c     | NAV_SND       | toggle_sound_react_active | |
+| c     | NAV_WJMX      | wj_toggle_active | |
+| c     | PLAY_SHADER   | toggle_shaders | toggle_shader_speed | |
+| c     | SHADER_PARAM  | return_to_default_control_mode | |
+| d     | DEFAULT       | switch_to_next_player | toggle_player_mode | |
+| d     | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
+| e     | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
+| e     | NAV_DETOUR    | decrease_mix_shader | |
+| e     | NAV_MOD       | select_previous_shader_modulation_slot | |
+| e     | NAV_WJMX      | wj_select_previous_argument | |
+| e     | PLAY_SHADER   | decrease_param_focus | |
+| e     | SHADER_PARAM  | decrease_param_focus | |
+| f     | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
+| f     | NAV_DETOUR    | increase_mix_shader | |
+| f     | NAV_MOD       | select_next_shader_modulation_slot | |
+| f     | NAV_QKSH      | clear_current_preset | |
+| f     | NAV_WJMX      | wj_select_next_argument | |
+| f     | PLAY_SHADER   | increase_param_focus | |
+| f     | SHADER_PARAM  | increase_param_focus | |
+| g     | DEFAULT       | toggle_capture_preview | toggle_capture_recording | |
+| g     | NAV_QKSH      | qksh_toggle_display_live | |
+| h     | DEFAULT       | cycle_display_mode | cycle_display_mode_back | |
+| i     | DEFAULT       | toggle_function | |
+| j     | DEFAULT       | load_slot_0_into_next_player | previous_bank | |
+| j     | NAV_DETOUR    | switch_to_detour_0 | set_the_detour_mix_0 | |
+| j     | NAV_QKSH      | switch_to_preset_0 | select_preset_0 | |
+| j     | NAV_SHADERS   | play_shader_0 | previous_shader_layer | |
+| j     | PLAY_SHADER   | play_shader_0 | previous_shader_layer | |
+| k     | DEFAULT       | load_slot_1_into_next_player | next_bank | |
+| k     | NAV_DETOUR    | switch_to_detour_1 | set_the_detour_mix_1 | |
+| k     | NAV_QKSH      | switch_to_preset_1 | select_preset_1 | |
+| k     | NAV_SHADERS   | play_shader_1 | next_shader_layer | |
+| k     | PLAY_SHADER   | play_shader_1 | next_shader_layer | |
+| l     | DEFAULT       | load_slot_2_into_next_player | clear_all_slots | |
+| l     | NAV_DETOUR    | switch_to_detour_2 | clear_this_detour | |
+| l     | NAV_QKSH      | switch_to_preset_2 | select_preset_2 | |
+| l     | NAV_SHADERS   | play_shader_2 | clear_shader_bank | |
+| l     | PLAY_SHADER   | play_shader_2 | clear_shader_bank | |
+| m     | DEFAULT       | load_slot_3_into_next_player | |
+| m     | NAV_DETOUR    | switch_to_detour_3 | |
+| m     | NAV_QKSH      | switch_to_preset_3 | select_preset_3 | |
+| m     | PLAY_SHADER   | play_shader_3 | |
+| n     | DEFAULT       | load_slot_4_into_next_player | |
+| n     | NAV_QKSH      | switch_to_preset_4 | select_preset_4 | |
+| n     | PLAY_SHADER   | play_shader_4 | |
+| o     | DEFAULT       | load_slot_5_into_next_player | toggle_screen_mirror | |
+| o     | NAV_QKSH      | switch_to_preset_5 | select_preset_5 | |
+| o     | PLAY_SHADER   | play_shader_5 | toggle_screen_mirror | |
+| p     | DEFAULT       | load_slot_6_into_next_player | toggle_shaders | |
+| p     | NAV_QKSH      | switch_to_preset_6 | select_preset_6 | |
+| p     | PLAY_SHADER   | play_shader_6 | toggle_shaders | |
+| q     | DEFAULT       | load_slot_7_into_next_player | toggle_detour_mode | |
+| q     | NAV_QKSH      | switch_to_preset_7 | select_preset_7 | |
+| q     | PLAY_SHADER   | play_shader_7 | toggle_detour_mode | |
+| r     | DEFAULT       | load_slot_8_into_next_player | toggle_feedback | |
+| r     | NAV_QKSH      | switch_to_preset_8 | select_preset_8 | |
+| r     | PLAY_SHADER   | play_shader_8 | toggle_feedback | |
+| s     | DEFAULT       | load_slot_9_into_next_player | confirm_shutdown | |
+| s     | NAV_QKSH      | switch_to_preset_9 | select_preset_9 | |
+| s     | PLAY_SHADER   | play_shader_9 | confirm_shutdown | |
+| x_m   | DEFAULT       | set_the_shader_param_0_layer_offset_0_continuous | set_strobe_amount_continuous | |
+| x_m   | NAV_DETOUR    | set_detour_speed_position_continuous | |
+| x_m   | NAV_LFO       | set_lfo_modulation_0_level | |
+| x_m   | NAV_LPRC      | set_automation_speed | |
+| x_m   | NAV_MANI      | set_variable_A | |
+| x_m   | NAV_SND       | sound_set_config_energy_gain | |
+| x_m   | NAV_WJMX      | wj_set_position_N:x | |
+| y_m   | DEFAULT       | set_the_shader_param_1_layer_offset_0_continuous | set_shader_speed_layer_0_amount | |
+| y_m   | NAV_DETOUR    | set_detour_start_continuous | |
+| y_m   | NAV_LFO       | set_lfo_modulation_1_level | |
+| y_m   | NAV_MANI      | f:sin(x*pi):|set_variable_SIN | |
+| y_m   | NAV_SND       | sound_set_config_energy_threshold | |
+| y_m   | NAV_WJMX      | wj_set_position_N:y | |
 

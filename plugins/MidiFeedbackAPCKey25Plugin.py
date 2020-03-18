@@ -19,6 +19,12 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
             print ("bind is %s, returning default" % bind)
             return default
 
+    def stop_plugin(self):
+        for cmd, content in self.status.items():
+            content['velocity'] = 0
+        self.update_device()
+        super().stop_plugin()
+
     def set_midi_device(self, device):
         super().set_midi_device(device)
         self.last_state = None

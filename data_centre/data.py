@@ -111,7 +111,8 @@ class Data(object):
         from utils import docs
         docs.generate_mappings_doc("MIDI mappings", self.midi_mappings)
         docs.generate_mappings_doc("OSC mappings", self.osc_mappings, column_one_header="OSC address")
-        docs.generate_mappings_doc("Key mappings", self.analog_mappings, column_one_header="Analogue input")
+        docs.generate_mappings_doc("Analog mappings", self.analog_mappings, column_one_header="Analogue input")
+        docs.generate_mappings_doc("Key mappings", self.key_mappings, column_one_header="Key mappings")
         #quit()
 
     def initialise_plugins(self):

@@ -343,13 +343,11 @@ class Display(object):
             name = self.shaders.selected_shader_list[layer].get('name').strip()
             #o = ""
             for slot in range(4):
-                sl = 'ABCD'[slot]
-                if slot != self.shaders.selected_modulation_slot:
-                    sl = sl.lower()
-                o+= sl + "["
+                sl = self.get_mod_slot_label(slot)
+                o+= sl + ("[" if sl.isupper() else "-")
                 for param in range(4):
                     o += self.get_bar(self.shaders.modulation_level[layer][param][slot])
-                o+= "] "
+                o+= ("]" if sl.isupper() else "-") + " "
             self.display_text.insert(END, "%s %s:\t%s\n\n"%(">" if layer==self.data.shader_layer else " ", layer, o))
         self.display_text.insert(END, '\n')
         # todo: this doesnt work but would be a better way to highlight the selected modulation slot/layer
@@ -637,10 +635,15 @@ class Display(object):
 
     def _update_screen_every_second(self):
         self.refresh_display()
-        self.tk.after(500, self._update_screen_every_second)
+        self.tk.after(50, self._update_screen_every_second)
 
+    last_refreshed = 0
+    REFRESH_LIMIT = 100
     def refresh_display(self):
         if self.data.update_screen:
+            if time.time()*1000 - self.last_refreshed < self.REFRESH_LIMIT:
+                return
+            self.last_refreshed = time.time()*1000
             self.display_text.configure(state='normal')
             self.display_text.delete(1.0, END)
             self._load_display()

@@ -26,32 +26,47 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     
     frequency = 10 # how often messages are sampled+calculated+sent, not anything to do with audio frequency
 
+    values = {}
+    levels = {
+            "energy": [ 0.0, 0.0, 1.0, 0.0 ],
+            "peakfreq": [ 0.0, 0.0, 0.0, 0.0 ]
+    }
+    last_values = {}
+    display_values = {}
+
     config = {}
 
-    # TODO: save + reload current config
+    # TODO: UI to select other sources than 'energy'
+    # TODO: fix/restore peakfreq source
+    # TODO: make triggery work better
+    # TODO: slope/curves so eg set threshold when signal received above threshold set energy level, decay energy level over time
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
 
-        """#self.PRESET_FILE_NAME = "ShaderLoopRecordPlugin/frames.json"
-        if self.active and not self.disabled:
-            try:
-                p=pyaudio.PyAudio()
-                self.stream=p.open(format=pyaudio.paInt16,channels=1,rate=self.RATE,input=True,
-                    frames_per_buffer=self.CHUNK)
-            except:
-                print("Failed to open sound device - disabling SoundReactPlugin!")
-                self.disabled = True
-                return
+        self.PRESET_FILE_NAME = "SoundReactPlugin/config.json"
+        presets = self.load_presets()
+        self.config = presets.get('config',self.config)
+        self.levels = presets.get('levels',self.levels)
+        self.active = presets.get('active',self.active)
 
-        print ("now setting to run automation..")
-
-        self.pc.shaders.root.after(500, self.run_automation)"""
         if not self.disabled:
             self.start_plugin()
 
+    def load_presets(self):
+        print("trying load presets? %s " % self.PRESET_FILE_NAME)
+        return self.pc.read_json(self.PRESET_FILE_NAME) or {}
+
+    def save_presets(self):
+        self.pc.update_json(self.PRESET_FILE_NAME, { 'config': self.config, 'levels': self.levels, 'active': self.active } )
+
+    def stop_plugin(self):
+        super().stop_plugin()
+        self.save_presets()
+
     def stop_plugin(self):
         self.close_sound_device()
+        self.save_presets()
         super().stop_plugin()
 
     def start_plugin(self):
@@ -86,16 +101,9 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
             #"low": self.low,
             #"mid": self.mid,
             #"high": self.high,
-            "peakfreq": self.peakfreq
+            #"peakfreq": self.peakfreq
         }
 
-    values = {}
-    levels = {
-            "energy": [ 0.0, 0.0, 1.0, 0.0 ],
-            "peakfreq": [ 0.0, 0.0, 0.0, 1.0 ]
-    }
-    last_values = {}
-    display_values = {}
     # triggers?
     #   sudden drop - sudden leap?
 
@@ -226,3 +234,4 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
 
     def toggle_active(self):
         self.active = not self.active
+        self.save_presets()

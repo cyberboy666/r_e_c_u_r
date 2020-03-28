@@ -6,6 +6,9 @@ from data_centre.plugin_collection import ModulationReceiverPlugin
 class Shaders(object):
     MENU_HEIGHT = 10
     EMPTY_SHADER = dict(name='none',is_shader=True,shad_type='-',param_number=4,path='-')
+
+    MAX_MOD_SLOTS = 4
+
     def __init__(self, root, osc_client, message_handler, data):
         self.root = root
         self.osc_client = osc_client
@@ -25,7 +28,7 @@ class Shaders(object):
 
         self.selected_modulation_slot = 0
         #self.modulation_level = [[[0.0,0.0,0.0,0.0] for i in range(4)] for i in range(3)]
-        self.modulation_value = [0.0,0.0,0.0,0.0]
+        self.modulation_value = [0.0] * self.MAX_MOD_SLOTS #,0.0,0.0,0.0]
 
         #self.load_selected_shader()
 
@@ -176,6 +179,16 @@ class Shaders(object):
 
     def select_shader_modulation_slot(self, slot):
         self.selected_modulation_slot = slot
+
+    def select_next_shader_modulation_slot(self):
+        self.selected_modulation_slot += 1
+        if self.selected_modulation_slot >= self.MAX_MOD_SLOTS:
+            self.selected_modulation_slot = 0
+
+    def select_previous_shader_modulation_slot(self):
+        self.selected_modulation_slot -= 1
+        if self.selected_modulation_slot < 0:
+            self.selected_modulation_slot = self.MAX_MOD_SLOTS-1
 
     def reset_modulation(self, slot):
         for layer in self.modulation_level:

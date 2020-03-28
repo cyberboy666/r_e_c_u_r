@@ -190,9 +190,10 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
             display.display_text.insert(END, "\n")
 
         cmd = self.commands[self.selected_command_name]
-        output = "\nMod " +  "%s %s : %s\n" % (self.commands[self.selected_command_name].get('queue'), self.selected_command_name, cmd['name'])
+        output = "\n" +  "%s %s : %s\n" % (self.commands[self.selected_command_name].get('queue'), self.selected_command_name, cmd['name'])
         for arg_name in cmd['arg_names']:
             is_selected = cmd['arg_names'].index(arg_name)==self.selected_argument_index
+            output += "\t " #Mod
             indicator = " " if not is_selected else "["
             output += "%s%s: "%(indicator,arg_name)
             for slot,mods in enumerate(cmd.setdefault('modulation',[{},{},{},{}])):
@@ -369,7 +370,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def select_previous_command(self):
         selected_command_index = list(sorted(self.commands.keys())).index(self.selected_command_name)-1
         if selected_command_index<0:
-            selected_command_index = len(self.commands.keys())
+            selected_command_index = len(self.commands.keys())-1
         self.selected_command_name = sorted(list(self.commands.keys()))[selected_command_index]
 
         self.selected_argument_index = 0
@@ -377,7 +378,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def select_next_command(self):
         selected_command_index = list(sorted(self.commands.keys())).index(self.selected_command_name)+1
         if selected_command_index>=len(self.commands.keys()):
-            selected_command_index = 0#self.commands.keys()[0]
+            selected_command_index = 0
         self.selected_command_name = sorted(list(self.commands.keys()))[selected_command_index]
 
         self.selected_argument_index = 0
@@ -385,7 +386,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
     def select_previous_argument(self):
         self.selected_argument_index -= 1
         if self.selected_argument_index<0:
-            self.selected_argument_index = len(self.commands[self.selected_command_name]['arg_names'])
+            self.selected_argument_index = len(self.commands[self.selected_command_name]['arg_names'])-1
 
     def select_next_argument(self):
         self.selected_argument_index += 1

@@ -128,6 +128,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
     def toggle_lfo_active(self):
         self.active = not self.active
+        self.save_presets()
 
     # Formula handling for generating automation
     # mapping 0-3 to match the LFO 

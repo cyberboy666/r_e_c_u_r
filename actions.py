@@ -1036,6 +1036,8 @@ class Actions(object):
                 ( r"^reset_selected_modulation$", self.shaders.reset_selected_modulation ),
                 ( r"^reset_modulation_([0-3])$", self.shaders.reset_modulation ),
                 ( r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot ),
+                ( r"^select_next_shader_modulation_slot$", self.shaders.select_next_shader_modulation_slot ),
+                ( r"^select_previous_shader_modulation_slot$", self.shaders.select_previous_shader_modulation_slot ),
                 ( r"^set_shader_speed_layer_offset_([0-2])_amount$",               self.shaders.set_speed_offset_to_amount ),
                 ( r"^set_shader_speed_layer_([0-2])_amount$",                      self.shaders.set_speed_layer_to_amount ),
                 ( r"^set_display_mode_([a-zA-Z_]*)$",  self.set_display_mode )
@@ -1099,9 +1101,8 @@ class Actions(object):
 
         try:
             #print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
-
                 # for the case where cc is being used as switch, we ignore note_off
-            print(type(argument))
+            #print(type(argument))
             if len(signature(method).parameters) == 0 and isinstance(argument, float) and argument == 0:
                 print('cc off ?')
                 return

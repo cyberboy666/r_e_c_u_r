@@ -10,7 +10,8 @@
         "SHADER_PARAM": ["decrease_this_param", "decrease_shader_param"],
         "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"],
 	"NAV_WJMX": ["wj_select_previous_command"],
-	"NAV_MOD": ["previous_shader_layer"]
+	"NAV_MOD": ["previous_shader_layer"],
+	"NAV_QKSH": ["select_previous_preset","switch_to_previous_preset"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
@@ -23,7 +24,8 @@
         "SHADER_PARAM": ["increase_this_param", "increase_shader_param"],
         "PLAY_SHADER": ["increase_this_param", "increase_shader_param"],
 	"NAV_WJMX": ["wj_select_next_command"],
-	"NAV_MOD": ["next_shader_layer"]
+	"NAV_MOD": ["next_shader_layer"],
+	"NAV_QKSH": ["select_next_preset","switch_to_next_preset"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
@@ -38,8 +40,8 @@
         "PLAY_SHADER": ["toggle_shaders", "toggle_shader_speed"],
 	"NAV_LFO": ["toggle_lfo_active"],
 	"NAV_SND": ["toggle_sound_react_active"],
-	"NAV_QKSH": ["qksh_toggle_display_live"],
-	"NAV_WJMX": ["wj_toggle_active"]
+	"NAV_WJMX": ["wj_toggle_active"],
+	"NAV_QKSH": ["switch_to_current_preset","store_current_preset"]
 	},
 	"d": {
 		"DEFAULT": ["switch_to_next_player", "toggle_player_mode"],
@@ -50,17 +52,22 @@
         "SHADER_PARAM": ["decrease_param_focus"],
         "PLAY_SHADER": ["decrease_param_focus"],
         "NAV_DETOUR": ["decrease_mix_shader"],
-	"NAV_WJMX": ["wj_select_previous_argument"]
+	"NAV_WJMX": ["wj_select_previous_argument"],
+	"NAV_MOD": ["select_previous_shader_modulation_slot"]
 	},
 	"f": {
 		"DEFAULT": ["set_playing_sample_end_to_current_duration", "clear_playing_sample_end_time"],
         "SHADER_PARAM": ["increase_param_focus"],
         "PLAY_SHADER": ["increase_param_focus"],
         "NAV_DETOUR": ["increase_mix_shader"],
-	"NAV_WJMX": ["wj_select_next_argument"]
+	"NAV_WJMX": ["wj_select_next_argument"],
+        "NAV_QKSH": ["clear_current_preset"],
+	"NAV_MOD": ["select_next_shader_modulation_slot"]
 	},
 	"g": {
-        "DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"]},
+        	"DEFAULT": ["toggle_capture_preview", "toggle_capture_recording"],
+	        "NAV_QKSH": ["qksh_toggle_display_live"]
+	},
 	"h": {
 		"DEFAULT": ["cycle_display_mode", "cycle_display_mode_back"]
 	},
@@ -71,48 +78,58 @@
 		"DEFAULT": ["load_slot_0_into_next_player","previous_bank"],
 		"PLAY_SHADER": ["play_shader_0","previous_shader_layer"],
 		"NAV_SHADERS": ["play_shader_0","previous_shader_layer"],
-        "NAV_DETOUR": ["switch_to_detour_0", "set_the_detour_mix_0"]
+        "NAV_DETOUR": ["switch_to_detour_0", "set_the_detour_mix_0"],
+	"NAV_QKSH": ["switch_to_preset_0","select_preset_0"]
 	},
 	"k": {
 		"DEFAULT": ["load_slot_1_into_next_player","next_bank"],
 		"PLAY_SHADER": ["play_shader_1","next_shader_layer"],
 		"NAV_SHADERS": ["play_shader_1","next_shader_layer"],
-        "NAV_DETOUR": ["switch_to_detour_1", "set_the_detour_mix_1"]
+        "NAV_DETOUR": ["switch_to_detour_1", "set_the_detour_mix_1"],
+	"NAV_QKSH": ["switch_to_preset_1","select_preset_1"]
 	},
 	"l": {
 		"DEFAULT": ["load_slot_2_into_next_player","clear_all_slots"],
 		"PLAY_SHADER": ["play_shader_2","clear_shader_bank"],
         "NAV_SHADERS": ["play_shader_2","clear_shader_bank"],
-        "NAV_DETOUR": ["switch_to_detour_2", "clear_this_detour"]
+        "NAV_DETOUR": ["switch_to_detour_2", "clear_this_detour"],
+	"NAV_QKSH": ["switch_to_preset_2","select_preset_2"]
 	},
 	"m": {
 		"DEFAULT": ["load_slot_3_into_next_player"],
 		"PLAY_SHADER": ["play_shader_3"],
-        "NAV_DETOUR": ["switch_to_detour_3"]
+        "NAV_DETOUR": ["switch_to_detour_3"],
+	"NAV_QKSH": ["switch_to_preset_3","select_preset_3"]
 	},
 	"n": {
 		"DEFAULT": ["load_slot_4_into_next_player"],
-		"PLAY_SHADER": ["play_shader_4"]
+		"PLAY_SHADER": ["play_shader_4"],
+		"NAV_QKSH": ["switch_to_preset_4","select_preset_4"]
 	},
 	"o": {
 		"DEFAULT": ["load_slot_5_into_next_player","toggle_screen_mirror"],
-		"PLAY_SHADER": ["play_shader_5", "toggle_screen_mirror"]
+		"PLAY_SHADER": ["play_shader_5", "toggle_screen_mirror"],
+		"NAV_QKSH": ["switch_to_preset_5","select_preset_5"]
 	},
 	"p": {
 		"DEFAULT": ["load_slot_6_into_next_player","toggle_shaders"],
-		"PLAY_SHADER": ["play_shader_6","toggle_shaders"]
+		"PLAY_SHADER": ["play_shader_6","toggle_shaders"],
+		"NAV_QKSH": ["switch_to_preset_6","select_preset_6"]
 	},
 	"q": {
 		"DEFAULT": ["load_slot_7_into_next_player", "toggle_detour_mode"],
-        "PLAY_SHADER": ["play_shader_7","toggle_detour_mode"]
+        "PLAY_SHADER": ["play_shader_7","toggle_detour_mode"],
+		"NAV_QKSH": ["switch_to_preset_7","select_preset_7"]
 	},
 	"r": {
 		"DEFAULT": ["load_slot_8_into_next_player", "toggle_feedback"],
-        "PLAY_SHADER": ["play_shader_8", "toggle_feedback"]
+        "PLAY_SHADER": ["play_shader_8", "toggle_feedback"],
+		"NAV_QKSH": ["switch_to_preset_8","select_preset_8"]
 	},
 	"s": {
 		"DEFAULT": ["load_slot_9_into_next_player","confirm_shutdown"],
-        "PLAY_SHADER": ["play_shader_9","confirm_shutdown"]
+        "PLAY_SHADER": ["play_shader_9","confirm_shutdown"],
+	"NAV_QKSH": ["switch_to_preset_9","select_preset_9"]
     },
     "x_m": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],

@@ -278,15 +278,15 @@ class Frame:
             for i2,p in enumerate(f2):
                 if ignored['shader_params'][i][i2] is not None:
                     f['shader_params'][i][i2] = None
-        if ignored.has('feedback_active'):
+        if 'feedback_active' in ignored:
             f['feedback_active'] = None
-        if ignored.has('x3_as_speed'):
+        if 'x3_as_speed' in ignored:
             f['x3_as_speed'] = None
-        if ignored.has('shader_speeds') and frame.has('shader_speeds'):
+        if 'shader_speeds' in ignored and 'shader_speeds' in frame:
           for i,s in enumerate(frame.get('shader_speeds')):
             if ignored['shader_speeds'][i] is not None:
                 f['shader_speeds'][i] = None
-        if ignored.has('strobe_amount'):
+        if 'strobe_amount' in ignored:
             f['strobe_amount'] = None
 
         from data_centre.plugin_collection import AutomationSourcePlugin

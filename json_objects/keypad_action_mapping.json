@@ -11,7 +11,8 @@
         "PLAY_SHADER": ["decrease_this_param", "decrease_shader_param"],
 	"NAV_WJMX": ["wj_select_previous_command"],
 	"NAV_MOD": ["previous_shader_layer"],
-	"NAV_QKSH": ["select_previous_preset","switch_to_previous_preset"]
+	"NAV_QKSH": ["select_previous_preset","switch_to_previous_preset"],
+	"NAV_LFO": ["select_previous_lfo", "decrease_lfo_speed"]
 	},
 	"b": {
 		"NAV_BROWSER": ["move_browser_selection_down", "move_browser_selection_page_down"],
@@ -25,7 +26,8 @@
         "PLAY_SHADER": ["increase_this_param", "increase_shader_param"],
 	"NAV_WJMX": ["wj_select_next_command"],
 	"NAV_MOD": ["next_shader_layer"],
-	"NAV_QKSH": ["select_next_preset","switch_to_next_preset"]
+	"NAV_QKSH": ["select_next_preset","switch_to_next_preset"],
+	"NAV_LFO": ["select_next_lfo", "increase_lfo_speed"]
 	},
 	"c": {
 		"NAV_BROWSER": ["enter_on_browser_selection"],
@@ -52,6 +54,7 @@
         "SHADER_PARAM": ["decrease_param_focus"],
         "PLAY_SHADER": ["decrease_param_focus"],
         "NAV_DETOUR": ["decrease_mix_shader"],
+	"NAV_LFO": ["decrease_selected_lfo_level"],
 	"NAV_WJMX": ["wj_select_previous_argument"],
 	"NAV_MOD": ["select_previous_shader_modulation_slot"]
 	},
@@ -60,6 +63,7 @@
         "SHADER_PARAM": ["increase_param_focus"],
         "PLAY_SHADER": ["increase_param_focus"],
         "NAV_DETOUR": ["increase_mix_shader"],
+	"NAV_LFO": ["increase_selected_lfo_level"],
 	"NAV_WJMX": ["wj_select_next_argument"],
         "NAV_QKSH": ["clear_current_preset"],
 	"NAV_MOD": ["select_next_shader_modulation_slot"]

@@ -107,7 +107,8 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
     def stop_plugin(self):
         super().stop_plugin()
-        self.asyncwriter.quit()
+        if self.asyncwriter is not None:
+            self.asyncwriter.quit()
         self.asyncwriter = None
         self.save_presets()
 

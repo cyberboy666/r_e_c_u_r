@@ -12,6 +12,8 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
     # active = True (toggle_lfo_active) to enable sending of modulation
     active = False
 
+    selected_lfo = 0
+
     # for keeping track of LFO levels
     level = [0.0]*MAX_LFOS
     speed = 0.5
@@ -66,6 +68,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         display.display_text.insert(END, "\tSpeed: {:4.1f}% {}\n\n".format(self.speed*100, display.get_speed_indicator(self.speed/2.0, convert=False)))
 
         for lfo,value in enumerate(self.level):
+            display.display_text.insert(END, "*" if self.selected_lfo==lfo else " ")
             display.display_text.insert(END, "lfo {} level: {:4.2f}% {}\t".format(lfo,value*100,display.get_bar(value)))
             display.display_text.insert(END, "{}\t{}\n".format(self.last_lfo_status[lfo], display.get_bar(self.last_lfo_value[lfo])))
             display.display_text.insert(END, "\tslot %s\t%s\n" % (display.get_mod_slot_label(lfo), self.formula[lfo]))
@@ -113,11 +116,22 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         return [ 
                 ( r"^set_lfo_modulation_([0-3])_level$", self.set_lfo_modulation_level ),
                 ( r"^toggle_lfo_active$", self.toggle_lfo_active ),
-                ( r"^set_lfo_speed", self.set_lfo_speed )
-                # TODO: changing formulas and LFO modes, speed
+                ( r"^set_lfo_speed", self.set_lfo_speed ),
+                ( r"^select_lfo$", self.select_lfo ),
+                ( r"^select_previous_lfo$", self.select_previous_lfo ),
+                ( r"^select_next_lfo$", self.select_next_lfo ),
+                ( r"^increase_lfo_([0-3])_level$", self.increase_lfo_level ),
+                ( r"^decrease_lfo_([0-3])_level$", self.decrease_lfo_level ),
+                ( r"^increase_selected_lfo_level$", self.increase_selected_lfo_level ),
+                ( r"^decrease_selected_lfo_level$", self.decrease_selected_lfo_level ),
+                ( r"^increase_lfo_speed", self.increase_lfo_speed ),
+                ( r"^decrease_lfo_speed", self.decrease_lfo_speed ),
+                # TODO: changing formulas and LFO modes
         ]
 
     def set_lfo_modulation_level(self, slot, value):
+        if (value<0.0): value = 0.0
+        if (value>1.0): value = 1.0
         self.level[slot] = value
 
     def set_lfo_speed(self, speed):
@@ -125,10 +139,47 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
 
     def set_lfo_speed_direct(self, speed):
         self.speed = speed
+        if self.speed<-2.0:
+            self.speed = -2.0
+        if self.speed>2.0:
+            self.speed = 2.0
 
     def toggle_lfo_active(self):
         self.active = not self.active
         self.save_presets()
+
+    def select_lfo(self, lfo):
+        self.selected_lfo = lfo
+        if self.selected_lfo>=self.MAX_LFOS:
+            self.selected_lfo = 0
+        if self.selected_lfo<0:
+            self.selected_lfo = self.MAX_LFOS-1
+
+    def select_next_lfo(self):
+        self.select_lfo(self.selected_lfo+1)
+    def select_previous_lfo(self):
+        self.select_lfo(self.selected_lfo-1)
+
+    level_step = 0.125
+    def increase_lfo_level(self, slot):
+        self.set_lfo_modulation_level(slot, self.level[slot] + self.level_step)
+    def decrease_lfo_level(self, slot):
+        self.set_lfo_modulation_level(slot, self.level[slot] - self.level_step)
+
+    def increase_selected_lfo_level(self):
+        self.increase_lfo_level(self.selected_lfo)
+    def decrease_selected_lfo_level(self):
+        self.decrease_lfo_level(self.selected_lfo)
+
+    lfo_step = 0.25
+    def increase_lfo_speed(self):
+        self.set_lfo_speed_direct ( self.speed + self.lfo_step )
+        if self.speed==0.0: # dont rest on 0 - set to a small amount forward
+            self.speed = 0.05
+    def decrease_lfo_speed(self):
+        self.set_lfo_speed_direct ( self.speed - self.lfo_step )
+        if self.speed==0.0: # dont rest on 0 - set to a small amount forward
+            self.speed = -0.05
 
     # Formula handling for generating automation
     # mapping 0-3 to match the LFO 

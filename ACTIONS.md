@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Mon 16 Mar 21:47:04 UTC 2020
+Sat 18 Apr 18:55:37 UTC 2020
 
 for branch=dev
 
@@ -194,6 +194,15 @@ for branch=dev
   * set_lfo_modulation_([0-3])_level	(from LFOModulationPlugin)
   * toggle_lfo_active	(from LFOModulationPlugin)
   * set_lfo_speed	(from LFOModulationPlugin)
+  * select_lfo	(from LFOModulationPlugin)
+  * select_previous_lfo	(from LFOModulationPlugin)
+  * select_next_lfo	(from LFOModulationPlugin)
+  * increase_lfo_([0-3])_level	(from LFOModulationPlugin)
+  * decrease_lfo_([0-3])_level	(from LFOModulationPlugin)
+  * increase_selected_lfo_level	(from LFOModulationPlugin)
+  * decrease_selected_lfo_level	(from LFOModulationPlugin)
+  * increase_lfo_speed	(from LFOModulationPlugin)
+  * decrease_lfo_speed	(from LFOModulationPlugin)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
@@ -201,6 +210,9 @@ for branch=dev
   * ([A-Z0-9]+)>(.*)	(from ManipulatePlugin)
   * (.*)>&(.*)	(from ManipulatePlugin)
   * (.*)&&(.*)	(from MultiActionsPlugin)
+  * send_serial_macro_([0-9])	(from SerialSendPlugin)
+  * send_serial_string_(.*)	(from SerialSendPlugin)
+  * send_random_settings	(from SerialSendPlugin)
   * run_automation	(from ShaderLoopRecordPlugin)
   * stop_automation	(from ShaderLoopRecordPlugin)
   * toggle_pause_automation	(from ShaderLoopRecordPlugin)

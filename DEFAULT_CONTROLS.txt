@@ -504,6 +504,7 @@
 | a     | DEFAULT       | seek_back_on_player | decrease_seek_time | |
 | a     | LENGTH_SET    | return_to_default_control_mode | |
 | a     | NAV_BROWSER   | move_browser_selection_up | move_browser_selection_page_up | |
+| a     | NAV_LFO       | select_previous_lfo | decrease_lfo_speed | |
 | a     | NAV_MOD       | previous_shader_layer | |
 | a     | NAV_PLUGINS   | move_plugins_selection_up | move_plugins_selection_page_up | |
 | a     | NAV_QKSH      | select_previous_preset | switch_to_previous_preset | |
@@ -516,6 +517,7 @@
 | b     | DEFAULT       | seek_forward_on_player | increase_seek_time | |
 | b     | LENGTH_SET    | return_to_default_control_mode | |
 | b     | NAV_BROWSER   | move_browser_selection_down | move_browser_selection_page_down | |
+| b     | NAV_LFO       | select_next_lfo | increase_lfo_speed | |
 | b     | NAV_MOD       | next_shader_layer | |
 | b     | NAV_PLUGINS   | move_plugins_selection_down | move_plugins_selection_page_down | |
 | b     | NAV_QKSH      | select_next_preset | switch_to_next_preset | |
@@ -542,12 +544,14 @@
 | d     | NAV_DETOUR    | toggle_detour_record | toggle_detour_record_loop | |
 | e     | DEFAULT       | set_playing_sample_start_to_current_duration | clear_playing_sample_start_time | |
 | e     | NAV_DETOUR    | decrease_mix_shader | |
+| e     | NAV_LFO       | decrease_selected_lfo_level | |
 | e     | NAV_MOD       | select_previous_shader_modulation_slot | |
 | e     | NAV_WJMX      | wj_select_previous_argument | |
 | e     | PLAY_SHADER   | decrease_param_focus | |
 | e     | SHADER_PARAM  | decrease_param_focus | |
 | f     | DEFAULT       | set_playing_sample_end_to_current_duration | clear_playing_sample_end_time | |
 | f     | NAV_DETOUR    | increase_mix_shader | |
+| f     | NAV_LFO       | increase_selected_lfo_level | |
 | f     | NAV_MOD       | select_next_shader_modulation_slot | |
 | f     | NAV_QKSH      | clear_current_preset | |
 | f     | NAV_WJMX      | wj_select_next_argument | |

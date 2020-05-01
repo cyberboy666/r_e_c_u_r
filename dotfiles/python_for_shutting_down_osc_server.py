@@ -12,8 +12,9 @@ def setup_osc_client(ip, port):
 
     return udp_client.SimpleUDPClient(client_args.ip, client_args.port)
 
-client = setup_osc_client('127.0.0.1',5433)
+
+client = setup_osc_client('127.0.0.1', 5433)
 client.send_message("/shutdown", True)
 
-client = setup_osc_client('127.0.0.1',9000)
+client = setup_osc_client('127.0.0.1', 9000)
 client.send_message("/shutdown", True)

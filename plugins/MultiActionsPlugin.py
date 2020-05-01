@@ -1,13 +1,14 @@
 from data_centre.plugin_collection import ActionsPlugin
 
+
 class MultiActionsPlugin(ActionsPlugin):
-    disabled = False # this is only a demo of very basic multi-actions plugin -- superceded by ManipulatePlugin
+    disabled = False  # this is only a demo of very basic multi-actions plugin -- superceded by ManipulatePlugin
 
     def __init__(self, plugin_collection):
         super().__init__(plugin_collection)
         try:
             from plugins import ManipulatePlugin
-            self.disabled = True # if we've found ManipulatePlugin then disable this one
+            self.disabled = True  # if we've found ManipulatePlugin then disable this one
         except:
             # if it fails, we're good to go (so long as not disabled explictly above)
             pass
@@ -15,7 +16,7 @@ class MultiActionsPlugin(ActionsPlugin):
     @property
     def parserlist(self):
         return [
-                ( r"(.*)&&(.*)", self.run_multi ),
+            (r"(.*)&&(.*)", self.run_multi),
         ]
 
     def run_multi(self, action1, action2, value):

@@ -1,5 +1,3 @@
-
-
 class AltVideoPlayer:
     def __init__(self, root, message_handler, data, osc_client, name):
         self.root = root
@@ -18,15 +16,14 @@ class AltVideoPlayer:
         self.load_attempts = 0
         self.alpha = 0
         self.show_toggle_on = True
-### new stuff
+        ### new stuff
         self.client = osc_client
 
         self.position = -1
 
-
     def try_load(self, layer, is_current=False):
         load_attempts = 0
-        while(load_attempts < 2):
+        while (load_attempts < 2):
             load_attempts = load_attempts + 1
             if self.load(layer, is_current):
                 print('load success')
@@ -36,7 +33,6 @@ class AltVideoPlayer:
         self.message_handler.set_message('ERROR', 'failed to load')
         self.status = 'ERROR'
         return False
-            
 
     def load(self, layer, is_current=False):
         self.get_context_for_player(is_current)
@@ -45,9 +41,9 @@ class AltVideoPlayer:
             self.status = 'EMPTY'
             return True
 
-        if(self.end is -1): 
+        if (self.end is -1):
             self.end = self.total_length
-        if(self.start is -1):
+        if (self.start is -1):
             self.start = 0
         self.client.send_message("/player/{}/load".format(self.name[0]), [self.location, self.start / self.total_length, self.end / self.total_length, self.rate])
         self.crop_length = self.end - self.start
@@ -57,10 +53,10 @@ class AltVideoPlayer:
             pass
             self.set_alpha_value(0)
         return True
-        #except (ValueError, SystemError) as e:
-          #  print(e)
-            #self.message_handler.set_message('ERROR', 'load attempt fail')
-            #return False
+        # except (ValueError, SystemError) as e:
+        #  print(e)
+        # self.message_handler.set_message('ERROR', 'load attempt fail')
+        # return False
 
     def start_video(self):
         if 'play' in self.data.settings['sampler']['ON_START']['value']:
@@ -72,9 +68,6 @@ class AltVideoPlayer:
             self.set_alpha_value(255)
         else:
             self.set_alpha_value(0)
-
-
-
 
     def reload(self, layer, is_current=False):
         self.exit()
@@ -131,7 +124,7 @@ class AltVideoPlayer:
 
         new_rate = self.rate + amount
         print('new rate is being set to {}'.format(new_rate))
-        if new_rate >=  -3 and new_rate <= 3:
+        if new_rate >= -3 and new_rate <= 3:
             self.client.send_message("/player/{}/speed".format(self.name[0]), new_rate)
             self.rate = new_rate
             return new_rate
@@ -149,15 +142,14 @@ class AltVideoPlayer:
         self.root.after(100, self.exit)
 
     def exit(self):
-        #self.last_player.exit()        
+        # self.last_player.exit()
         try:
-            self.client.send_message("/player/{}/quit".format(self.name[0]),True) 
+            self.client.send_message("/player/{}/quit".format(self.name[0]), True)
             self.player_running = False
         except:
             pass
 
-
-    ## not sure if i am going to implement this atm 
+    ## not sure if i am going to implement this atm
     def set_screen_size_for_dev_mode(self):
         if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'on':
             ##self.client.send_message("/player/{}/alpha".format(self.name[0]), amount)
@@ -165,17 +157,3 @@ class AltVideoPlayer:
         else:
             aspect_mode = self.data.settings['video']['SCREEN_MODE']['value']
             return False, '--aspect-mode', aspect_mode
-
-
-
-
-
-
-
-
-
-
-
-
-
-

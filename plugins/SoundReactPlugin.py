@@ -1,11 +1,9 @@
-import math
-import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, AutomationSourcePlugin
-
-import pyaudio
-import numpy as np
-from random import randint
 from statistics import mean
+
+import numpy as np
+import pyaudio
+
+from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin, SequencePlugin
 
 #import matplotlib.pyplot as plt
 
@@ -112,7 +110,7 @@ class SoundReactPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         return ['SOUNDMOD','NAV_SND']
 
     def show_plugin(self, display, display_mode):
-        from tkinter import Text, END
+        from tkinter import END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "SoundReactPlugin - ")

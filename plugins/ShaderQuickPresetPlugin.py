@@ -1,6 +1,4 @@
-import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
-import copy
+from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin
 from plugins.frame_manager import Frame
 
 class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
@@ -55,7 +53,7 @@ class ShaderQuickPresetPlugin(ActionsPlugin,DisplayPlugin): #,SequencePlugin):
         return ['QUIKSHDR',['NAV_QKSH','PLAY_SHADER']]
 
     def show_plugin(self, display, display_mode):
-        from tkinter import Text, END
+        from tkinter import END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "ShaderQuickPresetPlugin")

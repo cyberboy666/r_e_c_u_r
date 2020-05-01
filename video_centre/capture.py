@@ -1,8 +1,10 @@
+import datetime
+import fractions
 import os
 import subprocess
-import datetime
+
 import picamera
-import fractions
+
 
 class Capture(object):
     PREVIEW_LAYER = 255

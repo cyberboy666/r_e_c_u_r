@@ -1,5 +1,6 @@
-from video_centre.video_player import VideoPlayer
 from video_centre.alt_video_player import AltVideoPlayer
+from video_centre.video_player import VideoPlayer
+
 
 class VideoDriver(object):
 

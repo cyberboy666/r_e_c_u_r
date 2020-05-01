@@ -1,19 +1,19 @@
-import subprocess
-import tracemalloc
-import data_centre.length_setter as length_setter
-from inspect import signature
-import sys
-import shlex
+import argparse
 import os
 import re
-from pythonosc import osc_message_builder
+import subprocess
+import sys
+import threading
+from inspect import signature
+
+import git
 from pythonosc import dispatcher
 from pythonosc import osc_server
-import git
-import threading
-import argparse
+
+import data_centre.length_setter as length_setter
 from video_centre.capture import Capture
 from video_centre.of_capture import OfCapture
+
 
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, shaders, display, osc_client):

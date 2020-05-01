@@ -1,6 +1,7 @@
 import math
-import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, AutomationSourcePlugin
+
+from data_centre.plugin_collection import ActionsPlugin, AutomationSourcePlugin, DisplayPlugin, SequencePlugin
+
 
 class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, AutomationSourcePlugin):
 
@@ -58,7 +59,7 @@ class LFOModulationPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin, Automation
         return ['LFOMODU','NAV_LFO']
 
     def show_plugin(self, display, display_mode):
-        from tkinter import Text, END
+        from tkinter import END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "LFOModulation is ")

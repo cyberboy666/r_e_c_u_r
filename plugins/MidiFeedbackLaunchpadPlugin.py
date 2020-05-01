@@ -1,6 +1,3 @@
-from data_centre import plugin_collection
-from data_centre.plugin_collection import MidiFeedbackPlugin
-import mido
 import plugins
 #from plugins.MidiFeedbackAPCKey25Plugin import MidiFeedbackAPCKey25Plugin
 

@@ -1,6 +1,6 @@
-import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin
 from plugins.frame_manager import Frame
+
 
 class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
     
@@ -54,7 +54,7 @@ class ShaderLoopRecordPlugin(ActionsPlugin,SequencePlugin,DisplayPlugin):
         return ['LOOPREC','NAV_LPRC']
 
     def show_plugin(self, display, display_mode):
-        from tkinter import Text, END
+        from tkinter import END
         #super(DisplayPlugin).show_plugin(display, display_mode)
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "test from ShaderLoopRecordPlugin!\n")

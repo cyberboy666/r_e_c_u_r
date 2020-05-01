@@ -1,6 +1,7 @@
-from data_centre import plugin_collection
-from data_centre.plugin_collection import MidiFeedbackPlugin
 import mido
+
+from data_centre.plugin_collection import MidiFeedbackPlugin
+
 
 class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
     #disabled = False

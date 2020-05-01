@@ -1,7 +1,9 @@
-from tkinter import Text, END
 import math
 import time
+from tkinter import END, Text
+
 import display_centre.menu as menu
+
 
 class Display(object):
     MENU_HEIGHT = 10

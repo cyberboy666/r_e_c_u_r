@@ -1,24 +1,21 @@
 #!/usr/bin/python
 
-import traceback
-from tkinter import Tk, Frame
-import sys
-import tracemalloc
 import argparse
+import traceback
+from tkinter import Frame, Tk
+
 from pythonosc import udp_client
 
 from actions import Actions
 from data_centre.data import Data
 from display_centre.display import Display
 from display_centre.messages import MessageHandler
+from user_input.analog_input import AnalogInput
+from user_input.midi_input import MidiInput
 from user_input.numpad_input import NumpadInput
 from user_input.osc_input import OscInput
-from user_input.midi_input import MidiInput
-from user_input.analog_input import AnalogInput
-from video_centre.video_driver import VideoDriver
-#from video_centre.capture import Capture
 from video_centre.shaders import Shaders
-import data_centre
+from video_centre.video_driver import VideoDriver
 
 # create tk object
 tk = Tk()

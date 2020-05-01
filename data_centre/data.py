@@ -1,16 +1,16 @@
-import subprocess
-import json
-import xml.etree.ElementTree as ET
-import os
 import collections
+import json
+import os
+import subprocess
+import threading
+import xml.etree.ElementTree as ET
 from random import randint
-import inspect
-from itertools import cycle
-from omxplayer.player import OMXPlayer
 from shutil import copyfile
-import threading 
+
+from omxplayer.player import OMXPlayer
 
 from data_centre import plugin_collection
+
 
 class AsyncWrite(threading.Thread):
     def __init__(self, filename, data, mode='json'):

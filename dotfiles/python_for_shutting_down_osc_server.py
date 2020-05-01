@@ -1,7 +1,7 @@
-from pythonosc import osc_message_builder
-from pythonosc import udp_client
-from pythonosc import dispatcher
 import argparse
+
+from pythonosc import udp_client
+
 
 def setup_osc_client(ip, port):
     client_parser = argparse.ArgumentParser()

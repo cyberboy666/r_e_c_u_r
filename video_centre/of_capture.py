@@ -1,9 +1,11 @@
-import os
-import subprocess
 import datetime
 import fractions
-import picamera
+import os
+import subprocess
 import time
+
+import picamera
+
 
 class OfCapture(object):
     def __init__(self, root, osc_client, message_handler, data):

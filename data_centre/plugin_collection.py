@@ -1,9 +1,9 @@
 import inspect
-import os
 import pkgutil
 import re
 
-from plugins.frame_manager import FrameManager, Frame
+from plugins.frame_manager import FrameManager
+
 
 class Plugin(object):
     """Base class that each plugin must inherit from. within this class
@@ -197,7 +197,7 @@ class DisplayPlugin(Plugin):
             raise NotImplementedError
 
     def show_plugin(self, display):
-        from tkinter import Text, END
+        from tkinter import END
         #display_text.insert(END, 'test from DisplayPlugin')
         display.display_text.insert(END, '{} \n'.format(display.body_title))
 

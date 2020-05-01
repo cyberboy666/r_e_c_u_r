@@ -1,9 +1,10 @@
-import serial
-from serial import Serial
-import data_centre.plugin_collection
-from data_centre.plugin_collection import ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationReceiverPlugin, AutomationSourcePlugin
 import threading
 import time
+
+import serial
+
+from data_centre.plugin_collection import ActionsPlugin, AutomationSourcePlugin, DisplayPlugin, ModulationReceiverPlugin, SequencePlugin
+
 
 class AsyncWriter(threading.Thread):
     queue = []
@@ -178,7 +179,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
                 
     #methods for DisplayPlugin
     def show_plugin(self, display, display_mode):
-        from tkinter import Text, END
+        from tkinter import END
         display.display_text.insert(END, '{} \n'.format(display.body_title))
         display.display_text.insert(END, "WJSendPlugin {}\n\n".format('ACTIVE' if self.active else 'not active'))
 

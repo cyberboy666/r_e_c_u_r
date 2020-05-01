@@ -1,7 +1,9 @@
-import display_centre.menu as menu
 import os
 from statistics import mean
+
+import display_centre.menu as menu
 from data_centre.plugin_collection import ModulationReceiverPlugin
+
 
 class Shaders(object):
     MENU_HEIGHT = 10

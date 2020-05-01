@@ -1,7 +1,5 @@
-import string
-import datetime
 import mido
-import subprocess
+
 
 class MidiInput(object):
     def __init__(self, root, message_handler, display, actions, data):

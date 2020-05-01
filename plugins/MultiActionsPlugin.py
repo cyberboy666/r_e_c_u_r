@@ -1,4 +1,3 @@
-import data_centre.plugin_collection
 from data_centre.plugin_collection import ActionsPlugin
 
 class MultiActionsPlugin(ActionsPlugin):

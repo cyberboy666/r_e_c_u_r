@@ -1,5 +1,5 @@
 import string
-import sys
+
 
 class NumpadInput(object):
     KEY_000_DELAY = 100

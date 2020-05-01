@@ -1,12 +1,9 @@
+import argparse
 import string
-import sys
+import threading
 
-
-from pythonosc import dispatcher
 from pythonosc import dispatcher
 from pythonosc import osc_server
-import threading
-import argparse
 
 
 class OscInput(object):

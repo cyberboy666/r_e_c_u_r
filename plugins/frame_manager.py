@@ -1,5 +1,4 @@
 import copy
-import json
 from json import JSONEncoder
 
 def _default(self, obj):
@@ -19,7 +18,6 @@ class Frame:
     DEBUG_FRAMES = False#True
 
     def __init__(self, pc):
-        import copy #from copy import deepcopy
         self.pc = pc
 
     def to_json(self):

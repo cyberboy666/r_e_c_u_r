@@ -1,8 +1,10 @@
+import datetime
+import fractions
 import os
 import subprocess
-import datetime
+
 import picamera
-import fractions
+
 
 class Capture(object):
     PREVIEW_LAYER = 255
@@ -11,7 +13,7 @@ class Capture(object):
         self.root = root
         self.message_handler = message_handler
         self.data = data
-        
+
         self.device = None
         self.is_recording = False
         self.is_previewing = False
@@ -21,16 +23,15 @@ class Capture(object):
 
         ## some capture settings
 
-
     def create_capture_device(self):
         if self.data.settings['capture']['TYPE']['value'] != 'usb':
             if self.use_capture:
                 if self.piCapture_with_no_source():
                     return False
                 self.update_capture_settings()
-                
+
                 try:
-                    self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode = self.sensor_mode)
+                    self.device = picamera.PiCamera(resolution=self.resolution, framerate=self.framerate, sensor_mode=self.sensor_mode)
                     return True
                 except picamera.exc.PiCameraError as e:
                     self.use_capture = False
@@ -58,16 +59,15 @@ class Capture(object):
         if self.capture_type == "piCaptureSd1":
             self.sensor_mode = 6
         else:
-            self.sensor_mode = 0 
-        ##update current instance (device) if in use
+            self.sensor_mode = 0
+            ##update current instance (device) if in use
         if self.device and not self.device.closed:
             self.device.image_effect = self.data.settings['capture']['IMAGE_EFFECT']['value']
             self.device.shutter_speed = self.convert_shutter_value(self.data.settings['capture']['SHUTTER']['value'])
-        ## can only update resolution and framerate if not recording
+            ## can only update resolution and framerate if not recording
             if not self.is_recording:
                 self.device.framerate = self.framerate
                 self.device.resolution = self.resolution
-            
 
     def start_preview(self):
         if self.use_capture == False:
@@ -83,7 +83,7 @@ class Capture(object):
             self.set_preview_screen_size()
             self.set_capture_settings()
             self.device.preview.layer = self.PREVIEW_LAYER
-            return True            
+            return True
 
     def set_capture_settings(self):
         if self.capture_type == "piCaptureSd1":
@@ -93,7 +93,6 @@ class Capture(object):
             self.device.exposure_mode = "off"
         else:
             self.sensor_mode = 0
-            
 
     def set_preview_screen_size(self):
         if self.data.settings['system']['DEV_MODE_RESET']['value'] == 'on':
@@ -119,7 +118,7 @@ class Capture(object):
             is_created = self.create_capture_device()
             if self.use_capture == False or not is_created:
                 return
-        
+
         if not os.path.exists(self.video_dir):
             os.makedirs(self.video_dir)
         self.is_recording = True
@@ -129,7 +128,7 @@ class Capture(object):
     def monitor_disk_space(self):
         if self.is_recording:
             if self.check_available_disk_space():
-                self.root.after(10000, self.monitor_disk_space)    
+                self.root.after(10000, self.monitor_disk_space)
             else:
                 self.stop_recording()
 
@@ -143,9 +142,9 @@ class Capture(object):
 
     def stop_recording(self):
         self.device.stop_recording()
-        #set status to saving
+        # set status to saving
         mp4box_process, recording_name = self.convert_raw_recording()
-        self.is_recording = 'saving'        
+        self.is_recording = 'saving'
         self.root.after(0, self.wait_for_recording_to_save, mp4box_process, recording_name)
 
         self.update_capture_settings()
@@ -154,23 +153,22 @@ class Capture(object):
             self.device.close()
 
     def convert_raw_recording(self):
-        recording_path , recording_name = self.generate_recording_path()
+        recording_path, recording_name = self.generate_recording_path()
         try:
             if self.sensor_mode == 6:
                 mp4box_process = subprocess.Popen(['MP4Box', '-fps', '60', '-add', self.video_dir + '/raw.h264', recording_path])
-                return mp4box_process , recording_name
+                return mp4box_process, recording_name
             else:
                 mp4box_process = subprocess.Popen(['MP4Box', '-add', self.video_dir + '/raw.h264', recording_path])
-                return mp4box_process , recording_name
+                return mp4box_process, recording_name
         except Exception as e:
             print(e)
             if hasattr(e, 'message'):
                 error_info = e.message
             else:
                 error_info = e
-            self.message_handler.set_message('ERROR',error_info)
-        
-    
+            self.message_handler.set_message('ERROR', error_info)
+
     def wait_for_recording_to_save(self, process, name):
         print('the poll is {}'.format(process.poll()))
         if process.poll() is not None:
@@ -186,10 +184,10 @@ class Capture(object):
             os.makedirs(rec_dir)
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         i = 0
-        while os.path.exists('{}/rec-{}-{}.mp4'.format(rec_dir,date, i)):
+        while os.path.exists('{}/rec-{}-{}.mp4'.format(rec_dir, date, i)):
             i += 1
         name = 'rec-{}-{}.mp4'.format(date, i)
-        return '{}/{}'.format(rec_dir,name), name 
+        return '{}/{}'.format(rec_dir, name), name
 
     def get_recording_time(self):
         if not self.device or not self.device.recording or self.device.frame.timestamp == None:
@@ -207,7 +205,7 @@ class Capture(object):
                     error_info = e.message
                 else:
                     error_info = e
-                self.message_handler.set_message('ERROR',error_info)
+                self.message_handler.set_message('ERROR', error_info)
                 return 0
             return 0
 
@@ -249,8 +247,7 @@ class Capture(object):
     def close_capture(self):
         if self.device is not None:
             print('closing the old camera...')
-            self.device.close() 
+            self.device.close()
 
     def receive_recording_finished(self, path, value):
         pass
-

@@ -1,19 +1,19 @@
-import subprocess
-import tracemalloc
-import data_centre.length_setter as length_setter
-from inspect import signature
-import sys
-import shlex
+import argparse
 import os
 import re
-from pythonosc import osc_message_builder
+import subprocess
+import sys
+import threading
+from inspect import signature
+
+import git
 from pythonosc import dispatcher
 from pythonosc import osc_server
-import git
-import threading
-import argparse
+
+import data_centre.length_setter as length_setter
 from video_centre.capture import Capture
 from video_centre.of_capture import OfCapture
+
 
 class Actions(object):
     def __init__(self, tk, message_handler, data, video_driver, shaders, display, osc_client):
@@ -32,7 +32,7 @@ class Actions(object):
         self.remote_process = None
         self.set_capture_object('value')
         self.server = self.setup_osc_server()
-        
+
     def set_capture_object(self, value):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
             self.python_capture.close_capture()
@@ -54,7 +54,6 @@ class Actions(object):
     def move_browser_selection_page_up(self):
         self.display.browser_menu.navigate_menu_page_up()
 
-
     def enter_on_browser_selection(self):
         self.display.browser_menu.enter_on_browser_selection()
 
@@ -69,7 +68,6 @@ class Actions(object):
 
     def move_settings_selection_page_up(self):
         self.display.settings_menu.navigate_menu_page_up()
-
 
     def enter_on_settings_selection(self):
         is_setting, setting = self.display.settings_menu.enter_on_setting_selection()
@@ -91,7 +89,6 @@ class Actions(object):
 
     def move_shaders_selection_page_up(self):
         self.shaders.shaders_menu.navigate_menu_page_up()
-
 
     def enter_on_shaders_selection(self):
         ##want to select shader if its not selected, and want to enter 'param' mode if it already is
@@ -122,7 +119,7 @@ class Actions(object):
         self.display.browser_menu.generate_browser_list()
 
     def _load_this_slot_into_next_player(self, slot):
- ### load next player for seamless type otherwise respect player mode
+        ### load next player for seamless type otherwise respect player mode
         if self.data.settings['sampler']['LOOP_TYPE']['value'] == 'seamless':
             if self.data.update_next_slot_number(slot):
                 print('should reload next player !! ')
@@ -134,8 +131,6 @@ class Actions(object):
             else:
                 if self.data.update_next_slot_number(slot, is_current=True):
                     self.video_driver.reload_current_player()
-           
-
 
     def load_slot_0_into_next_player(self):
         self._load_this_slot_into_next_player(0)
@@ -177,8 +172,8 @@ class Actions(object):
 
     def set_display_mode(self, display_mode):
         mapmodes = {
-                'shader': 'SHADERS',
-                'shader_bank': 'SHDR_BNK'
+            'shader': 'SHADERS',
+            'shader_bank': 'SHDR_BNK'
         }
         if display_mode in mapmodes:
             display_mode = mapmodes[display_mode]
@@ -186,7 +181,7 @@ class Actions(object):
         display_mode = display_mode.upper()
 
         display_modes = self.data.get_display_modes_list(with_nav_mode=True)
-        for i,dm in enumerate(display_modes):
+        for i, dm in enumerate(display_modes):
             if display_mode in dm:
                 self.data.display_mode = display_modes[i][0]
                 self.data.control_mode = display_modes[i][1]
@@ -195,7 +190,7 @@ class Actions(object):
         display_modes = self.data.get_display_modes_list(with_nav_mode=True)
 
         current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
-        next_mode_index = (current_mode_index + 1) % len(display_modes) 
+        next_mode_index = (current_mode_index + 1) % len(display_modes)
         self.data.display_mode = display_modes[next_mode_index][0]
         self.data.control_mode = display_modes[next_mode_index][1]
 
@@ -203,10 +198,9 @@ class Actions(object):
         display_modes = self.data.get_display_modes_list(with_nav_mode=True)
 
         current_mode_index = [index for index, i in enumerate(display_modes) if self.data.display_mode in i][0]
-        next_mode_index = (current_mode_index - 1) % len(display_modes) 
+        next_mode_index = (current_mode_index - 1) % len(display_modes)
         self.data.display_mode = display_modes[next_mode_index][0]
         self.data.control_mode = display_modes[next_mode_index][1]
-
 
     def toggle_action_on_player(self):
         play = 'play' in self.data.settings['sampler']['ON_ACTION']['value']
@@ -230,19 +224,17 @@ class Actions(object):
 
     def increase_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index + 1) % len(options) ])
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value']][0]
+        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index + 1) % len(options)])
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
-
 
     def decrease_seek_time(self):
         options = self.data.settings['sampler']['SEEK_TIME']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value'] ][0]
-        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index - 1) % len(options) ])
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['sampler']['SEEK_TIME']['value']][0]
+        self.data.update_setting_value('sampler', 'SEEK_TIME', options[(current_index - 1) % len(options)])
         self.message_handler.set_message('INFO', 'The Seek Time is now ' + str(self.data.settings['sampler']['SEEK_TIME']['value']) + 's')
-        
 
-    def seek_forward_on_player(self):    
+    def seek_forward_on_player(self):
         self.video_driver.current_player.seek(self.data.settings['sampler']['SEEK_TIME']['value'])
 
     def seek_back_on_player(self):
@@ -264,24 +256,24 @@ class Actions(object):
     def previous_bank(self):
         self.data.update_bank_number_by_amount(-1)
         print('current bank is {} , the number of banks is {} '.format(self.data.bank_number, len(self.data.bank_data)))
-              
+
     def increase_speed(self):
         print("increasing speed !")
         new_rate = self.video_driver.current_player.change_rate(1)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
-        #self._load_this_slot_into_next_player(current_slot)
+        # self._load_this_slot_into_next_player(current_slot)
 
     def decrease_speed(self):
         print("increasing speed !")
         new_rate = self.video_driver.current_player.change_rate(-1)
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
         self.data.update_slot_rate_to_this(current_slot, new_rate)
-        #self._load_this_slot_into_next_player(current_slot)
+        # self._load_this_slot_into_next_player(current_slot)
 
     def set_playing_sample_start_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        current_position = round(self.video_driver.current_player.get_position(),3)
+        current_position = round(self.video_driver.current_player.get_position(), 3)
         self.data.update_slot_start_to_this_time(current_slot, current_position)
         self._load_this_slot_into_next_player(current_slot)
 
@@ -292,7 +284,7 @@ class Actions(object):
 
     def set_playing_sample_end_to_current_duration(self):
         current_bank, current_slot = self.data.split_bankslot_number(self.video_driver.current_player.bankslot_number)
-        current_position = round(self.video_driver.current_player.get_position(),0)
+        current_position = round(self.video_driver.current_player.get_position(), 0)
         self.data.update_slot_end_to_this_time(current_slot, current_position)
         self._load_this_slot_into_next_player(current_slot)
 
@@ -305,19 +297,18 @@ class Actions(object):
         is_previewing = self.capture.is_previewing
         if is_previewing:
             self.capture.stop_preview()
-            #if self.video_driver.current_player.status == 'PAUSED':
-                #self.video_driver.current_player.toggle_pause()
+            # if self.video_driver.current_player.status == 'PAUSED':
+            # self.video_driver.current_player.toggle_pause()
         else:
             is_successful = self.capture.start_preview()
-            #if is_successful and self.video_driver.current_player.status != 'PAUSED':
-                #self.video_driver.current_player.toggle_pause()
-
+            # if is_successful and self.video_driver.current_player.status != 'PAUSED':
+            # self.video_driver.current_player.toggle_pause()
 
     def toggle_capture_recording(self):
         is_recording = self.capture.is_recording
         if is_recording:
             self.capture.stop_recording()
-        else: 
+        else:
             self.capture.start_recording()
 
     def toggle_screen_mirror(self):
@@ -360,12 +351,12 @@ class Actions(object):
                 self.data.detour_active = True
                 shader_input = self.data.settings['detour']['SHADER_POSITION']['value'] == 'input'
                 self.video_driver.osc_client.send_message("/detour/start", shader_input)
-                self.load_this_detour_shader() 
+                self.load_this_detour_shader()
 
     def toggle_detour_play(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
-            is_playing =  not self.data.detour_settings['is_playing']
-            self.data.detour_settings['is_playing'] = is_playing 
+            is_playing = not self.data.detour_settings['is_playing']
+            self.data.detour_settings['is_playing'] = is_playing
             self.video_driver.osc_client.send_message("/detour/is_playing", is_playing)
 
     def toggle_feedback(self):
@@ -432,14 +423,14 @@ class Actions(object):
 
     def toggle_detour_record(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
-            is_recording =  not self.data.detour_settings['is_recording']
-            self.data.detour_settings['is_recording'] = is_recording 
+            is_recording = not self.data.detour_settings['is_recording']
+            self.data.detour_settings['is_recording'] = is_recording
             self.video_driver.osc_client.send_message("/detour/is_recording", is_recording)
 
     def toggle_detour_record_loop(self):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
             record_loop = not self.data.detour_settings['record_loop']
-            self.data.detour_settings['record_loop'] = record_loop 
+            self.data.detour_settings['record_loop'] = record_loop
             self.video_driver.osc_client.send_message("/detour/record_loop", record_loop)
 
     def clear_this_detour(self):
@@ -477,9 +468,8 @@ class Actions(object):
 
     def switch_to_this_detour(self, number):
         if self.data.settings['detour']['TRY_DEMO']['value'] == 'enabled':
-            self.data.detour_settings['current_detour'] = number 
+            self.data.detour_settings['current_detour'] = number
             self.video_driver.osc_client.send_message("/detour/switch_to_detour_number", number)
-
 
     def set_detour_delay_mode(self, state):
         self.video_driver.osc_client.send_message("/detour/set_delay_mode", state == 'enabled')
@@ -513,19 +503,19 @@ class Actions(object):
         self.set_detour_mix_continuous(1)
 
     def set_the_camera_colour_u_continuous(self, amount):
-        self.capture.set_colour(amount*255, None)
+        self.capture.set_colour(amount * 255, None)
 
     def set_the_camera_colour_v_continuous(self, amount):
-        self.capture.set_colour(None, amount*255)
+        self.capture.set_colour(None, amount * 255)
 
     def set_the_camera_alpha_continuous(self, amount):
-        self.capture.set_alpha(amount*255)
+        self.capture.set_alpha(amount * 255)
 
     def set_the_current_video_alpha_continuous(self, amount):
-        self.video_driver.current_player.set_alpha_value(amount*255)
+        self.video_driver.current_player.set_alpha_value(amount * 255)
 
     def set_the_next_video_alpha_continuous(self, amount):
-        self.video_driver.next_player.set_alpha_value(amount*255)
+        self.video_driver.next_player.set_alpha_value(amount * 255)
 
     def set_the_shader_param_0_layer_offset_0_continuous(self, amount):
         self.shaders.set_param_to_amount(0, amount, layer_offset=0)
@@ -583,8 +573,8 @@ class Actions(object):
             self.data.update_setting_value('shader', 'STROBE_AMOUNT', scaled_amount)
 
     def get_midi_status(self):
-        device_name = 'none' if not hasattr(self.data,'midi_device_name') else self.data.midi_device_name
-        self.message_handler.set_message('INFO', ("midi status is {} to %s"%(device_name)).format(self.data.midi_status))
+        device_name = 'none' if not hasattr(self.data, 'midi_device_name') else self.data.midi_device_name
+        self.message_handler.set_message('INFO', ("midi status is {} to %s" % (device_name)).format(self.data.midi_status))
 
     def cycle_midi_port_index(self):
         self.data.midi_port_index = self.data.midi_port_index + 1
@@ -629,24 +619,23 @@ class Actions(object):
             self.data.update_setting_value('video', 'OUTPUT', 'hdmi')
 
             if self.data.settings['video']['HDMI_MODE']['value'] == "CEA 4 HDMI":
-                
+
                 self.data.update_setting_value('video', 'HDMI_MODE', 'CEA 4 HDMI')
 
                 self.change_hdmi_settings('CEA 4 HDMI')
 
-
     def check_dev_mode(self):
         #### check if in dev mode:(ie not using the lcd screen)
         with open('/boot/config.txt', 'r') as config:
-                if '##no_waveshare_overlay' in config.read():
-                    self.data.update_setting_value('system','DEV_MODE_RESET', 'on')
-                else:
-                    self.data.update_setting_value('system','DEV_MODE_RESET', 'off')
+            if '##no_waveshare_overlay' in config.read():
+                self.data.update_setting_value('system', 'DEV_MODE_RESET', 'on')
+            else:
+                self.data.update_setting_value('system', 'DEV_MODE_RESET', 'off')
 
     def check_if_should_start_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
-            with open("conjur.log","w+") as out:
-                self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS +'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'], stdout=out)
+            with open("conjur.log", "w+") as out:
+                self.openframeworks_process = subprocess.Popen([self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r/bin/c_o_n_j_u_r'], stdout=out)
                 print('conjur pid is {}'.format(self.openframeworks_process.pid))
 
     def exit_openframeworks(self):
@@ -669,7 +658,7 @@ class Actions(object):
         self.set_capture_object('nothing')
         self.display.settings_menu.generate_settings_list()
         self.reset_players()
-        
+
     def reset_players(self):
         self.video_driver.reset_all_players()
 
@@ -680,16 +669,15 @@ class Actions(object):
         progressive = ''
         if self.data.settings['video']['COMPOSITE_PROGRESSIVE']['value'] == 'on':
             progressive = 'p'
-        
+
         if output == 'composite':
-            subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)],shell=True)
+            subprocess.call(['tvservice --sdtvon="{} {} {}"'.format(mode, aspect, progressive)], shell=True)
             self.refresh_frame_buffer_and_restart_openframeworks()
         self.persist_composite_setting(mode, progressive, aspect)
 
-    
     def _refresh_frame_buffer(self):
         self.data.open_omxplayer_for_reset()
-        subprocess.run(["fbset -depth 16; fbset -depth 32; xrefresh -display :0" ], shell=True)
+        subprocess.run(["fbset -depth 16; fbset -depth 32; xrefresh -display :0"], shell=True)
 
     def persist_composite_setting(self, mode, progressive, aspect):
         sdtv_mode = ''
@@ -714,7 +702,7 @@ class Actions(object):
         self.update_config_settings(sdtv_mode, sdtv_aspect)
 
     def update_config_settings(self, sdtv_mode, sdtv_aspect):
-        self.run_script('set_composite_mode',sdtv_mode, sdtv_aspect)
+        self.run_script('set_composite_mode', sdtv_mode, sdtv_aspect)
 
     def switch_dev_mode(self, state):
         if state == 'on':
@@ -727,13 +715,12 @@ class Actions(object):
             self.switch_display_to_lcd()
 
     def switch_display_to_hdmi(self):
-        with open('/boot/config.txt', 'r') as config: 
+        with open('/boot/config.txt', 'r') as config:
             with open('/usr/share/X11/xorg.conf.d/99-fbturbo.conf') as framebuffer_conf:
                 if 'dtoverlay=waveshare35a:rotate=270' in config.read() and 'dev/fb1' in framebuffer_conf.read():
                     self.run_script('switch_display_to_hdmi')
                 else:
                     self.message_handler.set_message('INFO', 'failed to switch display')
-        
 
     def switch_display_to_lcd(self):
         with open('/boot/config.txt', 'r') as config:
@@ -745,9 +732,9 @@ class Actions(object):
                     self.message_handler.set_message('INFO', 'failed to switch display')
 
     def run_script(self, script_name, first_argument='', second_argument=''):
-        print('first arg is {} , second is {}'.format(first_argument,second_argument))
-        subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name),first_argument, second_argument ])
-           
+        print('first arg is {} , second is {}'.format(first_argument, second_argument))
+        subprocess.call(['/home/pi/r_e_c_u_r/dotfiles/{}.sh'.format(script_name), first_argument, second_argument])
+
     def toggle_x_autorepeat(self):
         if self.data.auto_repeat_on:
             subprocess.call(['xset', 'r', 'off'])
@@ -756,13 +743,12 @@ class Actions(object):
             subprocess.call(['xset', 'r', 'on'])
             self.data.auto_repeat_on = True
 
-
     def quit_the_program(self):
         self.data._update_json(self.data.SETTINGS_JSON, self.data.settings)
         self.data.plugins.quit_plugins()
         self.video_driver.exit_all_players()
         self.exit_openframeworks()
-        self.exit_osc_server('','')
+        self.exit_osc_server('', '')
         self.create_client_and_shutdown_osc_server()
         self.stop_serial_port_process()
         self.stop_openframeworks_process()
@@ -772,8 +758,8 @@ class Actions(object):
 
     def restart_the_program(self):
         self.quit_the_program()
-        os.execv('/usr/bin/python3', [sys.argv[0],'/home/pi/r_e_c_u_r/r_e_c_u_r.py'])
-        
+        os.execv('/usr/bin/python3', [sys.argv[0], '/home/pi/r_e_c_u_r/r_e_c_u_r.py'])
+
     def set_shader_param_mode(self):
         self.data.control_mode = 'SHADER_PARAM'
         self.message_handler.set_message('INFO', '[ ]: focus  < >: level ■: back')
@@ -786,21 +772,21 @@ class Actions(object):
         self.shaders.decrease_this_param(self.data.settings['shader']['SHADER_PARAM']['value'])
 
     def increase_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param + 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param + 1) % self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def decrease_param_focus(self):
-        self.shaders.focused_param = (self.shaders.focused_param - 1)%self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
+        self.shaders.focused_param = (self.shaders.focused_param - 1) % self.shaders.selected_shader_list[self.data.shader_layer]['param_number']
 
     def increase_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
-        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index + 1) % len(options) ])
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value']][0]
+        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index + 1) % len(options)])
         self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def decrease_shader_param(self):
         options = self.data.settings['shader']['SHADER_PARAM']['options']
-        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value'] ][0]
-        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index - 1) % len(options) ])
+        current_index = [index for index, item in enumerate(options) if item == self.data.settings['shader']['SHADER_PARAM']['value']][0]
+        self.data.update_setting_value('shader', 'SHADER_PARAM', options[(current_index - 1) % len(options)])
         self.message_handler.set_message('INFO', 'The Param amount is now ' + str(self.data.settings['shader']['SHADER_PARAM']['value']))
 
     def set_fixed_length(self, value):
@@ -808,12 +794,11 @@ class Actions(object):
         self.message_handler.set_message('INFO', 'tap: ■ ;   < > : back')
         self.fixed_length_setter = length_setter.FixedLengthSetter(self.data)
 
-
     def return_to_default_control_mode(self):
         display_list = self.data.get_display_modes_list(with_nav_mode=True)
         for display, control in display_list:
             if display == self.data.display_mode:
-                 self.data.control_mode = control
+                self.data.control_mode = control
 
     def perform_confirm_action(self):
         action = self.data.confirm_action
@@ -829,10 +814,10 @@ class Actions(object):
         self.message_handler.set_message('INFO', 'confirm: {} ■:y < >:no'.format(action_title[:22]))
 
     def confirm_shutdown(self):
-        self.start_confirm_action('shutdown_pi' )
+        self.start_confirm_action('shutdown_pi')
 
     def confirm_quit(self):
-        self.start_confirm_action('quit_the_program', message='quit' )
+        self.start_confirm_action('quit_the_program', message='quit')
 
     def confirm_switch_dev_mode(self, state):
         # i startd writing a confirm dev mod but it messed with the state if you say no ...
@@ -842,7 +827,6 @@ class Actions(object):
         if self.fixed_length_setter:
             self.fixed_length_setter.record_input()
         self.display.settings_menu.generate_settings_list()
-
 
     def setup_osc_server(self):
         server_parser = argparse.ArgumentParser()
@@ -861,7 +845,7 @@ class Actions(object):
         this_dispatcher.map("/detour/detour_info", self.receive_detour_info)
         this_dispatcher.map("/capture/recording_finished", self.capture.receive_recording_finished)
         this_dispatcher.map("/shutdown", self.exit_osc_server)
-        #this_dispatcher.map("/player/a/status", self.set_status)
+        # this_dispatcher.map("/player/a/status", self.set_status)
 
         osc_server.ThreadingOSCUDPServer.allow_reuse_address = True
         server = osc_server.ThreadingOSCUDPServer((server_args.ip, server_args.port), this_dispatcher)
@@ -889,10 +873,10 @@ class Actions(object):
 
     def toggle_access_point(self, setting_value):
         osc_setting_state = self.data.settings['user_input']['OSC_INPUT']['value']
-        self.data.update_setting_value('user_input', 'OSC_INPUT', 'disabled') 
+        self.data.update_setting_value('user_input', 'OSC_INPUT', 'disabled')
         self.tk.after(2000, self.toggle_access_point_delay, setting_value, osc_setting_state)
 
-    def toggle_access_point_delay(self, setting_value, osc_setting_state ):
+    def toggle_access_point_delay(self, setting_value, osc_setting_state):
         if setting_value == 'enabled':
             subprocess.call(['sudo', 'bash', '/home/pi/raspiApWlanScripts/switchToAP.sh'])
         else:
@@ -914,7 +898,6 @@ class Actions(object):
     def enable_osc(self, osc_setting_state):
         self.data.update_setting_value('user_input', 'OSC_INPUT', osc_setting_state)
 
-
     def show_ip(self, *args):
         address = self.data.get_ip_address()
         self.message_handler.set_message('INFO', 'ip is {}:8080'.format(address))
@@ -922,13 +905,12 @@ class Actions(object):
     def create_serial_port_process(self):
         if self.serial_port_process == None:
             self.serial_port_process = subprocess.Popen("exec " + "ttymidi -s /dev/serial0 -b 38400 -n serial", shell=True)
-            print('created the serial port process ? {}'.format(self.serial_port_process))        
+            print('created the serial port process ? {}'.format(self.serial_port_process))
 
     def stop_serial_port_process(self):
         if self.serial_port_process is not None:
             self.serial_port_process.kill()
             self.serial_port_process = None
-
 
     def stop_remote_process(self):
         if self.remote_process is not None:
@@ -939,7 +921,7 @@ class Actions(object):
         self.reset_players()
         self.exit_openframeworks()
         self.stop_openframeworks_process()
-        self.check_if_should_start_openframeworks()        
+        self.check_if_should_start_openframeworks()
 
     def refresh_frame_buffer_and_restart_openframeworks(self):
         if self.data.settings['video']['VIDEOPLAYER_BACKEND']['value'] != 'omxplayer':
@@ -948,7 +930,7 @@ class Actions(object):
             self.stop_openframeworks_process()
             self._refresh_frame_buffer()
             self.check_if_should_start_openframeworks()
-            #self.tk.after(1000, self.check_if_should_start_openframeworks)
+            # self.tk.after(1000, self.check_if_should_start_openframeworks)
         else:
             self._refresh_frame_buffer()
 
@@ -960,21 +942,21 @@ class Actions(object):
             subprocess.call(['killall', 'c_o_n_j_u_r'])
 
     def try_pull_code_and_reset(self):
-        #self.message_handler.set_message('INFO', 'checkin fo updates pls wait')
+        # self.message_handler.set_message('INFO', 'checkin fo updates pls wait')
         recur_repo = git.Repo("~/r_e_c_u_r")
         conjur_repo = git.Repo(self.data.PATH_TO_OPENFRAMEWORKS + "apps/myApps/c_o_n_j_u_r")
-        ofxVideoArtTools_repo = git.Repo(self.data.PATH_TO_OPENFRAMEWORKS +  "/addons/ofxVideoArtTools")
+        ofxVideoArtTools_repo = git.Repo(self.data.PATH_TO_OPENFRAMEWORKS + "/addons/ofxVideoArtTools")
         current_recur_hash = recur_repo.head.object.hexsha
         current_conjur_hash = conjur_repo.head.object.hexsha
         current_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
 
-        self.data.try_remove_file(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON )
-        self.data.try_remove_file(self.data.PATH_TO_DEFAULT_CONJUR_DATA) 
+        self.data.try_remove_file(self.data.PATH_TO_DATA_OBJECTS + self.data.SETTINGS_JSON)
+        self.data.try_remove_file(self.data.PATH_TO_DEFAULT_CONJUR_DATA)
         try:
             recur_repo.remotes.origin.pull()
             conjur_repo.remotes.origin.pull()
             ofxVideoArtTools_repo.remotes.origin.pull()
-        except git.exc.GitCommandError as e: 
+        except git.exc.GitCommandError as e:
             if 'unable to access' in str(e):
                 self.message_handler.set_message('INFO', 'not connected to network')
             else:
@@ -982,22 +964,22 @@ class Actions(object):
                     error_info = e.message
                 else:
                     error_info = e
-                self.message_handler.set_message('ERROR',error_info)
+                self.message_handler.set_message('ERROR', error_info)
             return
-    
+
         new_recur_hash = recur_repo.head.object.hexsha
         new_conjur_hash = conjur_repo.head.object.hexsha
         new_ofxVideoArtTools_hash = ofxVideoArtTools_repo.head.object.hexsha
-        if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash :
-            #something has changed!            
+        if current_recur_hash != new_recur_hash or current_conjur_hash != new_conjur_hash or current_ofxVideoArtTools_hash != new_ofxVideoArtTools_hash:
+            # something has changed!
             self.restart_the_program()
         else:
             self.message_handler.set_message('INFO', 'up to date !')
 
-#    def complie_openframeworks(self):
-#        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
-#        self.message_handler.set_message('INFO', 'finished compiling!')
-#        self.restart_the_program()
+    #    def complie_openframeworks(self):
+    #        subprocess.call(['make', '--directory=' + self.data.PATH_TO_OPENFRAMEWORKS + 'apps/myApps/c_o_n_j_u_r' ])
+    #        self.message_handler.set_message('INFO', 'finished compiling!')
+    #        self.restart_the_program()
 
     def shutdown_pi(self):
         subprocess.call(['sudo', 'shutdown', '-h', 'now'])
@@ -1005,7 +987,7 @@ class Actions(object):
     def clear_message(self):
         self.message_handler.clear_all_messages()
 
-    #"""def modulate_param_layer_offset_to_amount(self, param, layer, amount):
+    # """def modulate_param_layer_offset_to_amount(self, param, layer, amount):
     #    self.shaders.modulate_param_layer_offset_to_amount(param, amount, layer_offset=layer)"""
 
     @staticmethod
@@ -1016,35 +998,34 @@ class Actions(object):
     def eject_all_usb_drives(self):
         for i in range(1, 4):
             if os.path.exists('/dev/sda{}'.format(i)):
-                subprocess.call(['sudo', 'eject', '/dev/sda{}'.format(i)])                
+                subprocess.call(['sudo', 'eject', '/dev/sda{}'.format(i)])
                 self.message_handler.set_message('INFO', 'usb ejected')
-                
 
     # TODO: make this interrogate the various components for available routes to parse
     # this would include eg a custom script module..
     @property
     def parserlist(self):
         return {
-                ( r"^play_shader_([0-9])_([0-9])$", self.shaders.play_that_shader ),
-                ( r"^toggle_shader_layer_([0-2])$", self.toggle_shader_layer ),
-                ( r"^start_shader_layer_([0-2])$",  self.shaders.start_shader ),
-                ( r"^stop_shader_layer_([0-2])$",   self.shaders.stop_shader ),
-                ( r"^set_the_shader_param_([0-3])_layer_([0-2])_continuous$",      self.shaders.set_param_layer_to_amount ),
-                ( r"^modulate_param_([0-3])_to_amount_continuous$", self.shaders.modulate_param_to_amount ),
-                ( r"^set_param_([0-3])_layer_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_modulation_level ),
-                ( r"^set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_offset_modulation_level ),
-                ( r"^reset_selected_modulation$", self.shaders.reset_selected_modulation ),
-                ( r"^reset_modulation_([0-3])$", self.shaders.reset_modulation ),
-                ( r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot ),
-                ( r"^select_next_shader_modulation_slot$", self.shaders.select_next_shader_modulation_slot ),
-                ( r"^select_previous_shader_modulation_slot$", self.shaders.select_previous_shader_modulation_slot ),
-                ( r"^set_shader_speed_layer_offset_([0-2])_amount$",               self.shaders.set_speed_offset_to_amount ),
-                ( r"^set_shader_speed_layer_([0-2])_amount$",                      self.shaders.set_speed_layer_to_amount ),
-                ( r"^set_display_mode_([a-zA-Z_]*)$",  self.set_display_mode )
+            (r"^play_shader_([0-9])_([0-9])$", self.shaders.play_that_shader),
+            (r"^toggle_shader_layer_([0-2])$", self.toggle_shader_layer),
+            (r"^start_shader_layer_([0-2])$", self.shaders.start_shader),
+            (r"^stop_shader_layer_([0-2])$", self.shaders.stop_shader),
+            (r"^set_the_shader_param_([0-3])_layer_([0-2])_continuous$", self.shaders.set_param_layer_to_amount),
+            (r"^modulate_param_([0-3])_to_amount_continuous$", self.shaders.modulate_param_to_amount),
+            (r"^set_param_([0-3])_layer_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_modulation_level),
+            (r"^set_param_([0-3])_layer_offset_([0-2])_modulation_level_continuous$", self.shaders.set_param_layer_offset_modulation_level),
+            (r"^reset_selected_modulation$", self.shaders.reset_selected_modulation),
+            (r"^reset_modulation_([0-3])$", self.shaders.reset_modulation),
+            (r"^select_shader_modulation_slot_([0-3])$", self.shaders.select_shader_modulation_slot),
+            (r"^select_next_shader_modulation_slot$", self.shaders.select_next_shader_modulation_slot),
+            (r"^select_previous_shader_modulation_slot$", self.shaders.select_previous_shader_modulation_slot),
+            (r"^set_shader_speed_layer_offset_([0-2])_amount$", self.shaders.set_speed_offset_to_amount),
+            (r"^set_shader_speed_layer_([0-2])_amount$", self.shaders.set_speed_layer_to_amount),
+            (r"^set_display_mode_([a-zA-Z_]*)$", self.set_display_mode)
         }
 
     def detect_types(self, args):
-        a = [ int(arg) if str(arg).isnumeric() else str(arg) for arg in list(args) ]
+        a = [int(arg) if str(arg).isnumeric() else str(arg) for arg in list(args)]
         return a
 
     def get_callback_for_method(self, method_name, argument):
@@ -1054,13 +1035,13 @@ class Actions(object):
             matches = re.search(regex, method_name)
 
             if matches:
-                found_method = me 
-                parsed_args = self.detect_types(matches.groups()) #list(map(int,matches.groups()))
+                found_method = me
+                parsed_args = self.detect_types(matches.groups())  # list(map(int,matches.groups()))
                 if argument is not None:
                     args = parsed_args + [argument]
                 else:
-                    args = parsed_args 
-                
+                    args = parsed_args
+
                 return (found_method, args)
 
         return None, None
@@ -1072,7 +1053,7 @@ class Actions(object):
         # first check if we have a native method to handle this for us
         # todo: assess whether it would still be performant/desirable to be able to override core actions with plugins?
         if hasattr(self, method_name):
-            
+
             method = getattr(self, method_name)
             if argument is not None:
                 arguments = [argument]
@@ -1089,29 +1070,28 @@ class Actions(object):
             from data_centre.plugin_collection import ActionsPlugin
             for plugin in self.data.plugins.get_plugins(ActionsPlugin):
                 if plugin.is_handled(method_name):
-                    print ("Plugin %s is handling %s" % (plugin, method_name))
+                    print("Plugin %s is handling %s" % (plugin, method_name))
                     method, arguments = plugin.get_callback_for_method(method_name, argument)
-                    break # only deal with the first plugin
+                    break  # only deal with the first plugin
 
         if method is None:
-            print ("Failed to find a method for '%s'" % method_name)
+            print("Failed to find a method for '%s'" % method_name)
             import traceback
             traceback.print_exc()
             return
 
         try:
-            #print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
-                # for the case where cc is being used as switch, we ignore note_off
-            #print(type(argument))
+            # print ("for method_name %s, arguments is %s and len is %s, got method %s" % (method_name, arguments, len(signature(method).parameters), method))
+            # for the case where cc is being used as switch, we ignore note_off
+            # print(type(argument))
             if len(signature(method).parameters) == 0 and isinstance(argument, float) and argument == 0:
                 print('cc off ?')
                 return
-            if arguments is not None and len(signature(method).parameters)==len(arguments): # only pass arguments if count matches method sig
+            if arguments is not None and len(signature(method).parameters) == len(arguments):  # only pass arguments if count matches method sig
                 method(*arguments)
             else:
                 method()
         except:
-            print ("Exception calling action for '%s' with arguments ( %s ) " % ( method_name, arguments))
+            print("Exception calling action for '%s' with arguments ( %s ) " % (method_name, arguments))
             import traceback
             traceback.print_exc()
-

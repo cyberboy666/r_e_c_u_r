@@ -1,0 +1,9 @@
+adafruit-mcp3008
+gitpython
+mido
+numpy
+omxplayer-wrapper
+picamera
+pyaudio
+pyserial
+python-osc

@@ -1,7 +1,7 @@
-from pythonosc import osc_message_builder
-from pythonosc import udp_client
-from pythonosc import dispatcher
 import argparse
+
+from pythonosc import udp_client
+
 
 def setup_osc_client(ip, port):
     client_parser = argparse.ArgumentParser()
@@ -12,8 +12,9 @@ def setup_osc_client(ip, port):
 
     return udp_client.SimpleUDPClient(client_args.ip, client_args.port)
 
-client = setup_osc_client('127.0.0.1',5433)
+
+client = setup_osc_client('127.0.0.1', 5433)
 client.send_message("/shutdown", True)
 
-client = setup_osc_client('127.0.0.1',9000)
+client = setup_osc_client('127.0.0.1', 9000)
 client.send_message("/shutdown", True)

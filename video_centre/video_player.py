@@ -1,5 +1,6 @@
 from omxplayer.player import OMXPlayer
 
+
 class VideoPlayer:
     def __init__(self, root, message_handler, data, name):
         self.root = root
@@ -20,10 +21,9 @@ class VideoPlayer:
         self.alpha = 0
         self.show_toggle_on = False
 
-
     def try_load(self, layer, is_current=False):
         load_attempts = 0
-        while(load_attempts < 2):
+        while (load_attempts < 2):
             load_attempts = load_attempts + 1
             if self.load(layer, is_current):
                 print('load success')
@@ -33,10 +33,9 @@ class VideoPlayer:
         self.message_handler.set_message('ERROR', 'failed to load')
         self.status = 'ERROR'
         return False
-            
 
     def load(self, layer, is_current=False):
-        #try:
+        # try:
         self.get_context_for_player(is_current)
         is_dev_mode, first_screen_arg, second_screen_arg = self.set_screen_size_for_dev_mode()
         arguments = ['--no-osd', '--layer', str(layer), '--adev', 'local', '--alpha', '0', first_screen_arg, second_screen_arg]
@@ -49,10 +48,10 @@ class VideoPlayer:
             return True
         self.omx_player = OMXPlayer(self.location, args=arguments, dbus_name=self.name)
         self.omx_running = True
-        self.total_length = self.omx_player.duration() # <-- uneeded once self.duration stores float
-        if(self.end is -1): 
+        self.total_length = self.omx_player.duration()  # <-- uneeded once self.duration stores float
+        if (self.end is -1):
             self.end = self.total_length
-        if(self.start is -1):
+        if (self.start is -1):
             self.start = 0
         self.crop_length = self.end - self.start
         print('{}: the duration is {}'.format(self.name, self.total_length))
@@ -64,14 +63,14 @@ class VideoPlayer:
             self.set_alpha_value(0)
         self.pause_at_start()
         return True
-        #except (ValueError, SystemError) as e:
-          #  print(e)
-            #self.message_handler.set_message('ERROR', 'load attempt fail')
-            #return False
+        # except (ValueError, SystemError) as e:
+        #  print(e)
+        # self.message_handler.set_message('ERROR', 'load attempt fail')
+        # return False
 
     def pause_at_start(self):
         position = self.get_position()
-        start_threshold = round(self.start - 0.02,2)
+        start_threshold = round(self.start - 0.02, 2)
         if position > start_threshold:
             if self.status == 'LOADING':
                 self.status = 'LOADED'
@@ -94,12 +93,12 @@ class VideoPlayer:
     def pause_at_end(self):
         position = self.get_position()
         end_threshold = self.end - 0.2
-        if(position > end_threshold):
+        if (position > end_threshold):
             self.status = 'FINISHED'
             self.omx_player.pause()
-            
+
             print('its paused at end!')
-        elif(self.omx_running):
+        elif (self.omx_running):
             self.root.after(5, self.pause_at_end)
 
     def reload(self, layer, is_current=False):
@@ -123,7 +122,7 @@ class VideoPlayer:
     def get_context_for_player(self, is_current=False):
         next_context = self.data.get_next_context(is_current)
         self.location = next_context['location']
-        #self.total_length = next_context['length']
+        # self.total_length = next_context['length']
         self.start = next_context['start']
         self.end = next_context['end']
         self.bankslot_number = next_context['bankslot_number']
@@ -152,7 +151,7 @@ class VideoPlayer:
         after_seek_position = position + amount
         if after_seek_position > self.start and after_seek_position < self.end:
             self.set_position(after_seek_position)
-            #self.player.seek(amount)
+            # self.player.seek(amount)
         else:
             self.message_handler.set_message('INFO', 'can not seek outside range')
 
@@ -161,7 +160,7 @@ class VideoPlayer:
         if (new_rate > self.omx_player.minimum_rate() and new_rate < self.omx_player.maximum_rate()):
             updated_speed = self.omx_player.set_rate(new_rate)
             self.rate = new_rate
-            print('max rate {} , min rate {} '.format(self.omx_player.maximum_rate() ,self.omx_player.minimum_rate()))
+            print('max rate {} , min rate {} '.format(self.omx_player.maximum_rate(), self.omx_player.minimum_rate()))
             return new_rate
         else:
             self.message_handler.set_message('INFO', 'can not set speed outside of range')
@@ -173,7 +172,7 @@ class VideoPlayer:
     def exit(self):
         try:
             if self.omx_player:
-                print('trying to exit this player ', self.location) 
+                print('trying to exit this player ', self.location)
                 self.omx_player.quit()
             self.status = 'EMPTY'
             self.omx_running = False
@@ -187,5 +186,3 @@ class VideoPlayer:
         else:
             aspect_mode = self.data.settings['video']['SCREEN_MODE']['value']
             return False, '--aspect-mode', aspect_mode
-
-

@@ -217,7 +217,7 @@ class Display(object):
         for i in range(min(4, shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
-                display_param == 99
+                display_param = 99
             self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
         self.display_text.insert(END, '\n')
         self.display_text.tag_add("COLUMN_NAME", 5.0, 6.0)
@@ -253,7 +253,7 @@ class Display(object):
         for i in range(min(4, shader['param_number'])):
             display_param = self.format_param_value(self.shaders.selected_param_list[self.data.shader_layer][i])
             if display_param == 100:
-                display_param == 99
+                display_param = 99
             self.display_text.insert(END, 'x{}:{:02d}'.format(i, display_param))
         self.display_text.insert(END, '\n')
 

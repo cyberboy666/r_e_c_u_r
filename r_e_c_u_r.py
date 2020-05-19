@@ -1,24 +1,21 @@
 #!/usr/bin/python
 
-import traceback
-from tkinter import Tk, Frame
-import sys
-import tracemalloc
 import argparse
+import traceback
+from tkinter import Frame, Tk
+
 from pythonosc import udp_client
 
 from actions import Actions
 from data_centre.data import Data
 from display_centre.display import Display
 from display_centre.messages import MessageHandler
+from user_input.analog_input import AnalogInput
+from user_input.midi_input import MidiInput
 from user_input.numpad_input import NumpadInput
 from user_input.osc_input import OscInput
-from user_input.midi_input import MidiInput
-from user_input.analog_input import AnalogInput
-from video_centre.video_driver import VideoDriver
-#from video_centre.capture import Capture
 from video_centre.shaders import Shaders
-import data_centre
+from video_centre.video_driver import VideoDriver
 
 # create tk object
 tk = Tk()
@@ -32,6 +29,7 @@ message_handler = MessageHandler()
 
 data = Data(message_handler)
 
+
 def setup_osc_client():
     client_parser = argparse.ArgumentParser()
     client_parser.add_argument("--ip", default="127.0.0.1", help="the ip")
@@ -41,10 +39,11 @@ def setup_osc_client():
 
     return udp_client.SimpleUDPClient(client_args.ip, client_args.port)
 
+
 osc_client = setup_osc_client()
 # setup the video driver
 video_driver = VideoDriver(tk, osc_client, message_handler, data)
-#capture = Capture(tk, osc_client, message_handler, data)
+# capture = Capture(tk, osc_client, message_handler, data)
 shaders = Shaders(tk, osc_client, message_handler, data)
 
 # setup the display
@@ -70,14 +69,12 @@ actions.toggle_x_autorepeat()
 frame.pack()
 tk.attributes("-fullscreen", True)
 
+
 def handle_error(exc, val, tb):
     print('traceback for error : {}'.format(traceback.format_exc()))
     message_handler.set_message('ERROR', val, traceback.format_exc())
 
 
-
 tk.report_callback_exception = handle_error
 
-
 tk.mainloop()
-

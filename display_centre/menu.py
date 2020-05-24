@@ -91,6 +91,8 @@ class BrowserMenu(Menu):
 
         files.sort()
         for f in files:
+            if f[0]=='.':
+                continue
             split_name = os.path.splitext(f)
             if (split_name[1].lower() in ['.mp4', '.mkv', '.avi', '.mov']):
                 self.menu_list.append(dict(name='{}{}'.format(indent, f), slot='-'))

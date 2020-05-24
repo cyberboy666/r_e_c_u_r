@@ -98,6 +98,8 @@ class BrowserMenu(Menu):
 
         indent = ' ' * 4 * (current_level)
         for folder in sorted(dirs):
+            if folder[0]=='.':
+                continue
             is_open, char = self._check_folder_state(folder)
             self.menu_list.append(dict(name='{}{}{}'.format(indent, folder, char), slot='x'))
             if (is_open):

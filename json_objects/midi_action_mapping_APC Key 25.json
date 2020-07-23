@@ -281,10 +281,10 @@
 		"DEFAULT": ["function_off"]
 	},
 	"note_on 91": {
-		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
+		"DEFAULT": ["f:float(0):|seek_to_location_on_player&&send_serial_macro_0","f:float(0.25):|seek_to_location_on_player&&send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["set_display_mode_settings","set_display_mode_shader"]
+		"DEFAULT": ["f:float(0.5):|seek_to_location_on_player&&set_display_mode_settings","f:rand():|seek_to_location_on_player&&set_display_mode_shader"]
 	}
 }
 

@@ -1,6 +1,9 @@
 from data_centre.plugin_collection import ActionsPlugin, DisplayPlugin, ModulationReceiverPlugin  # , SequencePlugin
 
-# import math
+import math ## DO NOT REMOVE -- IS REQUIRED FOR THE 'FORMULA' FUNCTION TO BE ABLE TO ACCESS pi AND random ETC
+import random
+from math import pi, sin, atan, cos, tan
+from random import random as rand
 
 """
 add to midi or osc mapping

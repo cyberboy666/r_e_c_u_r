@@ -1093,7 +1093,11 @@ class Actions(object):
                 return
             if arguments is not None and len(signature(method).parameters) == len(arguments):  # only pass arguments if count matches method sig
                 method(*arguments)
+            elif arguments is not None and len(signature(method).parameters) == len(arguments)+1: # need to send in a dummy value
+                arguments += [ None ]
+                method(*arguments)
             else:
+                print ("method_name %s: arguments is '%s'" % (method_name, arguments))
                 method()
         except:
             print("Exception calling action for '%s' with arguments ( %s ) " % (method_name, arguments))

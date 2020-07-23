@@ -155,6 +155,12 @@ class VideoPlayer:
         else:
             self.message_handler.set_message('INFO', 'can not seek outside range')
 
+    def seek_percent(self, percent):
+        # convert % to absolute position in current clip
+        duration = self.end - self.start
+        pos = duration * percent
+        self.set_position(self.start + pos)
+
     def change_rate(self, amount):
         new_rate = self.rate + amount
         if (new_rate > self.omx_player.minimum_rate() and new_rate < self.omx_player.maximum_rate()):

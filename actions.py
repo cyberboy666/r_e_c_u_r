@@ -194,6 +194,10 @@ class Actions(object):
     def seek_back_on_player(self):
         self.video_driver.current_player.seek(-(self.data.settings['sampler']['SEEK_TIME']['value']))
 
+    def seek_to_location_on_player(self, position):
+        print("seek_to_location_on_player passed %s" % position)
+        self.video_driver.current_player.seek_percent(position)
+
     def toggle_function(self):
         self.data.function_on = not self.data.function_on
 

@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Sat 18 Apr 18:55:37 UTC 2020
+Thu 23 Jul 17:24:45 UTC 2020
 
 for branch=dev
 
@@ -99,7 +99,8 @@ for branch=dev
   *   restart_the_program
   *   return_to_default_control_mode
   *   seek_back_on_player
-  *   seek_forward_on_player    
+  *   seek_forward_on_player
+  *   seek_to_location_on_player(position)
   *   set_capture_object(value)
   *   set_detour_delay_mode(state)
   *   set_detour_end_continuous(amount)
@@ -149,7 +150,6 @@ for branch=dev
   *   switch_to_next_player
   *   switch_to_this_detour(number)
   *   switch_video_backend(state)
-  *   toggle_access_point_delay(setting_value, osc_setting_state )
   *   toggle_access_point(setting_value)
   *   toggle_action_on_player
   *   toggle_capture_preview
@@ -221,7 +221,6 @@ for branch=dev
   * clear_automation	(from ShaderLoopRecordPlugin)
   * select_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
   * toggle_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
-  * smooth_clip_(0-7])	(from ShaderLoopRecordPlugin)
   * smooth_selected_clip	(from ShaderLoopRecordPlugin)
   * load_presets	(from ShaderQuickPresetPlugin)
   * save_presets	(from ShaderQuickPresetPlugin)
@@ -249,10 +248,6 @@ for branch=dev
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
   * wj_send_serial:([0-9a-zA-Z:]*)	(from WJSendPlugin)
-  * wj_set_colour:([A|B|T])_([x|y])	(from WJSendPlugin)
-  * wj_set_back_colour:([x|y|z])	(from WJSendPlugin)
-  * wj_set_position:([N|L])_([x|y])	(from WJSendPlugin)
-  * wj_set_mix	(from WJSendPlugin)
   * wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level	(from WJSendPlugin)
   * wj_set_current_modulation_slot_([0-3])_level	(from WJSendPlugin)
   * wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)

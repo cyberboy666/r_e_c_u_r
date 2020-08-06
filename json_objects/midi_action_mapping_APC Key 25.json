@@ -60,6 +60,7 @@
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
             "NAV_WJMX": ["wj_set_colour_T:x"],
+	    "NAV_MANI": ["set_variable_playheadmsb&&f:pc.actions.call_method_name('seek_to_location_on_player',((x*10) + playheadlsb)/11 ):|"],
 	    "NAV_LFO": ["set_lfo_modulation_2_level"],
 	    "NAV_SND": ["sound_set_config_energy_triggerthreshold"]
     },
@@ -67,6 +68,7 @@
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
 	    "NAV_WJMX": ["wj_set_colour_T:y"],
+	    "NAV_MANI": ["set_variable_playheadlsb&&f:pc.actions.call_method_name('seek_to_location_on_player',((playheadmsb*10) + x)/11 ):|"],
 	    "NAV_LFO": ["set_lfo_modulation_3_level"]
     },
     "control_change 52": {

@@ -48,6 +48,7 @@ class ManipulatePlugin(ActionsPlugin, DisplayPlugin, ModulationReceiverPlugin):
     DEBUG = False
 
     def __init__(self, plugin_collection):
+        globals()['pc'] = plugin_collection
         super().__init__(plugin_collection)
 
     # ActionsPlugin methods

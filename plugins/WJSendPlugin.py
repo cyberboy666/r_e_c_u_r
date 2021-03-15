@@ -234,7 +234,7 @@ class WJSendPlugin(ActionsPlugin, SequencePlugin, DisplayPlugin, ModulationRecei
 
         except Exception as e:
             print("WJSendPlugin>> open_serial failed: " + str(type(e)))
-            self.disabled = True
+            self.pc.data.disable_plugin('WJSendPlugin')
             import traceback
             traceback.print_exc()
 

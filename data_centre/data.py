@@ -122,6 +122,9 @@ class Data(object):
     def get_enabled_plugin_class_names(self):
         return [k for k, v in self.enabled_plugins.items() if v is True]
 
+    def disable_plugin(self, plugin_class_name):
+        del self.enabled_plugins[plugin_class_name]
+
     def compare_plugins_list(self):
         current_plugins = [type(plugin).__name__ for plugin in self.plugins.get_plugins(include_disabled=True)]
         plugins_to_add = set(current_plugins) - set(self.enabled_plugins.keys())

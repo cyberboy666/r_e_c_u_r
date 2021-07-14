@@ -1,6 +1,6 @@
 # Auto-generated Actions list
 
-Mon 16 Mar 21:47:04 UTC 2020
+Thu 23 Jul 17:24:45 UTC 2020
 
 for branch=dev
 
@@ -99,7 +99,8 @@ for branch=dev
   *   restart_the_program
   *   return_to_default_control_mode
   *   seek_back_on_player
-  *   seek_forward_on_player    
+  *   seek_forward_on_player
+  *   seek_to_location_on_player(position)
   *   set_capture_object(value)
   *   set_detour_delay_mode(state)
   *   set_detour_end_continuous(amount)
@@ -149,7 +150,6 @@ for branch=dev
   *   switch_to_next_player
   *   switch_to_this_detour(number)
   *   switch_video_backend(state)
-  *   toggle_access_point_delay(setting_value, osc_setting_state )
   *   toggle_access_point(setting_value)
   *   toggle_action_on_player
   *   toggle_capture_preview
@@ -194,6 +194,15 @@ for branch=dev
   * set_lfo_modulation_([0-3])_level	(from LFOModulationPlugin)
   * toggle_lfo_active	(from LFOModulationPlugin)
   * set_lfo_speed	(from LFOModulationPlugin)
+  * select_lfo	(from LFOModulationPlugin)
+  * select_previous_lfo	(from LFOModulationPlugin)
+  * select_next_lfo	(from LFOModulationPlugin)
+  * increase_lfo_([0-3])_level	(from LFOModulationPlugin)
+  * decrease_lfo_([0-3])_level	(from LFOModulationPlugin)
+  * increase_selected_lfo_level	(from LFOModulationPlugin)
+  * decrease_selected_lfo_level	(from LFOModulationPlugin)
+  * increase_lfo_speed	(from LFOModulationPlugin)
+  * decrease_lfo_speed	(from LFOModulationPlugin)
   * (.*)&&(.*)	(from ManipulatePlugin)
   * invert|(.*)	(from ManipulatePlugin)
   * f:(.*):|(.*)	(from ManipulatePlugin)
@@ -212,7 +221,6 @@ for branch=dev
   * clear_automation	(from ShaderLoopRecordPlugin)
   * select_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
   * toggle_automation_clip_([0-7])	(from ShaderLoopRecordPlugin)
-  * smooth_clip_(0-7])	(from ShaderLoopRecordPlugin)
   * smooth_selected_clip	(from ShaderLoopRecordPlugin)
   * load_presets	(from ShaderQuickPresetPlugin)
   * save_presets	(from ShaderQuickPresetPlugin)
@@ -240,10 +248,6 @@ for branch=dev
   * print_arguments	(from TestPlugin)
   * set_the_shader_param_([0-3])_layer_offset_([0-2])_continuous_inverted_example	(from TestPlugin)
   * wj_send_serial:([0-9a-zA-Z:]*)	(from WJSendPlugin)
-  * wj_set_colour:([A|B|T])_([x|y])	(from WJSendPlugin)
-  * wj_set_back_colour:([x|y|z])	(from WJSendPlugin)
-  * wj_set_position:([N|L])_([x|y])	(from WJSendPlugin)
-  * wj_set_mix	(from WJSendPlugin)
   * wj_set_modulation_([a-zA-Z_]*)[:]?([a-zA-Z_]*)_slot_([0-3])_level	(from WJSendPlugin)
   * wj_set_current_modulation_slot_([0-3])_level	(from WJSendPlugin)
   * wj_send_append_pad:([0-9]*)_([[:0-9a-zA-Z]*)	(from WJSendPlugin)

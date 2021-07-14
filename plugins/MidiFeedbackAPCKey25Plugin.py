@@ -1,9 +1,10 @@
-from data_centre import plugin_collection
-from data_centre.plugin_collection import MidiFeedbackPlugin
 import mido
 
+from data_centre.plugin_collection import MidiFeedbackPlugin
+
+
 class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
-    #disabled = False
+    # disabled = False
 
     status = {}
 
@@ -11,12 +12,12 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         super().__init__(plugin_collection)
         self.description = 'Outputs feedback to APC Key 25'
 
-    def get_note(self,action,default):
+    def get_note(self, action, default):
         bind = self.pc.midi_input.find_binding_for_action(action)
         if bind is not None and 'note_on' in bind:
             return int(bind.split(' ')[1])
         else:
-            print ("bind is %s, returning default" % bind)
+            print("bind is %s, returning default" % bind)
             return default
 
     def stop_plugin(self):
@@ -32,16 +33,16 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.init_notes()
 
     def init_notes(self):
-        self.NOTE_PLAY_SHADER = self.get_note('play_shader_0_0',32)
-        self.NOTE_SHADER_FEEDBACK = self.get_note('toggle_feedback',85)
-        self.NOTE_SCENE_LAUNCH_COLUMN = self.get_note('toggle_shader_layer_0',82)
+        self.NOTE_PLAY_SHADER = self.get_note('play_shader_0_0', 32)
+        self.NOTE_SHADER_FEEDBACK = self.get_note('toggle_feedback', 85)
+        self.NOTE_SCENE_LAUNCH_COLUMN = self.get_note('toggle_shader_layer_0', 82)
         self.NOTE_MODULATION_COLUMN = self.get_note('select_shader_modulation_slot_0', self.NOTE_SCENE_LAUNCH_COLUMN)
         self.NOTE_CAPTURE_PREVIEW = self.get_note('toggle_capture_preview', 86)
         self.NOTE_CLIP_STATUS_ROW = self.get_note('toggle_automation_clip_0', 8)
         self.NOTE_SHADER_PRESET_ROW = self.get_note('select_preset_0', 0)
-        self.NOTE_SHADER_LAYER_ON = [ #82, 83, 84
-                self.get_note('toggle_shader_layer_%i'%i, 82+i) for i in range(0,3)
-            ]
+        self.NOTE_SHADER_LAYER_ON = [  # 82, 83, 84
+            self.get_note('toggle_shader_layer_%i' % i, 82 + i) for i in range(0, 3)
+        ]
 
     def supports_midi_feedback(self, device_name):
         supported_devices = ['APC Key 25']
@@ -51,16 +52,16 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
     def set_status(self, command='note_on', note=None, velocity=None):
         self.status[note] = {
-                'command': command,
-                'note': note,
-                'velocity': velocity
+            'command': command,
+            'note': note,
+            'velocity': velocity
         }
-        #print("set status to %s: %s" % (note, self.status[note]))
+        # print("set status to %s: %s" % (note, self.status[note]))
 
     def send_command(self, command='note_on', note=None, velocity=None):
-        #print("send_command(%s, %s)" % (note, velocity))
+        # print("send_command(%s, %s)" % (note, velocity))
         self.midi_feedback_device.send(
-            mido.Message(command, note=note, velocity=velocity)
+                mido.Message(command, note=note, velocity=velocity)
         )
 
     def feedback_shader_feedback(self, on):
@@ -70,15 +71,16 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.set_status(note=self.NOTE_CAPTURE_PREVIEW, velocity=int(on))
 
     def feedback_shader_on(self, layer, slot, colour=None):
-        if colour is None: colour = self.COLOUR_GREEN
-        self.set_status(note=(self.NOTE_PLAY_SHADER-(layer)*8)+slot, velocity=int(colour))
+        if colour is None:
+            colour = self.COLOUR_GREEN
+        self.set_status(note=(self.NOTE_PLAY_SHADER - (layer) * 8) + slot, velocity=int(colour))
 
     def feedback_shader_off(self, layer, slot):
-        self.set_status(note=(self.NOTE_PLAY_SHADER-(layer)*8)+slot, velocity=self.COLOUR_OFF)
+        self.set_status(note=(self.NOTE_PLAY_SHADER - (layer) * 8) + slot, velocity=self.COLOUR_OFF)
 
     def feedback_shader_layer_on(self, layer):
         self.set_status(note=self.NOTE_SHADER_LAYER_ON[layer], velocity=self.COLOUR_GREEN)
-        
+
     def feedback_shader_layer_off(self, layer):
         self.set_status(note=self.NOTE_SHADER_LAYER_ON[layer], velocity=self.COLOUR_OFF)
 
@@ -86,90 +88,90 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         self.set_status(note=70, velocity=layer)
 
     def feedback_show_modulation(self, slot):
-        for i in range(self.NOTE_MODULATION_COLUMN,self.NOTE_MODULATION_COLUMN+4):
-            if slot==i-self.NOTE_MODULATION_COLUMN:
+        for i in range(self.NOTE_MODULATION_COLUMN, self.NOTE_MODULATION_COLUMN + 4):
+            if slot == i - self.NOTE_MODULATION_COLUMN:
                 self.set_status(note=i, velocity=self.COLOUR_GREEN)
             else:
                 self.set_status(note=i, velocity=self.COLOUR_OFF)
 
     def feedback_plugin_status(self):
-      from data_centre.plugin_collection import SequencePlugin
+        from data_centre.plugin_collection import SequencePlugin
 
-      try:
-        from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
-        for plugin in self.pc.get_plugins(SequencePlugin):
-            if isinstance(plugin, ShaderLoopRecordPlugin):
+        try:
+            from plugins.ShaderLoopRecordPlugin import ShaderLoopRecordPlugin
+            for plugin in self.pc.get_plugins(SequencePlugin):
+                if isinstance(plugin, ShaderLoopRecordPlugin):
 
-                NOTE_PLAY_STATUS    = 65
-                NOTE_RECORD_STATUS  = 66 
-                NOTE_OVERDUB_STATUS = 67
-                #NOTE_CLIP_STATUS_ROW = 8
+                    NOTE_PLAY_STATUS = 65
+                    NOTE_RECORD_STATUS = 66
+                    NOTE_OVERDUB_STATUS = 67
+                    # NOTE_CLIP_STATUS_ROW = 8
 
-                colour = self.COLOUR_OFF
-                if plugin.is_playing():
-                    colour = self.COLOUR_GREEN
-                    if plugin.is_paused():
-                        colour += self.BLINK
-                self.set_status(command='note_on', note=NOTE_PLAY_STATUS, velocity=colour)
-
-                colour = self.COLOUR_OFF
-                if plugin.recording:
-                    colour = self.COLOUR_GREEN
-                    if plugin.is_ignoring():
-                       colour += self.BLINK
-                self.set_status(command='note_on', note=NOTE_RECORD_STATUS, velocity=colour)
-
-                colour = self.COLOUR_OFF
-                if plugin.overdub:
-                    colour = self.COLOUR_RED
-                    if plugin.is_paused() or plugin.is_ignoring():
-                        colour += self.BLINK
-                self.set_status(command='note_on', note=NOTE_OVERDUB_STATUS, velocity=colour)
-
-                for i in range(plugin.MAX_CLIPS):
-                    if i in plugin.running_clips:
-                        if plugin.is_playing() and not plugin.is_paused():
-                            colour = self.COLOUR_GREEN
-                        else:
-                            colour = self.COLOUR_AMBER
-                        if plugin.selected_clip==i: #blink if selected
-                            colour += self.BLINK
-                    elif plugin.selected_clip==i:
-                        colour = self.COLOUR_RED_BLINK
-                    else:
-                        colour = self.COLOUR_OFF
-                    self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=colour)
-
-                """ # doesnt really work well, but shows progress of clip in leds
-                if plugin.is_playing() and not plugin.is_paused():
-                    for i in range(0,plugin.MAX_CLIPS):
-                        if i==int(plugin.position*plugin.MAX_CLIPS):
-                            self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN)
-                """
-      except Exception as e:
-          pass
-          #print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))
- 
-      try:
-        from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
-        #print ("feedback_plugin_status")
-        for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
-            #print ("for plugin %s" % plugin)
-            for pad in range(0,8):
-                #print ("checking selected_preset %s vs pad %s" % (plugin.selected_preset, pad))
-                colour = self.COLOUR_OFF
-                if plugin.presets[pad] is not None:
-                    colour = self.COLOUR_AMBER
-                    if plugin.last_recalled==pad:
+                    colour = self.COLOUR_OFF
+                    if plugin.is_playing():
                         colour = self.COLOUR_GREEN
-                if plugin.selected_preset==pad:
-                    if plugin.presets[pad] is None:
+                        if plugin.is_paused():
+                            colour += self.BLINK
+                    self.set_status(command='note_on', note=NOTE_PLAY_STATUS, velocity=colour)
+
+                    colour = self.COLOUR_OFF
+                    if plugin.recording:
+                        colour = self.COLOUR_GREEN
+                        if plugin.is_ignoring():
+                            colour += self.BLINK
+                    self.set_status(command='note_on', note=NOTE_RECORD_STATUS, velocity=colour)
+
+                    colour = self.COLOUR_OFF
+                    if plugin.overdub:
                         colour = self.COLOUR_RED
-                    colour += self.BLINK
-                self.set_status(command='note_on', note=self.NOTE_SHADER_PRESET_ROW+pad, velocity=colour)
-      except Exception as e:
-          pass
-          #print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))
+                        if plugin.is_paused() or plugin.is_ignoring():
+                            colour += self.BLINK
+                    self.set_status(command='note_on', note=NOTE_OVERDUB_STATUS, velocity=colour)
+
+                    for i in range(plugin.MAX_CLIPS):
+                        if i in plugin.running_clips:
+                            if plugin.is_playing() and not plugin.is_paused():
+                                colour = self.COLOUR_GREEN
+                            else:
+                                colour = self.COLOUR_AMBER
+                            if plugin.selected_clip == i:  # blink if selected
+                                colour += self.BLINK
+                        elif plugin.selected_clip == i:
+                            colour = self.COLOUR_RED_BLINK
+                        else:
+                            colour = self.COLOUR_OFF
+                        self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW + i, velocity=colour)
+
+                    """ # doesnt really work well, but shows progress of clip in leds
+                    if plugin.is_playing() and not plugin.is_paused():
+                        for i in range(0,plugin.MAX_CLIPS):
+                            if i==int(plugin.position*plugin.MAX_CLIPS):
+                                self.set_status(command='note_on', note=self.NOTE_CLIP_STATUS_ROW+i, velocity=self.COLOUR_GREEN)
+                    """
+        except Exception as e:
+            pass
+            # print ("Warning: Failed when running plugin feedback for ShaderLoopRecordPlugin:\t%s" % str(e))
+
+        try:
+            from plugins.ShaderQuickPresetPlugin import ShaderQuickPresetPlugin
+            # print ("feedback_plugin_status")
+            for plugin in self.pc.get_plugins(ShaderQuickPresetPlugin):
+                # print ("for plugin %s" % plugin)
+                for pad in range(0, 8):
+                    # print ("checking selected_preset %s vs pad %s" % (plugin.selected_preset, pad))
+                    colour = self.COLOUR_OFF
+                    if plugin.presets[pad] is not None:
+                        colour = self.COLOUR_AMBER
+                        if plugin.last_recalled == pad:
+                            colour = self.COLOUR_GREEN
+                    if plugin.selected_preset == pad:
+                        if plugin.presets[pad] is None:
+                            colour = self.COLOUR_RED
+                        colour += self.BLINK
+                    self.set_status(command='note_on', note=self.NOTE_SHADER_PRESET_ROW + pad, velocity=colour)
+        except Exception as e:
+            pass
+            # print ("Warning: Failed when running plugin feedback for ShaderQuickPresetPlugin:\t%s" % str(e))
 
     BLINK = 1
     COLOUR_OFF = 0
@@ -188,7 +190,7 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
         # show if internal feedback (the shader layer kind) is enabled
         if self.pc.data.feedback_active and not self.pc.data.function_on:
             self.feedback_shader_feedback(self.COLOUR_GREEN)
-        #elif self.pc.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and self.pc.data.function_on:
+        # elif self.pc.data.settings['shader']['X3_AS_SPEED']['value'] == 'enabled' and self.pc.data.function_on:
         #    self.feedback_shader_feedback(self.COLOUR_GREEN_BLINK)
         else:
             self.feedback_shader_feedback(self.COLOUR_OFF)
@@ -203,16 +205,16 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
         self.feedback_plugin_status()
 
-        for n,shader in enumerate(self.pc.message_handler.shaders.selected_shader_list):
-            #print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
+        for n, shader in enumerate(self.pc.message_handler.shaders.selected_shader_list):
+            # print ("%s: in refresh_midi_feedback, got shader: %s" % (n,shader))
             # show if layer is running or not
             if not self.pc.data.function_on:
                 if self.pc.message_handler.shaders.selected_status_list[n] == '▶':
                     self.feedback_shader_layer_on(n)
                 else:
                     self.feedback_shader_layer_off(n)
-            for x in range(0,8):
-                if 'slot' in shader and shader.get('slot',None)==x:
+            for x in range(0, 8):
+                if 'slot' in shader and shader.get('slot', None) == x:
                     if self.pc.message_handler.shaders.selected_status_list[n] == '▶':
                         # show that slot is selected and running
                         self.feedback_shader_on(n, x, self.COLOUR_GREEN)
@@ -228,15 +230,16 @@ class MidiFeedbackAPCKey25Plugin(MidiFeedbackPlugin):
 
         self.update_device()
 
-        #print("refresh_midi_feedback")
+        # print("refresh_midi_feedback")
 
     last_state = None
+
     def update_device(self):
         from copy import deepcopy
-        #print("in update device status is %s" % self.status)
-        for i,c in self.status.items():
-            #'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
-            if self.last_state is None or (i not in self.last_state or self.last_state[i]!=c):
-                #print("got command: %s: %s" % (i,c))
+        # print("in update device status is %s" % self.status)
+        for i, c in self.status.items():
+            # 'print("comparing\n%s to\n%s" % (c, self.last_state[i]))
+            if self.last_state is None or (i not in self.last_state or self.last_state[i] != c):
+                # print("got command: %s: %s" % (i,c))
                 self.send_command(**c)
         self.last_state = deepcopy(self.status)

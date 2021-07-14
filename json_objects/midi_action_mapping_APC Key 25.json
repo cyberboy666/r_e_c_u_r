@@ -41,7 +41,7 @@
 	},
     "control_change 48": {
             "DEFAULT": ["set_the_shader_param_0_layer_offset_0_continuous","set_strobe_amount_continuous"],
-            "NAV_DETOUR": ["set_detour_speed_position_continuous"],
+            "NAV_DETOUR": ["set_detour_speed_position_continuous", "seek_to_location_on_player"],
             "NAV_WJMX": ["wj_set_position_N:x"],
 	    "NAV_MANI": ["set_variable_A"],
 	    "NAV_LPRC": ["set_automation_speed"],
@@ -60,6 +60,7 @@
             "DEFAULT": ["set_the_shader_param_2_layer_offset_0_continuous","set_shader_speed_layer_1_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
             "NAV_WJMX": ["wj_set_colour_T:x"],
+	    "NAV_MANI": ["set_variable_playheadmsb&&f:pc.actions.call_method_name('seek_to_location_on_player',((x*10) + playheadlsb)/11 ):|"],
 	    "NAV_LFO": ["set_lfo_modulation_2_level"],
 	    "NAV_SND": ["sound_set_config_energy_triggerthreshold"]
     },
@@ -67,6 +68,7 @@
             "DEFAULT": ["set_the_shader_param_3_layer_offset_0_continuous","set_shader_speed_layer_2_amount"],
             "NAV_DETOUR": ["set_detour_end_continuous"],
 	    "NAV_WJMX": ["wj_set_colour_T:y"],
+	    "NAV_MANI": ["set_variable_playheadlsb&&f:pc.actions.call_method_name('seek_to_location_on_player',((playheadmsb*10) + x)/11 ):|"],
 	    "NAV_LFO": ["set_lfo_modulation_3_level"]
     },
     "control_change 52": {
@@ -281,10 +283,10 @@
 		"DEFAULT": ["function_off"]
 	},
 	"note_on 91": {
-		"DEFAULT": ["send_serial_macro_0","send_serial_macro_1"]
+		"DEFAULT": ["f:float(0):|seek_to_location_on_player&&send_serial_macro_0","f:float(0.25):|seek_to_location_on_player&&send_serial_macro_1"]
 	},
 	"note_on 93": {
-		"DEFAULT": ["set_display_mode_settings","set_display_mode_shader"]
+		"DEFAULT": ["f:float(0.5):|seek_to_location_on_player&&set_display_mode_settings","f:rand():|seek_to_location_on_player&&set_display_mode_shader"]
 	}
 }
 

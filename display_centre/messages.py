@@ -1,5 +1,6 @@
 import logging
 
+
 class MessageHandler(object):
     def __init__(self):
         self.current_message = [None, None, None]

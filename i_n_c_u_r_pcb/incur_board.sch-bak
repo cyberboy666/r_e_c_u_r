@@ -31,7 +31,7 @@ U 1 1 5BC53B0C
 P 3950 2875
 F 0 "RV1" V 3775 2875 50  0000 C CNN
 F 1 "10k_pot" V 3850 2875 50  0000 C CNN
-F 2 "lib_fp:tht_vertical_potentiometer" H 3950 2875 50  0001 C CNN
+F 2 "Potentiometers:Potentiometer_Alps_RK09K_Horizontal" H 3950 2875 50  0001 C CNN
 F 3 "" H 3950 2875 50  0001 C CNN
 	1    3950 2875
 	1    0    0    -1  
@@ -349,7 +349,7 @@ U 1 1 5BC66915
 P 3950 4150
 F 0 "RV2" V 3775 4150 50  0000 C CNN
 F 1 "10k_pot" V 3850 4150 50  0000 C CNN
-F 2 "lib_fp:tht_vertical_potentiometer" H 3950 4150 50  0001 C CNN
+F 2 "Potentiometers:Potentiometer_Alps_RK09K_Horizontal" H 3950 4150 50  0001 C CNN
 F 3 "" H 3950 4150 50  0001 C CNN
 	1    3950 4150
 	1    0    0    -1  
@@ -384,7 +384,7 @@ U 1 1 5BC669D1
 P 3950 5425
 F 0 "RV3" V 3775 5425 50  0000 C CNN
 F 1 "10k_pot" V 3850 5425 50  0000 C CNN
-F 2 "lib_fp:tht_vertical_potentiometer" H 3950 5425 50  0001 C CNN
+F 2 "Potentiometers:Potentiometer_Alps_RK09K_Horizontal" H 3950 5425 50  0001 C CNN
 F 3 "" H 3950 5425 50  0001 C CNN
 	1    3950 5425
 	1    0    0    -1  
@@ -419,7 +419,7 @@ U 1 1 5BC669E7
 P 3950 6700
 F 0 "RV4" V 3775 6700 50  0000 C CNN
 F 1 "10k_pot" V 3850 6700 50  0000 C CNN
-F 2 "lib_fp:tht_vertical_potentiometer" H 3950 6700 50  0001 C CNN
+F 2 "Potentiometers:Potentiometer_Alps_RK09K_Horizontal" H 3950 6700 50  0001 C CNN
 F 3 "" H 3950 6700 50  0001 C CNN
 	1    3950 6700
 	1    0    0    -1  

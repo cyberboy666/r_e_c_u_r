@@ -1,36 +1,11 @@
 EESchema-LIBRARY Version 2.4
 #encoding utf-8
 #
-# Connector_Conn_Coaxial
+# +3V3
 #
-DEF Connector_Conn_Coaxial J 0 40 Y N 1 F N
-F0 "J" 10 120 50 H V C CNN
-F1 "Connector_Conn_Coaxial" 115 0 50 V V C CNN
-F2 "" 0 0 50 H I C CNN
-F3 "" 0 0 50 H I C CNN
-$FPLIST
- *BNC*
- *SMA*
- *SMB*
- *SMC*
- *Cinch*
-$ENDFPLIST
-DRAW
-A -2 0 71 1636 0 0 1 10 N -70 20 70 0
-A -1 0 71 0 -1638 0 1 10 N 70 0 -70 -20
-C 0 0 20 0 1 8 N
-P 2 0 1 0 -100 0 -20 0 N
-P 2 0 1 0 0 -100 0 -70 N
-X In 1 -200 0 100 R 50 50 1 1 P
-X Ext 2 0 -200 100 U 50 50 1 1 P
-ENDDRAW
-ENDDEF
-#
-# incur_board-rescue_+3V3
-#
-DEF incur_board-rescue_+3V3 #PWR 0 0 Y Y 1 F P
+DEF +3V3 #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "incur_board-rescue_+3V3" 0 140 50 H V C CNN
+F1 "+3V3" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -41,11 +16,11 @@ X +3V3 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_+5V
+# +5V
 #
-DEF incur_board-rescue_+5V #PWR 0 0 Y Y 1 F P
+DEF +5V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "incur_board-rescue_+5V" 0 140 50 H V C CNN
+F1 "+5V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -56,11 +31,11 @@ X +5V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_6N138
+# 6N138
 #
-DEF incur_board-rescue_6N138 U 0 40 Y N 1 F N
+DEF 6N138 U 0 40 Y N 1 F N
 F0 "U" -160 350 50 H V C CNN
-F1 "incur_board-rescue_6N138" 90 350 50 H V C CNN
+F1 "6N138" 90 350 50 H V C CNN
 F2 "" 290 -300 50 H I C CNN
 F3 "" 290 -300 50 H I C CNN
 $FPLIST
@@ -101,11 +76,11 @@ X VCC 8 300 200 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_Audio-Jack-2_Switch
+# Audio-Jack-2_Switch
 #
-DEF incur_board-rescue_Audio-Jack-2_Switch J 0 40 Y Y 1 F N
+DEF Audio-Jack-2_Switch J 0 40 Y Y 1 F N
 F0 "J" -50 175 50 H V C CNN
-F1 "incur_board-rescue_Audio-Jack-2_Switch" 225 -75 50 H V C CNN
+F1 "Audio-Jack-2_Switch" 225 -75 50 H V C CNN
 F2 "" 250 100 50 H I C CNN
 F3 "" 250 100 50 H I C CNN
 DRAW
@@ -121,11 +96,11 @@ X ~ 3 200 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_Conn_01x01
+# Conn_01x01
 #
-DEF incur_board-rescue_Conn_01x01 J 0 40 Y N 1 F N
+DEF Conn_01x01 J 0 40 Y N 1 F N
 F0 "J" 0 100 50 H V C CNN
-F1 "incur_board-rescue_Conn_01x01" 0 -100 50 H V C CNN
+F1 "Conn_01x01" 0 -100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -143,11 +118,11 @@ X Pin_1 1 -200 0 150 R 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_D
+# D
 #
-DEF incur_board-rescue_D D 0 40 N N 1 F N
+DEF D D 0 40 N N 1 F N
 F0 "D" 0 100 50 H V C CNN
-F1 "incur_board-rescue_D" 0 -100 50 H V C CNN
+F1 "D" 0 -100 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -166,11 +141,11 @@ X A 2 150 0 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_DIN-5_180degree
+# DIN-5_180degree
 #
-DEF incur_board-rescue_DIN-5_180degree J 0 40 Y Y 1 F N
+DEF DIN-5_180degree J 0 40 Y Y 1 F N
 F0 "J" 125 225 50 H V C CNN
-F1 "incur_board-rescue_DIN-5_180degree" 0 -250 50 H V C CNN
+F1 "DIN-5_180degree" 0 -250 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -199,11 +174,11 @@ X ~ 5 300 100 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_GND
+# GND
 #
-DEF incur_board-rescue_GND #PWR 0 0 Y Y 1 F P
+DEF GND #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "incur_board-rescue_GND" 0 -150 50 H V C CNN
+F1 "GND" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -212,11 +187,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_MCP3208
+# MCP3208
 #
-DEF incur_board-rescue_MCP3208 U 0 40 Y Y 1 F N
+DEF MCP3208 U 0 40 Y Y 1 F N
 F0 "U" -200 525 50 H V R CNN
-F1 "incur_board-rescue_MCP3208" -200 450 50 H V R CNN
+F1 "MCP3208" -200 450 50 H V R CNN
 F2 "" 100 100 50 H I C CNN
 F3 "" 100 100 50 H I C CNN
 $FPLIST
@@ -253,11 +228,11 @@ X DGND 9 200 -600 100 U 50 50 1 1 W
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_POT
+# POT
 #
-DEF incur_board-rescue_POT RV 0 40 N N 1 F N
+DEF POT RV 0 40 N N 1 F N
 F0 "RV" -175 0 50 V V C CNN
-F1 "incur_board-rescue_POT" -100 0 50 V V C CNN
+F1 "POT" -100 0 50 V V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -273,11 +248,11 @@ X 3 3 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_PWR_FLAG
+# PWR_FLAG
 #
-DEF incur_board-rescue_PWR_FLAG #FLG 0 0 N N 1 F P
+DEF PWR_FLAG #FLG 0 0 N N 1 F P
 F0 "#FLG" 0 75 50 H I C CNN
-F1 "incur_board-rescue_PWR_FLAG" 0 150 50 H V C CNN
+F1 "PWR_FLAG" 0 150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -286,11 +261,11 @@ X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_R
+# R
 #
-DEF incur_board-rescue_R R 0 0 N Y 1 F N
+DEF R R 0 0 N Y 1 F N
 F0 "R" 80 0 50 V V C CNN
-F1 "incur_board-rescue_R" 0 0 50 V V C CNN
+F1 "R" 0 0 50 V V C CNN
 F2 "" -70 0 50 V I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -304,11 +279,34 @@ X ~ 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# incur_board-rescue_Raspberry_Pi_2_3
+# RCJ-024
 #
-DEF incur_board-rescue_Raspberry_Pi_2_3 J 0 40 Y Y 1 F N
+DEF RCJ-024 J 0 40 Y Y 1 L N
+F0 "J" -100 150 50 H V L BNN
+F1 "RCJ-024" -100 -250 50 H V L BNN
+F2 "CUI_RCJ-024" 0 0 50 H I L BNN
+F3 "CUI Inc" 0 0 50 H I L BNN
+F4 "Manufacturer recommendations" 0 0 50 H I L BNN
+F5 "B" 0 0 50 H I L BNN
+DRAW
+S -130 -100 -70 50 0 0 0 F
+P 2 0 0 6 -100 100 -100 50 N
+P 2 0 0 6 0 -40 -30 -100 N
+P 2 0 0 6 30 -100 0 -40 N
+P 2 0 0 6 100 -100 30 -100 N
+P 2 0 0 6 200 -100 100 -100 N
+P 2 0 0 6 200 100 -100 100 N
+X 1 1A 300 100 100 L 40 40 0 0 P
+X 1 1B 300 100 100 L 40 40 0 0 P
+X 2 2 300 -100 100 L 40 40 0 0 P
+ENDDRAW
+ENDDEF
+#
+# Raspberry_Pi_2_3
+#
+DEF Raspberry_Pi_2_3 J 0 40 Y Y 1 F N
 F0 "J" 700 -1250 50 H V C CNN
-F1 "incur_board-rescue_Raspberry_Pi_2_3" -400 900 50 H V C CNN
+F1 "Raspberry_Pi_2_3" -400 900 50 H V C CNN
 F2 "Pin_Headers:Pin_Header_Straight_2x20" 1000 1250 50 H I C CNN
 F3 "" 50 -150 50 H I C CNN
 DRAW

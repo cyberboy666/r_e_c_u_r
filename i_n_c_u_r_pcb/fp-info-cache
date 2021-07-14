@@ -1,4 +1,4 @@
-16373739160157416
+16399717218855036
 Battery
 BatteryHolder_Bulgin_BX0036_1xC
 Bulgin Battery Holder, BX0036, Battery Type C (https://www.bulgin.com/products/pub/media/bulgin/data/Battery_holders.pdf)
@@ -73204,4 +73204,116 @@ Varistor, diameter 21.5mm, width 11.4mm, pitch 10mm
 varistor SIOV
 0
 2
+2
+lib_fp
+DIP-SOIC-8
+8-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), LongPads
+THT DIP DIL PDIP 2.54mm 7.62mm 300mil LongPads
+0
+16
+8
+lib_fp
+dpdt_mini_toggle_switch_tayda
+
+
+0
+6
+6
+lib_fp
+dpdt_slide_switch_large_tayda
+E-Switch sub miniature slide switch, EG series, DPDT, http://spec_sheets.e-switch.com/specs/P040047.pdf
+switch DPDT
+0
+6
+6
+lib_fp
+pot_vertical_9mm
+Potentiometer, vertical, Alps RK09L Single, http://www.alps.com/prod/info/E/HTML/Potentiometer/RotaryPotentiometers/RK09L/RK09L_list.html
+Potentiometer vertical Alps RK09L Single
+0
+3
+3
+lib_fp
+spdt_mini_toggle_switch_tayda
+
+
+0
+3
+3
+lib_fp
+spdt_slide_switch_small_tayda
+
+
+0
+5
+3
+lib_fp
+tht_BarrelJack_Horizontal
+DC Barrel Jack
+Power Jack
+0
+3
+3
+lib_fp
+tht_rca_vertical
+<b>DC POWER JACK</b><p>Source: DCJ0202.pdf
+
+0
+3
+2
+project_parts
+DIP-SOIC-8
+8-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), LongPads
+THT DIP DIL PDIP 2.54mm 7.62mm 300mil LongPads
+0
+16
+8
+project_parts
+dpdt_mini_toggle_switch_tayda
+
+
+0
+6
+6
+project_parts
+dpdt_slide_switch_large_tayda
+E-Switch sub miniature slide switch, EG series, DPDT, http://spec_sheets.e-switch.com/specs/P040047.pdf
+switch DPDT
+0
+6
+6
+project_parts
+pot_vertical_9mm
+Potentiometer, vertical, Alps RK09L Single, http://www.alps.com/prod/info/E/HTML/Potentiometer/RotaryPotentiometers/RK09L/RK09L_list.html
+Potentiometer vertical Alps RK09L Single
+0
+3
+3
+project_parts
+spdt_mini_toggle_switch_tayda
+
+
+0
+3
+3
+project_parts
+spdt_slide_switch_small_tayda
+
+
+0
+5
+3
+project_parts
+tht_BarrelJack_Horizontal
+DC Barrel Jack
+Power Jack
+0
+3
+3
+project_parts
+tht_rca_vertical
+<b>DC POWER JACK</b><p>Source: DCJ0202.pdf
+
+0
+3
 2

@@ -1,3 +1,0 @@
-(sym_lib_table
-  (lib (name incur_board-rescue)(type Legacy)(uri ${KIPRJMOD}/incur_board-rescue.lib)(options "")(descr ""))
-)
